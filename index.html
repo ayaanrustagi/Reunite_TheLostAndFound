@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reunite - School Lost & Found</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Accessible skip link -->
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <!-- Animated Background -->
+  <div class="animated-background" aria-hidden="true">
+    <div class="animated-background__base"></div>
+    <div class="animated-background__overlay"></div>
+    <div class="animated-background__orb animated-background__orb--left"></div>
+    <div class="animated-background__orb animated-background__orb--right"></div>
+    <div class="animated-background__orb animated-background__orb--center"></div>
+    <div class="animated-background__grid"></div>
+    <div class="animated-background__radial"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <nav class="nav" aria-label="Primary navigation">
+      <button class="logo-button" type="button" onclick="navigateToSection('hero')" aria-label="Go to Home">
+        <img src="assets/reunite-logo.png" alt="Reunite logo" class="logo">
+        <span class="logo-text">REUNITE</span>
+      </button>
+
+      <div class="nav-links">
+        <button class="nav-link" data-section="found" type="button" onclick="navigateToSection('found')">Find Items</button>
+        <button class="nav-link" data-section="report" type="button" onclick="navigateToSection('report')">Report an Item</button>
+        <button class="nav-link" data-section="claim" type="button" onclick="navigateToSection('claim')">Claim an Item</button>
+        <button class="nav-link" data-section="how" type="button" onclick="navigateToSection('how')">How It Works</button>
+      </div>
+
+      <div class="auth-buttons">
+        <button class="auth-button" id="dashboardBtn" style="display:none;" type="button" onclick="navigateToSection('dashboard')">DASHBOARD</button>
+        <button class="auth-button" id="adminBtn" style="display:none;" type="button" onclick="navigateToSection('admin')">ADMIN</button>
+        <button class="auth-button" id="logoutBtn" style="display:none;" type="button" onclick="handleLogout()">LOGOUT</button>
+        <button class="auth-button" id="loginBtn" type="button" onclick="openLoginModal()">LOGIN</button>
+</div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main id="mainContent" class="main-content">
+    <!-- Hero -->
+    <section id="page-hero" class="page-section hero-section" data-section-id="hero">
+      <div class="brutalist-background"></div>
+      <div class="grid-container">
+        <div class="col-8">
+          <div class="hero-content">
+            <div class="hero-label">YOUR SCHOOL'S LOST & FOUND NETWORK</div>
+
+            <h1 class="hero-title">
+              <div class="overflow-hidden">
+                <span id="headlineText" class="headline-text">LOST AN ITEM</span>
+              </div>
+              <span class="hero-title__accent">
+                <div class="overflow-hidden">
+                  <span id="taglineText" class="tagline-text">REUNITE ON CAMPUS FASTER</span>
+                </div>
+              </span>
+            </h1>
+
+            <p class="hero-description">
+              Built for students, staff, and campus offices. Report found items, search the catalog, and submit a claim request—all in one place.
+            </p>
+
+            <div class="hero-buttons">
+              <button class="btn-primary" type="button" onclick="navigateToSection('report')">Report a Found Item</button>
+              <button class="btn-secondary" type="button" onclick="navigateToSection('found')">Browse Found Items</button>
+            </div>
+
+            <div class="helper-row" role="status" aria-live="polite" id="globalStatus"></div>
+          </div>
+        </div>
+        <div class="col-4"></div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="page-how" class="page-section how-section" data-section-id="how" style="display:none;">
+      <div class="brutalist-background"></div>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">HOW IT WORKS</div>
+          <h2 class="section-title">SIMPLE 3-STEP PROCESS</h2>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>REPORT</h3>
+            <p>Submit a found item report with details and a photo.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>MATCH</h3>
+            <p>AI-assisted matching suggests similar items using offline image similarity.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>REUNITE</h3>
+            <p>Submit a claim request. Admins verify and mark items as claimed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Found Items -->
+    <section id="page-found" class="page-section found-section" data-section-id="found" style="display:none;">
+      <div class="brutalist-background"></div>
+      <div class="grid-container">
+        <div class="col-8">
+          <div class="found-content">
+            <div class="section-label">BROWSE FOUND ITEMS</div>
+            <h1 class="section-title">FIND YOUR LOST ITEMS</h1>
+
+            <div class="filters" aria-label="Filters">
+              <div class="filter-group">
+                <label class="sr-only" for="searchFilter">Search</label>
+                <input id="searchFilter" class="form-input" type="text" placeholder="Search title or description..." />
+              </div>
+
+              <div class="filter-group">
+                <label class="sr-only" for="categoryFilter">Category</label>
+                <select id="categoryFilter" class="form-select">
+                  <option value="">Item Type</option>
+                  <option value="Keys">Keys</option>
+                  <option value="Wallet">Wallet</option>
+                  <option value="Phone">Phone</option>
+                  <option value="Bag">Bag</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div id="categoryOtherHelp" class="field-help" style="display:none;">
+                  “Other” means the item doesn’t fit the listed categories.
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <label class="sr-only" for="locationFilter">Location</label>
+                <input id="locationFilter" class="form-input" type="text" placeholder="Location (free response)" />
+              </div>
+
+              <div class="filter-group">
+                <label class="sr-only" for="dateFilter">Date</label>
+                <input type="date" id="dateFilter" class="form-input">
+              </div>
+              
+<div class="filter-group">
+  <label class="sr-only" for="sortFilter">Sort</label>
+  <select id="sortFilter" class="form-select">
+    <option value="newest">Newest First</option>
+    <option value="oldest">Oldest First</option>
+    <option value="category">By Category</option>
+  </select>
+</div>
+
+<div class="status-legend" aria-label="Status legend">
+  <span><span class="legend-dot pending"></span> Pending</span>
+  <span><span class="legend-dot approved"></span> Approved</span>
+  <span><span class="legend-dot claimed"></span> Claimed</span>
+</div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="results-stats">
+            <div class="stat-card">
+              <div class="stat-label">Search Results</div>
+              <div class="stat-number" id="itemsCount">0</div>
+              <div class="stat-sublabel">Items Found</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        
+<div class="find-upload">
+  <label for="findPhoto">Upload a photo of your lost item (optional)</label>
+  <input type="file" id="findPhoto" accept="image/*">
+  <div class="field-help">AI-assisted matching will highlight similar approved found items below.</div>
+  <img id="findPhotoPreview" class="photo-preview" style="display:none;" alt="Preview of uploaded photo">
+  <div class="form-status" id="findAiStatus" role="status" aria-live="polite"></div>
+</div>
+
+<div class="items-grid" id="itemsGrid">
+          <div class="loading-message">Loading items...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Report Item -->
+    <section id="page-report" class="page-section report-section" data-section-id="report" style="display:none;">
+      <div class="brutalist-background"></div>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">REPORT A FOUND ITEM</div>
+          <h2 class="section-title">TELL US WHAT WAS FOUND</h2>
+        </div>
+
+        <form id="reportForm" class="report-form" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="itemTitle">Item Title <span aria-hidden="true">*</span></label>
+              <input type="text" id="itemTitle" name="title" required aria-required="true">
+              <div class="field-help">Example: “Blue Hydro Flask”</div>
+            </div>
+
+            <div class="form-group">
+              <label for="itemCategory">Category <span aria-hidden="true">*</span></label>
+              <select id="itemCategory" name="category" required aria-required="true">
+                <option value="">Select Category</option>
+                <option value="Keys">Keys</option>
+                <option value="Wallet">Wallet</option>
+                <option value="Phone">Phone</option>
+                <option value="Bag">Bag</option>
+                <option value="Other">Other</option>
+              </select>
+              <div id="otherCategoryWrap" style="display:none; margin-top: .5rem;">
+                <label for="otherCategory" class="sr-only">Specify other category</label>
+                <input type="text" id="otherCategory" name="other_category" class="form-input" placeholder="If Other, describe the item type (e.g., Jacket, Calculator)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="itemLocation">Location Found <span aria-hidden="true">*</span></label>
+              <input type="text" id="itemLocation" name="location" required aria-required="true" placeholder="Example: Library - 2nd floor">
+            </div>
+
+            <div class="form-group">
+              <label for="itemDate">Date Found <span aria-hidden="true">*</span></label>
+              <input type="date" id="itemDate" name="date_found" required aria-required="true">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="itemPhoto">Photo (recommended)</label>
+              <input type="file" id="itemPhoto" name="photo" accept="image/*">
+              <div class="field-help">Offline AI-assisted matching uses this photo to find similar items.</div>
+              <img id="reportPhotoPreview" class="photo-preview" alt="Preview of uploaded report photo" style="display:none;">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="itemDescription">Description</label>
+              <textarea id="itemDescription" name="description" rows="4" placeholder="Color, brand, identifying details..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="contactName">Your Name <span aria-hidden="true">*</span></label>
+              <input type="text" id="contactName" name="contact_name" required aria-required="true">
+            </div>
+
+            <div class="form-group">
+              <label for="contactEmail">Your School Email <span aria-hidden="true">*</span></label>
+              <input type="email" id="contactEmail" name="contact_email" required aria-required="true" placeholder="name@school.edu">
+            </div>
+
+            <div class="form-group">
+              <label for="contactPhone">Phone (optional)</label>
+              <input type="tel" id="contactPhone" name="contact_phone">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Submit Report</button>
+          <div class="form-status" id="reportStatus" role="status" aria-live="polite"></div>
+          <div class="form-status" id="aiMatchStatus" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Claim Item -->
+    <section id="page-claim" class="page-section report-section" data-section-id="claim" style="display:none;">
+      <div class="brutalist-background"></div>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">CLAIM / INQUIRY</div>
+          <h2 class="section-title">REQUEST AN ITEM OR ASK A QUESTION</h2>
+        </div>
+
+        <form id="claimForm" class="report-form" novalidate>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="claimItemId">Select a Found Item <span aria-hidden="true">*</span></label>
+              <select id="claimItemId" required aria-required="true"></select>
+              <div class="field-help">Only approved items appear here.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="claimName">Your Name <span aria-hidden="true">*</span></label>
+              <input id="claimName" type="text" required aria-required="true">
+            </div>
+
+            <div class="form-group">
+              <label for="claimEmail">Your School Email <span aria-hidden="true">*</span></label>
+              <input id="claimEmail" type="email" required aria-required="true" placeholder="name@school.edu">
+            </div>
+<div class="form-group full-width">
+              <label for="claimMessage">Message <span aria-hidden="true">*</span></label>
+              <textarea id="claimMessage" rows="4" required aria-required="true" placeholder="Describe identifying details proving ownership..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Submit Claim</button>
+          <div class="form-status" id="claimStatus" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="page-dashboard" class="page-section how-section" data-section-id="dashboard" style="display:none;">
+      <div class="brutalist-background"></div>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">STUDENT DASHBOARD</div>
+          <h2 class="section-title">YOUR REPORTS & CLAIMS</h2>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Your Reports</h3>
+            <div id="myReports" class="dashboard-list"></div>
+          </div>
+          <div class="dashboard-card">
+            <h3>Your Claims</h3>
+            <div id="myClaims" class="dashboard-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin -->
+    <section id="page-admin" class="page-section how-section" data-section-id="admin" style="display:none;">
+      <div class="brutalist-background"></div>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">ADMIN REVIEW</div>
+          <h2 class="section-title">APPROVE REPORTS & PROCESS CLAIMS</h2>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Pending Item Reports</h3>
+            <div id="adminPendingItems" class="dashboard-list"></div>
+          </div>
+          <div class="dashboard-card">
+            <h3>Incoming Claims</h3>
+            <div id="adminClaims" class="dashboard-list"></div>
+          </div>
+        
+<div class="dashboard-card">
+  <h3>Audit Log</h3>
+  <div id="adminAudit" class="dashboard-list"></div>
+</div>
+
+        </div>
+        <div class="field-help" style="margin-top:1rem;">
+          Tip: Use Demo Mode for state judging reliability (works fully offline).
+        </div>
+      </div>
+    </section>
+  
+<div id="printReceipt" class="print-receipt">
+  <h2>Claim Receipt</h2>
+  <p id="receiptItem"></p>
+  <p id="receiptClaimant"></p>
+  <p id="receiptDate"></p>
+  <button onclick="window.print()" class="btn-primary">Print</button>
+</div>
+
+</main>
+
+  <!-- Item Modal -->
+  <div id="itemModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" onclick="closeModal()" aria-hidden="true"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalTitle" class="modal-title">Item Title</h3>
+          <p id="modalLocation" class="modal-subtitle">Location</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeModal()" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <h4>Description</h4>
+          <p id="modalDescription">No description available</p>
+        </div>
+        <div class="modal-section">
+          <h4>Contact Information</h4>
+          <p id="modalContactName">Not provided</p>
+          <p id="modalContactEmail">Not provided</p>
+          <p id="modalContactPhone">Not provided</p>
+        </div>
+        <div class="modal-section">
+          <h4>Found Date</h4>
+          <p id="modalDate">Not specified</p>
+        </div>
+        <div class="modal-section">
+          <button class="btn-primary" type="button" onclick="navigateToSection('claim'); closeModal();">Claim / Inquire</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal-backdrop" onclick="closeLoginModal()" aria-hidden="true"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h3 id="loginTitle" class="modal-title">Sign In</h3>
+          <p class="modal-subtitle">Choose your role</p>
+        </div>
+        <button class="modal-close" type="button" onclick="closeLoginModal()" aria-label="Close sign in">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid" style="margin-bottom:0;">
+          <div class="form-group full-width">
+            <label for="loginRole">Role</label>
+            <select id="loginRole" onchange="handleRoleChange()">
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="loginName">Name</label>
+            <input id="loginName" type="text" placeholder="Your name" />
+          </div>
+
+          <div class="form-group">
+            <label for="loginEmail">School Email</label>
+            <input id="loginEmail" type="email" placeholder="name@school.edu" />
+          </div>
+
+          <div class="form-group full-width" id="adminCodeWrap" style="display:none;">
+            <label for="adminCode">Admin Access Code</label>
+            <input id="adminCode" type="password" placeholder="Enter code provided by the school office" />
+            <div class="field-help">Demo default: <code>FBLA2025</code> (change in <code>script.js</code>)</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" type="button" onclick="handleLogin()">Continue</button>
+        <div class="form-status" id="loginStatus" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
