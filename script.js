@@ -1,45 +1,240 @@
 // =======================================================
-// Reunite (FBLA School Lost-and-Found) - State Ready Build
-// Offline-first Demo Mode + Role-based Login + Admin Review
-// AI-assisted matching uses offline perceptual hashing (dHash)
+// REUNITE - Lost & Found System Logic
 // =======================================================
 
-/**
- * ✅ FBLA reliability strategy:
- * - DEMO_MODE = true (recommended for state judging)
- * - Everything works offline via localStorage.
- * - If you later want to wire Supabase, you can add it behind DEMO_MODE = false.
- */
 const DEMO_MODE = true;
-const ADMIN_ACCESS_CODE = "FBLA2025"; // change if desired
+const ADMIN_ACCESS_CODE = "FBLA2025";
 
-// ------------------------------
-// Storage Keys
-// ------------------------------
 const LS_KEYS = {
   session: "reunite_session",
   items: "reunite_items",
-  claims: "reunite_claims",
-  audit: "reunite_audit"
+  claims: "reunite_claims"
 };
 
-// ------------------------------
-// In-memory state
-// ------------------------------
-let currentUser = null; // { role, name, email }
-let items = [];         // item objects
-let claims = [];        // claim objects
+let currentUser = null;
+let items = [];
+let claims = [];
 
 // ------------------------------
-// Helpers
+// Initialization
 // ------------------------------
-function uid(prefix = "id") {
-  return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now()}`;
+document.addEventListener('DOMContentLoaded', () => {
+  loadAll();
+  loadSession();
+  updateAuthUI();
+
+  // Check for initial hash/section
+  const hash = window.location.hash.replace('#', '');
+  if (hash) {
+    navigateToSection(hash);
+  } else {
+    navigateToSection('hero');
+  }
+
+  // Scroll listener for "How It Works" split section
+  const howSection = document.getElementById('page-how');
+  if (howSection) {
+    window.addEventListener('scroll', handleSplitScroll);
+  }
+
+  // Form Submissions
+  document.getElementById('reportForm')?.addEventListener('submit', handleReportSubmit);
+  document.getElementById('claimForm')?.addEventListener('submit', handleClaimSubmit);
+
+  // Hero Text Rotation
+  initHeroRotation();
+});
+
+// ------------------------------
+// Navigation
+// ------------------------------
+function navigateToSection(sectionId) {
+  const sections = document.querySelectorAll('.view-section');
+  sections.forEach(s => s.classList.remove('active'));
+
+  const target = document.getElementById(`page-${sectionId}`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Nav active state
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(sectionId));
+  });
+
+  if (sectionId === 'found') renderFound();
+  if (sectionId === 'claim') renderClaimSelect();
+  if (sectionId === 'dashboard') renderDashboard();
+  if (sectionId === 'admin') renderAdmin();
+
+  // Store in location for browser back button
+  window.history.pushState(null, null, `#${sectionId}`);
 }
 
-function setGlobalStatus(msg) {
-  const el = document.getElementById("globalStatus");
-  if (el) el.textContent = msg || "";
+window.navigateToSection = navigateToSection;
+
+// ------------------------------
+// Hero Text Rotation
+// ------------------------------
+function initHeroRotation() {
+  const titles = [
+    "CAN'T FIND IT",
+    "LOST VALUABLES",
+    "WHERE DID IT GO",
+    "MISSING BELONGINGS",
+    "LOST AN ITEM",
+    "MISPLACED SOMETHING"
+  ];
+  const subs = [
+    "REUNITE YOUR WORLD FASTER",
+    "BRING BACK WHAT'S YOURS",
+    "FIND YOUR LOST ITEMS",
+    "CONNECT WITH FINDERS",
+    "RECOVER YOUR BELONGINGS"
+  ];
+
+  let tIndex = 0;
+  let sIndex = 0;
+  const titleEl = document.getElementById('hero-title');
+  const subEl = document.getElementById('hero-subtitle');
+
+  if (!titleEl || !subEl) return;
+
+  setInterval(() => {
+    tIndex = (tIndex + 1) % titles.length;
+    sIndex = (sIndex + 1) % subs.length;
+
+    // Apply glitch effect
+    titleEl.classList.add('glitch-active');
+    subEl.classList.add('glitch-active');
+
+    // Swap text halfway through the quick glitch
+    setTimeout(() => {
+      titleEl.textContent = titles[tIndex];
+      subEl.textContent = subs[sIndex];
+    }, 200);
+
+    // Remove class to reset for next cycle
+    setTimeout(() => {
+      titleEl.classList.remove('glitch-active');
+      subEl.classList.remove('glitch-active');
+    }, 400);
+
+  }, 4000);
+}
+
+// ------------------------------
+// "How It Works" Interaction
+// ------------------------------
+function handleSplitScroll() {
+  const section = document.getElementById('page-how');
+  if (!section || !section.classList.contains('active')) return;
+
+  const stepItems = document.querySelectorAll('.step-item');
+  const previewTitle = document.getElementById('preview-title');
+  const previewDesc = document.getElementById('preview-desc');
+
+  const stepData = [
+    { title: "INITIATE", desc: "Begin the recovery process by logging the details into our secure network." },
+    { title: "ANALYZE", desc: "Our algorithm scans existing inventory using perceptual hashing to find potential matches." },
+    { title: "RESOLVE", desc: "Verify ownership through our secure claim portal and arrange for item retrieval." }
+  ];
+
+  let currentStep = 0;
+  stepItems.forEach((item, index) => {
+    const rect = item.getBoundingClientRect();
+    if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+      item.classList.add('active');
+      currentStep = index;
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  if (previewTitle && stepData[currentStep]) {
+    previewTitle.textContent = stepData[currentStep].title;
+    previewDesc.textContent = stepData[currentStep].desc;
+  }
+}
+
+// ------------------------------
+// Auth & Sessions
+// ------------------------------
+function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+window.openLoginModal = openLoginModal;
+window.closeLoginModal = closeLoginModal;
+
+function handleLogin() {
+  const role = document.getElementById('loginRole').value;
+  const name = document.getElementById('loginName').value.trim();
+  const email = document.getElementById('loginEmail').value.trim();
+  const code = document.getElementById('adminCode').value;
+  const status = document.getElementById('loginStatus');
+
+  if (!name || !email) {
+    status.textContent = "REQUIRED FIELDS MISSING";
+    return;
+  }
+
+  if (role === 'admin' && code !== ADMIN_ACCESS_CODE) {
+    status.textContent = "INVALID ACCESS CODE";
+    return;
+  }
+
+  currentUser = { role, name, email };
+  localStorage.setItem(LS_KEYS.session, JSON.stringify(currentUser));
+  updateAuthUI();
+  closeLoginModal();
+  navigateToSection(role === 'admin' ? 'admin' : 'dashboard');
+}
+window.handleLogin = handleLogin;
+
+function handleLogout() {
+  currentUser = null;
+  localStorage.removeItem(LS_KEYS.session);
+  updateAuthUI();
+  navigateToSection('hero');
+}
+window.handleLogout = handleLogout;
+
+function updateAuthUI() {
+  const loginBtn = document.getElementById('loginBtn');
+  const dashboardBtn = document.getElementById('dashboardBtn');
+  const adminBtn = document.getElementById('adminBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  if (currentUser) {
+    loginBtn.classList.add('hidden');
+    logoutBtn.classList.remove('hidden');
+    if (currentUser.role === 'admin') {
+      adminBtn.classList.remove('hidden');
+      dashboardBtn.classList.add('hidden');
+    } else {
+      dashboardBtn.classList.remove('hidden');
+      adminBtn.classList.add('hidden');
+    }
+  } else {
+    loginBtn.classList.remove('hidden');
+    dashboardBtn.classList.add('hidden');
+    adminBtn.classList.add('hidden');
+    logoutBtn.classList.add('hidden');
+  }
+}
+
+function handleRoleChange() {
+  const role = document.getElementById('loginRole').value;
+  document.getElementById('adminCodeWrap').classList.toggle('hidden', role !== 'admin');
+}
+window.handleRoleChange = handleRoleChange;
+
+// ------------------------------
+// Data Handling
+// ------------------------------
+function loadAll() {
+  items = JSON.parse(localStorage.getItem(LS_KEYS.items) || "[]");
+  claims = JSON.parse(localStorage.getItem(LS_KEYS.claims) || "[]");
 }
 
 function saveAll() {
@@ -47,861 +242,437 @@ function saveAll() {
   localStorage.setItem(LS_KEYS.claims, JSON.stringify(claims));
 }
 
-function loadAll() {
-  items = JSON.parse(localStorage.getItem(LS_KEYS.items) || "[]");
-  claims = JSON.parse(localStorage.getItem(LS_KEYS.claims) || "[]");
-}
-
-function saveSession() {
-  localStorage.setItem(LS_KEYS.session, JSON.stringify(currentUser));
-}
-
 function loadSession() {
   const s = localStorage.getItem(LS_KEYS.session);
   currentUser = s ? JSON.parse(s) : null;
 }
 
-function isAdmin() {
-  return currentUser?.role === "admin";
-}
-
-function escapeHtml(str) {
-  return (str ?? "").toString()
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 // ------------------------------
-// Navigation
+// Rendering
 // ------------------------------
-function showSection(sectionId) {
-  document.querySelectorAll(".page-section").forEach(sec => {
-    sec.style.display = "none";
-  });
-  const target = document.getElementById(`page-${sectionId}`);
-  if (target) target.style.display = "block";
-}
+function renderFound() {
+  const grid = document.getElementById('itemsGrid');
+  const search = document.getElementById('searchFilter').value.toLowerCase();
+  const cat = document.getElementById('categoryFilter').value;
+  const loc = document.getElementById('locationFilter').value.toLowerCase();
+  const sort = document.getElementById('sortFilter').value;
 
-function updateActiveNavLink(sectionId) {
-  document.querySelectorAll(".nav-link").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.section === sectionId);
-  });
-}
+  let filtered = items.filter(it => it.status === 'approved'); // Only show approved items
 
-function navigateToSection(sectionId) {
-  showSection(sectionId);
-  updateActiveNavLink(sectionId);
+  if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || i.description.toLowerCase().includes(search));
+  if (cat) filtered = filtered.filter(i => i.category === cat);
+  if (loc) filtered = filtered.filter(i => i.location.toLowerCase().includes(loc));
 
-  // refresh screens on entry
-  if (sectionId === "found") renderFound();
-  if (sectionId === "claim") renderClaimSelect();
-  if (sectionId === "dashboard") renderDashboard();
-  renderFound();
-  if (sectionId === "admin") renderAdmin(); renderAudit();
-}
+  if (sort === 'newest') filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  else filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-// expose for onclick
-window.navigateToSection = navigateToSection;
+  document.getElementById('itemsCount').textContent = filtered.length;
 
-// ------------------------------
-// Modals
-// ------------------------------
-function openLoginModal() {
-  const modal = document.getElementById("loginModal");
-  if (!modal) return;
-  modal.style.display = "flex";
-  document.body.style.overflow = "hidden";
-  requestAnimationFrame(() => modal.classList.add("show"));
-  document.getElementById("loginStatus").textContent = "";
-}
-
-function closeLoginModal() {
-  const modal = document.getElementById("loginModal");
-  if (!modal) return;
-  modal.classList.remove("show");
-  setTimeout(() => {
-    modal.style.display = "none";
-    document.body.style.overflow = "";
-  }, 250);
-}
-
-window.openLoginModal = openLoginModal;
-window.closeLoginModal = closeLoginModal;
-
-// ------------------------------
-// Role Login
-// ------------------------------
-function updateAuthUI() {
-  const loginBtn = document.getElementById("loginBtn");
-    const dashboardBtn = document.getElementById("dashboardBtn");
-  const adminBtn = document.getElementById("adminBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  if (currentUser) {
-    loginBtn.style.display = "none";
-        dashboardBtn.style.display = (currentUser.role === "student") ? "block" : "none";
-    logoutBtn.style.display = "block";
-    adminBtn.style.display = isAdmin() ? "block" : "none";
-    setGlobalStatus(`Signed in as ${currentUser.role}: ${currentUser.name || currentUser.email || "User"}`);
-  } else {
-    loginBtn.style.display = "block";
-        dashboardBtn.style.display = "none";
-    adminBtn.style.display = "none";
-    logoutBtn.style.display = "none";
-    setGlobalStatus("");
-  }
-}
-
-function handleLogin() {
-  const role = document.getElementById("loginRole").value;
-  const name = document.getElementById("loginName").value.trim();
-  const email = document.getElementById("loginEmail").value.trim();
-  const code = document.getElementById("adminCode").value;
-
-  const status = document.getElementById("loginStatus");
-
-  if (!email || !email.includes("@")) {
-    status.textContent = "Please enter a valid school email.";
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="status-msg">NO ITEMS FOUND IN DATABASE</div>';
     return;
   }
 
-  if (role === "admin") {
-    if (code !== ADMIN_ACCESS_CODE) {
-      status.textContent = "Incorrect admin access code.";
-      return;
-    }
+  grid.innerHTML = filtered.map(item => `
+        <div class="item-card" onclick="openItemModal('${item.id}')">
+            ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}"></div>` : ''}
+            <div class="card-content-wrap">
+              <div class="card-meta">${item.category} / FOUND ${new Date(item.date_found).toLocaleDateString()}</div>
+              <h3 class="card-title">${item.title}</h3>
+              <p class="card-desc">${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}</p>
+              <div class="card-footer">
+                  <span>${item.location}</span>
+                  <span>ID: ${item.id.substring(5, 13)}</span>
+              </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openItemModal(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  document.getElementById('modalTitle').textContent = item.title;
+  document.getElementById('modalLocation').textContent = item.location;
+  document.getElementById('modalDescription').textContent = item.description;
+  document.getElementById('modalContactName').textContent = item.contact_name;
+  document.getElementById('modalDate').textContent = item.date_found;
+
+  const modalImg = document.getElementById('modalImage');
+  if (item.image) {
+    modalImg.src = item.image;
+    modalImg.classList.remove('hidden');
+  } else {
+    modalImg.classList.add('hidden');
   }
 
-  currentUser = { role, name, email };
-  saveSession();
-  updateAuthUI();
-  closeLoginModal();
-
-  navigateToSection(role === "admin" ? "admin" : "dashboard");
+  sessionStorage.setItem('reunite_selected_id', id);
+  document.getElementById('itemModal').classList.remove('hidden');
 }
+window.openItemModal = openItemModal;
 
-window.handleLogin = handleLogin;
-
-function handleLogout() {
-  currentUser = null;
-  localStorage.removeItem(LS_KEYS.session);
-  updateAuthUI();
-  navigateToSection("hero");
-}
-
-window.handleLogout = handleLogout;
-
-// toggle admin code field
-function handleRoleChange() {
-  const role = document.getElementById("loginRole").value;
-  const wrap = document.getElementById("adminCodeWrap");
-  wrap.style.display = role === "admin" ? "block" : "none";
-}
-window.handleRoleChange = handleRoleChange;
+function closeModal() { document.getElementById('itemModal').classList.add('hidden'); }
+window.closeModal = closeModal;
 
 // ------------------------------
-// AI-Assisted Offline Image Matching (dHash)
+// AI Scanning Simulation
 // ------------------------------
-function resizeImageToCanvas(file, w=9, h=8) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
+function previewFileFind() {
+  const fileInput = document.getElementById('findItemPhoto');
+  const file = fileInput.files[0];
+  const preview = document.getElementById('findPhotoPreview');
+  const parent = fileInput.parentElement;
+
+  if (file) {
     const reader = new FileReader();
-    reader.onload = () => {
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas);
-      };
-      img.onerror = reject;
-      img.src = reader.result;
+    reader.onload = (e) => {
+      preview.src = e.target.result;
+      preview.classList.remove('hidden');
+      parent.classList.add('has-image');
+      simulateAiScan();
     };
-    reader.onerror = reject;
     reader.readAsDataURL(file);
+  } else {
+    preview.classList.add('hidden');
+    parent.classList.remove('has-image');
+  }
+}
+window.previewFileFind = previewFileFind;
+
+function previewFileReport() {
+  const fileInput = document.getElementById('reportItemPhoto');
+  const file = fileInput.files[0];
+  const preview = document.getElementById('reportPhotoPreview');
+  const parent = fileInput.parentElement;
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      preview.src = e.target.result;
+      preview.classList.remove('hidden');
+      parent.classList.add('has-image');
+    };
+    reader.readAsDataURL(file);
+  } else {
+    preview.classList.add('hidden');
+    parent.classList.remove('has-image');
+  }
+}
+window.previewFileReport = previewFileReport;
+
+// ------------------------------
+// dHash (Perceptual Hashing)
+// ------------------------------
+function computeDHash(imgElement) {
+  return new Promise((resolve) => {
+    const process = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const size = 8;
+      canvas.width = size + 1;
+      canvas.height = size;
+
+      ctx.drawImage(imgElement, 0, 0, size + 1, size);
+      const imgData = ctx.getImageData(0, 0, size + 1, size).data;
+
+      const grays = [];
+      for (let i = 0; i < imgData.length; i += 4) {
+        grays.push(imgData[i] * 0.299 + imgData[i + 1] * 0.587 + imgData[i + 2] * 0.114);
+      }
+
+      let hash = "";
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const left = grays[y * (size + 1) + x];
+          const right = grays[y * (size + 1) + x + 1];
+          hash += left > right ? "1" : "0";
+        }
+      }
+      resolve(hash);
+    };
+
+    if (imgElement.complete && imgElement.naturalWidth !== 0) {
+      process();
+    } else {
+      imgElement.onload = process;
+    }
   });
 }
 
-function dHashFromCanvas(canvas) {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  const { width, height } = canvas;
-  const data = ctx.getImageData(0, 0, width, height).data;
-
-  // grayscale luminance array
-  const lum = [];
-  for (let y=0; y<height; y++) {
-    for (let x=0; x<width; x++) {
-      const i = (y*width + x)*4;
-      const r = data[i], g = data[i+1], b = data[i+2];
-      lum.push(0.299*r + 0.587*g + 0.114*b);
-    }
-  }
-
-  // compare adjacent pixels horizontally
-  let bits = "";
-  for (let y=0; y<height; y++) {
-    for (let x=0; x<width-1; x++) {
-      const left = lum[y*width + x];
-      const right = lum[y*width + (x+1)];
-      bits += left > right ? "1" : "0";
-    }
-  }
-
-  // bits length = height*(width-1) = 8*8 = 64
-  // convert to hex
-  let hex = "";
-  for (let i=0; i<bits.length; i+=4) {
-    hex += parseInt(bits.slice(i, i+4), 2).toString(16);
-  }
-  return hex;
-}
-
-function hammingHex(a, b) {
-  if (!a || !b || a.length !== b.length) return 999;
-  const nibbleBits = [
-    0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4
-  ];
+function hammingDistance(h1, h2) {
+  if (!h1 || !h2) return 64;
   let dist = 0;
-  for (let i=0; i<a.length; i++) {
-    const x = parseInt(a[i], 16) ^ parseInt(b[i], 16);
-    dist += nibbleBits[x];
+  for (let i = 0; i < h1.length; i++) {
+    if (h1[i] !== h2[i]) dist++;
   }
   return dist;
 }
 
-async function getImageHash(file) {
-  if (!file) return null;
-  const canvas = await resizeImageToCanvas(file, 9, 8);
-  return dHashFromCanvas(canvas);
-}
+// ------------------------------
+// AI Scanning Simulation
+// ------------------------------
+async function simulateAiScan() {
+  const fileInput = document.getElementById('findItemPhoto');
+  const preview = document.getElementById('findPhotoPreview');
+  const container = document.getElementById('aiMatchContainer');
+  const label = document.getElementById('aiMatchLabel');
+  const progress = document.getElementById('aiScanProgress');
+  const results = document.getElementById('aiMatchResults');
 
-function aiMatchItem(hash) {
-  // Compare against approved items that have hashes
-  const approved = items.filter(it => it.is_approved && it.image_hash);
-  if (!hash || approved.length === 0) return [];
+  container.classList.add('active');
+  results.innerHTML = '';
 
-  const scored = approved.map(it => {
-    const dist = hammingHex(hash, it.image_hash);
-    const similarity = Math.max(0, 100 - Math.round((dist/64)*100));
-    return { item: it, dist, similarity };
-  }).sort((a,b) => a.dist - b.dist);
+  const steps = [
+    "PARSING IMAGE DATA...",
+    "EXTRACTING FEATURE VECTORS...",
+    "COMPUTING PERCEPTUAL HASH (dHash)...",
+    "COMPARING AGAINST NETWORK INVENTORY...",
+    "SCAN COMPLETE."
+  ];
 
-  return scored.slice(0, 3);
+  for (let i = 0; i < steps.length; i++) {
+    label.textContent = steps[i];
+    let p = ((i + 1) / steps.length) * 100;
+    progress.style.width = p + "%";
+    await new Promise(r => setTimeout(r, 600));
+  }
+
+  // Compute hash of the uploaded image
+  const currentHash = await computeDHash(preview);
+
+  // Sort items by similarity
+  const scoredMatches = items
+    .filter(it => it.status === 'approved' && it.dhash)
+    .map(it => {
+      const dist = hammingDistance(currentHash, it.dhash);
+      const confidence = Math.max(0, Math.floor(((64 - dist) / 64) * 100));
+      return { ...it, confidence };
+    })
+    .sort((a, b) => b.confidence - a.confidence)
+    .filter(it => it.confidence > 50) // Only show reasonable matches
+    .slice(0, 3);
+
+  if (scoredMatches.length > 0) {
+    results.innerHTML = '<div style="margin-top: 1.5rem; color: #fff; font-size: 0.6rem; letter-spacing: 0.1em;">PROBABLE MATCHES DETECTED:</div>' +
+      scoredMatches.map(m => `
+                <div class="match-item" onclick="openItemModal('${m.id}')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(0,255,0,0.05); border: 1px solid rgba(0,255,0,0.2); margin-top: 0.5rem; cursor: pointer;">
+                    ${m.image ? `<img src="${m.image}" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #0f0;">` : '<div style="width: 40px; height: 40px; background: #222; border: 1px solid #333;"></div>'}
+                    <div style="flex: 1;">
+                        <div style="color: #0f0; font-weight: bold;">> ${m.title}</div>
+                        <div style="font-size: 0.55rem; opacity: 0.7;">MATCH CONFIDENCE: ${m.confidence}%</div>
+                    </div>
+                </div>
+            `).join('');
+  } else {
+    results.innerHTML = '<div class="match-item" style="color: #ff4d4d; margin-top: 1rem;">> NO MATCHES DETECTED IN SYSTEM INVENTORY.</div>';
+  }
 }
 
 // ------------------------------
-// Items CRUD (Offline)
+// Forms
 // ------------------------------
 async function handleReportSubmit(e) {
   e.preventDefault();
-  const statusEl = document.getElementById("reportStatus");
-  const aiEl = document.getElementById("aiMatchStatus");
-  statusEl.textContent = "";
-  aiEl.textContent = "";
+  const title = document.getElementById('itemTitle').value;
+  const category = document.getElementById('itemCategory').value;
+  const location = document.getElementById('itemLocation').value;
+  const date = document.getElementById('itemDate').value;
+  const description = document.getElementById('itemDescription').value;
+  const name = document.getElementById('contactName').value;
+  const email = document.getElementById('contactEmail').value;
+  const preview = document.getElementById('reportPhotoPreview');
+  const photoBase64 = preview.src;
 
-  // basic validation
-  const title = document.getElementById("itemTitle").value.trim();
-  const category = document.getElementById("itemCategory").value;
-  const otherCat = document.getElementById("otherCategory").value.trim();
-  const location = document.getElementById("itemLocation").value.trim();
-  const dateFound = document.getElementById("itemDate").value;
-  const desc = document.getElementById("itemDescription").value.trim();
-  const cName = document.getElementById("contactName").value.trim();
-  const cEmail = document.getElementById("contactEmail").value.trim();
-  const cPhone = document.getElementById("contactPhone").value.trim();
-  const file = document.getElementById("itemPhoto").files[0] || null;
-
-  if (!title || !category || !location || !dateFound || !cName || !cEmail) {
-    statusEl.textContent = "Please fill out all required fields.";
-    return;
-  }
-  if (category === "Other" && !otherCat) {
-    statusEl.textContent = "Please describe the category for “Other”.";
-    return;
+  let dhash = null;
+  if (photoBase64 && !preview.classList.contains('hidden')) {
+    dhash = await computeDHash(preview);
   }
 
-  // AI hash (offline)
-  let imgHash = null;
-  try {
-    imgHash = await getImageHash(file);
-  } catch (err) {
-    // Non-fatal
-    imgHash = null;
-  }
-
-  // store small image preview for demo (optional)
-  let photoDataUrl = null;
-  if (file) {
-    photoDataUrl = await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  const item = {
-    id: uid("item"),
-    title,
-    category: category === "Other" ? `Other: ${otherCat}` : category,
-    category_raw: category,
-    other_category: otherCat || null,
-    location,
-    date_found: dateFound,
-    description: desc,
-    contact_name: cName,
-    contact_email: cEmail,
-    contact_phone: cPhone || null,
-    status: "pending",
-    is_approved: false,
-    is_claimed: false,
+  const newItem = {
+    id: "item_" + Math.random().toString(36).substr(2, 9),
+    title, category, location, date_found: date, description,
+    contact_name: name, contact_email: email,
+    image: dhash ? photoBase64 : null,
+    dhash: dhash,
+    status: 'pending',
     created_at: new Date().toISOString(),
-    created_by: currentUser?.email || cEmail,
-    image_hash: imgHash,
-    photo_data_url: photoDataUrl
+    created_by: email
   };
 
-  items.unshift(item);
+  items.unshift(newItem);
   saveAll();
+  document.getElementById('reportStatus').textContent = "REPORT LOGGED SUCCESSFULLY - PENDING REVIEW";
 
-  statusEl.textContent = "Report submitted! It will appear after admin approval.";
-
-  // show AI suggestions (if photo)
-  const matches = aiMatchItem(imgHash);
-  if (matches.length > 0) {
-    aiEl.textContent = `AI-assisted matches: ${matches.map(m => `${m.item.title} (${m.similarity}%)`).join(", ")}`;
-  } else if (file) {
-    aiEl.textContent = "AI-assisted matching: no close matches found (yet).";
-  }
+  // Clear preview
+  document.getElementById('reportPhotoPreview').classList.add('hidden');
+  document.getElementById('reportItemPhoto').parentElement.classList.remove('has-image');
 
   e.target.reset();
-  document.getElementById("otherCategoryWrap").style.display = "none";
-  renderAdmin(); renderAudit(); // if an admin is logged in and on admin page, refresh
-}
-
-function getFilteredApprovedItems() {
-  const search = (document.getElementById("searchFilter")?.value || "").trim().toLowerCase();
-  const category = document.getElementById("categoryFilter")?.value || "";
-  const location = (document.getElementById("locationFilter")?.value || "").trim().toLowerCase();
-  const date = document.getElementById("dateFilter")?.value || "";
-  const sort = document.getElementById("sortFilter")?.value || "newest";
-
-  let list = items.filter(it => it.is_approved && !it.is_claimed);
-
-  if (search) {
-    list = list.filter(it =>
-      (it.title || "").toLowerCase().includes(search) ||
-      (it.description || "").toLowerCase().includes(search)
-    );
-  }
-  if (category) {
-    if (category === "Other") {
-      list = list.filter(it => (it.category_raw === "Other") || (it.category || "").startsWith("Other"));
-    } else {
-      list = list.filter(it => it.category_raw === category || it.category === category);
-    }
-  }
-  if (location) {
-    list = list.filter(it => (it.location || "").toLowerCase().includes(location));
-  }
-  if (date) {
-    list = list.filter(it => it.date_found === date);
-  }
-
-  if (sort === "newest") list.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-  if (sort === "oldest") list.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-  if (sort === "category") list.sort((a,b) => (a.category || "").localeCompare(b.category || ""));
-
-  return list;
-}
-
-function renderFound(highlightIds = []) {
-  const grid = document.getElementById("itemsGrid");
-  const count = document.getElementById("itemsCount");
-  if (!grid) return;
-
-  const list = getFilteredApprovedItems();
-  count.textContent = String(list.length);
-
-  if (list.length === 0) {
-    grid.innerHTML = '<div class="no-items">No items found matching your criteria.</div>';
-    return;
-  }
-
-  grid.innerHTML = list.map((item, idx) => {
-    const iconLetter = (item.category_raw || item.category || "I")[0];
-    const dateStr = new Date(item.created_at).toLocaleDateString();
-    return `
-      <div class="item-card ${highlightIds.includes(item.id) ? "highlight" : ""}" onclick="openModal('${item.id}')" onmousemove="handleCardMouseMove(event, this)" onmouseleave="handleCardMouseLeave(this)" style="animation-delay:${idx*0.07}s">
-        <div class="item-header">
-          <div class="item-icon">${escapeHtml(iconLetter)}</div>
-          <span class="status-badge status-${escapeHtml(item.status)}">${escapeHtml(item.status)}</span>
-        </div>
-        ${item.photo_data_url ? `<img class="item-thumb" src="${item.photo_data_url}" alt="Photo of ${escapeHtml(item.title)}">` : ``}
-        <h3 class="item-title">${escapeHtml(item.title)}</h3>
-        <div class="item-meta">Category: ${escapeHtml(item.category)}</div>
-        <p class="item-description">${escapeHtml(item.description || "No description available")}</p>
-        <div class="item-footer">
-          <span>${escapeHtml(item.location)}</span>
-          <span>${escapeHtml(dateStr)}</span>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function openModal(itemId) {
-  const item = items.find(i => i.id === itemId);
-  if (!item) return;
-
-  document.getElementById("modalTitle").textContent = item.title || "Unknown Item";
-  document.getElementById("modalLocation").textContent = `Found at ${item.location || "Unknown location"}`;
-  document.getElementById("modalDescription").textContent = item.description || "No description available";
-  document.getElementById("modalContactName").textContent = item.contact_name || "Not provided";
-  document.getElementById("modalContactEmail").textContent = item.contact_email || "Not provided";
-  document.getElementById("modalContactPhone").textContent = item.contact_phone || "Not provided";
-  document.getElementById("modalDate").textContent = item.date_found || new Date(item.created_at).toLocaleDateString();
-
-  // Preselect claim dropdown if open later
-  sessionStorage.setItem("reunite_last_item", item.id);
-
-  const modal = document.getElementById("itemModal");
-  modal.style.display = "flex";
-  document.body.style.overflow = "hidden";
-  requestAnimationFrame(() => modal.classList.add("show"));
-}
-window.openModal = openModal;
-
-function closeModal() {
-  const modal = document.getElementById("itemModal");
-  modal.classList.remove("show");
-  setTimeout(() => {
-    modal.style.display = "none";
-    document.body.style.overflow = "";
-  }, 250);
-}
-window.closeModal = closeModal;
-
-function handleCardMouseMove(event, card) {
-  const rect = card.getBoundingClientRect();
-  const x = ((event.clientX - rect.left) / rect.width) * 100;
-  const y = ((event.clientY - rect.top) / rect.height) * 100;
-  card.style.setProperty('--mouse-x', `${x}%`);
-  card.style.setProperty('--mouse-y', `${y}%`);
-}
-window.handleCardMouseMove = handleCardMouseMove;
-
-function handleCardMouseLeave(card) {
-  card.style.setProperty('--mouse-x', '50%');
-  card.style.setProperty('--mouse-y', '50%');
-}
-window.handleCardMouseLeave = handleCardMouseLeave;
-
-// ------------------------------
-// Claim Form
-// ------------------------------
-function renderClaimSelect() {
-  const sel = document.getElementById("claimItemId");
-  if (!sel) return;
-
-  const approved = items.filter(it => it.is_approved && !it.is_claimed);
-  sel.innerHTML = approved.length
-    ? approved.map(it => `<option value="${escapeHtml(it.id)}">${escapeHtml(it.title)} — ${escapeHtml(it.location)}</option>`).join("")
-    : `<option value="">No approved items available</option>`;
-
-  const last = sessionStorage.getItem("reunite_last_item");
-  if (last && approved.some(i => i.id === last)) sel.value = last;
 }
 
 function handleClaimSubmit(e) {
   e.preventDefault();
-  const statusEl = document.getElementById("claimStatus");
-  statusEl.textContent = "";
+  const itemId = document.getElementById('claimItemId').value;
+  const name = document.getElementById('claimName').value;
+  const email = document.getElementById('claimEmail').value;
+  const message = document.getElementById('claimMessage').value;
 
-  const itemId = document.getElementById("claimItemId").value;
-  const name = document.getElementById("claimName").value.trim();
-  const email = document.getElementById("claimEmail").value.trim();
-  const msg = document.getElementById("claimMessage").value.trim();
-
-  if (!itemId || !name || !email || !msg) {
-    statusEl.textContent = "Please complete all required fields.";
-    return;
-  }
-
-  const claim = {
-    id: uid("claim"),
+  const newClaim = {
+    id: "claim_" + Math.random().toString(36).substr(2, 9),
     item_id: itemId,
     claimant_name: name,
     claimant_email: email,
-    message: msg,
-    status: "pending",
+    message,
+    status: 'pending',
     created_at: new Date().toISOString()
   };
-  claims.unshift(claim);
+
+  claims.unshift(newClaim);
   saveAll();
-
-  statusEl.textContent = "Claim submitted. Admin will review shortly.";
+  document.getElementById('claimStatus').textContent = "CLAIM DATA RECEIVED - AWAITING VERIFICATION";
   e.target.reset();
+}
 
-  renderAdmin(); renderAudit();
+function renderClaimSelect() {
+  const select = document.getElementById('claimItemId');
+  if (!select) return;
+  const approved = items.filter(i => i.status === 'approved');
+  select.innerHTML = approved.map(i => `<option value="${i.id}">${i.title} (${i.location})</option>`).join('');
+
+  const pre = sessionStorage.getItem('reunite_selected_id');
+  if (pre) select.value = pre;
 }
 
 // ------------------------------
-// Dashboard (Student)
+// Dashboards
 // ------------------------------
 function renderDashboard() {
-  const reportsEl = document.getElementById("myReports");
-  const claimsEl = document.getElementById("myClaims");
-  if (!reportsEl || !claimsEl) return;
+  if (!currentUser) return;
+  const reportsEl = document.getElementById('myReports');
+  const claimsEl = document.getElementById('myClaims');
 
-  if (!currentUser) {
-    reportsEl.innerHTML = '<div class="no-items">Sign in to view your dashboard.</div>';
-    claimsEl.innerHTML = '<div class="no-items">Sign in to view your dashboard.</div>';
-    return;
-  }
+  const myReports = items.filter(i => i.contact_email === currentUser.email);
+  const myClaims = claims.filter(c => c.claimant_email === currentUser.email);
 
-  const myEmail = currentUser.email;
-  const myReports = items.filter(it => it.created_by === myEmail || it.contact_email === myEmail);
-  const myClaims = claims.filter(c => c.claimant_email === myEmail);
-
-  reportsEl.innerHTML = myReports.length ? myReports.map(it => `
-    <div class="admin-row">
-      <strong>${escapeHtml(it.title)}</strong><br/>
-      <span>Status: ${escapeHtml(it.is_approved ? (it.is_claimed ? "claimed" : "approved") : "pending approval")}</span><br/>
-      <span>Location: ${escapeHtml(it.location)}</span>
-    </div>
-  `).join("") : '<div class="no-items">No reports yet.</div>';
+  reportsEl.innerHTML = myReports.length ? myReports.map(r => `
+        <div class="list-item">
+            <div>
+              <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted-text); margin-bottom:0.25rem;">REF: ${r.id.substring(5, 13).toUpperCase()}</div>
+              <strong>${r.title}</strong>
+            </div>
+            <span class="status-tag" style="border-color:${r.status === 'approved' ? '#0f0' : r.status === 'rejected' ? '#f00' : 'var(--border-color)'}">
+              ${r.status.toUpperCase()}
+            </span>
+        </div>
+    `).join('') : '<div class="status-msg">NO REPORTS LOGGED</div>';
 
   claimsEl.innerHTML = myClaims.length ? myClaims.map(c => {
     const item = items.find(i => i.id === c.item_id);
     return `
-      <div class="admin-row">
-        <strong>${escapeHtml(item?.title || "Item")}</strong><br/>
-        <span>Claim Status: ${escapeHtml(c.status)}</span>
-      </div>
-    `;
-  }).join("") : '<div class="no-items">No claims yet.</div>';
-}
-
-// ------------------------------
-// Admin Review
-// ------------------------------
-function audit(action, meta = {}) {
-  const adminEmail = currentUser?.email || "unknown-admin";
-  const entry = {
-    action,
-    admin: adminEmail,
-    claim_id: meta.claim_id || null,
-    item_id: meta.item_id || null,
-    msg: meta.msg || null,
-    at: new Date().toISOString()
-  };
-  const log = JSON.parse(localStorage.getItem(LS_KEYS.audit) || "[]");
-  log.unshift(entry);
-  localStorage.setItem(LS_KEYS.audit, JSON.stringify(log.slice(0, 75)));
+            <div class="list-item">
+                <div>
+                  <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted-text); margin-bottom:0.25rem;">CLAIM ID: ${c.id.substring(6, 14).toUpperCase()}</div>
+                  <strong>${item?.title || 'Unknown Item'}</strong>
+                </div>
+                <span class="status-tag" style="border-color:${c.status === 'approved' ? '#0f0' : 'var(--border-color)'}">
+                  ${c.status.toUpperCase()}
+                </span>
+            </div>
+        `;
+  }).join('') : '<div class="status-msg">NO CLAIMS IN PROGRESS</div>';
 }
 
 function renderAdmin() {
-  const pendingEl = document.getElementById("adminPendingItems");
-  const claimsEl = document.getElementById("adminClaims");
-  if (!pendingEl || !claimsEl) return;
+  if (!currentUser || currentUser.role !== 'admin') return;
 
-  if (!isAdmin()) {
-    pendingEl.innerHTML = '<div class="no-items">Admin access required.</div>';
-    claimsEl.innerHTML = '<div class="no-items">Admin access required.</div>';
-    return;
-  }
+  const pendingEl = document.getElementById('adminPendingItems');
+  const claimsEl = document.getElementById('adminClaims');
 
-  const pending = items.filter(it => !it.is_approved && it.status === "pending");
-  pendingEl.innerHTML = pending.length ? pending.map(it => `
-    <div class="admin-row">
-      <strong>${escapeHtml(it.title)}</strong><br/>
-      <span>Category: ${escapeHtml(it.category)}</span><br/>
-      <span>Location: ${escapeHtml(it.location)}</span><br/>
-      <span>Date Found: ${escapeHtml(it.date_found || "")}</span>
-      <div class="admin-actions">
-        <button class="btn-secondary btn-small" type="button" onclick="adminApproveItem('${it.id}')">Approve</button>
-        <button class="btn-secondary btn-small" type="button" onclick="adminRejectItem('${it.id}')">Reject</button>
-      </div>
-    </div>
-  `).join("") : '<div class="no-items">No pending reports.</div>';
-
-  // Show claims (pending + approved) so admin can approve first, then mark picked up.
-  const relevantClaims = claims.filter(c => c.status === "pending" || c.status === "approved");
-  claimsEl.innerHTML = relevantClaims.length ? relevantClaims.map(c => {
-    const it = items.find(i => i.id === c.item_id);
-    const isApproved = c.status === "approved";
-    return `
-      <div class="admin-row">
-        <strong>${escapeHtml(it?.title || "Item")}</strong><br/>
-        <span><b>Claim ID:</b> ${escapeHtml(c.id)}</span><br/>
-        <span>Claimant: ${escapeHtml(c.claimant_name)} (${escapeHtml(c.claimant_email)})</span><br/>
-        <span>Status: ${escapeHtml(c.status)}</span><br/>
-        <span>Message: ${escapeHtml(c.message)}</span>
-        <div class="admin-actions">
-          ${!isApproved ? `<button class="btn-secondary btn-small" type="button" onclick="adminApproveClaim('${c.id}')">Approve Claim</button>` : ``}
-          ${!isApproved ? `<button class="btn-secondary btn-small" type="button" onclick="adminRejectClaim('${c.id}')">Reject Claim</button>` : ``}
-          ${isApproved ? `<button class="btn-secondary btn-small" type="button" onclick="adminMarkPickedUp('${c.id}')">Mark Picked Up</button>` : ``}
-          ${isApproved ? `<button class="btn-secondary btn-small" type="button" onclick="printClaimReceipt('${c.id}')">Print Receipt</button>` : ``}
+  const pending = items.filter(i => i.status === 'pending');
+  pendingEl.innerHTML = pending.length ? pending.map(i => `
+        <div class="list-item">
+            <strong>${i.title}</strong>
+            <div>
+                <button onclick="approveItem('${i.id}')" class="btn-sm btn-outline">APPROVE</button>
+                <button onclick="rejectItem('${i.id}')" class="btn-sm btn-outline">REJECT</button>
+                <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
+            </div>
         </div>
-      </div>
-    `;
-  }).join("") : '<div class="no-items">No pending/approved claims.</div>';
+    `).join('') : 'ALL CLEAR';
 
-  renderAudit();
+  const pendingClaims = claims.filter(c => c.status === 'pending');
+  claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
+    const item = items.find(it => it.id === c.item_id);
+    return `
+            <div class="list-item">
+                <strong>${item?.title} / BY ${c.claimant_name}</strong>
+                <button onclick="approveClaim('${c.id}')" class="btn-sm btn-outline">VERIFY</button>
+            </div>
+        `;
+  }).join('') : 'NO PENDING CLAIMS';
+
+  // Approved Inventory
+  const approvedEl = document.getElementById('adminApprovedItems');
+  const approved = items.filter(i => i.status === 'approved');
+  approvedEl.innerHTML = approved.length ? approved.map(i => `
+        <div class="list-item">
+            <strong>${i.title}</strong>
+            <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
+        </div>
+    `).join('') : 'EMPTY';
+
+  // Verified Claims
+  const verifiedEl = document.getElementById('adminVerifiedClaims');
+  const verified = claims.filter(c => c.status === 'approved');
+  verifiedEl.innerHTML = verified.length ? verified.map(c => {
+    const item = items.find(it => it.id === c.item_id);
+    return `
+            <div class="list-item">
+                <strong>${item?.title} / BY ${c.claimant_name}</strong>
+                <button onclick="deleteClaim('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE ENTRY</button>
+            </div>
+        `;
+  }).join('') : 'EMPTY';
 }
 
-function adminApproveItem(itemId) {
-  const it = items.find(i => i.id === itemId);
-  if (!it) return;
-  it.is_approved = true;
-  it.status = "approved";
-  audit("approve_item", { item_id: it.id, msg: `Approved item: ${it.title}` });
-  saveAll();
-  renderAdmin(); renderAudit();
-  renderFound();
+function approveItem(id) {
+  const item = items.find(i => i.id === id);
+  if (item) item.status = 'approved';
+  saveAll(); renderAdmin();
 }
+window.approveItem = approveItem;
 
-function adminRejectItem(itemId) {
-  const it = items.find(i => i.id === itemId);
-  if (!it) return;
-  it.status = "rejected";
-  it.is_approved = false;
-  audit("reject_item", { item_id: it.id, msg: `Rejected item: ${it.title}` });
-  saveAll();
-  renderAdmin(); renderAudit();
+function rejectItem(id) {
+  const item = items.find(i => i.id === id);
+  if (item) item.status = 'rejected';
+  saveAll(); renderAdmin();
 }
+window.rejectItem = rejectItem;
 
-function adminApproveClaim(claimId) {
-  const c = claims.find(x => x.id === claimId);
-  if (!c) return;
-  c.status = "approved";
-  audit("approve_claim", { claim_id: claimId, item_id: c.item_id, msg: `Approved claim ${claimId}` });
-  saveAll();
-  renderAdmin();
-  renderDashboard();
-  renderFound();
+function approveClaim(id) {
+  const claim = claims.find(c => c.id === id);
+  if (claim) claim.status = 'approved';
+  saveAll(); renderAdmin();
 }
+window.approveClaim = approveClaim;
 
-function adminRejectClaim(claimId) {
-  const c = claims.find(x => x.id === claimId);
-  if (!c) return;
-  c.status = "rejected";
-  audit("reject_claim", { claim_id: claimId, item_id: c.item_id, msg: `Rejected claim ${claimId}` });
-  saveAll();
-  renderAdmin();
-  renderDashboard();
-  renderFound();
+function deleteItem(id) {
+  if (!confirm("PERMANENTLY DELETE THIS ITEM FROM DATABASE?")) return;
+  items = items.filter(i => i.id !== id);
+  saveAll(); renderAdmin();
 }
+window.deleteItem = deleteItem;
 
-function adminMarkClaimed(itemId) {
-  const it = items.find(i => i.id === itemId);
-  if (!it) return;
-  it.is_claimed = true;
-  it.status = "claimed";
-  audit("mark_claimed", { item_id: it.id, msg: `Marked item claimed: ${it.title}` });
-  saveAll();
-  renderAdmin(); renderAudit();
-  renderFound();
-  renderDashboard();
-  renderFound();
+function deleteClaim(id) {
+  if (!confirm("PERMANENTLY DELETE THIS CLAIM RECORD?")) return;
+  claims = claims.filter(c => c.id !== id);
+  saveAll(); renderAdmin();
 }
+window.deleteClaim = deleteClaim;
 
-window.adminApproveItem = adminApproveItem;
-window.adminRejectItem = adminRejectItem;
-window.adminApproveClaim = adminApproveClaim;
-window.adminRejectClaim = adminRejectClaim;
-window.adminMarkClaimed = adminMarkClaimed;
-
-// ------------------------------
-// Filter handlers
-// ------------------------------
-function setupFilters() {
-  document.getElementById("searchFilter")?.addEventListener("input", renderFound);
-  // categoryFilter removed in v6
-/*    const v = document.getElementById("categoryFilter").value;
-    const help = document.getElementById("categoryOtherHelp");
-    help.style.display = v === "Other" ? "block" : "none";
-    renderFound();
-  });*/
-  document.getElementById("locationFilter")?.addEventListener("input", renderFound);
-  document.getElementById("dateFilter")?.addEventListener("change", renderFound);
+function toggleOtherCat() {
+  const cat = document.getElementById('itemCategory').value;
+  document.getElementById('otherCategoryWrap').classList.toggle('hidden', cat !== 'Other');
 }
-
-// "Other category" reveal on report form
-function setupReportCategoryOther() {
-  const sel = document.getElementById("itemCategory");
-  const wrap = document.getElementById("otherCategoryWrap");
-  sel?.addEventListener("change", () => {
-    wrap.style.display = sel.value === "Other" ? "block" : "none";
-  });
-}
-
-// ------------------------------
-// Seed Data (for demo)
-// ------------------------------
-function seedIfEmpty() {
-  if (items.length > 0) return;
-
-  items = [
-    {
-      id: uid("item"),
-      title: "Black Wallet",
-      category: "Wallet",
-      category_raw: "Wallet",
-      location: "Cafeteria",
-      date_found: new Date().toISOString().slice(0,10),
-      description: "Black leather wallet with student ID inside.",
-      contact_name: "Front Office",
-      contact_email: "frontoffice@school.edu",
-      contact_phone: "",
-      status: "approved",
-      is_approved: true,
-      is_claimed: false,
-      created_at: new Date().toISOString(),
-      created_by: "frontoffice@school.edu",
-      image_hash: null,
-      photo_data_url: null
-    },
-    {
-      id: uid("item"),
-      title: "Silver Keys (3 keys)",
-      category: "Keys",
-      category_raw: "Keys",
-      location: "Library",
-      date_found: new Date().toISOString().slice(0,10),
-      description: "Three keys on a blue keychain.",
-      contact_name: "Library Desk",
-      contact_email: "library@school.edu",
-      contact_phone: "",
-      status: "approved",
-      is_approved: true,
-      is_claimed: false,
-      created_at: new Date().toISOString(),
-      created_by: "library@school.edu",
-      image_hash: null,
-      photo_data_url: null
-    }
-  ];
-  saveAll();
-}
-
-// ------------------------------
-// Init
-// ------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  loadAll();
-  loadSession();
-  seedIfEmpty();
-  updateAuthUI();
-
-  // listeners
-  setupFilters();
-  setupReportCategoryOther();
-
-  document.getElementById("reportForm")?.addEventListener("submit", handleReportSubmit);
-  document.getElementById("claimForm")?.addEventListener("submit", handleClaimSubmit);
-
-  // Photo previews
-  document.getElementById("itemPhoto")?.addEventListener("change", () => setPreview("itemPhoto", "reportPhotoPreview"));
-  
-  // Sort filter
-  document.getElementById("sortFilter")?.addEventListener("change", renderFound);
-  document.getElementById("findPhoto")?.addEventListener("change", handleFindPhotoChange);
-
-
-  document.getElementById("loginRole")?.addEventListener("change", handleRoleChange);
-  handleRoleChange();
-
-  // default view
-  navigateToSection("hero");
-});
-
-// Also expose modal close if user clicks backdrop (already in HTML)
-
-function renderAudit() {
-  const el = document.getElementById("adminAudit");
-  if (!el) return;
-  const log = JSON.parse(localStorage.getItem(LS_KEYS.audit) || "[]");
-  el.innerHTML = log.length
-    ? log.map(l => {
-        const when = new Date(l.at).toLocaleString();
-        const claim = l.claim_id ? ` • Claim: ${escapeHtml(l.claim_id)}` : "";
-        const item = l.item_id ? ` • Item: ${escapeHtml(l.item_id)}` : "";
-        return `<div class="admin-row">
-          <strong>${escapeHtml(l.action)}</strong><br/>
-          <small>Admin: ${escapeHtml(l.admin || "unknown")}${claim}${item}</small><br/>
-          <small>${escapeHtml(l.msg || "")}</small><br/>
-          <small>${escapeHtml(when)}</small>
-        </div>`;
-      }).join("")
-    : "<div class='no-items'>No audit activity yet.</div>";
-}
-
-function printClaimReceipt(claimId) {
-  const c = claims.find(x=>x.id===claimId);
-  const it = items.find(i=>i.id===c.item_id);
-  document.getElementById("receiptItem").textContent = "Item: " + it.title;
-  document.getElementById("receiptClaimant").textContent = "Claimant: " + c.claimant_name;
-  document.getElementById("receiptDate").textContent = "Date: " + new Date().toLocaleDateString();
-  window.print();
-}
-
-
-function setPreview(fileInputId, imgId) {
-  const input = document.getElementById(fileInputId);
-  const img = document.getElementById(imgId);
-  if (!input || !img) return;
-  const file = input.files && input.files[0];
-  if (!file) {
-    img.style.display = "none";
-    img.removeAttribute("src");
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => {
-    img.src = reader.result;
-    img.style.display = "block";
-  };
-  reader.readAsDataURL(file);
-}
-
-
-
-async function handleFindPhotoChange() {
-  const input = document.getElementById("findPhoto");
-  const status = document.getElementById("findAiStatus");
-  if (!input || !status) return;
-
-  setPreview("findPhoto", "findPhotoPreview");
-  const file = input.files && input.files[0];
-  if (!file) {
-    status.textContent = "";
-    renderFound();
-    return;
-  }
-
-  let hash = null;
-  try {
-    hash = await getImageHash(file);
-  } catch (e) {
-    status.textContent = "Could not process image.";
-    return;
-  }
-
-  const matches = aiMatchItem(hash);
-  if (!matches.length) {
-    status.textContent = "AI-assisted matching: no close matches found.";
-    renderFound();
-    return;
-  }
-
-  status.textContent = `AI-assisted matches: ${matches.map(m => `${m.item.title} (${m.similarity}%)`).join(", ")}`;
-  renderFound(matches.map(m => m.item.id));
-}
-
-window.printClaimReceipt = printClaimReceipt;
+window.toggleOtherCat = toggleOtherCat;
