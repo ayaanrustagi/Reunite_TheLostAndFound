@@ -2,6 +2,11 @@
 // REUNITE - Lost & Found System Logic
 // =======================================================
 
+// Supabase config - set directly here to ensure it's available
+window.SUPABASE_URL = "https://izoyxyekflrnyheuxppk.supabase.co";
+window.SUPABASE_ANON_KEY = "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
+window.DEMO_MODE = false;
+
 const DEMO_MODE = (typeof window !== "undefined" && typeof window.DEMO_MODE === "boolean")
   ? window.DEMO_MODE
   : true;
@@ -18,10 +23,12 @@ const LS_KEYS = {
 // ------------------------------
 const SUPABASE_URL = window.SUPABASE_URL || "";
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "";
+console.log("Supabase init values:", { SUPABASE_URL, SUPABASE_ANON_KEY: SUPABASE_ANON_KEY ? "set" : "missing", DEMO_MODE });
 const supabaseClient = (typeof window.supabase !== "undefined" && SUPABASE_URL && SUPABASE_ANON_KEY)
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 const SUPABASE_ENABLED = !!supabaseClient;
+console.log("Supabase client created:", SUPABASE_ENABLED);
 
 let currentUser = null;
 let items = [];
