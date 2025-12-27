@@ -2,7 +2,9 @@
 // REUNITE - Lost & Found System Logic
 // =======================================================
 
-const DEMO_MODE = true;
+const DEMO_MODE = (typeof window !== "undefined" && typeof window.DEMO_MODE === "boolean")
+  ? window.DEMO_MODE
+  : true;
 const ADMIN_ACCESS_CODE = "FBLA2025";
 
 const LS_KEYS = {
@@ -10,6 +12,16 @@ const LS_KEYS = {
   items: "reunite_items",
   claims: "reunite_claims"
 };
+
+// ------------------------------
+// Supabase (safe, optional)
+// ------------------------------
+const SUPABASE_URL = window.SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "";
+const supabaseClient = (typeof window.supabase !== "undefined" && SUPABASE_URL && SUPABASE_ANON_KEY)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+const SUPABASE_ENABLED = !!supabaseClient;
 
 let currentUser = null;
 let items = [];
@@ -22,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAll();
   loadSession();
   updateAuthUI();
+  // If Supabase is configured and demo mode is off, hydrate from backend
+  syncFromSupabase();
 
   // Check for initial hash/section
   const hash = window.location.hash.replace('#', '');
@@ -245,6 +259,54 @@ function saveAll() {
 function loadSession() {
   const s = localStorage.getItem(LS_KEYS.session);
   currentUser = s ? JSON.parse(s) : null;
+}
+
+// ------------------------------
+// Supabase sync helpers (safe + optional)
+// ------------------------------
+async function syncFromSupabase() {
+  if (!SUPABASE_ENABLED || DEMO_MODE) return;
+  try {
+    const { data: itemsData, error: itemsErr } = await supabaseClient
+      .from('items')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!itemsErr && Array.isArray(itemsData)) {
+      items = itemsData;
+    }
+    const { data: claimsData, error: claimsErr } = await supabaseClient
+      .from('claims')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!claimsErr && Array.isArray(claimsData)) {
+      claims = claimsData;
+    }
+    saveAll();
+    renderFound();
+    renderClaimSelect();
+    renderDashboard();
+    renderAdmin();
+  } catch (err) {
+    console.warn('Supabase sync failed, using local data fallback.', err);
+  }
+}
+
+async function supabaseUpsert(table, record) {
+  if (!SUPABASE_ENABLED || DEMO_MODE) return;
+  try {
+    await supabaseClient.from(table).upsert(record);
+  } catch (err) {
+    console.warn(`Supabase upsert failed for ${table}`, err);
+  }
+}
+
+async function supabaseDelete(table, id) {
+  if (!SUPABASE_ENABLED || DEMO_MODE) return;
+  try {
+    await supabaseClient.from(table).delete().eq('id', id);
+  } catch (err) {
+    console.warn(`Supabase delete failed for ${table}`, err);
+  }
 }
 
 // ------------------------------
@@ -502,6 +564,7 @@ async function handleReportSubmit(e) {
 
   items.unshift(newItem);
   saveAll();
+  supabaseUpsert('items', newItem);
   document.getElementById('reportStatus').textContent = "REPORT LOGGED SUCCESSFULLY - PENDING REVIEW";
 
   // Clear preview
@@ -530,6 +593,7 @@ function handleClaimSubmit(e) {
 
   claims.unshift(newClaim);
   saveAll();
+  supabaseUpsert('claims', newClaim);
   document.getElementById('claimStatus').textContent = "CLAIM DATA RECEIVED - AWAITING VERIFICATION";
   e.target.reset();
 }
