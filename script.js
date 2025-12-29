@@ -318,11 +318,13 @@ function loadSession() {
 // ------------------------------
 // Supabase sync helpers (safe + optional)
 // ------------------------------
+let isSyncing = false;
 async function syncFromSupabase() {
-  if (!SUPABASE_ENABLED) return;
-  console.log("🔄 SYNCING FROM SUPABASE...");
+  if (!SUPABASE_ENABLED || isSyncing) return;
+  isSyncing = true;
+  console.log("🔄 STARTING SMART SYNC...");
+
   try {
-    // Attempt basic fetch first without ordering to be more robust
     const [itRes, clRes] = await Promise.all([
       supabaseClient.from('items').select('*'),
       supabaseClient.from('claims').select('*')
@@ -334,20 +336,23 @@ async function syncFromSupabase() {
     items = itRes.data || [];
     claims = clRes.data || [];
 
-    // Sort locally if possible, instead of relying on DB column presence
+    // Local sort is faster than DB sort for small datasets
     items.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
-    console.log(`✅ SYNC COMPLETE: Found ${items.length} items and ${claims.length} claims`);
+    console.log(`✅ SYNC SUCCESS: ${items.length} items cached.`);
 
-    renderFound();
-    renderClaimSelect();
-    renderDashboard();
-    renderAdmin();
+    // Debounced renders to prevent UI lockup
+    requestAnimationFrame(() => {
+      renderFound();
+      renderClaimSelect();
+      renderDashboard();
+      renderAdmin();
+      isSyncing = false;
+    });
+
   } catch (err) {
-    console.error('🔴 SUPABASE SYNC FAILED:', err.message || err);
-    // If sync fails, show a status message if possible
-    const statusEl = document.getElementById('reportStatus') || document.getElementById('loginStatus');
-    if (statusEl) statusEl.textContent = "⚠️ DATABASE CONNECTION ERROR - CHECK CONSOLE";
+    console.error('🔴 SYNC FAILED:', err.message || err);
+    isSyncing = false;
   }
 }
 
@@ -441,8 +446,8 @@ function renderFound() {
   }
 
   grid.innerHTML = filtered.map(item => `
-        <div class="item-card" onclick="openItemModal('${item.id}')">
-            ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}"></div>` : ''}
+        <div class="item-card" onclick="openItemModal('${item.id}')" style="contain: content;">
+            ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" loading="lazy"></div>` : ''}
             <div class="card-content-wrap">
               <div class="card-meta">${item.category} / FOUND ${new Date(item.date_found).toLocaleDateString()}</div>
               <h3 class="card-title">${item.title}</h3>
