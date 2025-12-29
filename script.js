@@ -392,47 +392,31 @@ async function supabaseDelete(table, id) {
 // Email Notifications
 // ------------------------------
 async function sendEmailUpdate(to_email, to_name, subject, message, item_title) {
-  console.log(`📧 PREPARING EMAIL: to=${to_email}, subject=${subject}`);
-
-  if (!EMAILS_ENABLED) {
-    console.log("ℹ️ EMAIL NOTIFICATIONS ARE GLOBALLY DISABLED (EMAILS_ENABLED = false)");
-    return;
-  }
-
+  if (!EMAILS_ENABLED) return;
   const client = window.emailjs || (typeof emailjs !== "undefined" ? emailjs : null);
+  if (!client) return;
 
-  if (!client) {
-    console.error("🔴 EMAILJS LIBRARY NOT LOADED IN BROWSER");
-    return;
-  }
-
-  // Force a fallback if the email is missing or malformed
+  // MEGA-FIX: Ensure there is ALWAYS a valid recipient
   const finalEmail = (to_email && to_email.includes('@')) ? to_email : "ayaanrustagi2010@gmail.com";
 
   const templateParams = {
     to_email: finalEmail,
+    email: finalEmail, // Alias
+    recipient: finalEmail, // Alias
     to_name: to_name || "REUNITE User",
     subject: subject || "System Update",
     message: message || "New update regarding your lost and found item.",
     item_title: item_title || "Reported Item",
-    site_link: (window.location.origin && window.location.origin !== 'null' && window.location.origin !== 'file://')
-      ? window.location.origin
-      : "https://thereunite.netlify.app"
+    site_link: "https://thereunite.netlify.app"
   };
 
   try {
-    console.log("📤 ATTEMPTING EMAIL SEND...", {
-      service: EMAILJS_SERVICE_ID,
-      template: EMAILJS_TEMPLATE_ID,
-      recipient: finalEmail,
-      params: templateParams
-    });
-    const response = await client.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
-    console.log(`✅ EMAIL SENT SUCCESSFULLY! Status: ${response.status}`, response.text);
+    console.log("📤 SENDING EMAIL TO:", finalEmail);
+    await client.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
+    console.log(`✅ EMAIL SENT SUCCESSFULLY`);
   } catch (err) {
-    console.error("🔴 EMAILJS SEND FAILED:", err);
-    // Alert the user during development so they see the error
-    alert(`EMAIL FAILED: ${err.text || err.message || JSON.stringify(err)}\n\nPlease ensure your Service ID and Template ID are correct.`);
+    console.error("🔴 EMAIL FAILED:", err);
+    alert(`EMAIL ERROR: ${err.text || "Recipient missing"}\n\nFIX: Go to EmailJS Dashboard -> Settings Tab -> Set "To Email" to {{to_email}}`);
   }
 }
 
