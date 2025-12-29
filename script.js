@@ -311,9 +311,10 @@ async function syncFromSupabase() {
   if (!SUPABASE_ENABLED) return;
   console.log("🔄 SYNCING FROM SUPABASE...");
   try {
+    // Attempt basic fetch first without ordering to be more robust
     const [itRes, clRes] = await Promise.all([
-      supabaseClient.from('items').select('*').order('created_at', { ascending: false }),
-      supabaseClient.from('claims').select('*').order('created_at', { ascending: false })
+      supabaseClient.from('items').select('*'),
+      supabaseClient.from('claims').select('*')
     ]);
 
     if (itRes.error) throw itRes.error;
@@ -321,6 +322,9 @@ async function syncFromSupabase() {
 
     items = itRes.data || [];
     claims = clRes.data || [];
+
+    // Sort locally if possible, instead of relying on DB column presence
+    items.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
     console.log(`✅ SYNC COMPLETE: Found ${items.length} items and ${claims.length} claims`);
 
@@ -380,7 +384,7 @@ function renderFound() {
 
   console.log("renderFound called with:", { totalItems: items.length, search, cat, loc, sort });
 
-  let filtered = items.filter(it => it.status === 'approved'); // Only show approved items
+  let filtered = items.filter(it => (it.status || "").toLowerCase().trim() === 'approved'); // Only show approved items
   console.log("After status filter (approved only):", filtered.length);
 
   if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || i.description.toLowerCase().includes(search));
@@ -687,19 +691,19 @@ function renderDashboard() {
   const myReports = items.filter(i => i.contact_email === currentUser.email);
   const myClaims = claims.filter(c => c.claimant_email === currentUser.email);
 
-  reportsEl.innerHTML = myReports.length ? myReports.map(r => `
+  if (reportsEl) reportsEl.innerHTML = myReports.length ? myReports.map(r => `
         <div class="list-item">
             <div>
               <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted-text); margin-bottom:0.25rem;">REF: ${r.id.substring(5, 13).toUpperCase()}</div>
               <strong>${r.title}</strong>
             </div>
-            <span class="status-tag" style="border-color:${r.status === 'approved' ? '#0f0' : r.status === 'rejected' ? '#f00' : 'var(--border-color)'}">
-              ${r.status.toUpperCase()}
+            <span class="status-tag" style="border-color:${(r.status || "").toLowerCase() === 'approved' ? '#0f0' : (r.status || "").toLowerCase() === 'rejected' ? '#f00' : 'var(--border-color)'}">
+              ${(r.status || "PENDING").toUpperCase()}
             </span>
         </div>
     `).join('') : '<div class="status-msg">NO REPORTS LOGGED</div>';
 
-  claimsEl.innerHTML = myClaims.length ? myClaims.map(c => {
+  if (claimsEl) claimsEl.innerHTML = myClaims.length ? myClaims.map(c => {
     const item = items.find(i => i.id === c.item_id);
     return `
             <div class="list-item">
@@ -707,8 +711,8 @@ function renderDashboard() {
                   <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted-text); margin-bottom:0.25rem;">CLAIM ID: ${c.id.substring(6, 14).toUpperCase()}</div>
                   <strong>${item?.title || 'Unknown Item'}</strong>
                 </div>
-                <span class="status-tag" style="border-color:${c.status === 'approved' ? '#0f0' : 'var(--border-color)'}">
-                  ${c.status.toUpperCase()}
+                <span class="status-tag" style="border-color:${(c.status || "").toLowerCase() === 'approved' ? '#0f0' : 'var(--border-color)'}">
+                  ${(c.status || "PENDING").toUpperCase()}
                 </span>
             </div>
         `;
@@ -717,9 +721,25 @@ function renderDashboard() {
 
 function renderAdmin() {
   if (!currentUser || currentUser.role !== 'admin') return;
+
+  // Add Manual Sync Button to UI dynamically if it's not in HTML
+  const sectionHead = document.querySelector('#page-admin .section-head');
+  if (sectionHead && !document.getElementById('forceSyncBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'forceSyncBtn';
+    btn.className = 'btn-sm btn-outline';
+    btn.style.marginLeft = 'auto';
+    btn.style.fontSize = '0.6rem';
+    btn.textContent = 'FORCE SYSTEM SYNC';
+    btn.onclick = () => syncFromSupabase();
+    sectionHead.style.display = 'flex';
+    sectionHead.style.alignItems = 'flex-end';
+    sectionHead.appendChild(btn);
+  }
+
   const pendingEl = document.getElementById('adminPendingItems');
-  const pending = items.filter(i => i.status === 'pending');
-  pendingEl.innerHTML = pending.length ? pending.map(i => `
+  const pending = items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');
+  if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">
             <strong>${i.title}</strong>
             <div>
@@ -730,13 +750,13 @@ function renderAdmin() {
         </div>
     `).join('') : 'NO PENDING ITEMS';
 
-  const claimsEl = document.getElementById('adminPendingClaims');
-  const pendingClaims = claims.filter(c => c.status === 'pending');
-  claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
+  const claimsEl = document.getElementById('adminClaims');
+  const pendingClaims = claims.filter(c => (c.status || "").toLowerCase().trim() === 'pending');
+  if (claimsEl) claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
     const item = items.find(it => it.id === c.item_id);
     return `
             <div class="list-item">
-                <strong>${item?.title} / BY ${c.claimant_name}</strong>
+                <strong>${item?.title || 'Unknown Item'} / BY ${c.claimant_name}</strong>
                 <button onclick="approveClaim('${c.id}')" class="btn-sm btn-outline">VERIFY</button>
             </div>
         `;
@@ -744,9 +764,13 @@ function renderAdmin() {
 
   // Approved Inventory
   const approvedEl = document.getElementById('adminApprovedItems');
-  const approved = items.filter(i => i.status === 'approved');
-  console.log("renderAdmin debug:", { totalItems: items.length, approvedItems: approved.length, itemStatuses: items.map(i => ({ id: i.id, status: i.status })) });
-  approvedEl.innerHTML = approved.length ? approved.map(i => `
+  const approved = items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
+  console.log("ADMIN DEBUG:", {
+    total: items.length,
+    approved: approved.length,
+    statuses: items.map(it => it.status)
+  });
+  if (approvedEl) approvedEl.innerHTML = approved.length ? approved.map(i => `
         <div class="list-item">
             <strong>${i.title}</strong>
             <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
@@ -755,16 +779,23 @@ function renderAdmin() {
 
   // Verified Claims
   const verifiedEl = document.getElementById('adminVerifiedClaims');
-  const verified = claims.filter(c => c.status === 'approved');
-  verifiedEl.innerHTML = verified.length ? verified.map(c => {
-    const item = items.find(it => it.id === c.item_id);
-    return `
+  const verified = claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
+  if (verifiedEl) {
+    verifiedEl.innerHTML = verified.length ? verified.map(c => {
+      const item = items.find(it => it.id === c.item_id);
+      return `
             <div class="list-item">
-                <strong>${item?.title} / BY ${c.claimant_name}</strong>
+                <strong>${item?.title || 'Unknown Item'} / BY ${c.claimant_name}</strong>
                 <button onclick="deleteClaim('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE ENTRY</button>
             </div>
         `;
-  }).join('') : 'EMPTY';
+    }).join('') : 'EMPTY';
+  }
+
+  const auditEl = document.getElementById('adminAudit');
+  if (auditEl) {
+    // Placeholder for audit log rendering
+  }
 }
 
 async function approveItem(id) {
