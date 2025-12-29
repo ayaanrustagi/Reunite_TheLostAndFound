@@ -12,6 +12,12 @@ const DEMO_MODE = (typeof window !== "undefined" && typeof window.DEMO_MODE === 
   : true;
 const ADMIN_ACCESS_CODE = "FBLA2025";
 
+// EmailJS Config (Placeholders - user needs to set these up at emailjs.com)
+const EMAILJS_SERVICE_ID = "service_gpf5o4g";
+const EMAILJS_TEMPLATE_ID = "template_2y2c309";
+const EMAILJS_PUBLIC_KEY = "vQdFZ_3TQhMLDP1z3";
+const EMAILS_ENABLED = true; // Set to true after adding Service/Template IDs below
+
 const LS_KEYS = {
   session: "reunite_session",
   items: "reunite_items",
@@ -77,6 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAll();
   loadSession();
   updateAuthUI();
+  // Initialize EmailJS
+  if (typeof emailjs !== "undefined" && EMAILS_ENABLED) {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
+
   // If Supabase is configured and demo mode is off, hydrate from backend
   syncFromSupabase();
 
@@ -373,6 +384,32 @@ async function supabaseDelete(table, id) {
 }
 
 // ------------------------------
+// Email Notifications
+// ------------------------------
+async function sendEmailUpdate(to_email, to_name, subject, message, item_title) {
+  if (!EMAILS_ENABLED || typeof emailjs === "undefined") {
+    console.log("Email notifications are disabled or EmailJS not loaded.");
+    return;
+  }
+
+  const templateParams = {
+    to_email: to_email,
+    to_name: to_name,
+    subject: subject,
+    message: message,
+    item_title: item_title,
+    site_link: window.location.origin
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+    console.log(`✅ EMAIL SENT TO ${to_email}`);
+  } catch (err) {
+    console.error("🔴 EMAIL FAILED:", err);
+  }
+}
+
+// ------------------------------
 // Rendering
 // ------------------------------
 function renderFound() {
@@ -642,6 +679,15 @@ async function handleReportSubmit(e) {
   document.getElementById('reportItemPhoto').parentElement.classList.remove('has-image');
 
   e.target.reset();
+
+  // Notify User via Email
+  sendEmailUpdate(
+    newItem.contact_email,
+    newItem.contact_name,
+    "Report Received",
+    "We have successfully logged your report in our system. An administrator will review it shortly.",
+    newItem.title
+  );
 }
 
 async function handleClaimSubmit(e) {
@@ -668,6 +714,27 @@ async function handleClaimSubmit(e) {
   }
   document.getElementById('claimStatus').textContent = "CLAIM DATA RECEIVED - AWAITING VERIFICATION";
   e.target.reset();
+
+  // Notify the Original Reporter that someone claimed their item
+  const item = items.find(i => i.id === newClaim.item_id);
+  if (item && item.contact_email) {
+    sendEmailUpdate(
+      item.contact_email,
+      item.contact_name,
+      "New Claim Submitted",
+      `A claim has been submitted for your item "${item.title}". Please log in to the portal to review the claim details.`,
+      item.title
+    );
+  }
+
+  // Notify the Claimant
+  sendEmailUpdate(
+    newClaim.claimant_email,
+    newClaim.claimant_name,
+    "Claim Received",
+    "Your claim has been submitted and is currently being reviewed by our administration team.",
+    item ? item.title : "Reported Item"
+  );
 }
 
 function renderClaimSelect() {
@@ -805,6 +872,15 @@ async function approveItem(id) {
     const success = await supabaseUpsert('items', updatedItem);
     if (success) {
       await syncFromSupabase();
+
+      // Notify Reporter
+      sendEmailUpdate(
+        item.contact_email,
+        item.contact_name,
+        "Item Approved",
+        "Your report has been approved and is now visible in the public inventory.",
+        item.title
+      );
     }
   }
 }
@@ -813,9 +889,20 @@ window.approveItem = approveItem;
 async function rejectItem(id) {
   const item = items.find(i => i.id === id);
   if (item) {
-    item.status = 'rejected';
-    await supabaseUpsert('items', item);
-    await syncFromSupabase();
+    const updatedItem = { ...item, status: 'rejected' };
+    const success = await supabaseUpsert('items', updatedItem);
+    if (success) {
+      await syncFromSupabase();
+
+      // Notify Reporter
+      sendEmailUpdate(
+        item.contact_email,
+        item.contact_name,
+        "Item Update",
+        "Your report has been reviewed and was not approved for the public inventory. Please contact administration for more details.",
+        item.title
+      );
+    }
   }
 }
 window.rejectItem = rejectItem;
@@ -823,9 +910,22 @@ window.rejectItem = rejectItem;
 async function approveClaim(id) {
   const claim = claims.find(c => c.id === id);
   if (claim) {
-    claim.status = 'approved';
-    await supabaseUpsert('claims', claim);
-    await syncFromSupabase();
+    const updatedClaim = { ...claim, status: 'approved' };
+    const success = await supabaseUpsert('claims', updatedClaim);
+    if (success) {
+      await syncFromSupabase();
+
+      const item = items.find(i => i.id === claim.item_id);
+
+      // Notify Claimant
+      sendEmailUpdate(
+        claim.claimant_email,
+        claim.claimant_name,
+        "Claim Verified",
+        "Your claim has been verified! You can now arrange to retrieve your item from the administration office.",
+        item ? item.title : "Your Item"
+      );
+    }
   }
 }
 window.approveClaim = approveClaim;
