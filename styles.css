@@ -157,10 +157,60 @@ body {
     display: flex;
     gap: 2rem;
     transition: gap 0.4s ease;
+    margin-right: auto;
+    /* Push subsequent items to the right */
+    margin-left: 3rem;
 }
 
 .site-header.scrolled .main-nav {
     gap: 1.25rem;
+}
+
+/* Header Search Bar */
+.header-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 0.5rem 1.2rem;
+    width: 250px;
+    margin-right: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-search-wrap:focus-within {
+    background: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0, 78, 204, 0.15);
+    width: 300px;
+}
+
+.header-search-wrap .search-icon {
+    display: flex;
+    align-items: center;
+    color: var(--muted-text);
+    margin-right: 0.75rem;
+    opacity: 0.7;
+}
+
+#headerSearchInput {
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    width: 100%;
+    outline: none;
+    color: var(--text-color);
+    padding: 0;
+}
+
+#headerSearchInput::placeholder {
+    color: var(--muted-text);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
 }
 
 /* Float Menu Trigger */
@@ -574,19 +624,6 @@ body {
     transform: scale(1.05);
 }
 
-.status-ticker {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    border-top: 1px solid var(--border-color);
-    background: var(--bg-color);
-    text-align: center;
-    color: var(--accent-color);
-}
 
 /* Split Layout (How It Works) */
 .split-layout {
@@ -1322,4 +1359,15 @@ body {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Search Active State (Clean View) */
+.search-active .filter-ui,
+.search-active .visual-search-group,
+.search-active .section-head {
+    display: none !important;
+}
+
+.search-active .content-wrapper {
+    padding-top: 2rem;
 }

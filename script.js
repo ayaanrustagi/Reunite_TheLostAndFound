@@ -667,19 +667,96 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
 // ------------------------------
 // Rendering
 // ------------------------------
+// Levenshtein function for fuzzy search
+function levenshteinDistance(a, b) {
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+  for (let j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          Math.min(
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1 // deletion
+          )
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function isFuzzyMatch(text, searchToken) {
+  if (!text || !searchToken) return false;
+  const cleanText = text.toLowerCase();
+  const token = searchToken.toLowerCase();
+
+  // Direct match is always best
+  if (cleanText.includes(token)) return true;
+
+  // Check word by word for close matches
+  const words = cleanText.split(/\s+/);
+  return words.some(word => {
+    // Optimization: length difference check
+    if (Math.abs(word.length - token.length) > 2) return false;
+
+    // Allow more errors for longer words
+    const maxErrors = token.length > 5 ? 2 : 1;
+    const dist = levenshteinDistance(word, token);
+    return dist <= maxErrors;
+  });
+}
+
 function renderFound() {
   const grid = document.getElementById('itemsGrid');
-  const search = document.getElementById('searchFilter').value.toLowerCase();
+
+  // Get search inputs from both possible sources (header or page)
+  const headerInput = document.getElementById('headerSearchInput');
+  const headerSearchVal = headerInput?.value || "";
+  const pageSearchVal = document.getElementById('searchFilter')?.value || "";
+
+  // Toggle pure search mode if using header search
+  const foundSection = document.getElementById('page-found');
+  if (foundSection) {
+    if (headerSearchVal.trim().length > 0) {
+      foundSection.classList.add('search-active');
+    } else {
+      foundSection.classList.remove('search-active');
+    }
+  }
+
+  // Prefer the one that has value, or combine? Let's treat them as synced or just grab the active one.
+  // For simplicity, let's use the one that isn't empty, or page filter if both.
+  const search = (pageSearchVal || headerSearchVal).toLowerCase().trim();
+
   const cat = document.getElementById('categoryFilter').value;
   const loc = document.getElementById('locationFilter').value.toLowerCase();
   const sort = document.getElementById('sortFilter').value;
 
   console.log("renderFound called with:", { totalItems: items.length, search, cat, loc, sort });
 
-  let filtered = items.filter(it => (it.status || "").toLowerCase().trim() === 'approved'); // Only show approved items
-  console.log("After status filter (approved only):", filtered.length);
+  let filtered = items.filter(it => (it.status || "").toLowerCase().trim() === 'approved');
 
-  if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || i.description.toLowerCase().includes(search));
+  // Apply Fuzzy Search
+  if (search) {
+    const searchTokens = search.split(/\s+/);
+    filtered = filtered.filter(item => {
+      const titleMatch = searchTokens.every(token => isFuzzyMatch(item.title, token));
+      const descMatch = searchTokens.every(token => isFuzzyMatch(item.description, token));
+      const catMatch = searchTokens.every(token => isFuzzyMatch(item.category, token));
+      return titleMatch || descMatch || catMatch;
+    });
+  }
+
   if (cat) filtered = filtered.filter(i => i.category === cat);
   if (loc) filtered = filtered.filter(i => i.location.toLowerCase().includes(loc));
 
@@ -704,7 +781,7 @@ function renderFound() {
               <p class="card-desc">${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}</p>
               <div class="card-footer">
                   <span>${item.location}</span>
-                  <span>ID: ${item.id.substring(5, 13)}</span>
+                  <span>ID: ${item.id.substring(0, 8)}</span>
               </div>
             </div>
         </div>
