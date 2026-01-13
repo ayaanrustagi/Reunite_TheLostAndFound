@@ -13,7 +13,7 @@ Reunite is a comprehensive lost & found system designed to help communities reco
 - **Event**: FBLA Website Coding & Development
 - **Competition Year**: 2026
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 | Technology | Purpose | Documentation |
 |------------|---------|---------------|
@@ -112,7 +112,7 @@ For production deployment, consider:
 - Adding rate limiting on form submissions
 - Implementing CAPTCHA for public forms
 
-## 📚 Credits & Attributions
+## Credits & Attributions
 
 ### External Libraries
 - **Supabase JS Client** v2.39.7 - [MIT License](https://github.com/supabase/supabase-js/blob/master/LICENSE)
@@ -126,7 +126,7 @@ For production deployment, consider:
 - Grainy gradient texture from [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/)
 - Custom logo designed for the Reunite project
 
-## 📄 License
+## License
 
 This project was created for the FBLA Website Coding & Development competition. 
 
