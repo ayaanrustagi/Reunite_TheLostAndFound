@@ -15,6 +15,7 @@
 
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="animations.css" />
   <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
   <!-- EmailJS client -->
@@ -90,7 +91,58 @@
     <!-- SECTION: HERO -->
     <section id="page-hero" class="view-section active">
       <div class="hero-wrapper">
-        <div class="hero-top-label">LEANDERS BEST LOST & FOUND NETWORK</div>
+
+        <!-- 3D Magnifying Glass Scanning Animation -->
+        <div class="hero-cluster magnetic-cluster" id="heroCluster">
+
+          <!-- Base Layer (Normal Items) -->
+          <div class="cluster-base">
+            <div class="cluster-center">
+              <img src="https://em-content.zobj.net/thumbs/240/apple/354/key_1f511.png" alt="Key">
+            </div>
+            <!-- Satellites -->
+            <div class="satellite sat-1"><img
+                src="https://em-content.zobj.net/thumbs/240/apple/354/mobile-phone_1f4f1.png" alt="Phone"></div>
+            <div class="satellite sat-2"><img
+                src="https://em-content.zobj.net/thumbs/240/apple/354/credit-card_1f4b3.png" alt="Card"></div>
+            <div class="satellite sat-3"><img src="https://em-content.zobj.net/thumbs/240/apple/354/briefcase_1f4bc.png"
+                alt="Bag"></div>
+            <div class="satellite sat-4"><img src="https://em-content.zobj.net/thumbs/240/apple/354/headphone_1f3a7.png"
+                alt="Headphones"></div>
+            <div class="satellite sat-5"><img src="https://em-content.zobj.net/thumbs/240/apple/354/purse_1f45b.png"
+                alt="Purse"></div>
+            <div class="satellite sat-6"><img src="https://em-content.zobj.net/thumbs/240/apple/354/luggage_1f9f3.png"
+                alt="Luggage"></div>
+          </div>
+
+          <!-- Magnifying Glass (Floats on top) -->
+          <div class="mag-glass">
+            <div class="mag-lens">
+              <!-- Duplicate Layer for Magnified Effect (Translated opposite to glass movement) -->
+              <div class="mag-content">
+                <div class="cluster-center">
+                  <img src="https://em-content.zobj.net/thumbs/240/apple/354/key_1f511.png" alt="Key">
+                </div>
+                <div class="satellite sat-1"><img
+                    src="https://em-content.zobj.net/thumbs/240/apple/354/mobile-phone_1f4f1.png" alt="Phone"></div>
+                <div class="satellite sat-2"><img
+                    src="https://em-content.zobj.net/thumbs/240/apple/354/credit-card_1f4b3.png" alt="Card"></div>
+                <div class="satellite sat-3"><img
+                    src="https://em-content.zobj.net/thumbs/240/apple/354/briefcase_1f4bc.png" alt="Bag"></div>
+                <div class="satellite sat-4"><img
+                    src="https://em-content.zobj.net/thumbs/240/apple/354/headphone_1f3a7.png" alt="Headphones"></div>
+                <div class="satellite sat-5"><img src="https://em-content.zobj.net/thumbs/240/apple/354/purse_1f45b.png"
+                    alt="Purse"></div>
+                <div class="satellite sat-6"><img
+                    src="https://em-content.zobj.net/thumbs/240/apple/354/luggage_1f9f3.png" alt="Luggage"></div>
+              </div>
+              <!-- Gloss/Reflection Overlay -->
+              <div class="lens-reflection"></div>
+            </div>
+            <div class="mag-handle"></div>
+          </div>
+
+        </div>
 
         <h1 class="hero-display-text">
           <span id="hero-title" class="line-reveal">SEARCHING NOW</span>
@@ -363,9 +415,17 @@
     <!-- SECTION: ADMIN -->
     <section id="page-admin" class="view-section">
       <div class="content-wrapper">
-        <div class="section-head">
-          <span class="label-tech">ADMINISTRATION</span>
-          <h2>SYSTEM OVERSIGHT</h2>
+        <div class="section-head admin-header">
+          <div class="admin-title-group">
+            <span class="label-tech">ADMINISTRATION</span>
+            <h2>SYSTEM OVERSIGHT</h2>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-sm btn-outline" onclick="syncFromSupabase()">FORCE SYSTEM SYNC</button>
+            <button class="btn-sm btn-outline" style="border-color: var(--accent-color);"
+              onclick="sendEmailUpdate(currentUser.email, currentUser.name, 'TEST EMAIL', 'System test', 'TEST')">TEST
+              EMAIL</button>
+          </div>
         </div>
         <div class="dashboard-panels">
           <div class="panel">

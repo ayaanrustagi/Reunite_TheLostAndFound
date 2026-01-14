@@ -320,6 +320,31 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', handleSplitScroll);
   }
 
+  // Hero Cluster Cycling Animation (iCloud-style)
+  (function initHeroClusterCycle() {
+    const cluster = document.getElementById('heroCluster');
+    if (!cluster) return;
+
+    const states = cluster.querySelectorAll('.cluster-state');
+    if (states.length <= 1) return;
+
+    let currentIndex = 0;
+    const CYCLE_DURATION = 7000; // 7 seconds per state
+
+    setInterval(() => {
+      // Remove active from current
+      states[currentIndex].classList.remove('active');
+
+      // Move to next state
+      currentIndex = (currentIndex + 1) % states.length;
+
+      // Add active to new state
+      states[currentIndex].classList.add('active');
+    }, CYCLE_DURATION);
+
+    console.log('✅ Hero cluster animation initialized with', states.length, 'states');
+  })();
+
   // Form Submissions
   document.getElementById('reportForm')?.addEventListener('submit', handleReportSubmit);
   document.getElementById('claimForm')?.addEventListener('submit', handleClaimSubmit);
@@ -467,16 +492,20 @@ function handleSplitScroll() {
     { title: "RESOLVE", desc: "Verify ownership through our secure claim portal and arrange for item retrieval." }
   ];
 
-  let currentStep = 0; // Default to first
+  // Check if we are at the bottom of the page
+  const isAtBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50;
 
-  // Find the active step based on scroll position
-  // We look for the last item that has crossed the threshold (e.g., top is above 60% of viewport)
-  stepItems.forEach((item, index) => {
-    const rect = item.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.6) {
-      currentStep = index;
-    }
-  });
+  if (isAtBottom) {
+    currentStep = stepItems.length - 1;
+  } else {
+    // Find the active step based on scroll position
+    stepItems.forEach((item, index) => {
+      const rect = item.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.6) {
+        currentStep = index;
+      }
+    });
+  }
 
   // Apply active class to the current step and remove from others
   stepItems.forEach((item, index) => {
@@ -1242,33 +1271,8 @@ function renderDashboard() {
 function renderAdmin() {
   if (!currentUser || currentUser.role !== 'admin') return;
 
-  // Add Manual Sync Button to UI dynamically if it's not in HTML
-  const sectionHead = document.querySelector('#page-admin .section-head');
-  if (sectionHead && !document.getElementById('forceSyncBtn')) {
-    const btn = document.createElement('button');
-    btn.id = 'forceSyncBtn';
-    btn.className = 'btn-sm btn-outline';
-    btn.style.marginLeft = 'auto';
-    btn.style.fontSize = '0.6rem';
-    btn.textContent = 'FORCE SYSTEM SYNC';
-    btn.onclick = () => syncFromSupabase();
-    sectionHead.style.display = 'flex';
-    sectionHead.style.alignItems = 'flex-end';
-    sectionHead.appendChild(btn);
+  // Buttons are now in HTML directly to fix layout issues
 
-    // Add Test Email Button
-    const testBtn = document.createElement('button');
-    testBtn.className = 'btn-sm btn-outline';
-    testBtn.style.marginLeft = '0.5rem';
-    testBtn.style.fontSize = '0.6rem';
-    testBtn.style.borderColor = 'var(--accent-color)';
-    testBtn.textContent = 'TEST EMAIL';
-    testBtn.onclick = () => {
-      sendEmailUpdate(currentUser.email, currentUser.name, "TEST EMAIL", "If you received this, your email configuration is correct!", "TEST ITEM");
-      alert("Test email triggered. Check your inbox (and spam) and the browser console.");
-    };
-    sectionHead.appendChild(testBtn);
-  }
 
   const pendingEl = document.getElementById('adminPendingItems');
   const pending = items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');

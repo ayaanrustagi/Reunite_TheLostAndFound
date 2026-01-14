@@ -1,63 +1,300 @@
-/* Hero Text Rotation Animations */
-.headline-text,
-.tagline-text {
-  transition: opacity 0.3s ease-in-out;
+/* ================================== */
+/* 3D SCANNING GLASS ANIMATION        */
+/* ================================== */
+
+.magnetic-cluster {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  /* More breathing room around the animation */
+  margin: 2rem auto 4rem;
+  overflow: visible;
+  /* Ensure visibility */
+  display: block;
 }
 
-/* Page Transition Animations */
-.page-section {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+/* --- CLUSTER BASE (Normal Items) --- */
+.cluster-base {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-.page-transition-in {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: pageSlideIn 0.5s ease-out forwards;
+.cluster-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(180deg, #f0f8ff 0%, #d4e9ff 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 40px rgba(0, 78, 204, 0.15);
+  z-index: 5;
 }
 
-@keyframes pageSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+.cluster-center img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  filter: grayscale(0.3) opacity(0.8);
+  transition: all 0.3s ease;
+}
+
+.satellite {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  /* Light, clean background */
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Soft shadows */
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08),
+    0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.satellite img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  /* Darker gray for contrast on white */
+  filter: grayscale(1) opacity(0.5);
+  /* Dimmed by default */
+  transition: filter 0.3s ease;
+}
+
+/* Positioning Satellites */
+.sat-1 {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sat-2 {
+  top: 25%;
+  right: 5%;
+}
+
+.sat-3 {
+  bottom: 25%;
+  right: 5%;
+}
+
+.sat-4 {
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sat-5 {
+  bottom: 25%;
+  left: 5%;
+}
+
+.sat-6 {
+  top: 25%;
+  left: 5%;
+}
+
+/* --- MAGNIFYING GLASS --- */
+.mag-glass {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 140px;
+  z-index: 50;
+  pointer-events: none;
+  /* Let clicks pass through */
+  /* Automatic Scanning Animation Path */
+  animation: scanPath 4s ease-in-out infinite;
+}
+
+.mag-lens {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  /* Glass Ring Border */
+  border: 4px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 20px 50px rgba(0, 78, 204, 0.3),
+    /* Blue glow */
+    inset 0 0 20px rgba(255, 255, 255, 0.5);
+  /* Inner gloss */
+  overflow: hidden;
+}
+
+/* The "Zoomed" Content inside the Glass */
+.mag-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  /* Must match parent cluster width */
+  height: 320px;
+  /* Counter-translation to keep content fixed relative to world */
+  animation: counterScan 4s ease-in-out infinite;
+  transform-origin: 0 0;
+}
+
+/* Magnified Items Styling */
+.mag-content .cluster-center {
+  width: 150px;
+  /* Larger! */
+  height: 150px;
+  background: #fff;
+  box-shadow: 0 0 30px rgba(0, 106, 255, 0.5);
+  /* Glowing */
+}
+
+.mag-content .cluster-center img {
+  width: 85px;
+  height: 85px;
+  filter: grayscale(0) opacity(1);
+  /* Full color */
+}
+
+.mag-content .satellite {
+  width: 70px;
+  /* Larger! */
+  height: 70px;
+  background: linear-gradient(145deg, #004ecc, #002a70);
+  /* Blue active state */
+  box-shadow: 0 0 20px rgba(0, 78, 204, 0.6);
+  z-index: 20;
+}
+
+.mag-content .satellite img {
+  filter: grayscale(0) opacity(1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Glass Reflection */
+.lens-reflection {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 40%;
+  height: 25%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.mag-handle {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  /* Angled handle */
+  width: 60px;
+  height: 12px;
+  background: linear-gradient(90deg, #d0d0d0, #f0f0f0, #b0b0b0);
+  transform: rotate(45deg);
+  border-radius: 10px;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  z-index: -1;
+}
+
+/* --- ANIMATION PATHS --- */
+/* Moves the GLASS over the items */
+@keyframes scanPath {
+  0% {
+    transform: translate(90px, 90px);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  /* Center Key */
+  15% {
+    transform: translate(160px, 40px);
+  }
+
+  /* Phone */
+  30% {
+    transform: translate(220px, 120px);
+  }
+
+  /* Card */
+  45% {
+    transform: translate(90px, 220px);
+  }
+
+  /* Headphones */
+  60% {
+    transform: translate(-20px, 140px);
+  }
+
+  /* Purse */
+  75% {
+    transform: translate(20px, 40px);
+  }
+
+  /* Luggage */
+  90% {
+    transform: translate(90px, 90px);
+  }
+
+  /* Back to Center */
+  100% {
+    transform: translate(90px, 90px);
   }
 }
 
-/* Enhanced hover effects for interactive elements */
-.nav-link {
-  transition: all 0.2s ease-in-out;
+/* Moves the CONTENT opposite to the glass to create the "Window" effect */
+/* Corrected logic: No scale on the container itself to avoid offset drift. 
+   Scale is applied to children if needed, but keeping 1:1 ensures perfect alignment. */
+@keyframes counterScan {
+  0% {
+    transform: translate(-90px, -90px);
+  }
+
+  15% {
+    transform: translate(-160px, -40px);
+  }
+
+  30% {
+    transform: translate(-220px, -120px);
+  }
+
+  45% {
+    transform: translate(-90px, -220px);
+  }
+
+  60% {
+    transform: translate(20px, -140px);
+  }
+
+  75% {
+    transform: translate(-20px, -40px);
+  }
+
+  90% {
+    transform: translate(-90px, -90px);
+  }
+
+  100% {
+    transform: translate(-90px, -90px);
+  }
 }
 
-.nav-link:hover {
-  transform: translateY(-2px);
-}
+/* ================================== */
+/* MOBILE RESPONSIVE                  */
+/* ================================== */
+@media (max-width: 768px) {
+  .hero-cluster {
+    width: 260px;
+    height: 260px;
+  }
 
-.btn-primary,
-.btn-secondary {
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-primary:hover,
-.btn-secondary:hover {
-  transform: translateY(-1px);
-}
-
-/* Smooth fade for modal content */
-.modal-content {
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-}
-
-.modal.show .modal-content {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.modal:not(.show) .modal-content {
-  opacity: 0;
-  transform: scale(0.95);
+  .mag-content {
+    width: 260px;
+    height: 260px;
+  }
 }
