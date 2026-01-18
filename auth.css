@@ -9,8 +9,8 @@
     padding: 0;
     border-radius: 0;
     overflow: hidden;
-    background: #fff;
-    /* Clean white base */
+    background: var(--panel-bg);
+    /* Clean white/dark base */
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     border: none;
 }
@@ -36,7 +36,7 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    background: #ffffff;
+    background: var(--panel-bg);
 }
 
 .auth-header {
@@ -115,7 +115,8 @@
     border-radius: 2px;
     /* BOXY SHAPE */
     border: 1px solid var(--border-color);
-    background: #f9f9f9;
+    background: var(--bg-color);
+    color: var(--text-color);
     font-family: var(--font-body);
     font-size: 0.95rem;
     transition: all 0.3s ease;
@@ -124,7 +125,7 @@
 
 .input-pill:focus {
     border-color: var(--accent-color);
-    background: #fff;
+    background: var(--panel-bg);
     box-shadow: 0 0 0 3px rgba(0, 78, 204, 0.1);
 }
 
