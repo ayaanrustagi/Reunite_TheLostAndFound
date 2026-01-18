@@ -139,9 +139,10 @@ body {
 
 .logo-text {
     font-family: var(--font-mono);
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-weight: 800;
+    letter-spacing: 0.15em;
     font-size: 1.1rem;
+    text-transform: uppercase;
 }
 
 .menu-toggle {
@@ -300,7 +301,8 @@ body {
 .nav-btn.active {
     background: rgba(0, 78, 204, 0.04);
     color: var(--accent-color);
-    font-weight: 500;
+    font-weight: 700;
+    box-shadow: inset 0 -2px 0 var(--accent-color);
 }
 
 .header-actions {
@@ -314,12 +316,15 @@ body {
 }
 
 .btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.7rem;
     font-family: var(--font-mono);
     cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 .btn-outline {
@@ -331,6 +336,8 @@ body {
 .btn-outline:hover {
     background: var(--text-color);
     color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Main Container */
@@ -396,9 +403,9 @@ body {
 
 .hero-display-text {
     font-size: clamp(3.5rem, 10vw, 7rem);
-    font-weight: 800;
+    font-weight: 900;
     line-height: 0.95;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.04em;
     text-transform: uppercase;
     margin-bottom: 4rem;
     color: var(--text-color);
@@ -449,17 +456,17 @@ body {
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    border-color: var(--accent-color);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    background: #000;
 }
 
 .btn-primary .btn-icon {
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-primary:hover .btn-icon {
-    transform: translateX(5px);
+    transform: translateX(8px) scale(1.1);
 }
 
 /* Hero Text Transition */
@@ -813,6 +820,11 @@ body {
 .section-head h2 {
     font-size: 2.5rem;
     font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    position: relative;
 }
 
 .section-centered {
@@ -850,6 +862,7 @@ body {
 }
 
 /* Form Element Reset - Cross-browser consistency */
+/* Unified Form Reset */
 input,
 select,
 textarea,
@@ -857,6 +870,7 @@ button {
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
+    color: inherit;
 }
 
 /* Select Element Normalization */
@@ -877,49 +891,53 @@ select::-ms-expand {
 
 .input-tech {
     width: 100%;
-    padding: 1rem;
+    height: 52px;
+    padding: 0 1.25rem;
     background: #fff;
     border: 1px solid var(--border-color);
     font-family: var(--font-mono);
     font-size: 0.75rem;
     outline: none;
-    border-radius: 0;
-    height: 48px;
-    /* Fixed height for consistency */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
     box-sizing: border-box;
 }
 
 .input-tech:focus {
     border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 78, 204, 0.06);
 }
 
 .input-group input,
 .input-group select,
 .input-group textarea {
     width: 100%;
-    padding: 0.75rem 1rem;
+    height: 48px;
+    padding: 0 1rem;
     border: 1px solid var(--border-color);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-family: inherit;
+    font-size: 0.85rem;
     outline: none;
-    background: #fff;
-    border-radius: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
+    background: #fdfdfd;
     box-sizing: border-box;
 }
 
-/* Consistent height for inputs and selects */
-.input-group input,
-.input-group select {
-    height: 44px;
+.input-group textarea {
+    height: auto;
+    min-height: 120px;
+    padding: 1rem;
 }
 
 .input-group input:focus,
-.input-group select:focus {
-    border-color: var(--accent-color);
-}
-
+.input-group select:focus,
 .input-group textarea:focus {
-    border-color: var(--text-color);
+    border-color: var(--accent-color);
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .input-group.invalid input,
@@ -1051,10 +1069,11 @@ select::-ms-expand {
 
 .card-title {
     font-size: 1.4rem;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 1rem;
     color: var(--text-color);
-    transition: color 0.3s;
+    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: -0.01em;
 }
 
 .card-desc {
@@ -1075,11 +1094,12 @@ select::-ms-expand {
     border-top: 1px solid var(--border-color);
     color: var(--muted-text);
     text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .card-footer span:first-child {
     color: var(--text-color);
-    font-weight: 500;
+    font-weight: 700;
 }
 
 /* Form Styles Enhancement */

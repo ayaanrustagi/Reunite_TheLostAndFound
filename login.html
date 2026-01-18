@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REUNITE - Authentication</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <link rel="stylesheet" href="login.css" />
+</head>
+
+<body class="auth-page theme-light">
+    <!-- Blue Glow / Scanline Overlays (Consistent with Main App) -->
+    <div class="screen-vignette"></div>
+    <div class="scan-line"></div>
+
+    <div class="auth-container">
+        <a href="index.html" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            BACK TO NETWORK
+        </a>
+
+        <div class="auth-form-side">
+            <div class="auth-form-wrapper">
+                <div class="auth-header">
+                    <h3 id="authTitle">WELCOME BACK</h3>
+                    <p id="authSubtitle">Please enter your credentials to access the network.</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <button id="tab-login" class="auth-tab active" onclick="setAuthMode('login')">Sign In</button>
+                    <button id="tab-signup" class="auth-tab" onclick="setAuthMode('signup')">Sign Up</button>
+                </div>
+
+                <div class="auth-form-container">
+                    <div id="nameGroup" class="input-pill-group hidden">
+                        <label>FULL NAME</label>
+                        <input type="text" id="authName" class="input-pill" placeholder="Ayaan Rustagi">
+                    </div>
+                    <div class="input-pill-group">
+                        <label>EMAIL ADDRESS</label>
+                        <input type="email" id="authEmail" class="input-pill" placeholder="ayaanrustagi@gmail.com">
+                    </div>
+
+                    <!-- OTP Verification Group (Hidden initially) -->
+                    <div id="otpGroup" class="input-pill-group hidden">
+                        <label>VERIFICATION CODE</label>
+                        <input type="text" id="authOTP" class="input-pill" placeholder="000000" maxlength="6">
+                        <p style="font-size: 0.7rem; color: var(--muted-text); margin-top: 0.5rem;">Check your inbox for
+                            the 6-digit code.</p>
+                    </div>
+
+                    <div class="admin-toggle-wrap">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="isAdminAuth" onchange="toggleAdminAuth()">
+                            Access as Administrator
+                        </label>
+                    </div>
+
+                    <div id="adminCodeAuthWrap" class="input-pill-group hidden">
+                        <label>ADMIN ACCESS CODE</label>
+                        <input type="password" id="adminCodeAuth" class="input-pill" placeholder="••••••••">
+                    </div>
+
+                    <button id="authSubmitBtn" onclick="handleAuthStep()" class="btn-primary pill-btn full-width">SEND
+                        CODE</button>
+                    <button id="resendBtn" onclick="sendOTP()" class="btn-text hidden"
+                        style="font-size: 0.7rem; margin-top: 1rem;">RESEND CODE</button>
+
+                    <div id="authStatus" class="status-msg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
+    <!-- EmailJS client -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Auth Logic -->
+    <script src="auth-handlers.js"></script>
+</body>
+
+</html>
