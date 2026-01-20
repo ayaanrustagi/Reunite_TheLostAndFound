@@ -44,7 +44,7 @@ body.auth-page::before {
     position: relative;
     border: 1px solid var(--border-color);
     border-radius: 2px;
-    background: #fff url("https://grainy-gradients.vercel.app/noise.svg");
+    background: var(--panel-bg) url("https://grainy-gradients.vercel.app/noise.svg");
     background-blend-mode: overlay;
     /* BOXY */
     animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -141,7 +141,7 @@ body.auth-page::before {
     width: 100%;
     padding: 1.2rem 1.5rem;
     border: 1px solid var(--border-color);
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--bg-color);
     font-family: var(--font-mono);
     font-size: 0.9rem;
     border-radius: 2px;
