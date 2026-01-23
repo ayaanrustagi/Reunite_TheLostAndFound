@@ -1,16 +1,15 @@
 /* Full Page Auth Styling */
 body.auth-page {
     margin: 0;
-    padding: 0;
-    height: 100vh;
+    padding: 2rem 1rem;
+    min-height: 100vh;
     width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--bg-color);
-    overflow: hidden;
     font-family: var(--font-main);
-    position: relative;
+    box-sizing: border-box;
 }
 
 body.auth-page::before {
@@ -40,13 +39,10 @@ body.auth-page::before {
     max-width: 680px;
     background: var(--panel-bg);
     padding: 3.5rem 4rem;
-    box-shadow: 4px 4px 60px rgba(0, 0, 0, 0.05), 15px 15px 0px rgba(0, 78, 204, 0.02);
-    position: relative;
     border: 1px solid var(--border-color);
-    border-radius: 2px;
-    background: var(--panel-bg) url("https://grainy-gradients.vercel.app/noise.svg");
-    background-blend-mode: overlay;
-    /* BOXY */
+    border-radius: 16px;
+    background: var(--panel-bg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
     animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -107,9 +103,8 @@ body.auth-page::before {
     justify-content: center;
     background: var(--bg-color);
     border: 1px solid var(--border-color);
-    border-radius: 2px;
-    box-shadow: 0 0 20px rgba(0, 78, 204, 0.1);
-    /* BOXY */
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
 }
 
 .auth-logo-img {
@@ -140,11 +135,10 @@ body.auth-page::before {
 .input-pill {
     width: 100%;
     padding: 1.2rem 1.5rem;
-    border: 1px solid var(--border-color);
     background: var(--bg-color);
     font-family: var(--font-mono);
     font-size: 0.9rem;
-    border-radius: 2px;
+    border-radius: 8px;
     outline: none;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -212,8 +206,8 @@ body.auth-page::before {
     font-weight: 600;
     border: none;
     cursor: pointer;
-    border-radius: 2px;
-    /* BOXY */
+    border-radius: 8px;
+    /* CURVED */
     transition: all 0.3s;
     display: flex;
     align-items: center;
@@ -275,10 +269,22 @@ body.auth-page::before {
 /* Theme specific overrides */
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
+    body.auth-page {
+        padding: 1rem;
+    }
+
     .auth-form-card {
         padding: 2.5rem 1.5rem;
-        border: none;
-        box-shadow: none;
-        background: transparent;
+        border: 1px solid var(--border-color);
+        background: var(--panel-bg);
+        border-radius: 12px;
+    }
+
+    .auth-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .auth-header {
+        margin-bottom: 1.5rem;
     }
 }
