@@ -899,10 +899,10 @@ body {
 }
 
 .label-tech {
+    padding-left: 1rem;
     font-family: var(--font-mono);
     font-size: 1.3rem;
     color: var(--accent-color);
-    margin-bottom: 1rem;
     display: block;
 }
 
@@ -1021,6 +1021,7 @@ body {
 }
 
 .section-head h2 {
+
     font-size: 2.5rem;
     font-weight: 800;
     letter-spacing: 0.15em;
@@ -2160,6 +2161,7 @@ select::-ms-expand {
     }
 
     .section-head h2 {
+        padding-left: 1rem;
         font-size: 1.8rem;
     }
 

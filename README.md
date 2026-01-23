@@ -29,12 +29,24 @@ Reunite is a comprehensive lost & found system designed to help communities reco
 ```
 Reunite_TheLostAndFound/
 ├── index.html          # Main HTML file (single-page application)
-├── styles.css          # Primary stylesheet with responsive design
-├── auth.css            # Authentication modal styles
-├── animations.css      # Animation keyframes (if separate)
-├── script.js           # Main JavaScript application logic
+├── login.html          # Authentication page
+├── css/
+│   ├── styles.css      # Primary stylesheet with responsive design
+│   ├── auth.css        # Combined Auth & Login styles
+│   └── animations.css  # Animation keyframes
+├── js/
+│   ├── app.js          # Main application wiring
+│   ├── auth-flow.js    # Authentication flow logic
+│   ├── config.js       # Configuration constants
+│   ├── email.js        # Email service integration
+│   ├── forms.js        # Form handling & validation
+│   ├── render.js       # UI rendering logic
+│   ├── state.js        # Global state management
+│   ├── supabase-client.js # Database client wrapper
+│   ├── ui.js           # UI interactions & navigation
+│   └── utils.js        # Shared utility functions
 ├── assets/
-│   └── Reunite-logo.png    # Application logo
+│   └── reunite-logo.png    # Application logo
 └── README.md           # This file
 ```
 

@@ -13,9 +13,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="auth.css" />
-    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/auth.css" />
 </head>
 
 <body class="auth-page">
@@ -50,6 +49,19 @@
             <div class="auth-form-container">
                 <div id="nameGroup" class="input-pill-group hidden">
                     <input type="text" id="authName" class="input-pill" placeholder="First and Last Name">
+                </div>
+
+                <!-- Admin Registration Option (Hidden until signup mode) -->
+                <div id="adminAuthGroup" class="input-pill-group hidden">
+                    <label class="admin-toggle-label">
+                        <input type="checkbox" id="isAdminAuth" onchange="toggleAdminAuth()">
+                        <span>Register as Administrator</span>
+                    </label>
+                    <div id="adminCodeAuthWrap" class="hidden" style="margin-top: 0.75rem;">
+                        <input type="password" id="adminCodeAuth" class="input-pill"
+                            placeholder="Enter Admin Access Code">
+                        <p class="field-hint">Contact your organization for the admin code.</p>
+                    </div>
                 </div>
                 <div class="input-pill-group">
                     <input type="email" id="authEmail" class="input-pill" placeholder="Email or Phone Number">
@@ -91,7 +103,12 @@
     <!-- EmailJS client -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <!-- Auth Logic -->
-    <script src="auth-handlers.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/email.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth-flow.js"></script>
 </body>
 
 </html>
