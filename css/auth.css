@@ -218,6 +218,7 @@ body.auth-page::before {
 
 .btn-primary.auth-submit-btn {
     background: #000;
+    /* Dark Grey */
     color: #fff;
     border: none;
     font-family: var(--font-mono);

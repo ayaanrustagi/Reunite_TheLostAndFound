@@ -38,6 +38,16 @@ function navigateToSection(sectionId) {
 window.navigateToSection = navigateToSection;
 
 // Focus management helper - sets initial focus when navigating to sections
+function handleLogoClick() {
+    if (window.currentUser) {
+        const dest = window.currentUser.role === 'admin' ? 'admin' : 'dashboard';
+        navigateToSection(dest);
+    } else {
+        navigateToSection('hero');
+    }
+}
+window.handleLogoClick = handleLogoClick;
+
 function setFocusForSection(sectionId) {
     let focusTarget = null;
 

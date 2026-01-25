@@ -188,6 +188,11 @@ window.renderClaimSelect = renderClaimSelect;
 
 function renderDashboard() {
     if (!window.currentUser) return;
+
+    // Update User Name
+    const nameEl = document.getElementById('dashboardUserName');
+    if (nameEl) nameEl.textContent = window.currentUser.name || "Student";
+
     const reportsEl = document.getElementById('myReports');
     const claimsEl = document.getElementById('myClaims');
 
@@ -225,6 +230,10 @@ window.renderDashboard = renderDashboard;
 
 function renderAdmin() {
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
+
+    // Update Admin Name
+    const nameEl = document.getElementById('adminUserName');
+    if (nameEl) nameEl.textContent = window.currentUser.name || "Administrator";
 
     const pendingEl = document.getElementById('adminPendingItems');
     const pending = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');

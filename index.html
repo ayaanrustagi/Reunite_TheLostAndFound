@@ -38,7 +38,7 @@
   <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
-      <div class="logo-area" onclick="navigateToSection('hero')">
+      <div class="logo-area" onclick="handleLogoClick()">
         <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
       </div>
@@ -71,13 +71,11 @@
       <div class="header-actions">
         <button id="darkModeToggle" class="btn-sm btn-outline dark-mode-toggle" onclick="toggleDarkMode()"
           aria-label="Toggle dark mode">
-          <span class="dark-icon">🌙</span>
-          <span class="light-icon hidden">☀️</span>
+          <span class="dark-icon">DARK</span>
+          <span class="light-icon hidden">LIGHT</span>
+        </button>
         </button>
         <a id="loginBtn" href="login.html" class="btn-sm btn-outline">SIGN IN</a>
-        <button id="dashboardBtn" class="btn-sm btn-outline hidden"
-          onclick="navigateToSection('dashboard')">DASHBOARD</button>
-        <button id="adminBtn" class="btn-sm btn-outline hidden" onclick="navigateToSection('admin')">ADMIN</button>
         <button id="logoutBtn" class="btn-sm btn-outline hidden" onclick="handleLogout()">LOGOUT</button>
       </div>
     </div>
@@ -397,11 +395,11 @@
         <div class="section-head admin-header">
           <div class="admin-title-group">
             <span class="label-tech">ADMINISTRATION</span>
-            <h2>SYSTEM OVERSIGHT</h2>
+            <h2>Hello, <span id="adminUserName">Admin</span></h2>
           </div>
           <div class="admin-actions">
             <button class="btn-sm btn-outline" onclick="syncFromSupabase()">FORCE SYSTEM SYNC</button>
-            <button class="btn-sm btn-outline" style="border-color: var(--accent-color);"
+            <button class="btn-sm btn-outline"
               onclick="sendEmailUpdate(currentUser.email, currentUser.name, 'TEST EMAIL', 'System test', 'TEST')">TEST
               EMAIL</button>
           </div>

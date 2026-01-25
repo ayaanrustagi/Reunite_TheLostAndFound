@@ -2582,19 +2582,134 @@ body.dark-mode .bento-card {
 }
 
 /* ================================
-   RESPONSIVE DARK MODE
+   FINAL UI POLISH
    ================================ */
 
-@media (max-width: 768px) {
-    .how-it-works-section {
-        padding: 4rem 1rem 3rem;
-    }
-    
-    .steps-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .scroll-indicator {
-        margin-top: 2rem;
-    }
+/* 1. Home Page Spacing */
+#page-hero {
+    padding-top: 8rem;
+    /* More spacing at top */
+}
+
+/* 2. Submit Buttons (Find/Claim Items) */
+/* Light Mode - Tan Color for Forms */
+.btn-primary,
+button[type="submit"] {
+    background-color: #d2b48c !important;
+    /* Tan color */
+    color: #000 !important;
+    border: none;
+    font-weight: 700;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover {
+    background-color: #c1a37b !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* OVERRIDE: Home Page "File a Lost Report" Button -> Dark Grey */
+.hero-cta-group .btn-primary {
+    background-color: #333333 !important;
+    /* Dark Grey */
+    color: #fff !important;
+}
+
+.hero-cta-group .btn-primary:hover {
+    background-color: #444444 !important;
+}
+
+/* 3. Section Header Alignment (Left Aligned with Padding) */
+.section-centered,
+.section-head,
+.centered-small,
+.admin-title-group {
+    text-align: left !important;
+    padding-left: 12px;
+    /* A few pixels from the edge */
+    align-items: flex-start !important;
+}
+
+/* Ensure label and h2 line up */
+.section-centered .label-tech,
+.section-head .label-tech,
+.admin-title-group .label-tech {
+    margin-left: 0;
+    justify-content: flex-start;
+}
+
+/* Dark Mode Colors */
+body.dark-mode .btn-primary,
+body.dark-mode button[type="submit"] {
+    background-color: #808080 !important;
+    /* Grey color for forms */
+    color: #fff !important;
+}
+
+/* Keep Hero Button Dark Grey in Dark Mode too */
+body.dark-mode .hero-cta-group .btn-primary {
+    background-color: #333333 !important;
+}
+
+body.dark-mode .btn-primary:hover,
+body.dark-mode button[type="submit"]:hover {
+    background-color: #666 !important;
+}
+
+/* 4. Dashboard Dark Mode Background Fixes */
+/* Remove light grey background from dashboard area */
+.dashboard-container,
+#page-dashboard .content-wrapper,
+#page-admin .content-wrapper {
+    background: transparent !important;
+}
+
+body.dark-mode .dashboard-container,
+body.dark-mode .dashboard-panels,
+body.dark-mode .panel,
+body.dark-mode .bento-card,
+body.dark-mode .list-view {
+    background-color: transparent;
+    /* Remove conflicting backgrounds */
+}
+
+/* 5. Dark Mode Toggle Styling (Match Logout Button) */
+.dark-mode-toggle {
+    padding: 0.65rem 1.5rem !important;
+    /* Match btn-sm padding */
+    font-size: 0.7rem !important;
+    /* Match btn-sm font size */
+    font-family: var(--font-mono) !important;
+    border-radius: var(--radius-sm) !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+    min-width: auto !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--text-color) !important;
+    color: var(--text-color) !important;
+    background: transparent !important;
+}
+
+.dark-mode-toggle:hover {
+    background: var(--text-color) !important;
+    color: var(--bg-color) !important;
+}
+
+/* Icons inside toggle */
+.dark-mode-toggle .dark-icon,
+.dark-mode-toggle .light-icon {
+    font-family: var(--font-mono) !important;
+    /* Use text font, not emoji font */
+    line-height: 1;
+}
+
+/* Fix input fields in dark mode dashboard */
+body.dark-mode .input-tech {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
 }

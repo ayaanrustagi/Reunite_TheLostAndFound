@@ -19,7 +19,6 @@
 
 <body class="auth-page">
 
-
     <div class="auth-container centered">
         <div class="auth-form-card">
             <!-- Back Button -->
@@ -31,6 +30,8 @@
                 </svg>
                 BACK
             </a>
+
+
 
             <!-- Logo Section -->
             <div class="auth-logo-section">
@@ -63,19 +64,46 @@
                         <p class="field-hint">Contact your organization for the admin code.</p>
                     </div>
                 </div>
+
                 <div class="input-pill-group">
-                    <input type="email" id="authEmail" class="input-pill" placeholder="Email or Phone Number">
+                    <input type="email" id="authEmail" class="input-pill" placeholder="Email Address">
+                </div>
+
+                <!-- Password Field -->
+                <div id="passwordGroup" class="input-pill-group">
+                    <input type="password" id="authPassword" class="input-pill" placeholder="Password">
+                </div>
+
+                <!-- Confirm Password (Signup only) -->
+                <div id="confirmPasswordGroup" class="input-pill-group hidden">
+                    <input type="password" id="authConfirmPassword" class="input-pill" placeholder="Confirm Password">
                 </div>
 
                 <!-- OTP Verification Group (Hidden initially) -->
                 <div id="otpGroup" class="input-pill-group hidden">
                     <input type="text" id="authOTP" class="input-pill" placeholder="Verification Code" maxlength="6">
-                    <p class="field-hint">Check your device for the 6-digit code.</p>
+                    <p class="field-hint">Check your email for the 6-digit code.</p>
                 </div>
 
                 <div class="auth-links-group">
                     <a href="#" class="auth-link" id="authModeLink"
                         onclick="event.preventDefault(); setAuthMode('signup')">Create Your Reunite Account</a>
+                    <span style="margin: 0 0.5rem; color: var(--muted-text);">|</span>
+                    <a href="#" class="auth-link" id="forgotPasswordLink"
+                        onclick="event.preventDefault(); showForgotPassword()">Forgot Password?</a>
+                </div>
+
+                <!-- Forgot Password Section (Hidden initially) -->
+                <div id="forgotPasswordSection" class="hidden" style="margin-top: 1rem;">
+                    <p class="field-hint" style="margin-bottom: 0.75rem;">Enter your email to receive a password reset
+                        link.</p>
+                    <div class="input-pill-group">
+                        <input type="email" id="forgotEmail" class="input-pill" placeholder="Email Address">
+                    </div>
+                    <button onclick="sendPasswordReset()" class="btn-primary auth-submit-btn"
+                        style="margin-top: 1rem;">SEND RESET EMAIL</button>
+                    <a href="#" class="auth-link" style="display: block; margin-top: 0.75rem; text-align: center;"
+                        onclick="event.preventDefault(); hideForgotPassword()">Back to Sign In</a>
                 </div>
 
                 <div class="auth-privacy-info">
@@ -85,7 +113,7 @@
                         Reunite records certain data for security, support, and reporting purposes.</p>
                 </div>
 
-                <div class="auth-footer-btns">
+                <div id="mainAuthButtons" class="auth-footer-btns">
                     <button id="authSubmitBtn" onclick="handleAuthStep()"
                         class="btn-primary auth-submit-btn">Continue</button>
                     <button id="resendBtn" onclick="sendOTP()" class="btn-text hidden"
@@ -106,6 +134,7 @@
     <script src="js/config.js"></script>
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/darkmode.js"></script>
     <script src="js/email.js"></script>
     <script src="js/supabase-client.js"></script>
     <script src="js/auth-flow.js"></script>
