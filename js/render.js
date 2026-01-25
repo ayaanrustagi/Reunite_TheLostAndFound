@@ -275,5 +275,52 @@ function renderAdmin() {
         `;
         }).join('') : 'EMPTY';
     }
+
+    // Audit Log
+    const auditEl = document.getElementById('adminAudit');
+    if (auditEl && window.auditLogs) {
+        const actionIcons = {
+            'ITEM_UPLOADED': '📤',
+            'ITEM_APPROVED': '✅',
+            'ITEM_REJECTED': '❌',
+            'ITEM_DELETED': '🗑️',
+            'CLAIM_SUBMITTED': '📝',
+            'CLAIM_APPROVED': '✔️',
+            'CLAIM_DELETED': '🗑️'
+        };
+
+        auditEl.innerHTML = window.auditLogs.length ? window.auditLogs.map(log => {
+            const icon = actionIcons[log.action] || '📋';
+            const timeAgo = getTimeAgo(new Date(log.created_at));
+            return `
+            <div class="list-item audit-entry">
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+                    <span style="font-size: 1.2rem;">${icon}</span>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.85rem;">${log.action.replace(/_/g, ' ')}</div>
+                        <div style="font-size: 0.75rem; color: var(--muted-text);">
+                            ${log.target_name || log.target_id} • ${log.user_email}
+                        </div>
+                        ${log.details ? `<div style="font-size: 0.7rem; color: var(--muted-text); margin-top: 0.25rem;">${log.details}</div>` : ''}
+                    </div>
+                </div>
+                <div style="font-size: 0.7rem; color: var(--muted-text); white-space: nowrap;">${timeAgo}</div>
+            </div>
+        `;
+        }).join('') : '<div class="status-msg">NO AUDIT LOGS YET</div>';
+    }
 }
 window.renderAdmin = renderAdmin;
+
+// Helper function for time ago display
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+
+    if (seconds < 60) return 'Just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+
+    return date.toLocaleDateString();
+}
+window.getTimeAgo = getTimeAgo;

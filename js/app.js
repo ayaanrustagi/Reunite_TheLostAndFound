@@ -84,13 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hash) {
         if (window.navigateToSection) window.navigateToSection(hash);
     } else {
-        if (window.navigateToSection) window.navigateToSection('hero');
-    }
-
-    // Scroll listener for "How It Works" split section
-    const howSection = document.getElementById('page-how');
-    if (howSection && window.handleSplitScroll) {
-        window.addEventListener('scroll', window.handleSplitScroll);
+        // If user is logged in and no specific hash, redirect to their dashboard
+        if (window.currentUser) {
+            const defaultSection = window.currentUser.role === 'admin' ? 'admin' : 'dashboard';
+            if (window.navigateToSection) window.navigateToSection(defaultSection);
+        } else {
+            if (window.navigateToSection) window.navigateToSection('hero');
+        }
     }
 
     // Form Submissions

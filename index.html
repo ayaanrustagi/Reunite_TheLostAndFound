@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/auth.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <!-- GSAP for animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
   <!-- EmailJS client -->
@@ -50,7 +53,6 @@
         <button class="nav-btn" onclick="navigateToSection('found')">FIND ITEMS</button>
         <button class="nav-btn" onclick="navigateToSection('report')">FOUND AN ITEM</button>
         <button class="nav-btn" onclick="navigateToSection('claim')">CLAIM ITEM</button>
-        <button class="nav-btn" onclick="navigateToSection('how')">HOW IT WORKS</button>
       </nav>
 
       <div class="header-search-wrap">
@@ -67,6 +69,11 @@
       </div>
 
       <div class="header-actions">
+        <button id="darkModeToggle" class="btn-sm btn-outline dark-mode-toggle" onclick="toggleDarkMode()"
+          aria-label="Toggle dark mode">
+          <span class="dark-icon">🌙</span>
+          <span class="light-icon hidden">☀️</span>
+        </button>
         <a id="loginBtn" href="login.html" class="btn-sm btn-outline">SIGN IN</a>
         <button id="dashboardBtn" class="btn-sm btn-outline hidden"
           onclick="navigateToSection('dashboard')">DASHBOARD</button>
@@ -86,59 +93,57 @@
   <!-- Main Content Area -->
   <main id="main-container">
 
-    <!-- SECTION: HERO -->
+    <!-- SECTION: HERO with integrated How It Works -->
     <section id="page-hero" class="view-section active">
-      <div class="hero-wrapper">
+      <div class="hero-full-wrapper">
+        <div class="hero-wrapper">
+          <h1 class="hero-display-text">
+            <span id="hero-title" class="">SEARCHING NOW</span>
+            <span id="hero-subtitle" class="sub-hero">FIND YOUR LOST ITEMS</span>
+          </h1>
 
+          <div class="hero-cta-group">
+            <button class="btn-primary" onclick="navigateToSection('report')">
+              FILE A LOST REPORT
+              <span class="btn-icon">→</span>
+            </button>
+            <button class="btn-text" onclick="navigateToSection('found')">
+              [ I FOUND SOMETHING ]
+            </button>
+          </div>
 
-        <h1 class="hero-display-text">
-          <span id="hero-title" class="">SEARCHING NOW</span>
-          <span id="hero-subtitle" class="sub-hero">FIND YOUR LOST ITEMS</span>
-        </h1>
-
-        <div class="hero-cta-group">
-          <button class="btn-primary" onclick="navigateToSection('report')">
-            FILE A LOST REPORT
-            <span class="btn-icon">→</span>
-          </button>
-          <button class="btn-text" onclick="navigateToSection('found')">
-            [ I FOUND SOMETHING ]
-          </button>
+          <div class="scroll-indicator">
+            <span>SCROLL TO LEARN MORE</span>
+            <div class="scroll-arrow">↓</div>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- SECTION: HOW IT WORKS (Split Layout) -->
-    <section id="page-how" class="view-section">
-      <div class="split-layout">
-        <div class="split-left sticky-content">
-          <div class="label-tech">HOW IT PROCESSES</div>
-          <div id="how-step-preview" class="step-preview">
-            <h2 id="preview-title" class="preview-title">INITIATE</h2>
-            <p id="preview-desc" class="preview-desc">Begin the recovery process by logging the details into our secure
-              network.</p>
-            <div class="scroll-hint">
-              <span class="hint-text">SCROLL TO EXPLORE</span>
-              <div class="hint-line"></div>
+        <!-- How It Works - Integrated Steps -->
+        <div class="how-it-works-section">
+          <div class="section-head">
+            <span class="label-tech">HOW IT WORKS</span>
+            <h2>THREE SIMPLE STEPS</h2>
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card gsap-step" data-step="1">
+              <div class="step-number">01</div>
+              <h3>REPORT</h3>
+              <p>Submit a detailed report with optional imagery. Our system indexes key features immediately.</p>
+              <div class="step-icon">📝</div>
             </div>
-          </div>
-        </div>
-
-        <div class="split-right scroll-steps">
-          <div class="step-item active" data-step="1">
-            <span class="step-num">01</span>
-            <h3>REPORT</h3>
-            <p>Submit a detailed report with optional imagery. Our system indexes key features immediately.</p>
-          </div>
-          <div class="step-item" data-step="2">
-            <span class="step-num">02</span>
-            <h3>MATCH</h3>
-            <p>Our algorithm scans existing inventory using perceptual hashing to find potential matches.</p>
-          </div>
-          <div class="step-item" data-step="3">
-            <span class="step-num">03</span>
-            <h3>REUNITE</h3>
-            <p>Verify ownership through our secure claim portal and arrange for item retrieval.</p>
+            <div class="step-card gsap-step" data-step="2">
+              <div class="step-number">02</div>
+              <h3>MATCH</h3>
+              <p>Our algorithm scans existing inventory using perceptual hashing to find potential matches.</p>
+              <div class="step-icon">🔍</div>
+            </div>
+            <div class="step-card gsap-step" data-step="3">
+              <div class="step-number">03</div>
+              <h3>REUNITE</h3>
+              <p>Verify ownership through our secure claim portal and arrange for item retrieval.</p>
+              <div class="step-icon">🎉</div>
+            </div>
           </div>
         </div>
       </div>
@@ -218,86 +223,84 @@
 
     <!-- SECTION: REPORT -->
     <section id="page-report" class="view-section">
-      <div class="content-wrapper">
-        <div class="section-centered">
-          <span class="label-tech">NEW ENTRY</span>
-          <h2>FILE A REPORT</h2>
+      <div class="content-wrapper centered-small">
+        <span class="label-tech">NEW ENTRY</span>
+        <h2>FILE A REPORT</h2>
 
-          <form id="reportForm" class="tech-form" novalidate>
-            <div class="form-row">
-              <div class="input-group required">
-                <label for="itemTitle">ITEM TITLE</label>
-                <input type="text" id="itemTitle" required aria-describedby="itemTitleError">
-                <p class="input-error" id="itemTitleError" role="alert"></p>
-              </div>
-              <div class="input-group required">
-                <label for="itemCategory">CATEGORY</label>
-                <select id="itemCategory" required onchange="toggleOtherCat()" aria-describedby="itemCategoryError">
-                  <option value="">SELECT...</option>
-                  <option value="Keys">KEYS</option>
-                  <option value="Wallet">WALLET</option>
-                  <option value="Phone">PHONE</option>
-                  <option value="Bag">BAG</option>
-                  <option value="Other">OTHER</option>
-                </select>
-                <p class="input-error" id="itemCategoryError" role="alert"></p>
-              </div>
+        <form id="reportForm" class="tech-form" novalidate>
+          <div class="form-row">
+            <div class="input-group required">
+              <label for="itemTitle">ITEM TITLE</label>
+              <input type="text" id="itemTitle" required aria-describedby="itemTitleError">
+              <p class="input-error" id="itemTitleError" role="alert"></p>
             </div>
+            <div class="input-group required">
+              <label for="itemCategory">CATEGORY</label>
+              <select id="itemCategory" required onchange="toggleOtherCat()" aria-describedby="itemCategoryError">
+                <option value="">SELECT...</option>
+                <option value="Keys">KEYS</option>
+                <option value="Wallet">WALLET</option>
+                <option value="Phone">PHONE</option>
+                <option value="Bag">BAG</option>
+                <option value="Other">OTHER</option>
+              </select>
+              <p class="input-error" id="itemCategoryError" role="alert"></p>
+            </div>
+          </div>
 
-            <div id="otherCategoryWrap" class="input-group hidden">
-              <label for="otherCategory">SPECIFY TYPE</label>
-              <input type="text" id="otherCategory">
-            </div>
+          <div id="otherCategoryWrap" class="input-group hidden">
+            <label for="otherCategory">SPECIFY TYPE</label>
+            <input type="text" id="otherCategory">
+          </div>
 
-            <div class="form-row">
-              <div class="input-group required">
-                <label for="itemLocation">LOCATION FOUND</label>
-                <input type="text" id="itemLocation" required aria-describedby="itemLocationError">
-                <p class="input-error" id="itemLocationError" role="alert"></p>
-              </div>
-              <div class="input-group required">
-                <label for="itemDate">DATE</label>
-                <input type="date" id="itemDate" required aria-describedby="itemDateError">
-                <p class="input-error" id="itemDateError" role="alert"></p>
-              </div>
+          <div class="form-row">
+            <div class="input-group required">
+              <label for="itemLocation">LOCATION FOUND</label>
+              <input type="text" id="itemLocation" required aria-describedby="itemLocationError">
+              <p class="input-error" id="itemLocationError" role="alert"></p>
             </div>
+            <div class="input-group required">
+              <label for="itemDate">DATE</label>
+              <input type="date" id="itemDate" required aria-describedby="itemDateError">
+              <p class="input-error" id="itemDateError" role="alert"></p>
+            </div>
+          </div>
 
-            <div class="input-group">
-              <label for="itemDescription">DESCRIPTION</label>
-              <textarea id="itemDescription" rows="3"></textarea>
-            </div>
+          <div class="input-group">
+            <label for="itemDescription">DESCRIPTION</label>
+            <textarea id="itemDescription" rows="3"></textarea>
+          </div>
 
-            <div class="input-group">
-              <label for="reportItemPhoto">ITEM PHOTO (OPTIONAL)</label>
-              <div class="file-upload-ui">
-                <input type="file" id="reportItemPhoto" accept="image/*" onchange="previewFileReport()">
-                <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO</span>
-                <img id="reportPhotoPreview" class="photo-preview hidden" alt="Preview">
-              </div>
+          <div class="input-group">
+            <label for="reportItemPhoto">ITEM PHOTO (OPTIONAL)</label>
+            <div class="file-upload-ui">
+              <input type="file" id="reportItemPhoto" accept="image/*" onchange="previewFileReport()">
+              <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO</span>
+              <img id="reportPhotoPreview" class="photo-preview hidden" alt="Preview">
             </div>
+          </div>
 
-            <div class="section-divider">CONTACT INFO</div>
-            <div class="form-row">
-              <div class="input-group required">
-                <label for="contactName">YOUR NAME</label>
-                <input type="text" id="contactName" required aria-describedby="contactNameError">
-                <p class="input-error" id="contactNameError" role="alert"></p>
-              </div>
-              <div class="input-group required">
-                <label for="contactEmail">SCHOOL EMAIL</label>
-                <input type="email" id="contactEmail" required aria-describedby="contactEmailError">
-                <p class="input-error" id="contactEmailError" role="alert"></p>
-              </div>
+          <div class="section-divider">CONTACT INFO</div>
+          <div class="form-row">
+            <div class="input-group required">
+              <label for="contactName">YOUR NAME</label>
+              <input type="text" id="contactName" required aria-describedby="contactNameError">
+              <p class="input-error" id="contactNameError" role="alert"></p>
             </div>
-            <div class="input-group">
-              <label for="contactPhone">PHONE (OPTIONAL)</label>
-              <input type="tel" id="contactPhone">
+            <div class="input-group required">
+              <label for="contactEmail">SCHOOL EMAIL</label>
+              <input type="email" id="contactEmail" required aria-describedby="contactEmailError">
+              <p class="input-error" id="contactEmailError" role="alert"></p>
             </div>
+          </div>
+          <div class="input-group">
+            <label for="contactPhone">PHONE (OPTIONAL)</label>
+            <input type="tel" id="contactPhone">
+          </div>
 
-            <button type="submit" class="btn-primary full-width">SUBMIT ENTRY</button>
-            <div id="reportStatus" class="status-msg" role="status" aria-live="polite"></div>
-          </form>
-        </div>
+          <button type="submit" class="btn-primary full-width">SUBMIT ENTRY</button>
+          <div id="reportStatus" class="status-msg" role="status" aria-live="polite"></div>
+        </form>
       </div>
     </section>
 
@@ -337,135 +340,53 @@
 
     <!-- SECTION: DASHBOARD -->
     <section id="page-dashboard" class="view-section">
-      <div class="dashboard-container">
-
-        <!-- Header -->
-        <div class="dashboard-header-row">
-          <h2 class="dashboard-greeting">Hello, <span class="highlight" id="dashboardUserName">User</span></h2>
-          <div class="header-actions">
-            <input type="text" class="input-tech" placeholder="Search..."
-              style="border-radius: 20px; padding: 0.5rem 1rem; width: 200px;">
-            <button class="card-icon-btn">🔔</button>
+      <div class="content-wrapper">
+        <div class="section-head admin-header">
+          <div class="admin-title-group">
+            <span class="label-tech">STUDENT PORTAL</span>
+            <h2>Hello, <span id="dashboardUserName">User</span></h2>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-sm btn-outline" onclick="navigateToSection('report')">FILE NEW REPORT</button>
+            <button class="btn-sm btn-outline" onclick="navigateToSection('claim')">CLAIM ITEM</button>
           </div>
         </div>
 
-        <!-- Bento Grid -->
-        <div class="dashboard-bento-grid">
-
-          <!-- Card 1: Reports (Workouts styling) -->
-          <div class="bento-card card-reports">
-            <div class="card-title">
-              <span>My Reports</span>
-              <div class="card-icon-btn">↗</div>
-            </div>
-            <div class="mini-chart">
-              <div class="chart-bar" style="height: 40%"></div>
-              <div class="chart-bar active" style="height: 70%"></div>
-              <div class="chart-bar" style="height: 50%"></div>
-              <div class="chart-bar" style="height: 30%"></div>
-              <div class="chart-bar" style="height: 60%"></div>
-            </div>
-            <div class="stat-big">3</div>
-            <div class="stat-label">Active Cases</div>
+        <div class="dashboard-panels">
+          <div class="panel">
+            <h3>MY REPORTS</h3>
+            <div id="myReports" class="list-view"></div>
           </div>
-
-          <!-- Card 2: Progress (Steps styling) -->
-          <div class="bento-card card-found">
-            <div class="card-title">
-              <span>Recovery Rate</span>
-              <div class="card-icon-btn">↗</div>
-            </div>
-            <div class="progress-circle-wrap">
-              <div class="progress-inner">
-                <span style="font-weight:700; font-size:1.2rem;">75%</span>
-              </div>
-            </div>
-            <div style="flex-grow:1"></div>
-            <div class="stat-big" style="font-size: 1.5rem;">12</div>
-            <div class="stat-label">Items Returned</div>
+          <div class="panel">
+            <h3>MY CLAIMS</h3>
+            <div id="myClaims" class="list-view"></div>
           </div>
-
-          <!-- Card 3: Action (Water styling) -->
-          <div class="bento-card card-action">
-            <div class="card-title" style="color:white;">
-              <span>Quick Action</span>
-            </div>
-            <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">
-              Report a new lost item or check matches.
-            </div>
-            <div style="display:flex; align-items:flex-end; margin-top:2rem;">
-              <span style="font-size:2rem; font-weight:700;">NEW</span>
-              <button class="action-plus-btn" onclick="navigateToSection('report')">+</button>
-            </div>
-          </div>
-
-          <!-- Card 4: Daily Goals (Tasks/Notifications) - Right Column -->
-          <div class="bento-card card-goals">
-            <div class="card-title">
-              <span>Tasks & Tips</span>
-              <div class="card-icon-btn">✏️</div>
-            </div>
-            <div class="check-list-wrap">
-              <div class="check-list-item">
-                <div class="check-circle checked"></div>
-                <span>Check email for matches</span>
+          <div class="panel">
+            <h3>QUICK TIPS</h3>
+            <div class="list-view">
+              <div class="list-item">
+                <div>
+                  <strong>Upload Clear Photos</strong>
+                  <p style="font-size: 0.8rem; color: var(--muted-text); margin-top: 0.25rem;">High-quality images help
+                    identify items faster.</p>
+                </div>
               </div>
-              <div class="check-list-item">
-                <div class="check-circle"></div>
-                <span>Upload clearer photo</span>
+              <div class="list-item">
+                <div>
+                  <strong>Check Your Email</strong>
+                  <p style="font-size: 0.8rem; color: var(--muted-text); margin-top: 0.25rem;">We send updates when your
+                    items are found.</p>
+                </div>
               </div>
-              <div class="check-list-item">
-                <div class="check-circle"></div>
-                <span>Verify student ID</span>
-              </div>
-              <div class="check-list-item">
-                <div class="check-circle"></div>
-                <span>Update contact info</span>
-              </div>
-            </div>
-
-            <div style="margin-top:auto; background: #f0f0f0; border-radius: 12px; padding: 1rem; margin-top: 1rem;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                <span>Profile Completion</span>
-                <span>80%</span>
-              </div>
-              <div style="height: 6px; background: #ddd; border-radius: 3px; overflow: hidden;">
-                <div style="width: 80%; height: 100%; background: var(--accent-color);"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 5: Timeline (Bottom Wide) -->
-          <div class="bento-card card-timeline">
-            <div class="card-title">
-              <span>Recent Activity Timeline</span>
-              <button class="btn-sm" style="background:#eee; color:#333; height: auto; padding: 0.4rem 1rem;">October
-                2025</button>
-            </div>
-
-            <div style="display: flex; gap: 2rem; overflow-x: auto; padding-bottom: 1rem;">
-              <!-- Activity Item -->
-              <div style="min-width: 200px; background: #f8f9fa; padding: 1rem; border-radius: 16px;">
-                <span style="font-size:0.8rem; color:#888;">10:00 AM</span>
-                <div style="font-weight: 600; margin-top: 0.5rem;">Found: Keys</div>
-                <div style="font-size: 0.85rem; color: #666;">Library 2nd Floor</div>
-              </div>
-
-              <!-- Activity Item -->
-              <div style="min-width: 200px; background: #f8f9fa; padding: 1rem; border-radius: 16px;">
-                <span style="font-size:0.8rem; color:#888;">Yesterday</span>
-                <div style="font-weight: 600; margin-top: 0.5rem;">Report Filed</div>
-                <div style="font-size: 0.85rem; color: #666;">Black Wallet</div>
-                <div style="margin-top:0.5rem; display:flex; gap: -10px;">
-                  <!-- Avatars placeholder -->
-                  <div style="width:24px; height:24px; background:#ddd; border-radius:50%;"></div>
+              <div class="list-item">
+                <div>
+                  <strong>Be Specific</strong>
+                  <p style="font-size: 0.8rem; color: var(--muted-text); margin-top: 0.25rem;">Include unique details
+                    like stickers, engravings, or marks.</p>
                 </div>
               </div>
             </div>
-            <button class="action-plus-btn"
-              style="background: var(--accent-color); color: white; position: absolute; bottom: 1.5rem; right: 1.5rem;">+</button>
           </div>
-
         </div>
       </div>
     </section>
@@ -546,6 +467,7 @@
   <script src="js/config.js"></script>
   <script src="js/state.js"></script>
   <script src="js/utils.js"></script>
+  <script src="js/darkmode.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/email.js"></script>
   <script src="js/supabase-client.js"></script>

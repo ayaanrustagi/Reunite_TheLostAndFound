@@ -95,13 +95,21 @@ async function syncFromSupabase() {
     console.log("🔄 STARTING SMART SYNC...");
 
     try {
-        const [itRes, clRes] = await Promise.all([
+        const [itRes, clRes, auditRes] = await Promise.all([
             window.supabaseClient.from('items').select('*'),
-            window.supabaseClient.from('claims').select('*')
+            window.supabaseClient.from('claims').select('*'),
+            window.supabaseClient.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(50)
         ]);
 
         if (itRes.error) throw itRes.error;
         if (clRes.error) throw clRes.error;
+        // Audit log errors are non-critical
+        if (auditRes.error) {
+            console.warn('Audit log fetch failed:', auditRes.error.message);
+            window.auditLogs = [];
+        } else {
+            window.auditLogs = auditRes.data || [];
+        }
 
         window.items = itRes.data || [];
         window.claims = clRes.data || [];
@@ -109,7 +117,7 @@ async function syncFromSupabase() {
         // Local sort is faster than DB sort for small datasets
         window.items.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
-        console.log(`✅ SYNC SUCCESS: ${window.items.length} items cached.`);
+        console.log(`✅ SYNC SUCCESS: ${window.items.length} items, ${window.claims.length} claims, ${window.auditLogs?.length || 0} audit logs cached.`);
 
         // Debounced renders to prevent UI lockup
         requestAnimationFrame(() => {
@@ -126,6 +134,40 @@ async function syncFromSupabase() {
     }
 }
 window.syncFromSupabase = syncFromSupabase;
+
+// Audit Log Function
+async function logAuditEvent(action, targetType, targetId, targetName, details = null) {
+    if (!window.SUPABASE_ENABLED) {
+        console.warn('Supabase disabled. Cannot log audit event.');
+        return false;
+    }
+
+    const userEmail = window.currentUser?.email || 'unknown';
+
+    const auditEntry = {
+        action: action,
+        target_type: targetType,
+        target_id: targetId,
+        target_name: targetName,
+        user_email: userEmail,
+        details: details,
+        created_at: new Date().toISOString()
+    };
+
+    try {
+        const { error } = await window.supabaseClient.from('audit_logs').insert(auditEntry);
+        if (error) {
+            console.error('Audit log insert failed:', error.message);
+            return false;
+        }
+        console.log(`📋 AUDIT: ${action} on ${targetType} by ${userEmail}`);
+        return true;
+    } catch (err) {
+        console.error('Audit logging error:', err);
+        return false;
+    }
+}
+window.logAuditEvent = logAuditEvent;
 
 async function supabaseUpsert(table, record) {
     if (!window.SUPABASE_ENABLED) {

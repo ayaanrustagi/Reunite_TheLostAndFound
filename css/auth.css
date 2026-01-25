@@ -578,3 +578,66 @@ body.auth-page::before {
         margin-bottom: 1rem;
     }
 }
+
+/* ================================
+   DARK MODE SUPPORT FOR AUTH PAGE
+   ================================ */
+
+body.auth-page.dark-mode {
+    --bg-color: #0d0d0d;
+    --text-color: #f5f5f5;
+    --accent-color: #4d9fff;
+    --border-color: #2a2a2a;
+    --panel-bg: #1a1a1a;
+    --muted-text: #8a8a8a;
+}
+
+body.auth-page.dark-mode::before {
+    opacity: 0.08;
+}
+
+body.auth-page.dark-mode .auth-form-card {
+    background: var(--panel-bg);
+    border-color: var(--border-color);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+body.auth-page.dark-mode .input-pill {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+body.auth-page.dark-mode .input-pill:focus {
+    background: var(--panel-bg);
+    border-color: var(--accent-color);
+}
+
+body.auth-page.dark-mode .btn-primary.auth-submit-btn {
+    background: #f5f5f5;
+    color: #0d0d0d;
+}
+
+body.auth-page.dark-mode .btn-primary.auth-submit-btn:hover {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+body.auth-page.dark-mode .logo-orb {
+    background: var(--bg-color);
+    border-color: var(--border-color);
+}
+
+body.auth-page.dark-mode .admin-toggle-label {
+    background: var(--bg-color);
+    border-color: var(--border-color);
+}
+
+body.auth-page.dark-mode .admin-toggle-label:hover {
+    border-color: var(--accent-color);
+    background: var(--panel-bg);
+}
+
+body.auth-page.dark-mode .modal-visual-side {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}

@@ -128,6 +128,10 @@ async function handleReportSubmit(e) {
     if (success) {
         // Only add to local array and show success if database save succeeded
         window.items.unshift(newItem);
+
+        // Log audit event
+        await logAuditEvent('ITEM_UPLOADED', 'item', newItem.id, newItem.title, `Submitted by ${email}`);
+
         await syncFromSupabase();
 
         setStatusMessage('reportStatus', 'REPORT LOGGED SUCCESSFULLY - PENDING REVIEW', false);
@@ -247,13 +251,17 @@ async function handleClaimSubmit(e) {
     if (success) {
         // Only add to local array and show success if database save succeeded
         window.claims.unshift(newClaim);
+
+        // Log audit event
+        const item = window.items.find(i => i.id === newClaim.item_id);
+        await logAuditEvent('CLAIM_SUBMITTED', 'claim', newClaim.id, item?.title || 'Unknown Item', `Claimed by ${email}`);
+
         await syncFromSupabase();
 
         setStatusMessage('claimStatus', 'CLAIM DATA RECEIVED - AWAITING VERIFICATION', false);
         e.target.reset();
 
         // Notify the Original Reporter that someone claimed their item
-        const item = window.items.find(i => i.id === newClaim.item_id);
         if (item && item.contact_email) {
             sendEmailUpdate(
                 item.contact_email,
@@ -425,6 +433,8 @@ async function approveItem(id) {
         const updatedItem = { ...item, status: 'approved' };
         const success = await supabaseUpsert('items', updatedItem);
         if (success) {
+            // Log audit event
+            await logAuditEvent('ITEM_APPROVED', 'item', item.id, item.title);
             await syncFromSupabase();
 
             // Notify Reporter
@@ -446,6 +456,8 @@ async function rejectItem(id) {
         const updatedItem = { ...item, status: 'rejected' };
         const success = await supabaseUpsert('items', updatedItem);
         if (success) {
+            // Log audit event
+            await logAuditEvent('ITEM_REJECTED', 'item', item.id, item.title);
             await syncFromSupabase();
 
             // Notify Reporter
@@ -467,9 +479,12 @@ async function approveClaim(id) {
         const updatedClaim = { ...claim, status: 'approved' };
         const success = await supabaseUpsert('claims', updatedClaim);
         if (success) {
-            await syncFromSupabase();
-
             const item = window.items.find(i => i.id === claim.item_id);
+
+            // Log audit event
+            await logAuditEvent('CLAIM_APPROVED', 'claim', claim.id, item?.title || 'Unknown Item', `Verified for ${claim.claimant_name}`);
+
+            await syncFromSupabase();
 
             // Notify Claimant
             sendEmailUpdate(
@@ -485,14 +500,29 @@ async function approveClaim(id) {
 window.approveClaim = approveClaim;
 
 async function deleteItem(id) {
+    const item = window.items.find(i => i.id === id);
     if (!confirm("PERMANENTLY DELETE THIS ITEM FROM DATABASE?")) return;
+
+    // Log audit event before deletion
+    if (item) {
+        await logAuditEvent('ITEM_DELETED', 'item', id, item.title);
+    }
+
     await supabaseDelete('items', id);
     await syncFromSupabase();
 }
 window.deleteItem = deleteItem;
 
 async function deleteClaim(id) {
+    const claim = window.claims.find(c => c.id === id);
     if (!confirm("PERMANENTLY DELETE THIS CLAIM RECORD?")) return;
+
+    // Log audit event before deletion
+    if (claim) {
+        const item = window.items.find(i => i.id === claim.item_id);
+        await logAuditEvent('CLAIM_DELETED', 'claim', id, item?.title || 'Unknown Item');
+    }
+
     await supabaseDelete('claims', id);
     await syncFromSupabase();
 }

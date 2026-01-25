@@ -285,7 +285,9 @@ async function verifyOTP() {
         }
 
         setTimeout(() => {
-            window.location.href = "index.html";
+            // Redirect to appropriate dashboard based on role
+            const dashboardHash = userData.role === 'admin' ? '#admin' : '#dashboard';
+            window.location.href = 'index.html' + dashboardHash;
         }, 1200);
 
     } catch (err) {
