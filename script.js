@@ -24,11 +24,46 @@ const LS_KEYS = {
 const SUPABASE_URL = window.SUPABASE_URL || "";
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "";
 console.log("Supabase init values:", { SUPABASE_URL, SUPABASE_ANON_KEY: SUPABASE_ANON_KEY ? "set" : "missing", DEMO_MODE });
-const supabaseClient = (typeof window.supabase !== "undefined" && SUPABASE_URL && SUPABASE_ANON_KEY)
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
-const SUPABASE_ENABLED = !!supabaseClient;
-console.log("Supabase client created:", SUPABASE_ENABLED);
+
+let supabaseClient = null;
+let SUPABASE_ENABLED = false;
+
+// Initialize Supabase after DOM is ready to ensure script is loaded
+function initializeSupabase() {
+  console.log("window.supabase available:", typeof window.supabase !== "undefined");
+
+  // If Supabase isn't loaded, try to load it dynamically
+  if (typeof window.supabase === "undefined") {
+    console.log("Loading Supabase dynamically...");
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js';
+    script.onload = () => {
+      console.log("Supabase script loaded dynamically");
+      createSupabaseClient();
+    };
+    script.onerror = () => {
+      console.error("Failed to load Supabase script dynamically");
+    };
+    document.head.appendChild(script);
+  } else {
+    createSupabaseClient();
+  }
+}
+
+function createSupabaseClient() {
+  console.log("Creating Supabase client...");
+  if (typeof window.supabase !== "undefined" && SUPABASE_URL && SUPABASE_ANON_KEY) {
+    try {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      SUPABASE_ENABLED = !!supabaseClient;
+      if (SUPABASE_ENABLED) {
+        console.log("🟢 SUPABASE CLIENT INITIALIZED");
+      }
+    } catch (e) {
+      console.error("🔴 SUPABASE INIT ERROR:", e);
+    }
+  }
+}
 
 let currentUser = null;
 let items = [];
@@ -38,6 +73,7 @@ let claims = [];
 // Initialization
 // ------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+  initializeSupabase();
   loadAll();
   loadSession();
   updateAuthUI();
@@ -254,13 +290,13 @@ window.handleRoleChange = handleRoleChange;
 // Data Handling
 // ------------------------------
 function loadAll() {
-  items = JSON.parse(localStorage.getItem(LS_KEYS.items) || "[]");
-  claims = JSON.parse(localStorage.getItem(LS_KEYS.claims) || "[]");
+  // Supabase-only: don't load from localStorage
+  items = [];
+  claims = [];
 }
 
 function saveAll() {
-  localStorage.setItem(LS_KEYS.items, JSON.stringify(items));
-  localStorage.setItem(LS_KEYS.claims, JSON.stringify(claims));
+  // Supabase-only: don't save to localStorage
 }
 
 function loadSession() {
@@ -272,43 +308,59 @@ function loadSession() {
 // Supabase sync helpers (safe + optional)
 // ------------------------------
 async function syncFromSupabase() {
-  if (!SUPABASE_ENABLED || DEMO_MODE) return;
+  if (!SUPABASE_ENABLED) return;
+  console.log("🔄 SYNCING FROM SUPABASE...");
   try {
-    const { data: itemsData, error: itemsErr } = await supabaseClient
-      .from('items')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (!itemsErr && Array.isArray(itemsData)) {
-      items = itemsData;
-    }
-    const { data: claimsData, error: claimsErr } = await supabaseClient
-      .from('claims')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (!claimsErr && Array.isArray(claimsData)) {
-      claims = claimsData;
-    }
-    saveAll();
+    const [itRes, clRes] = await Promise.all([
+      supabaseClient.from('items').select('*').order('created_at', { ascending: false }),
+      supabaseClient.from('claims').select('*').order('created_at', { ascending: false })
+    ]);
+
+    if (itRes.error) throw itRes.error;
+    if (clRes.error) throw clRes.error;
+
+    items = itRes.data || [];
+    claims = clRes.data || [];
+
+    console.log(`✅ SYNC COMPLETE: Found ${items.length} items and ${claims.length} claims`);
+
     renderFound();
     renderClaimSelect();
     renderDashboard();
     renderAdmin();
   } catch (err) {
-    console.warn('Supabase sync failed, using local data fallback.', err);
+    console.error('🔴 SUPABASE SYNC FAILED:', err.message || err);
+    // If sync fails, show a status message if possible
+    const statusEl = document.getElementById('reportStatus') || document.getElementById('loginStatus');
+    if (statusEl) statusEl.textContent = "⚠️ DATABASE CONNECTION ERROR - CHECK CONSOLE";
   }
 }
 
 async function supabaseUpsert(table, record) {
-  if (!SUPABASE_ENABLED || DEMO_MODE) return;
+  if (!SUPABASE_ENABLED) {
+    console.warn(`Supabase disabled. Cannot save to ${table}.`);
+    return false;
+  }
   try {
-    await supabaseClient.from(table).upsert(record);
+    console.log(`📤 SAVING TO ${table}...`, record);
+    const { error } = await supabaseClient.from(table).upsert(record);
+
+    if (error) {
+      console.error(`🔴 SUPABASE ERROR (${table}):`, error.message);
+      alert(`DATABASE ERROR: ${error.message}\n\nCheck if table columns match exactly and RLS is disabled.`);
+      return false;
+    }
+
+    console.log(`✅ ${table} RECORD UPDATED SUCCESSFULLY`);
+    return true;
   } catch (err) {
-    console.warn(`Supabase upsert failed for ${table}`, err);
+    console.error(`🔴 CRITICAL FAIL (${table}):`, err);
+    return false;
   }
 }
 
 async function supabaseDelete(table, id) {
-  if (!SUPABASE_ENABLED || DEMO_MODE) return;
+  if (!SUPABASE_ENABLED) return;
   try {
     await supabaseClient.from(table).delete().eq('id', id);
   } catch (err) {
@@ -326,7 +378,10 @@ function renderFound() {
   const loc = document.getElementById('locationFilter').value.toLowerCase();
   const sort = document.getElementById('sortFilter').value;
 
+  console.log("renderFound called with:", { totalItems: items.length, search, cat, loc, sort });
+
   let filtered = items.filter(it => it.status === 'approved'); // Only show approved items
+  console.log("After status filter (approved only):", filtered.length);
 
   if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || i.description.toLowerCase().includes(search));
   if (cat) filtered = filtered.filter(i => i.category === cat);
@@ -334,6 +389,8 @@ function renderFound() {
 
   if (sort === 'newest') filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   else filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+  console.log("Final filtered items to display:", filtered.length);
 
   document.getElementById('itemsCount').textContent = filtered.length;
 
@@ -570,8 +627,10 @@ async function handleReportSubmit(e) {
   };
 
   items.unshift(newItem);
-  saveAll();
-  supabaseUpsert('items', newItem);
+  const success = await supabaseUpsert('items', newItem);
+  if (success) {
+    await syncFromSupabase();
+  }
   document.getElementById('reportStatus').textContent = "REPORT LOGGED SUCCESSFULLY - PENDING REVIEW";
 
   // Clear preview
@@ -581,7 +640,7 @@ async function handleReportSubmit(e) {
   e.target.reset();
 }
 
-function handleClaimSubmit(e) {
+async function handleClaimSubmit(e) {
   e.preventDefault();
   const itemId = document.getElementById('claimItemId').value;
   const name = document.getElementById('claimName').value;
@@ -599,8 +658,10 @@ function handleClaimSubmit(e) {
   };
 
   claims.unshift(newClaim);
-  saveAll();
-  supabaseUpsert('claims', newClaim);
+  const success = await supabaseUpsert('claims', newClaim);
+  if (success) {
+    await syncFromSupabase();
+  }
   document.getElementById('claimStatus').textContent = "CLAIM DATA RECEIVED - AWAITING VERIFICATION";
   e.target.reset();
 }
@@ -656,10 +717,7 @@ function renderDashboard() {
 
 function renderAdmin() {
   if (!currentUser || currentUser.role !== 'admin') return;
-
   const pendingEl = document.getElementById('adminPendingItems');
-  const claimsEl = document.getElementById('adminClaims');
-
   const pending = items.filter(i => i.status === 'pending');
   pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">
@@ -670,8 +728,9 @@ function renderAdmin() {
                 <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
             </div>
         </div>
-    `).join('') : 'ALL CLEAR';
+    `).join('') : 'NO PENDING ITEMS';
 
+  const claimsEl = document.getElementById('adminPendingClaims');
   const pendingClaims = claims.filter(c => c.status === 'pending');
   claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
     const item = items.find(it => it.id === c.item_id);
@@ -686,6 +745,7 @@ function renderAdmin() {
   // Approved Inventory
   const approvedEl = document.getElementById('adminApprovedItems');
   const approved = items.filter(i => i.status === 'approved');
+  console.log("renderAdmin debug:", { totalItems: items.length, approvedItems: approved.length, itemStatuses: items.map(i => ({ id: i.id, status: i.status })) });
   approvedEl.innerHTML = approved.length ? approved.map(i => `
         <div class="list-item">
             <strong>${i.title}</strong>
@@ -707,38 +767,49 @@ function renderAdmin() {
   }).join('') : 'EMPTY';
 }
 
-function approveItem(id) {
+async function approveItem(id) {
   const item = items.find(i => i.id === id);
-  if (item) item.status = 'approved';
-  saveAll(); renderAdmin();
+  if (item) {
+    const updatedItem = { ...item, status: 'approved' };
+    const success = await supabaseUpsert('items', updatedItem);
+    if (success) {
+      await syncFromSupabase();
+    }
+  }
 }
 window.approveItem = approveItem;
 
-function rejectItem(id) {
+async function rejectItem(id) {
   const item = items.find(i => i.id === id);
-  if (item) item.status = 'rejected';
-  saveAll(); renderAdmin();
+  if (item) {
+    item.status = 'rejected';
+    await supabaseUpsert('items', item);
+    await syncFromSupabase();
+  }
 }
 window.rejectItem = rejectItem;
 
-function approveClaim(id) {
+async function approveClaim(id) {
   const claim = claims.find(c => c.id === id);
-  if (claim) claim.status = 'approved';
-  saveAll(); renderAdmin();
+  if (claim) {
+    claim.status = 'approved';
+    await supabaseUpsert('claims', claim);
+    await syncFromSupabase();
+  }
 }
 window.approveClaim = approveClaim;
 
-function deleteItem(id) {
+async function deleteItem(id) {
   if (!confirm("PERMANENTLY DELETE THIS ITEM FROM DATABASE?")) return;
-  items = items.filter(i => i.id !== id);
-  saveAll(); renderAdmin();
+  await supabaseDelete('items', id);
+  await syncFromSupabase();
 }
 window.deleteItem = deleteItem;
 
-function deleteClaim(id) {
+async function deleteClaim(id) {
   if (!confirm("PERMANENTLY DELETE THIS CLAIM RECORD?")) return;
-  claims = claims.filter(c => c.id !== id);
-  saveAll(); renderAdmin();
+  await supabaseDelete('claims', id);
+  await syncFromSupabase();
 }
 window.deleteClaim = deleteClaim;
 
