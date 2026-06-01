@@ -1,0 +1,63 @@
+/* Hero Text Rotation Animations */
+.headline-text,
+.tagline-text {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Page Transition Animations */
+.page-section {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.page-transition-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: pageSlideIn 0.5s ease-out forwards;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced hover effects for interactive elements */
+.nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary,
+.btn-secondary {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-1px);
+}
+
+/* Smooth fade for modal content */
+.modal-content {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.modal.show .modal-content {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal:not(.show) .modal-content {
+  opacity: 0;
+  transform: scale(0.95);
+}

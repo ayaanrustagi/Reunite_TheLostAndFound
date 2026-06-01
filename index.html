@@ -1,458 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reunite - School Lost & Found</title>
+  <title>REUNITE - Lost & Found Network</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <!-- Accessible skip link -->
-  <a class="skip-link" href="#mainContent">Skip to content</a>
 
-  <!-- Animated Background -->
-  <div class="animated-background" aria-hidden="true">
-    <div class="animated-background__base"></div>
-    <div class="animated-background__overlay"></div>
-    <div class="animated-background__orb animated-background__orb--left"></div>
-    <div class="animated-background__orb animated-background__orb--right"></div>
-    <div class="animated-background__orb animated-background__orb--center"></div>
-    <div class="animated-background__grid"></div>
-    <div class="animated-background__radial"></div>
-  </div>
+<body class="theme-light">
+
+  <!-- Blue Glow / Scanline Overlays -->
+  <div class="screen-vignette"></div>
+  <div class="scan-line"></div>
 
   <!-- Header -->
-  <header class="header" id="header">
-    <nav class="nav" aria-label="Primary navigation">
-      <button class="logo-button" type="button" onclick="navigateToSection('hero')" aria-label="Go to Home">
-        <img src="assets/reunite-logo.png" alt="Reunite logo" class="logo">
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-area" onclick="navigateToSection('hero')">
+        <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
-      </button>
-
-      <div class="nav-links">
-        <button class="nav-link" data-section="found" type="button" onclick="navigateToSection('found')">Find Items</button>
-        <button class="nav-link" data-section="report" type="button" onclick="navigateToSection('report')">Report an Item</button>
-        <button class="nav-link" data-section="claim" type="button" onclick="navigateToSection('claim')">Claim an Item</button>
-        <button class="nav-link" data-section="how" type="button" onclick="navigateToSection('how')">How It Works</button>
       </div>
 
-      <div class="auth-buttons">
-        <button class="auth-button" id="dashboardBtn" style="display:none;" type="button" onclick="navigateToSection('dashboard')">DASHBOARD</button>
-        <button class="auth-button" id="adminBtn" style="display:none;" type="button" onclick="navigateToSection('admin')">ADMIN</button>
-        <button class="auth-button" id="logoutBtn" style="display:none;" type="button" onclick="handleLogout()">LOGOUT</button>
-        <button class="auth-button" id="loginBtn" type="button" onclick="openLoginModal()">LOGIN</button>
-</div>
-    </nav>
+      <nav class="main-nav">
+        <button class="nav-btn" onclick="navigateToSection('found')">FIND ITEMS</button>
+        <button class="nav-btn" onclick="navigateToSection('report')">REPORT AN ITEM</button>
+        <button class="nav-btn" onclick="navigateToSection('how')">HOW IT WORKS</button>
+      </nav>
+
+      <div class="header-actions">
+        <button id="loginBtn" class="btn-sm btn-outline" onclick="openLoginModal()">SIGN IN</button>
+        <button id="dashboardBtn" class="btn-sm btn-outline hidden"
+          onclick="navigateToSection('dashboard')">DASHBOARD</button>
+        <button id="adminBtn" class="btn-sm btn-outline hidden" onclick="navigateToSection('admin')">ADMIN</button>
+        <button id="logoutBtn" class="btn-sm btn-outline hidden" onclick="handleLogout()">LOGOUT</button>
+      </div>
+    </div>
   </header>
 
-  <!-- Main -->
-  <main id="mainContent" class="main-content">
-    <!-- Hero -->
-    <section id="page-hero" class="page-section hero-section" data-section-id="hero">
-      <div class="brutalist-background"></div>
-      <div class="grid-container">
-        <div class="col-8">
-          <div class="hero-content">
-            <div class="hero-label">YOUR SCHOOL'S LOST & FOUND NETWORK</div>
+  <!-- Main Content Area -->
+  <main id="main-container">
 
-            <h1 class="hero-title">
-              <div class="overflow-hidden">
-                <span id="headlineText" class="headline-text">LOST AN ITEM</span>
-              </div>
-              <span class="hero-title__accent">
-                <div class="overflow-hidden">
-                  <span id="taglineText" class="tagline-text">REUNITE ON CAMPUS FASTER</span>
-                </div>
-              </span>
-            </h1>
+    <!-- SECTION: HERO -->
+    <section id="page-hero" class="view-section active">
+      <div class="hero-wrapper">
+        <div class="hero-top-label">WORLD'S LARGEST LOST & FOUND NETWORK</div>
 
-            <p class="hero-description">
-              Built for students, staff, and campus offices. Report found items, search the catalog, and submit a claim request—all in one place.
-            </p>
+        <h1 class="hero-display-text">
+          <span id="hero-title" class="line-reveal">SEARCHING NOW</span>
+          <span id="hero-subtitle" class="line-reveal sub-hero">FIND YOUR LOST ITEMS</span>
+        </h1>
 
-            <div class="hero-buttons">
-              <button class="btn-primary" type="button" onclick="navigateToSection('report')">Report a Found Item</button>
-              <button class="btn-secondary" type="button" onclick="navigateToSection('found')">Browse Found Items</button>
-            </div>
-
-            <div class="helper-row" role="status" aria-live="polite" id="globalStatus"></div>
-          </div>
+        <div class="hero-cta-group">
+          <button class="btn-primary" onclick="navigateToSection('report')">
+            FILE A LOST REPORT
+            <span class="btn-icon">→</span>
+          </button>
+          <button class="btn-text" onclick="navigateToSection('found')">
+            [ I FOUND SOMETHING ]
+          </button>
         </div>
-        <div class="col-4"></div>
+      </div>
+
+      <div class="status-ticker">
+        <span id="globalStatus">SYSTEM ONLINE - READY TO SEARCH</span>
       </div>
     </section>
 
-    <!-- How It Works -->
-    <section id="page-how" class="page-section how-section" data-section-id="how" style="display:none;">
-      <div class="brutalist-background"></div>
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">HOW IT WORKS</div>
-          <h2 class="section-title">SIMPLE 3-STEP PROCESS</h2>
+    <!-- SECTION: HOW IT WORKS (Split Layout) -->
+    <section id="page-how" class="view-section">
+      <div class="split-layout">
+        <div class="split-left sticky-content">
+          <div class="label-tech">HOW IT PROCESSES</div>
+          <div id="how-step-preview" class="step-preview">
+            <h2 id="preview-title" class="preview-title">INITIATE</h2>
+            <p id="preview-desc" class="preview-desc">Begin the recovery process by logging the details into our secure
+              network.</p>
+            <div class="step-visual">
+              <div class="visual-box"></div>
+            </div>
+          </div>
         </div>
 
-        <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-number">1</div>
+        <div class="split-right scroll-steps">
+          <div class="step-item active" data-step="1">
+            <span class="step-num">01</span>
             <h3>REPORT</h3>
-            <p>Submit a found item report with details and a photo.</p>
+            <p>Submit a detailed report with optional imagery. Our system indexes key features immediately.</p>
           </div>
-          <div class="step-card">
-            <div class="step-number">2</div>
+          <div class="step-item" data-step="2">
+            <span class="step-num">02</span>
             <h3>MATCH</h3>
-            <p>AI-assisted matching suggests similar items using offline image similarity.</p>
+            <p>Our algorithm scans existing inventory using perceptual hashing to find potential matches.</p>
           </div>
-          <div class="step-card">
-            <div class="step-number">3</div>
+          <div class="step-item" data-step="3">
+            <span class="step-num">03</span>
             <h3>REUNITE</h3>
-            <p>Submit a claim request. Admins verify and mark items as claimed.</p>
+            <p>Verify ownership through our secure claim portal and arrange for item retrieval.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Found Items -->
-    <section id="page-found" class="page-section found-section" data-section-id="found" style="display:none;">
-      <div class="brutalist-background"></div>
-      <div class="grid-container">
-        <div class="col-8">
-          <div class="found-content">
-            <div class="section-label">BROWSE FOUND ITEMS</div>
-            <h1 class="section-title">FIND YOUR LOST ITEMS</h1>
+    <!-- SECTION: FOUND ITEMS (Search) -->
+    <section id="page-found" class="view-section">
+      <div class="content-wrapper">
+        <div class="section-head">
+          <span class="label-tech">DATABASE ACCESS</span>
+          <h2>BROWSE INVENTORY</h2>
+        </div>
 
-            <div class="filters" aria-label="Filters">
-              <div class="filter-group">
-                <label class="sr-only" for="searchFilter">Search</label>
-                <input id="searchFilter" class="form-input" type="text" placeholder="Search title or description..." />
+        <div class="filter-ui">
+          <div class="filter-group">
+            <label class="sr-only">Search</label>
+            <input type="text" id="searchFilter" class="input-tech" placeholder="SEARCH KEYWORDS..."
+              onkeyup="renderFound()">
+          </div>
+          <div class="filter-group">
+            <label class="sr-only">Category</label>
+            <select id="categoryFilter" class="input-tech" onchange="renderFound()">
+              <option value="">ALL CATEGORIES</option>
+              <option value="Keys">KEYS</option>
+              <option value="Wallet">WALLET</option>
+              <option value="Phone">PHONE</option>
+              <option value="Bag">BAG</option>
+              <option value="Other">OTHER</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="sr-only">Location</label>
+            <input type="text" id="locationFilter" class="input-tech" placeholder="LOCATION..." onkeyup="renderFound()">
+          </div>
+          <div class="filter-group">
+            <label class="sr-only">Sort</label>
+            <select id="sortFilter" class="input-tech" onchange="renderFound()">
+              <option value="newest">NEWEST</option>
+              <option value="oldest">OLDEST</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group" style="margin-bottom: 3rem;">
+          <label class="label-tech">VISUAL SEARCH (AI MATCHING)</label>
+          <div class="file-upload-ui">
+            <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
+            <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO OF LOST ITEM</span>
+            <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
+          </div>
+          <div id="aiMatchContainer" class="ai-scan-container">
+            <div class="scanning-line-overlay"></div>
+            <div id="aiMatchLabel">INITIALIZING COMPONENT SCAN...</div>
+            <div class="scan-progress-bar" id="aiScanProgress"></div>
+            <div id="aiMatchResults"></div>
+          </div>
+        </div>
+
+        <div class="results-meta">
+          <span id="itemsCount">0</span> ITEMS FOUND
+        </div>
+
+        <div id="itemsGrid" class="grid-layout">
+          <!-- JS Injected Items -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: REPORT -->
+    <section id="page-report" class="view-section">
+      <div class="content-wrapper">
+        <div class="section-centered">
+          <span class="label-tech">NEW ENTRY</span>
+          <h2>FILE A REPORT</h2>
+
+          <form id="reportForm" class="tech-form" novalidate>
+            <div class="form-row">
+              <div class="input-group">
+                <label>ITEM TITLE</label>
+                <input type="text" id="itemTitle" required>
               </div>
-
-              <div class="filter-group">
-                <label class="sr-only" for="categoryFilter">Category</label>
-                <select id="categoryFilter" class="form-select">
-                  <option value="">Item Type</option>
-                  <option value="Keys">Keys</option>
-                  <option value="Wallet">Wallet</option>
-                  <option value="Phone">Phone</option>
-                  <option value="Bag">Bag</option>
-                  <option value="Other">Other</option>
+              <div class="input-group">
+                <label>CATEGORY</label>
+                <select id="itemCategory" required onchange="toggleOtherCat()">
+                  <option value="">SELECT...</option>
+                  <option value="Keys">KEYS</option>
+                  <option value="Wallet">WALLET</option>
+                  <option value="Phone">PHONE</option>
+                  <option value="Bag">BAG</option>
+                  <option value="Other">OTHER</option>
                 </select>
-                <div id="categoryOtherHelp" class="field-help" style="display:none;">
-                  “Other” means the item doesn’t fit the listed categories.
-                </div>
               </div>
-
-              <div class="filter-group">
-                <label class="sr-only" for="locationFilter">Location</label>
-                <input id="locationFilter" class="form-input" type="text" placeholder="Location (free response)" />
-              </div>
-
-              <div class="filter-group">
-                <label class="sr-only" for="dateFilter">Date</label>
-                <input type="date" id="dateFilter" class="form-input">
-              </div>
-              
-<div class="filter-group">
-  <label class="sr-only" for="sortFilter">Sort</label>
-  <select id="sortFilter" class="form-select">
-    <option value="newest">Newest First</option>
-    <option value="oldest">Oldest First</option>
-    <option value="category">By Category</option>
-  </select>
-</div>
-
-<div class="status-legend" aria-label="Status legend">
-  <span><span class="legend-dot pending"></span> Pending</span>
-  <span><span class="legend-dot approved"></span> Approved</span>
-  <span><span class="legend-dot claimed"></span> Claimed</span>
-</div>
-
             </div>
-          </div>
-        </div>
 
-        <div class="col-4">
-          <div class="results-stats">
-            <div class="stat-card">
-              <div class="stat-label">Search Results</div>
-              <div class="stat-number" id="itemsCount">0</div>
-              <div class="stat-sublabel">Items Found</div>
+            <div id="otherCategoryWrap" class="input-group hidden">
+              <label>SPECIFY TYPE</label>
+              <input type="text" id="otherCategory">
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="container">
-        
-<div class="find-upload">
-  <label for="findPhoto">Upload a photo of your lost item (optional)</label>
-  <input type="file" id="findPhoto" accept="image/*">
-  <div class="field-help">AI-assisted matching will highlight similar approved found items below.</div>
-  <img id="findPhotoPreview" class="photo-preview" style="display:none;" alt="Preview of uploaded photo">
-  <div class="form-status" id="findAiStatus" role="status" aria-live="polite"></div>
-</div>
+            <div class="form-row">
+              <div class="input-group">
+                <label>LOCATION FOUND</label>
+                <input type="text" id="itemLocation" required>
+              </div>
+              <div class="input-group">
+                <label>DATE</label>
+                <input type="date" id="itemDate" required>
+              </div>
+            </div>
 
-<div class="items-grid" id="itemsGrid">
-          <div class="loading-message">Loading items...</div>
+            <div class="input-group">
+              <label>DESCRIPTION</label>
+              <textarea id="itemDescription" rows="3"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label>ITEM PHOTO (OPTIONAL)</label>
+              <div class="file-upload-ui">
+                <input type="file" id="reportItemPhoto" accept="image/*" onchange="previewFileReport()">
+                <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO</span>
+                <img id="reportPhotoPreview" class="photo-preview hidden" alt="Preview">
+              </div>
+            </div>
+
+            <div class="section-divider">CONTACT INFO</div>
+            <div class="form-row">
+              <div class="input-group">
+                <label>YOUR NAME</label>
+                <input type="text" id="contactName" required>
+              </div>
+              <div class="input-group">
+                <label>SCHOOL EMAIL</label>
+                <input type="email" id="contactEmail" required>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>PHONE (OPTIONAL)</label>
+              <input type="tel" id="contactPhone">
+            </div>
+
+            <button type="submit" class="btn-primary full-width">SUBMIT ENTRY</button>
+            <div id="reportStatus" class="status-msg"></div>
+          </form>
         </div>
       </div>
     </section>
 
-    <!-- Report Item -->
-    <section id="page-report" class="page-section report-section" data-section-id="report" style="display:none;">
-      <div class="brutalist-background"></div>
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">REPORT A FOUND ITEM</div>
-          <h2 class="section-title">TELL US WHAT WAS FOUND</h2>
-        </div>
-
-        <form id="reportForm" class="report-form" novalidate>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="itemTitle">Item Title <span aria-hidden="true">*</span></label>
-              <input type="text" id="itemTitle" name="title" required aria-required="true">
-              <div class="field-help">Example: “Blue Hydro Flask”</div>
-            </div>
-
-            <div class="form-group">
-              <label for="itemCategory">Category <span aria-hidden="true">*</span></label>
-              <select id="itemCategory" name="category" required aria-required="true">
-                <option value="">Select Category</option>
-                <option value="Keys">Keys</option>
-                <option value="Wallet">Wallet</option>
-                <option value="Phone">Phone</option>
-                <option value="Bag">Bag</option>
-                <option value="Other">Other</option>
-              </select>
-              <div id="otherCategoryWrap" style="display:none; margin-top: .5rem;">
-                <label for="otherCategory" class="sr-only">Specify other category</label>
-                <input type="text" id="otherCategory" name="other_category" class="form-input" placeholder="If Other, describe the item type (e.g., Jacket, Calculator)">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="itemLocation">Location Found <span aria-hidden="true">*</span></label>
-              <input type="text" id="itemLocation" name="location" required aria-required="true" placeholder="Example: Library - 2nd floor">
-            </div>
-
-            <div class="form-group">
-              <label for="itemDate">Date Found <span aria-hidden="true">*</span></label>
-              <input type="date" id="itemDate" name="date_found" required aria-required="true">
-            </div>
-
-            <div class="form-group full-width">
-              <label for="itemPhoto">Photo (recommended)</label>
-              <input type="file" id="itemPhoto" name="photo" accept="image/*">
-              <div class="field-help">Offline AI-assisted matching uses this photo to find similar items.</div>
-              <img id="reportPhotoPreview" class="photo-preview" alt="Preview of uploaded report photo" style="display:none;">
-            </div>
-
-            <div class="form-group full-width">
-              <label for="itemDescription">Description</label>
-              <textarea id="itemDescription" name="description" rows="4" placeholder="Color, brand, identifying details..."></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="contactName">Your Name <span aria-hidden="true">*</span></label>
-              <input type="text" id="contactName" name="contact_name" required aria-required="true">
-            </div>
-
-            <div class="form-group">
-              <label for="contactEmail">Your School Email <span aria-hidden="true">*</span></label>
-              <input type="email" id="contactEmail" name="contact_email" required aria-required="true" placeholder="name@school.edu">
-            </div>
-
-            <div class="form-group">
-              <label for="contactPhone">Phone (optional)</label>
-              <input type="tel" id="contactPhone" name="contact_phone">
-            </div>
+    <!-- SECTION: CLAIM -->
+    <section id="page-claim" class="view-section">
+      <div class="content-wrapper centered-small">
+        <span class="label-tech">VERIFICATION</span>
+        <h2>CLAIM ITEM</h2>
+        <form id="claimForm" class="tech-form">
+          <div class="input-group">
+            <label>ITEM SELECTION</label>
+            <select id="claimItemId" required></select>
           </div>
-
-          <button type="submit" class="btn-primary">Submit Report</button>
-          <div class="form-status" id="reportStatus" role="status" aria-live="polite"></div>
-          <div class="form-status" id="aiMatchStatus" role="status" aria-live="polite"></div>
+          <div class="input-group">
+            <label>YOUR NAME</label>
+            <input type="text" id="claimName" required>
+          </div>
+          <div class="input-group">
+            <label>SCHOOL EMAIL</label>
+            <input type="email" id="claimEmail" required>
+          </div>
+          <div class="input-group">
+            <label>PROOF OF OWNERSHIP</label>
+            <textarea id="claimMessage" rows="4" placeholder="Describe unique details..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary full-width">SUBMIT CLAIM</button>
+          <div id="claimStatus" class="status-msg"></div>
         </form>
       </div>
     </section>
 
-    <!-- Claim Item -->
-    <section id="page-claim" class="page-section report-section" data-section-id="claim" style="display:none;">
-      <div class="brutalist-background"></div>
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">CLAIM / INQUIRY</div>
-          <h2 class="section-title">REQUEST AN ITEM OR ASK A QUESTION</h2>
+    <!-- SECTION: DASHBOARD -->
+    <section id="page-dashboard" class="view-section">
+      <div class="content-wrapper">
+        <div class="section-head">
+          <span class="label-tech">USER PORTAL</span>
+          <h2>MY ACTIVITY</h2>
         </div>
-
-        <form id="claimForm" class="report-form" novalidate>
-          <div class="form-grid">
-            <div class="form-group full-width">
-              <label for="claimItemId">Select a Found Item <span aria-hidden="true">*</span></label>
-              <select id="claimItemId" required aria-required="true"></select>
-              <div class="field-help">Only approved items appear here.</div>
-            </div>
-
-            <div class="form-group">
-              <label for="claimName">Your Name <span aria-hidden="true">*</span></label>
-              <input id="claimName" type="text" required aria-required="true">
-            </div>
-
-            <div class="form-group">
-              <label for="claimEmail">Your School Email <span aria-hidden="true">*</span></label>
-              <input id="claimEmail" type="email" required aria-required="true" placeholder="name@school.edu">
-            </div>
-<div class="form-group full-width">
-              <label for="claimMessage">Message <span aria-hidden="true">*</span></label>
-              <textarea id="claimMessage" rows="4" required aria-required="true" placeholder="Describe identifying details proving ownership..."></textarea>
-            </div>
+        <div class="dashboard-panels">
+          <div class="panel">
+            <h3>MY REPORTS</h3>
+            <div id="myReports" class="list-view"></div>
           </div>
-
-          <button type="submit" class="btn-primary">Submit Claim</button>
-          <div class="form-status" id="claimStatus" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-    </section>
-
-    <!-- Dashboard -->
-    <section id="page-dashboard" class="page-section how-section" data-section-id="dashboard" style="display:none;">
-      <div class="brutalist-background"></div>
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">STUDENT DASHBOARD</div>
-          <h2 class="section-title">YOUR REPORTS & CLAIMS</h2>
-        </div>
-
-        <div class="dashboard-grid">
-          <div class="dashboard-card">
-            <h3>Your Reports</h3>
-            <div id="myReports" class="dashboard-list"></div>
-          </div>
-          <div class="dashboard-card">
-            <h3>Your Claims</h3>
-            <div id="myClaims" class="dashboard-list"></div>
+          <div class="panel">
+            <h3>MY CLAIMS</h3>
+            <div id="myClaims" class="list-view"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Admin -->
-    <section id="page-admin" class="page-section how-section" data-section-id="admin" style="display:none;">
-      <div class="brutalist-background"></div>
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">ADMIN REVIEW</div>
-          <h2 class="section-title">APPROVE REPORTS & PROCESS CLAIMS</h2>
+    <!-- SECTION: ADMIN -->
+    <section id="page-admin" class="view-section">
+      <div class="content-wrapper">
+        <div class="section-head">
+          <span class="label-tech">ADMINISTRATION</span>
+          <h2>SYSTEM OVERSIGHT</h2>
         </div>
-
-        <div class="dashboard-grid">
-          <div class="dashboard-card">
-            <h3>Pending Item Reports</h3>
-            <div id="adminPendingItems" class="dashboard-list"></div>
+        <div class="dashboard-panels">
+          <div class="panel">
+            <h3>PENDING APPROVALS</h3>
+            <div id="adminPendingItems" class="list-view"></div>
           </div>
-          <div class="dashboard-card">
-            <h3>Incoming Claims</h3>
-            <div id="adminClaims" class="dashboard-list"></div>
+          <div class="panel">
+            <h3>CLAIMS PROCESSING</h3>
+            <div id="adminClaims" class="list-view"></div>
           </div>
-        
-<div class="dashboard-card">
-  <h3>Audit Log</h3>
-  <div id="adminAudit" class="dashboard-list"></div>
-</div>
-
-        </div>
-        <div class="field-help" style="margin-top:1rem;">
-          Tip: Use Demo Mode for state judging reliability (works fully offline).
+          <div class="panel">
+            <h3>APPROVED INVENTORY</h3>
+            <div id="adminApprovedItems" class="list-view"></div>
+          </div>
+          <div class="panel">
+            <h3>VERIFIED CLAIMS</h3>
+            <div id="adminVerifiedClaims" class="list-view"></div>
+          </div>
+          <div class="panel">
+            <h3>AUDIT LOG</h3>
+            <div id="adminAudit" class="list-view"></div>
+          </div>
         </div>
       </div>
     </section>
-  
-<div id="printReceipt" class="print-receipt">
-  <h2>Claim Receipt</h2>
-  <p id="receiptItem"></p>
-  <p id="receiptClaimant"></p>
-  <p id="receiptDate"></p>
-  <button onclick="window.print()" class="btn-primary">Print</button>
-</div>
 
-</main>
+  </main>
 
-  <!-- Item Modal -->
-  <div id="itemModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-backdrop" onclick="closeModal()" aria-hidden="true"></div>
-    <div class="modal-content">
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal-overlay hidden">
+    <div class="modal-box">
       <div class="modal-header">
-        <div>
-          <h3 id="modalTitle" class="modal-title">Item Title</h3>
-          <p id="modalLocation" class="modal-subtitle">Location</p>
-        </div>
-        <button class="modal-close" type="button" onclick="closeModal()" aria-label="Close dialog">×</button>
+        <h3>AUTHENTICATION</h3>
+        <button onclick="closeLoginModal()" class="close-btn">×</button>
       </div>
       <div class="modal-body">
-        <div class="modal-section">
-          <h4>Description</h4>
-          <p id="modalDescription">No description available</p>
+        <div class="input-group">
+          <label>ROLE</label>
+          <select id="loginRole" class="input-tech" onchange="handleRoleChange()">
+            <option value="student">STUDENT</option>
+            <option value="admin">ADMINISTRATOR</option>
+          </select>
         </div>
-        <div class="modal-section">
-          <h4>Contact Information</h4>
-          <p id="modalContactName">Not provided</p>
-          <p id="modalContactEmail">Not provided</p>
-          <p id="modalContactPhone">Not provided</p>
+        <div class="input-group">
+          <label>NAME</label>
+          <input type="text" id="loginName" class="input-tech">
         </div>
-        <div class="modal-section">
-          <h4>Found Date</h4>
-          <p id="modalDate">Not specified</p>
+        <div class="input-group">
+          <label>EMAIL</label>
+          <input type="email" id="loginEmail" class="input-tech">
         </div>
-        <div class="modal-section">
-          <button class="btn-primary" type="button" onclick="navigateToSection('claim'); closeModal();">Claim / Inquire</button>
+        <div id="adminCodeWrap" class="input-group hidden">
+          <label>ACCESS CODE</label>
+          <input type="password" id="adminCode" class="input-tech">
         </div>
+        <button onclick="handleLogin()" class="btn-primary full-width">ACCESS SYSTEM</button>
+        <div id="loginStatus" class="status-msg"></div>
       </div>
     </div>
   </div>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-    <div class="modal-backdrop" onclick="closeLoginModal()" aria-hidden="true"></div>
-    <div class="modal-content">
+  <!-- ITEM MODAL -->
+  <div id="itemModal" class="modal-overlay hidden">
+    <div class="modal-box large">
       <div class="modal-header">
-        <div>
-          <h3 id="loginTitle" class="modal-title">Sign In</h3>
-          <p class="modal-subtitle">Choose your role</p>
-        </div>
-        <button class="modal-close" type="button" onclick="closeLoginModal()" aria-label="Close sign in">×</button>
+        <h3>ITEM DETAILS</h3>
+        <button onclick="closeModal()" class="close-btn">×</button>
       </div>
       <div class="modal-body">
-        <div class="form-grid" style="margin-bottom:0;">
-          <div class="form-group full-width">
-            <label for="loginRole">Role</label>
-            <select id="loginRole" onchange="handleRoleChange()">
-              <option value="student">Student</option>
-              <option value="admin">Admin</option>
-            </select>
+        <h2 id="modalTitle">TITLE</h2>
+        <img id="modalImage" class="modal-photo hidden" alt="Item">
+        <div id="modalLocation" class="meta-tag">LOCATION</div>
+        <p id="modalDescription" class="desc-text"></p>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <label>CONTACT</label>
+            <span id="modalContactName"></span>
           </div>
-
-          <div class="form-group">
-            <label for="loginName">Name</label>
-            <input id="loginName" type="text" placeholder="Your name" />
-          </div>
-
-          <div class="form-group">
-            <label for="loginEmail">School Email</label>
-            <input id="loginEmail" type="email" placeholder="name@school.edu" />
-          </div>
-
-          <div class="form-group full-width" id="adminCodeWrap" style="display:none;">
-            <label for="adminCode">Admin Access Code</label>
-            <input id="adminCode" type="password" placeholder="Enter code provided by the school office" />
-            <div class="field-help">Demo default: <code>FBLA2025</code> (change in <code>script.js</code>)</div>
+          <div class="meta-item">
+            <label>DATE</label>
+            <span id="modalDate"></span>
           </div>
         </div>
-
-        <button class="btn-primary" type="button" onclick="handleLogin()">Continue</button>
-        <div class="form-status" id="loginStatus" role="status" aria-live="polite"></div>
+        <div class="modal-actions">
+          <button class="btn-primary" onclick="navigateToSection('claim'); closeModal();">CLAIM THIS ITEM</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
+
 </html>
