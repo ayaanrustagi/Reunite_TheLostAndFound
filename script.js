@@ -406,17 +406,25 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
     return;
   }
 
+  // Force a fallback if the email is missing or malformed
+  const finalEmail = (to_email && to_email.includes('@')) ? to_email : "ayaanrustagi2010@gmail.com";
+
   const templateParams = {
-    to_email: to_email || "user@example.com",
-    to_name: to_name || "User",
+    to_email: finalEmail,
+    to_name: to_name || "REUNITE User",
     subject: subject || "System Update",
-    message: message || "No message provided.",
-    item_title: item_title || "Unknown Item",
+    message: message || "New update regarding your lost and found item.",
+    item_title: item_title || "Reported Item",
     site_link: window.location.origin
   };
 
   try {
-    console.log("📤 SENDING VIA EMAILJS...", templateParams);
+    console.log("📤 ATTEMPTING EMAIL SEND...", {
+      service: EMAILJS_SERVICE_ID,
+      template: EMAILJS_TEMPLATE_ID,
+      recipient: finalEmail,
+      params: templateParams
+    });
     const response = await client.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
     console.log(`✅ EMAIL SENT SUCCESSFULLY! Status: ${response.status}`, response.text);
   } catch (err) {
