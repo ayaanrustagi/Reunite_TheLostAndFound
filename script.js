@@ -392,25 +392,37 @@ async function supabaseDelete(table, id) {
 // Email Notifications
 // ------------------------------
 async function sendEmailUpdate(to_email, to_name, subject, message, item_title) {
-  if (!EMAILS_ENABLED || typeof emailjs === "undefined") {
-    console.log("Email notifications are disabled or EmailJS not loaded.");
+  console.log(`📧 PREPARING EMAIL: to=${to_email}, subject=${subject}`);
+
+  if (!EMAILS_ENABLED) {
+    console.log("ℹ️ EMAIL NOTIFICATIONS ARE GLOBALLY DISABLED (EMAILS_ENABLED = false)");
+    return;
+  }
+
+  const client = window.emailjs || (typeof emailjs !== "undefined" ? emailjs : null);
+
+  if (!client) {
+    console.error("🔴 EMAILJS LIBRARY NOT LOADED IN BROWSER");
     return;
   }
 
   const templateParams = {
-    to_email: to_email,
-    to_name: to_name,
-    subject: subject,
-    message: message,
-    item_title: item_title,
+    to_email: to_email || "user@example.com",
+    to_name: to_name || "User",
+    subject: subject || "System Update",
+    message: message || "No message provided.",
+    item_title: item_title || "Unknown Item",
     site_link: window.location.origin
   };
 
   try {
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-    console.log(`✅ EMAIL SENT TO ${to_email}`);
+    console.log("📤 SENDING VIA EMAILJS...", templateParams);
+    const response = await client.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
+    console.log(`✅ EMAIL SENT SUCCESSFULLY! Status: ${response.status}`, response.text);
   } catch (err) {
-    console.error("🔴 EMAIL FAILED:", err);
+    console.error("🔴 EMAILJS SEND FAILED:", err);
+    // Alert the user during development so they see the error
+    alert(`EMAIL FAILED: ${err.text || err.message || JSON.stringify(err)}\n\nPlease ensure your Service ID and Template ID are correct.`);
   }
 }
 
@@ -807,6 +819,19 @@ function renderAdmin() {
     sectionHead.style.display = 'flex';
     sectionHead.style.alignItems = 'flex-end';
     sectionHead.appendChild(btn);
+
+    // Add Test Email Button
+    const testBtn = document.createElement('button');
+    testBtn.className = 'btn-sm btn-outline';
+    testBtn.style.marginLeft = '0.5rem';
+    testBtn.style.fontSize = '0.6rem';
+    testBtn.style.borderColor = 'var(--accent-color)';
+    testBtn.textContent = 'TEST EMAIL';
+    testBtn.onclick = () => {
+      sendEmailUpdate(currentUser.email, currentUser.name, "TEST EMAIL", "If you received this, your email configuration is correct!", "TEST ITEM");
+      alert("Test email triggered. Check your inbox (and spam) and the browser console.");
+    };
+    sectionHead.appendChild(testBtn);
   }
 
   const pendingEl = document.getElementById('adminPendingItems');
