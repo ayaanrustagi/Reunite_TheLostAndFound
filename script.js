@@ -415,7 +415,9 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
     subject: subject || "System Update",
     message: message || "New update regarding your lost and found item.",
     item_title: item_title || "Reported Item",
-    site_link: window.location.origin
+    site_link: (window.location.origin && window.location.origin !== 'null' && window.location.origin !== 'file://')
+      ? window.location.origin
+      : "https://thereunite.netlify.app"
   };
 
   try {
