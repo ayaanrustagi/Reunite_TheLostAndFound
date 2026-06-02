@@ -961,6 +961,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    overflow-y: auto;
     animation: modalFadeIn 0.3s ease-out;
 }
 
@@ -979,8 +980,11 @@ body {
     border: 1px solid var(--text-color);
     width: 100%;
     max-width: 480px;
+    max-height: calc(100vh - 4rem);
     position: relative;
     box-shadow: 20px 20px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
     animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1016,6 +1020,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -1035,6 +1040,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
 .modal-body .btn-primary {
