@@ -724,10 +724,13 @@ function renderFound() {
   const headerSearchVal = headerInput?.value || "";
   const pageSearchVal = document.getElementById('searchFilter')?.value || "";
 
-  // Toggle pure search mode if using header search
+  // Toggle pure search mode if using header search is active (focused or has text)
   const foundSection = document.getElementById('page-found');
   if (foundSection) {
-    if (headerSearchVal.trim().length > 0) {
+    const isSearchFocused = document.activeElement === headerInput;
+    const hasSearchText = headerSearchVal.trim().length > 0;
+
+    if (hasSearchText || isSearchFocused) {
       foundSection.classList.add('search-active');
     } else {
       foundSection.classList.remove('search-active');

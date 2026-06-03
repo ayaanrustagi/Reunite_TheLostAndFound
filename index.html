@@ -63,7 +63,8 @@
           </svg>
         </div>
         <input type="text" id="headerSearchInput" placeholder="Search lost items..."
-          oninput="navigateToSection('found'); renderFound()" onfocus="navigateToSection('found')">
+          oninput="navigateToSection('found'); renderFound()" onfocus="navigateToSection('found')"
+          onblur="setTimeout(renderFound, 200)">
       </div>
 
       <div class="header-actions">
