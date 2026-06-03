@@ -75,6 +75,175 @@ let currentUser = null;
 let items = [];
 let claims = [];
 
+const DASHBOARD_TUTORIALS = [
+  {
+    title: "HOW TO LOG A REPORT",
+    detail: "Add vivid descriptors (stickers, engravings, passcodes) to help admins verify faster.",
+    action: "Review report tips"
+  },
+  {
+    title: "SPEED UP CLAIM APPROVAL",
+    detail: "Upload proof photos or receipts before submitting a claim for instant verification cues.",
+    action: "Prep documents"
+  },
+  {
+    title: "FOLLOW UP LIKE A PRO",
+    detail: "Check this dashboard daily. Approved items appear here before the public feed updates.",
+    action: "Enable notifications"
+  }
+];
+
+let loadingCounter = 0;
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function showLoading(message = "Processing request...") {
+  const overlay = document.getElementById('loadingOverlay');
+  if (!overlay) return;
+  const messageEl = document.getElementById('loadingMessage');
+  if (messageEl && message) {
+    messageEl.textContent = message;
+  }
+  loadingCounter += 1;
+  overlay.classList.remove('hidden');
+}
+
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (!overlay) return;
+  loadingCounter = Math.max(0, loadingCounter - 1);
+  if (loadingCounter === 0) {
+    overlay.classList.add('hidden');
+  }
+}
+
+function setStatusMessage(elementId, message, isError = false) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = message || "";
+  el.classList.remove('error', 'success');
+  if (message) {
+    el.classList.add(isError ? 'error' : 'success');
+  }
+}
+
+function setFieldState(fieldId, isValid, message = "") {
+  const field = document.getElementById(fieldId);
+  if (!field) return isValid;
+  const group = field.closest('.input-group');
+  if (!group) return isValid;
+  const errorEl = document.getElementById(`${fieldId}Error`);
+  if (!isValid) {
+    group.classList.add('invalid');
+    if (errorEl) errorEl.textContent = message;
+  } else {
+    group.classList.remove('invalid');
+    if (errorEl) errorEl.textContent = "";
+  }
+  return isValid;
+}
+
+function attachRealtimeValidation() {
+  const requiredFields = document.querySelectorAll('.input-group.required input, .input-group.required select, .input-group.required textarea');
+  requiredFields.forEach(field => {
+    field.addEventListener('input', () => {
+      if (field.id) {
+        setFieldState(field.id, true);
+      }
+    });
+  });
+}
+
+function resetFormValidation(formEl) {
+  if (!formEl) return;
+  formEl.querySelectorAll('.input-group').forEach(group => {
+    group.classList.remove('invalid');
+    const errorEl = group.querySelector('.input-error');
+    if (errorEl) errorEl.textContent = "";
+  });
+}
+
+function getItemSearchText(item) {
+  return [
+    item.title,
+    item.description,
+    item.location,
+    item.category,
+    item.contact_name,
+    item.contact_email,
+    item.id
+  ].filter(Boolean).join(' ').toLowerCase();
+}
+
+function matchesSearchTokens(item, tokens) {
+  if (!tokens.length) return true;
+  const haystack = getItemSearchText(item);
+  return tokens.every(token => haystack.includes(token));
+}
+
+function updateActiveFilters({ searchTokens = [], category = "", location = "" }) {
+  const filtersEl = document.getElementById('activeFilters');
+  const clearBtn = document.getElementById('clearFiltersBtn');
+  if (!filtersEl || !clearBtn) return;
+
+  const tags = [];
+  if (searchTokens.length) {
+    tags.push(`Keywords: ${searchTokens.join(', ')}`);
+  }
+  if (category) {
+    tags.push(`Category: ${category}`);
+  }
+  if (location) {
+    tags.push(`Location: ${location}`);
+  }
+
+  if (!tags.length) {
+    filtersEl.textContent = "No filters active.";
+    clearBtn.classList.add('hidden');
+    return;
+  }
+
+  filtersEl.innerHTML = tags.map(tag => `<span class="filter-chip">${tag}</span>`).join('');
+  clearBtn.classList.remove('hidden');
+}
+
+function updateResultsStatus(totalApproved, shownCount, { searchTokens = [], category = "", location = "" }) {
+  const statusEl = document.getElementById('resultsStatus');
+  if (!statusEl) return;
+
+  if (totalApproved === 0) {
+    statusEl.textContent = "Awaiting approved inventory.";
+    return;
+  }
+
+  if (!searchTokens.length && !category && !location) {
+    statusEl.textContent = "Showing most recent approved records.";
+    return;
+  }
+
+  const bits = [];
+  if (searchTokens.length) bits.push(`keywords "${searchTokens.join(', ')}"`);
+  if (category) bits.push(`category ${category}`);
+  if (location) bits.push(`location "${location}"`);
+
+  statusEl.textContent = `Filtered ${shownCount} of ${totalApproved} via ${bits.join(' + ')}`;
+}
+
+function clearFilters() {
+  const searchField = document.getElementById('searchFilter');
+  const categoryField = document.getElementById('categoryFilter');
+  const locationField = document.getElementById('locationFilter');
+  const sortField = document.getElementById('sortFilter');
+
+  if (searchField) searchField.value = "";
+  if (categoryField) categoryField.value = "";
+  if (locationField) locationField.value = "";
+  if (sortField) sortField.value = "newest";
+
+  renderFound();
+}
+window.clearFilters = clearFilters;
+
 // ------------------------------
 // Initialization
 // ------------------------------
@@ -109,8 +278,41 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reportForm')?.addEventListener('submit', handleReportSubmit);
   document.getElementById('claimForm')?.addEventListener('submit', handleClaimSubmit);
 
-  // Hero Text Rotation
+  // Header Scroll Effect (Hide on Scroll Down, Show on Scroll Up)
+  let lastScrollY = window.scrollY;
+  const header = document.querySelector('.site-header');
+  const trigger = document.querySelector('.persistent-trigger');
+
+  window.addEventListener('scroll', () => {
+    if (!header) return;
+
+    const currentScrollY = window.scrollY;
+
+    // Show/hide based on direction
+    if (currentScrollY > lastScrollY && currentScrollY > 150) {
+      header.classList.add('header-hidden');
+      if (trigger) trigger.classList.add('visible');
+    } else {
+      header.classList.remove('header-hidden');
+      if (trigger) trigger.classList.remove('visible');
+    }
+
+    // Toggle styling when scrolled away from top
+    header.classList.toggle('scrolled', currentScrollY > 50);
+
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+
+  // Make header globally accessible for inline onclicks
+  window.header = header;
+  window.showHeader = function () {
+    header.classList.remove('header-hidden');
+    if (trigger) trigger.classList.remove('visible');
+  };
+
   initHeroRotation();
+  attachRealtimeValidation();
+  renderDashboardTips();
 });
 
 // ------------------------------
@@ -135,6 +337,10 @@ function navigateToSection(sectionId) {
   if (sectionId === 'claim') renderClaimSelect();
   if (sectionId === 'dashboard') renderDashboard();
   if (sectionId === 'admin') renderAdmin();
+  if (sectionId === 'how') {
+    // Small delay to ensure DOM state is ready for rect calculations
+    setTimeout(handleSplitScroll, 50);
+  }
 
   // Store in location for browser back button
   window.history.pushState(null, null, `#${sectionId}`);
@@ -173,21 +379,27 @@ function initHeroRotation() {
     tIndex = (tIndex + 1) % titles.length;
     sIndex = (sIndex + 1) % subs.length;
 
-    // Apply glitch effect
-    titleEl.classList.add('glitch-active');
-    subEl.classList.add('glitch-active');
+    // Fade out
+    titleEl.classList.add('text-fade-out');
+    subEl.classList.add('text-fade-out');
 
-    // Swap text halfway through the quick glitch
+    // Swap text after fade out completes
     setTimeout(() => {
       titleEl.textContent = titles[tIndex];
       subEl.textContent = subs[sIndex];
-    }, 200);
 
-    // Remove class to reset for next cycle
-    setTimeout(() => {
-      titleEl.classList.remove('glitch-active');
-      subEl.classList.remove('glitch-active');
+      // Remove fade-out, add fade-in
+      titleEl.classList.remove('text-fade-out');
+      subEl.classList.remove('text-fade-out');
+      titleEl.classList.add('text-fade-in');
+      subEl.classList.add('text-fade-in');
     }, 400);
+
+    // Clean up fade-in class
+    setTimeout(() => {
+      titleEl.classList.remove('text-fade-in');
+      subEl.classList.remove('text-fade-in');
+    }, 800);
 
   }, 4000);
 }
@@ -223,6 +435,14 @@ function handleSplitScroll() {
   if (previewTitle && stepData[currentStep]) {
     previewTitle.textContent = stepData[currentStep].title;
     previewDesc.textContent = stepData[currentStep].desc;
+  }
+
+  // Fade out scroll hint if we've scrolled a bit
+  const hint = section.querySelector('.scroll-hint');
+  if (hint) {
+    const sectionRect = section.getBoundingClientRect();
+    const scrollProgress = -sectionRect.top / 100; // start fading almost immediately
+    hint.style.opacity = Math.max(0, 0.6 - scrollProgress);
   }
 }
 
@@ -291,11 +511,35 @@ function updateAuthUI() {
   }
 }
 
-function handleRoleChange() {
-  const role = document.getElementById('loginRole').value;
-  document.getElementById('adminCodeWrap').classList.toggle('hidden', role !== 'admin');
+function toggleAdminField() {
+  const isChecked = document.getElementById('isAdminToggle').checked;
+  const roleSelect = document.getElementById('loginRole');
+  const codeWrap = document.getElementById('adminCodeWrap');
+
+  roleSelect.value = isChecked ? 'admin' : 'student';
+  codeWrap.classList.toggle('hidden', !isChecked);
 }
-window.handleRoleChange = handleRoleChange;
+window.toggleAdminField = toggleAdminField;
+
+function setAuthMode(mode) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${mode}`).classList.add('active');
+
+  const title = document.getElementById('authTitle');
+  const subtitle = document.getElementById('authSubtitle');
+  const btn = document.querySelector('.pill-btn');
+
+  if (mode === 'signup') {
+    title.textContent = "CREATE ACCOUNT";
+    subtitle.textContent = "Join the network to find lost items.";
+    btn.textContent = "SIGN UP";
+  } else {
+    title.textContent = "WELCOME BACK";
+    subtitle.textContent = "Please enter your details to access the network.";
+    btn.textContent = "SIGN IN";
+  }
+}
+window.setAuthMode = setAuthMode;
 
 // ------------------------------
 // Data Handling
