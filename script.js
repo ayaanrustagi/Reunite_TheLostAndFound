@@ -1,29 +1,5 @@
 /**
  * =======================================================
- * REUNITE - Lost & Found System
- * =======================================================
- * 
- * @project     REUNITE - Community Lost & Found Network
- * @author      Ayaan Rustagi
- * @school      Vista Ridge High School
- * @event       FBLA Website Coding & Development 2025
- * @version     1.0.0
- * @created     2025
- * 
- * @description
- * A comprehensive web application for managing lost and found
- * items within a school or community setting. Features include
- * item reporting, searching, claiming, and administrative oversight.
- * 
- * =======================================================
- * TECHNOLOGY STACK
- * =======================================================
- * - Frontend: HTML5, CSS3, JavaScript (ES6+)
- * - Backend: Supabase (PostgreSQL + REST API)
- * - Email: EmailJS for client-side email notifications
- * - Fonts: Google Fonts (Inter, Roboto Mono)
- * 
- * =======================================================
  * SECURITY NOTICE
  * =======================================================
  * This application is designed for EDUCATIONAL/DEMONSTRATION
