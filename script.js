@@ -1,31 +1,4 @@
-/**
- * =======================================================
- * SECURITY NOTICE
- * =======================================================
- * This application is designed for EDUCATIONAL/DEMONSTRATION
- * purposes as part of the FBLA competition. The following
- * security considerations apply:
- * 
- * 1. SUPABASE ANON KEY: This is a "publishable" key designed
- *    for client-side use. Security is enforced via Supabase
- *    Row Level Security (RLS) policies on the database.
- *    See: https://supabase.com/docs/guides/auth/row-level-security
- * 
- * 2. ADMIN ACCESS CODE: For demo purposes, admin access is
- *    controlled by a simple access code. In production, this
- *    should be replaced with proper authentication (OAuth,
- *    JWT tokens, etc.) and the code should be server-validated.
- * 
- * 3. For production deployment, migrate sensitive configuration
- *    to environment variables and implement server-side validation.
- * 
- * =======================================================
- * CONFIGURATION
- * =======================================================
- */
 
-// Supabase Configuration
-// These are safe "anon" keys - actual security is via RLS policies
 window.SUPABASE_URL = "https://izoyxyekflrnyheuxppk.supabase.co";
 window.SUPABASE_ANON_KEY = "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
 window.DEMO_MODE = false;
@@ -939,6 +912,9 @@ window.previewFileReport = previewFileReport;
 // ------------------------------
 // dHash (Perceptual Hashing)
 // ------------------------------
+// ------------------------------
+// Enhanced Image Analysis (dHash + Color)
+// ------------------------------
 function computeDHash(imgElement) {
     return new Promise((resolve) => {
         const process = () => {
@@ -975,6 +951,40 @@ function computeDHash(imgElement) {
     });
 }
 
+function getDominantColor(imgElement) {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 1; // Downsample to single pixel for average
+        canvas.height = 1;
+
+        // Use a slight timeout to ensure image is ready
+        setTimeout(() => {
+            try {
+                ctx.drawImage(imgElement, 0, 0, 1, 1);
+                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                resolve({ r, g, b });
+            } catch (e) {
+                console.warn("Color extraction failed:", e);
+                resolve(null);
+            }
+        }, 10);
+    });
+}
+
+function colorMatchScore(c1, c2) {
+    if (!c1 || !c2) return 100; // Ignore if missing
+    // Euclidean distance in RGB space
+    const dist = Math.sqrt(
+        Math.pow(c1.r - c2.r, 2) +
+        Math.pow(c1.g - c2.g, 2) +
+        Math.pow(c1.b - c2.b, 2)
+    );
+    // Max distance is sqrt(3 * 255^2) ≈ 441
+    // Normalize to 0-100 score (lower distance = higher score)
+    return Math.max(0, 100 - (dist / 4.41));
+}
+
 function hammingDistance(h1, h2) {
     if (!h1 || !h2) return 64;
     let dist = 0;
@@ -985,7 +995,7 @@ function hammingDistance(h1, h2) {
 }
 
 // ------------------------------
-// AI Scanning Simulation
+// AI Scanning Simulation & Logic
 // ------------------------------
 async function simulateAiScan() {
     const fileInput = document.getElementById('findItemPhoto');
@@ -998,49 +1008,73 @@ async function simulateAiScan() {
     container.classList.add('active');
     results.innerHTML = '';
 
-    const steps = [
-        "PARSING IMAGE DATA...",
-        "EXTRACTING FEATURE VECTORS...",
-        "COMPUTING PERCEPTUAL HASH (dHash)...",
-        "COMPARING AGAINST NETWORK INVENTORY...",
-        "SCAN COMPLETE."
+    // Phase 1: Visual Scanning Effect
+    const scanSteps = [
+        { text: "INITIALIZING NEURAL NET...", time: 500 },
+        { text: "SEGMENTING IMAGE REGIONS...", time: 600 },
+        { text: "EXTRACTING PERCEPTUAL HASH...", time: 700 },
+        { text: "ANALYZING CHROMATIC SIGNATURE...", time: 600 },
+        { text: "CROSS-REFERENCING DATABASE...", time: 800 }
     ];
 
-    for (let i = 0; i < steps.length; i++) {
-        label.textContent = steps[i];
-        let p = ((i + 1) / steps.length) * 100;
+    let totalTime = 0;
+    for (let step of scanSteps) {
+        label.textContent = step.text;
+        totalTime += step.time;
+        // Progress bar smooth fill
+        const p = Math.min(95, (totalTime / 3200) * 100);
         progress.style.width = p + "%";
-        await new Promise(r => setTimeout(r, 600));
+        await new Promise(r => setTimeout(r, step.time));
     }
+    progress.style.width = "100%";
 
-    // Compute hash of the uploaded image
+    // Phase 2: Actual Computation
     const currentHash = await computeDHash(preview);
+    const currentColor = await getDominantColor(preview);
 
-    // Sort items by similarity
+    // Phase 3: Scoring & Sorting
     const scoredMatches = items
         .filter(it => it.status === 'approved' && it.dhash)
         .map(it => {
+            // 1. Structural Match (dHash) - 70% weight
             const dist = hammingDistance(currentHash, it.dhash);
-            const confidence = Math.max(0, Math.floor(((64 - dist) / 64) * 100));
-            return { ...it, confidence };
+            const structScore = Math.max(0, Math.floor(((64 - dist) / 64) * 100));
+
+            // 2. Color Match - 30% weight
+            const colorScore = colorMatchScore(currentColor, it.color);
+
+            // Weighted Total
+            const confidence = Math.floor((structScore * 0.7) + (colorScore * 0.3));
+
+            return { ...it, confidence, structScore, colorScore };
         })
         .sort((a, b) => b.confidence - a.confidence)
-        .filter(it => it.confidence > 50) // Only show reasonable matches
+        .filter(it => it.confidence > 65) // Filter low confidence
         .slice(0, 3);
 
+    // Phase 4: Render Results
     if (scoredMatches.length > 0) {
-        results.innerHTML = '<div style="margin-top: 1.5rem; color: #fff; font-size: 0.6rem; letter-spacing: 0.1em;">PROBABLE MATCHES DETECTED:</div>' +
+        results.innerHTML = '<div style="margin-top: 1.5rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; font-size: 0.6rem; letter-spacing: 0.1em; color: #fff;">TOP AI MATCHES FOUND:</div>' +
             scoredMatches.map(m => `
-                <div class="match-item" onclick="openItemModal('${m.id}')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(0,255,0,0.05); border: 1px solid rgba(0,255,0,0.2); margin-top: 0.5rem; cursor: pointer;">
-                    ${m.image ? `<img src="${m.image}" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #0f0;">` : '<div style="width: 40px; height: 40px; background: #222; border: 1px solid #333;"></div>'}
+                <div class="match-item" onclick="openItemModal('${m.id}')" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0, 20, 40, 0.5); border: 1px solid rgba(0, 115, 255, 0.3); margin-top: 0.75rem; cursor: pointer; transition: all 0.2s;">
+                    ${m.image ? `<img src="${m.image}" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid var(--accent-color);">` : '<div style="width: 50px; height: 50px; background: #222;"></div>'}
                     <div style="flex: 1;">
-                        <div style="color: #0f0; font-weight: bold;">> ${m.title}</div>
-                        <div style="font-size: 0.55rem; opacity: 0.7;">MATCH CONFIDENCE: ${m.confidence}%</div>
+                        <div style="color: var(--accent-color); font-weight: bold; font-size: 0.9rem;">${m.title}</div>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.25rem;">
+                            <div style="font-size: 0.6rem; color: #aaa;">CONFIDENCE: <span style="color: #fff;">${m.confidence}%</span></div>
+                            <div style="font-size: 0.6rem; color: #aaa;">STRUCTURE: ${m.structScore}%</div>
+                            <div style="font-size: 0.6rem; color: #aaa;">COLOR: ${Math.round(m.colorScore)}%</div>
+                        </div>
                     </div>
+                    <div style="font-size: 1.2rem; color: var(--accent-color);">→</div>
                 </div>
             `).join('');
     } else {
-        results.innerHTML = '<div class="match-item" style="color: #ff4d4d; margin-top: 1rem;">> NO MATCHES DETECTED IN SYSTEM INVENTORY.</div>';
+        results.innerHTML = `
+            <div class="match-item" style="color: #ff9999; margin-top: 1rem; border: 1px solid #ff4d4d; padding: 1rem; background: rgba(255, 0, 0, 0.05);">
+                > NO HIGH-CONFIDENCE MATCHES.<br>
+                <span style="font-size: 0.7rem; opacity: 0.8; margin-top:0.5rem; display:block;">Try adjusting lighting or angle and scan again.</span>
+            </div>`;
     }
 }
 
@@ -1060,8 +1094,11 @@ async function handleReportSubmit(e) {
     const photoBase64 = preview.src;
 
     let dhash = null;
+    let avgColor = null;
+
     if (photoBase64 && !preview.classList.contains('hidden')) {
         dhash = await computeDHash(preview);
+        avgColor = await getDominantColor(preview);
     }
 
     const newItem = {
@@ -1070,6 +1107,7 @@ async function handleReportSubmit(e) {
         contact_name: name, contact_email: email,
         image: dhash ? photoBase64 : null,
         dhash: dhash,
+        color: avgColor, // SAVE COLOR DATA
         status: 'pending',
         created_at: new Date().toISOString(),
         created_by: email
