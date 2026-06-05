@@ -467,12 +467,21 @@ function handleSplitScroll() {
     { title: "RESOLVE", desc: "Verify ownership through our secure claim portal and arrange for item retrieval." }
   ];
 
-  let currentStep = 0;
+  let currentStep = 0; // Default to first
+
+  // Find the active step based on scroll position
+  // We look for the last item that has crossed the threshold (e.g., top is above 60% of viewport)
   stepItems.forEach((item, index) => {
     const rect = item.getBoundingClientRect();
-    if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
-      item.classList.add('active');
+    if (rect.top < window.innerHeight * 0.6) {
       currentStep = index;
+    }
+  });
+
+  // Apply active class to the current step and remove from others
+  stepItems.forEach((item, index) => {
+    if (index === currentStep) {
+      item.classList.add('active');
     } else {
       item.classList.remove('active');
     }

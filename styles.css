@@ -1657,11 +1657,16 @@ body {
         position: relative;
         top: 0;
         height: auto;
-        padding: 3rem 1rem 1rem;
-        /* Reduced top/bottom padding */
+        padding: 2rem 1rem 0;
+        /* Minimized padding */
         text-align: center;
         z-index: 5;
         background: var(--bg-color);
+    }
+
+    .label-tech {
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
     }
 
     .split-right {
@@ -1671,15 +1676,17 @@ body {
     }
 
     .preview-title {
-        font-size: 3.5rem;
-        margin: 0.5rem 0;
+        font-size: 2.8rem;
+        margin: 0.25rem 0;
+        line-height: 1;
     }
 
     .preview-desc {
-        font-size: 1rem;
+        font-size: 0.95rem;
         padding: 0 1rem;
-        margin-bottom: 1rem;
-        /* Reduced margin */
+        margin-bottom: 1.5rem;
+        line-height: 1.4;
+        color: var(--muted-text);
     }
 
     .scroll-hint {
