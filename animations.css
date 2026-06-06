@@ -261,6 +261,159 @@
   }
 }
 
+/* --- BLINK ANIMATIONS (Hide base items when lens is over them) --- */
+.cluster-base .sat-1 {
+  animation: fadeSat1 8s ease-in-out infinite;
+}
+
+.cluster-base .sat-2 {
+  animation: fadeSat2 8s ease-in-out infinite;
+}
+
+.cluster-base .sat-3 {
+  animation: fadeSat3 8s ease-in-out infinite;
+}
+
+.cluster-base .sat-4 {
+  animation: fadeSat4 8s ease-in-out infinite;
+}
+
+.cluster-base .sat-5 {
+  animation: fadeSat5 8s ease-in-out infinite;
+}
+
+.cluster-base .sat-6 {
+  animation: fadeSat6 8s ease-in-out infinite;
+}
+
+@keyframes fadeSat1 {
+  0% {
+    opacity: 0;
+  }
+
+  6% {
+    opacity: 0.6;
+  }
+
+  94% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeSat2 {
+  0% {
+    opacity: 0.6;
+  }
+
+  11% {
+    opacity: 0.6;
+  }
+
+  16% {
+    opacity: 0;
+  }
+
+  21% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fadeSat3 {
+  0% {
+    opacity: 0.6;
+  }
+
+  27% {
+    opacity: 0.6;
+  }
+
+  32% {
+    opacity: 0;
+  }
+
+  37% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fadeSat4 {
+  0% {
+    opacity: 0.6;
+  }
+
+  43% {
+    opacity: 0.6;
+  }
+
+  48% {
+    opacity: 0;
+  }
+
+  53% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fadeSat5 {
+  0% {
+    opacity: 0.6;
+  }
+
+  59% {
+    opacity: 0.6;
+  }
+
+  64% {
+    opacity: 0;
+  }
+
+  69% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fadeSat6 {
+  0% {
+    opacity: 0.6;
+  }
+
+  75% {
+    opacity: 0.6;
+  }
+
+  80% {
+    opacity: 0;
+  }
+
+  85% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
 /* ================================== */
 /* MOBILE RESPONSIVE                  */
 /* ================================== */
