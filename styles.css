@@ -411,6 +411,8 @@ body {
     padding: 0 1rem;
     transform: translateY(-2rem);
     /* Slight offset up to visually center better against header */
+    position: relative;
+    /* Ensure absolute children center relative to this */
 }
 
 .hero-top-label {

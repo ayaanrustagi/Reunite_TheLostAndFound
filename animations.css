@@ -7,17 +7,26 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 350px;
-  /* Elliptical area */
+  width: 900px;
+  height: 600px;
+  /* Fixed Aspect Ratio Stage */
   margin: 0;
   overflow: visible;
-  /* Ensure visibility */
   display: block;
-  z-index: -1;
-  /* Behind text */
-  opacity: 0.4;
-  /* Blend in */
+}
+
+/* Responsive Scaling to prevent overflow */
+@media (max-width: 950px),
+(max-height: 650px) {
+  .magnetic-cluster {
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+}
+
+@media (max-width: 600px) {
+  .magnetic-cluster {
+    transform: translate(-50%, -50%) scale(0.45);
+  }
 }
 
 /* --- CLUSTER BASE (Normal Items) --- */
@@ -25,90 +34,66 @@
   position: relative;
   width: 100%;
   height: 100%;
+  z-index: 1;
+  opacity: 0.6;
 }
 
-.cluster-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 160px;
-  /* Bigger Center */
-  height: 160px;
-  background: linear-gradient(180deg, #f0f8ff 0%, #d4e9ff 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 15px 40px rgba(0, 78, 204, 0.15);
-  z-index: 5;
-}
+/* Cluster Center styles removed */
 
-.cluster-center img {
-  width: 90px;
-  height: 90px;
-  object-fit: contain;
-  filter: grayscale(0.3) opacity(0.8);
-  transition: all 0.3s ease;
-}
-
+/* Satellites - Scattered Wildly */
 .satellite {
   position: absolute;
   width: 85px;
-  /* Bigger Items */
   height: 85px;
   border-radius: 50%;
-  /* Light, clean background */
   background: linear-gradient(145deg, #ffffff, #f0f0f0);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Soft shadows */
   box-shadow:
     0 5px 15px rgba(0, 0, 0, 0.08),
     0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-left: -42px;
+  /* Margin offset for true centering */
+  margin-top: -42px;
 }
 
 .satellite img {
   width: 65%;
   height: 65%;
   object-fit: contain;
-  /* Darker gray for contrast on white */
-  filter: grayscale(1) opacity(0.5);
-  /* Dimmed by default */
+  filter: grayscale(1) opacity(0.6);
   transition: filter 0.3s ease;
 }
 
-/* Positioning Satellites - Elliptical Layout by percentages */
+/* Positioning Satellites - Safe Inner Scatter (900x600) */
 .sat-1 {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 15%;
+  left: 15%;
 }
 
 .sat-2 {
-  top: 25%;
-  right: 5%;
+  top: 15%;
+  left: 85%;
 }
 
 .sat-3 {
-  bottom: 25%;
-  right: 5%;
+  top: 50%;
+  left: 95%;
 }
 
 .sat-4 {
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 85%;
+  left: 80%;
 }
 
 .sat-5 {
-  bottom: 25%;
-  left: 5%;
+  top: 85%;
+  left: 20%;
 }
 
 .sat-6 {
-  top: 25%;
+  top: 50%;
   left: 5%;
 }
 
@@ -117,15 +102,11 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 200px;
-  /* Bigger Glass */
-  height: 200px;
-  z-index: 2;
-  /* Above the faint items, but whole cluster is z-index -1, so effectively behind text */
+  width: 220px;
+  height: 220px;
+  z-index: 20;
   pointer-events: none;
-  /* Let clicks pass through */
-  /* Automatic Scanning Animation Path */
-  animation: scanPath 5s ease-in-out infinite;
+  animation: scanPath 8s ease-in-out infinite;
 }
 
 .mag-lens {
@@ -133,16 +114,12 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px) contrast(1.1);
-  /* Stronger blur for "overlay" effect */
-  /* Glass Ring Border */
-  border: 4px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px) contrast(1.2) brightness(1.1);
+  border: 4px solid rgba(255, 255, 255, 0.9);
   box-shadow:
-    0 30px 60px rgba(0, 78, 204, 0.4),
-    /* Blue glow */
-    inset 0 0 30px rgba(255, 255, 255, 0.4);
-  /* Inner gloss */
+    0 40px 80px rgba(0, 78, 204, 0.5),
+    inset 0 0 40px rgba(255, 255, 255, 0.6);
   overflow: hidden;
 }
 
@@ -151,43 +128,33 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 600px;
-  /* Must match parent cluster width */
-  height: 350px;
-  /* Counter-translation to keep content fixed relative to world */
-  animation: counterScan 5s ease-in-out infinite;
+  width: 900px;
+  /* Match parent width */
+  height: 600px;
+  /* Match parent height */
+  animation: counterScan 8s ease-in-out infinite;
   transform-origin: 0 0;
+  opacity: 1;
 }
 
 /* Magnified Items Styling */
-.mag-content .cluster-center {
-  width: 180px;
-  /* Even Larger inside lens! */
-  height: 180px;
-  background: #fff;
-  box-shadow: 0 0 30px rgba(0, 106, 255, 0.5);
-  /* Glowing */
-}
-
-.mag-content .cluster-center img {
-  width: 110px;
-  height: 110px;
-  filter: grayscale(0) opacity(1);
-  /* Full color */
-}
+/* Cluster Center magnified styles removed */
 
 .mag-content .satellite {
-  width: 95px;
-  /* Larger! */
-  height: 95px;
-  background: linear-gradient(145deg, #004ecc, #002a70);
-  /* Blue active state */
-  box-shadow: 0 0 20px rgba(0, 78, 204, 0.6);
+  width: 100px;
+  height: 100px;
+  background: rgba(0, 78, 204, 0.1);
+  box-shadow: 0 0 25px rgba(0, 78, 204, 0.3);
+  backdrop-filter: blur(3px);
   z-index: 20;
+  margin-left: -50px;
+  /* Re-center larger items */
+  margin-top: -50px;
 }
 
 .mag-content .satellite img {
-  filter: grayscale(0) opacity(1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  filter: grayscale(0) brightness(1.1) opacity(0.8);
+  mix-blend-mode: multiply;
 }
 
 /* Glass Reflection */
@@ -197,100 +164,100 @@
   left: 15px;
   width: 40%;
   height: 25%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   border-radius: 50%;
-  filter: blur(3px);
+  filter: blur(2px);
 }
 
 .mag-handle {
   position: absolute;
-  bottom: -40px;
-  right: -40px;
-  /* Angled handle */
-  width: 80px;
-  height: 16px;
-  background: linear-gradient(90deg, #d0d0d0, #f0f0f0, #b0b0b0);
+  bottom: -45px;
+  right: -45px;
+  width: 90px;
+  height: 18px;
+  background: linear-gradient(90deg, #e0e0e0, #ffffff, #c0c0c0);
   transform: rotate(45deg);
-  border-radius: 10px;
-  box-shadow: 4px 8px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.15);
   z-index: -1;
+  opacity: 0.9;
 }
 
-/* --- ANIMATION PATHS (Scaled for 600x350 box) --- */
-/* Moves the GLASS over the items */
+/* --- ANIMATION PATHS (900x600) --- */
+/*
+   Stage: 900 x 600
+   Lens Radius: 110
+   Sat1 (15%, 15% -> 135, 90)   Target: 25, -20
+   Sat2 (85%, 15% -> 765, 90)   Target: 655, -20
+   Sat3 (95%, 50% -> 855, 300)  Target: 745, 190
+   Sat4 (80%, 85% -> 720, 510)  Target: 610, 400
+   Sat5 (20%, 85% -> 180, 510)  Target: 70, 400
+   Sat6 (5%, 50% -> 45, 300)    Target: -65, 190
+*/
 @keyframes scanPath {
   0% {
-    transform: translate(200px, 100px);
+    transform: translate(25px, -20px);
   }
 
-  /* Center */
-  15% {
-    transform: translate(260px, 40px);
+  /* Sat 1 start */
+  16% {
+    transform: translate(655px, -20px);
   }
 
-  /* Top Rightish */
-  30% {
-    transform: translate(450px, 150px);
+  /* Sat 2 */
+  32% {
+    transform: translate(745px, 190px);
   }
 
-  /* Far Right */
-  45% {
-    transform: translate(200px, 250px);
+  /* Sat 3 */
+  48% {
+    transform: translate(610px, 400px);
   }
 
-  /* Bottom Middle */
-  60% {
-    transform: translate(50px, 180px);
+  /* Sat 4 */
+  64% {
+    transform: translate(70px, 400px);
   }
 
-  /* Left */
-  75% {
-    transform: translate(100px, 40px);
+  /* Sat 5 */
+  80% {
+    transform: translate(-65px, 190px);
   }
 
-  /* Top Left */
-  90% {
-    transform: translate(200px, 100px);
-  }
-
-  /* Back to Center */
+  /* Sat 6 */
   100% {
-    transform: translate(200px, 100px);
+    transform: translate(25px, -20px);
   }
 }
 
-/* Moves the CONTENT opposite to the glass */
+/* moves CONTENT opposite */
 @keyframes counterScan {
   0% {
-    transform: translate(-200px, -100px);
+    transform: translate(-25px, 20px);
   }
 
-  15% {
-    transform: translate(-260px, -40px);
+  16% {
+    transform: translate(-655px, 20px);
   }
 
-  30% {
-    transform: translate(-450px, -150px);
+  32% {
+    transform: translate(-745px, -190px);
   }
 
-  45% {
-    transform: translate(-200px, -250px);
+  48% {
+    transform: translate(-610px, -400px);
   }
 
-  60% {
-    transform: translate(-50px, -180px);
+  64% {
+    transform: translate(-70px, -400px);
   }
 
-  75% {
-    transform: translate(-100px, -40px);
-  }
-
-  90% {
-    transform: translate(-200px, -100px);
+  80% {
+    transform: translate(65px, -190px);
   }
 
   100% {
-    transform: translate(-200px, -100px);
+    transform: translate(-25px, 20px);
   }
 }
 
@@ -299,12 +266,47 @@
 /* ================================== */
 @media (max-width: 768px) {
   .hero-cluster {
-    width: 260px;
-    height: 260px;
+    width: 300px;
+    height: 300px;
+  }
+
+  .magnetic-cluster {
+    width: 100%;
+    height: 100%;
+    /* Let the mobile container dictate size */
   }
 
   .mag-content {
-    width: 260px;
-    height: 260px;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Simplify mobile animation to stay within bounds */
+  @keyframes scanPath {
+    0% {
+      transform: translate(10px, 10px);
+    }
+
+    50% {
+      transform: translate(150px, 150px);
+    }
+
+    100% {
+      transform: translate(10px, 10px);
+    }
+  }
+
+  @keyframes counterScan {
+    0% {
+      transform: translate(-10px, -10px);
+    }
+
+    50% {
+      transform: translate(-150px, -150px);
+    }
+
+    100% {
+      transform: translate(-10px, -10px);
+    }
   }
 }
