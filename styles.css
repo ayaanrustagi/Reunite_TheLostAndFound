@@ -713,7 +713,8 @@ body {
 }
 
 .preview-title {
-    font-size: 8rem;
+    font-size: clamp(4rem, 8vw, 8rem);
+    /* Responsive scaling to fit laptops */
     font-weight: 800;
     line-height: 1;
     margin: 1rem 0;
@@ -757,10 +758,12 @@ body {
 
 /* Scroll Hint */
 .scroll-hint {
-    position: absolute;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    margin-top: 2rem;
+    left: auto;
+    bottom: auto;
+    /* Reset */
+    transform: none;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -771,16 +774,19 @@ body {
 
 .hint-text {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     letter-spacing: 0.3em;
-    color: var(--muted-text);
+    color: var(--accent-color);
+    /* Reverted to Blue */
+    font-weight: 500;
     text-transform: uppercase;
 }
 
 .hint-line {
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, var(--accent-color), transparent);
+    width: 2px;
+    height: 70px;
+    /* Slightly longer */
+    background: linear-gradient(to bottom, rgba(0, 78, 204, 0.3), transparent);
     position: relative;
     overflow: hidden;
 }
@@ -792,8 +798,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--text-color);
-    animation: hintLineFlow 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    background: var(--accent-color);
+    /* Blue Flow */
+    box-shadow: 0 0 10px var(--accent-color);
+    /* Glow for visibility */
+    animation: hintLineFlow 1.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 @keyframes hintLineFlow {
@@ -1540,10 +1549,14 @@ body {
 
     .header-inner {
         padding: 0.75rem 1rem;
+        gap: 0.5rem;
+        /* Reduced gap between elements */
     }
 
     .logo-area {
         order: 1;
+        margin-right: auto;
+        /* Push actions and menu to the right */
     }
 
     /* Hide nav by default on mobile */
@@ -1679,47 +1692,99 @@ body {
         margin-bottom: 0.5rem;
     }
 
+    /* Horizontal Flashcard Layout for Mobile */
     .split-right {
-        padding-top: 0;
-        padding-bottom: 4rem;
+        padding-top: 0.5rem;
+        /* Reduced padding top to pull closer */
+        padding-bottom: 2rem;
         width: 100%;
+        display: flex;
+        flex-direction: row;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+        gap: 1rem;
+        /* Center the 85vw cards: (100vw - 85vw) / 2 = 7.5vw */
+        padding-left: 7.5vw;
+        padding-right: 7.5vw;
+        -webkit-overflow-scrolling: touch;
+        /* Hide scrollbar */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 
-    .preview-title {
-        font-size: 2.8rem;
-        margin: 0.25rem 0;
-        line-height: 1;
-    }
-
-    .preview-desc {
-        font-size: 0.95rem;
-        padding: 0 1rem;
-        margin-bottom: 1.5rem;
-        line-height: 1.4;
-        color: var(--muted-text);
-    }
-
-    .scroll-hint {
+    .split-right::-webkit-scrollbar {
         display: none;
     }
 
-    .step-item {
-        padding: 1.5rem 1.5rem;
-        /* Reduced vertical padding */
-        margin: 0 1rem 1rem;
-        /* Reduced margin */
-        background: #ffffff;
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        opacity: 0.4;
-        transition: all 0.4s ease;
+    /* Mobile Scroll Hint - "SWIPE" */
+    .scroll-hint {
+        display: flex;
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 2.5rem;
+        /* Increased specific spacing from title */
+        margin-bottom: 1.5rem;
+        /* Added spacing below */
+        flex-direction: row;
+        gap: 0.5rem;
+        justify-content: center;
+        width: 100%;
     }
 
-    .step-item.active {
+    .hint-line {
+        display: none;
+        /* Hide vertical line on mobile */
+    }
+
+    /* Replace text with "SWIPE" for mobile */
+    .hint-text {
+        font-size: 0;
+        /* Hide original text */
+    }
+
+    .hint-text::after {
+        content: '← SWIPE TO EXPLORE →';
+        font-size: 0.7rem;
+        color: var(--accent-color);
+        letter-spacing: 0.15em;
+        display: block;
+    }
+
+    .step-item {
+        flex: 0 0 85vw;
+        /* Card Width */
+        height: auto;
+        min-height: 220px;
+        /* Reduced height significantly */
+        scroll-snap-align: center;
+        padding: 2rem;
+        margin: 0;
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        /* Very subtle border */
+        border-radius: 24px;
+        /* Soft app-like corners */
         opacity: 1;
-        border-color: var(--accent-color);
-        box-shadow: 0 15px 40px rgba(0, 78, 204, 0.08);
-        transform: translateY(-5px);
+        /* Always visible */
+        transform: scale(0.95);
+        /* Slight shrink for inactive cards */
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+        /* diffuse soft shadow */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    /* Focused Card Highlight */
+    .step-item.active {
+        transform: scale(1);
+        border-color: rgba(0, 78, 204, 0.2);
+        box-shadow: 0 20px 50px rgba(0, 78, 204, 0.12);
     }
 
     .step-item h3 {
