@@ -1,3 +1,12 @@
+/* Noto Color Emoji - Cross-platform Apple-style emoji font */
+@font-face {
+    font-family: 'Noto Color Emoji';
+    src: url('https://fonts.gstatic.com/s/notocoloremoji/v30/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --bg-color: #f3f3f3;
     --text-color: #1a1a1a;
@@ -7,6 +16,7 @@
     --muted-text: #666666;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'Roboto Mono', monospace;
+    --font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
     --glow-opacity: 0.15;
     --accent-glow: rgba(0, 106, 255, 0.4);
 }
