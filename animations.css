@@ -3,14 +3,21 @@
 /* ================================== */
 
 .magnetic-cluster {
-  position: relative;
-  width: 320px;
-  height: 320px;
-  /* More breathing room around the animation */
-  margin: 2rem auto 4rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 350px;
+  /* Elliptical area */
+  margin: 0;
   overflow: visible;
   /* Ensure visibility */
   display: block;
+  z-index: -1;
+  /* Behind text */
+  opacity: 0.4;
+  /* Blend in */
 }
 
 /* --- CLUSTER BASE (Normal Items) --- */
@@ -25,8 +32,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  /* Bigger Center */
+  height: 160px;
   background: linear-gradient(180deg, #f0f8ff 0%, #d4e9ff 100%);
   border-radius: 50%;
   display: flex;
@@ -37,8 +45,8 @@
 }
 
 .cluster-center img {
-  width: 65px;
-  height: 65px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
   filter: grayscale(0.3) opacity(0.8);
   transition: all 0.3s ease;
@@ -46,8 +54,9 @@
 
 .satellite {
   position: absolute;
-  width: 55px;
-  height: 55px;
+  width: 85px;
+  /* Bigger Items */
+  height: 85px;
   border-radius: 50%;
   /* Light, clean background */
   background: linear-gradient(145deg, #ffffff, #f0f0f0);
@@ -61,8 +70,8 @@
 }
 
 .satellite img {
-  width: 60%;
-  height: 60%;
+  width: 65%;
+  height: 65%;
   object-fit: contain;
   /* Darker gray for contrast on white */
   filter: grayscale(1) opacity(0.5);
@@ -70,7 +79,7 @@
   transition: filter 0.3s ease;
 }
 
-/* Positioning Satellites */
+/* Positioning Satellites - Elliptical Layout by percentages */
 .sat-1 {
   top: 5%;
   left: 50%;
@@ -108,13 +117,15 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 140px;
-  height: 140px;
-  z-index: 50;
+  width: 200px;
+  /* Bigger Glass */
+  height: 200px;
+  z-index: 2;
+  /* Above the faint items, but whole cluster is z-index -1, so effectively behind text */
   pointer-events: none;
   /* Let clicks pass through */
   /* Automatic Scanning Animation Path */
-  animation: scanPath 4s ease-in-out infinite;
+  animation: scanPath 5s ease-in-out infinite;
 }
 
 .mag-lens {
@@ -122,14 +133,15 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px) contrast(1.1);
+  /* Stronger blur for "overlay" effect */
   /* Glass Ring Border */
-  border: 4px solid rgba(255, 255, 255, 0.8);
+  border: 4px solid rgba(255, 255, 255, 0.6);
   box-shadow:
-    0 20px 50px rgba(0, 78, 204, 0.3),
+    0 30px 60px rgba(0, 78, 204, 0.4),
     /* Blue glow */
-    inset 0 0 20px rgba(255, 255, 255, 0.5);
+    inset 0 0 30px rgba(255, 255, 255, 0.4);
   /* Inner gloss */
   overflow: hidden;
 }
@@ -139,35 +151,35 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 320px;
+  width: 600px;
   /* Must match parent cluster width */
-  height: 320px;
+  height: 350px;
   /* Counter-translation to keep content fixed relative to world */
-  animation: counterScan 4s ease-in-out infinite;
+  animation: counterScan 5s ease-in-out infinite;
   transform-origin: 0 0;
 }
 
 /* Magnified Items Styling */
 .mag-content .cluster-center {
-  width: 150px;
-  /* Larger! */
-  height: 150px;
+  width: 180px;
+  /* Even Larger inside lens! */
+  height: 180px;
   background: #fff;
   box-shadow: 0 0 30px rgba(0, 106, 255, 0.5);
   /* Glowing */
 }
 
 .mag-content .cluster-center img {
-  width: 85px;
-  height: 85px;
+  width: 110px;
+  height: 110px;
   filter: grayscale(0) opacity(1);
   /* Full color */
 }
 
 .mag-content .satellite {
-  width: 70px;
+  width: 95px;
   /* Larger! */
-  height: 70px;
+  height: 95px;
   background: linear-gradient(145deg, #004ecc, #002a70);
   /* Blue active state */
   box-shadow: 0 0 20px rgba(0, 78, 204, 0.6);
@@ -181,106 +193,104 @@
 /* Glass Reflection */
 .lens-reflection {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
   width: 40%;
   height: 25%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
   border-radius: 50%;
-  filter: blur(2px);
+  filter: blur(3px);
 }
 
 .mag-handle {
   position: absolute;
-  bottom: -30px;
-  right: -30px;
+  bottom: -40px;
+  right: -40px;
   /* Angled handle */
-  width: 60px;
-  height: 12px;
+  width: 80px;
+  height: 16px;
   background: linear-gradient(90deg, #d0d0d0, #f0f0f0, #b0b0b0);
   transform: rotate(45deg);
   border-radius: 10px;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 8px 15px rgba(0, 0, 0, 0.2);
   z-index: -1;
 }
 
-/* --- ANIMATION PATHS --- */
+/* --- ANIMATION PATHS (Scaled for 600x350 box) --- */
 /* Moves the GLASS over the items */
 @keyframes scanPath {
   0% {
-    transform: translate(90px, 90px);
+    transform: translate(200px, 100px);
   }
 
-  /* Center Key */
+  /* Center */
   15% {
-    transform: translate(160px, 40px);
+    transform: translate(260px, 40px);
   }
 
-  /* Phone */
+  /* Top Rightish */
   30% {
-    transform: translate(220px, 120px);
+    transform: translate(450px, 150px);
   }
 
-  /* Card */
+  /* Far Right */
   45% {
-    transform: translate(90px, 220px);
+    transform: translate(200px, 250px);
   }
 
-  /* Headphones */
+  /* Bottom Middle */
   60% {
-    transform: translate(-20px, 140px);
+    transform: translate(50px, 180px);
   }
 
-  /* Purse */
+  /* Left */
   75% {
-    transform: translate(20px, 40px);
+    transform: translate(100px, 40px);
   }
 
-  /* Luggage */
+  /* Top Left */
   90% {
-    transform: translate(90px, 90px);
+    transform: translate(200px, 100px);
   }
 
   /* Back to Center */
   100% {
-    transform: translate(90px, 90px);
+    transform: translate(200px, 100px);
   }
 }
 
-/* Moves the CONTENT opposite to the glass to create the "Window" effect */
-/* Corrected logic: No scale on the container itself to avoid offset drift. 
-   Scale is applied to children if needed, but keeping 1:1 ensures perfect alignment. */
+/* Moves the CONTENT opposite to the glass */
 @keyframes counterScan {
   0% {
-    transform: translate(-90px, -90px);
+    transform: translate(-200px, -100px);
   }
 
   15% {
-    transform: translate(-160px, -40px);
+    transform: translate(-260px, -40px);
   }
 
   30% {
-    transform: translate(-220px, -120px);
+    transform: translate(-450px, -150px);
   }
 
   45% {
-    transform: translate(-90px, -220px);
+    transform: translate(-200px, -250px);
   }
 
   60% {
-    transform: translate(20px, -140px);
+    transform: translate(-50px, -180px);
   }
 
   75% {
-    transform: translate(-20px, -40px);
+    transform: translate(-100px, -40px);
   }
 
   90% {
-    transform: translate(-90px, -90px);
+    transform: translate(-200px, -100px);
   }
 
   100% {
-    transform: translate(-90px, -90px);
+    transform: translate(-200px, -100px);
   }
 }
 

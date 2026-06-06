@@ -433,6 +433,11 @@ body {
     text-transform: uppercase;
     margin-bottom: 4rem;
     color: var(--text-color);
+    position: relative;
+    z-index: 5;
+    /* Ensure text is above the background animation */
+    pointer-events: none;
+    /* Let clicks pass through to potential BG elements if needed */
 }
 
 .hero-display-text .sub-hero {
@@ -450,6 +455,9 @@ body {
     align-items: center;
     gap: 3rem;
     margin-top: 2rem;
+    position: relative;
+    z-index: 5;
+    /* Keep buttons clickable */
 }
 
 .btn-primary {
@@ -490,11 +498,13 @@ body {
     0% {
         opacity: 1;
         transform: translateY(0);
+        filter: blur(0);
     }
 
     100% {
         opacity: 0;
         transform: translateY(-20px);
+        filter: blur(10px);
     }
 }
 
@@ -502,26 +512,31 @@ body {
     0% {
         opacity: 0;
         transform: translateY(20px);
+        filter: blur(10px);
     }
 
     100% {
         opacity: 1;
         transform: translateY(0);
+        filter: blur(0);
     }
 }
 
 #hero-title,
 #hero-subtitle {
     will-change: transform, opacity;
-    transition: all 0.4s ease;
+    transition: all 0.2s ease;
+    /* Faster blend */
 }
 
 .text-fade-out {
-    animation: textFadeOut 0.4s ease forwards;
+    animation: textFadeOut 0.2s ease forwards;
+    /* Faster */
 }
 
 .text-fade-in {
-    animation: textFadeIn 0.4s ease forwards;
+    animation: textFadeIn 0.2s ease forwards;
+    /* Faster */
 }
 
 /* Technical Micro-interactions */
