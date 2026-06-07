@@ -349,36 +349,27 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reportForm')?.addEventListener('submit', handleReportSubmit);
   document.getElementById('claimForm')?.addEventListener('submit', handleClaimSubmit);
 
-  // Header Scroll Effect (Hide on Scroll Down, Show on Scroll Up)
-  let lastScrollY = window.scrollY;
+  // Header Scroll Effect - Keep header always visible for accessibility
+  // (Removed hide-on-scroll behavior per feedback - improves tabbing and reduces confusion)
   const header = document.querySelector('.site-header');
   const trigger = document.querySelector('.persistent-trigger');
 
   window.addEventListener('scroll', () => {
     if (!header) return;
-
     const currentScrollY = window.scrollY;
 
-    // Show/hide based on direction
-    if (currentScrollY > lastScrollY && currentScrollY > 150) {
-      header.classList.add('header-hidden');
-      if (trigger) trigger.classList.add('visible');
-    } else {
-      header.classList.remove('header-hidden');
-      if (trigger) trigger.classList.remove('visible');
-    }
-
-    // Toggle styling when scrolled away from top
+    // Only add subtle styling when scrolled, but keep header visible
     header.classList.toggle('scrolled', currentScrollY > 50);
-
-    lastScrollY = currentScrollY;
   }, { passive: true });
+
+  // Ensure trigger stays hidden since header is always visible
+  if (trigger) trigger.classList.remove('visible');
 
   // Make header globally accessible for inline onclicks
   window.header = header;
   window.showHeader = function () {
+    // Header is always visible now, but keep function for compatibility
     header.classList.remove('header-hidden');
-    if (trigger) trigger.classList.remove('visible');
   };
 
   initHeroRotation();
@@ -415,6 +406,48 @@ function navigateToSection(sectionId) {
 
   // Store in location for browser back button
   window.history.pushState(null, null, `#${sectionId}`);
+
+  // Focus Management - Set focus to primary interactive element for accessibility
+  setTimeout(() => {
+    setFocusForSection(sectionId);
+  }, 100);
+}
+
+// Focus management helper - sets initial focus when navigating to sections
+function setFocusForSection(sectionId) {
+  let focusTarget = null;
+
+  switch (sectionId) {
+    case 'found':
+      // Focus on main search filter
+      focusTarget = document.getElementById('searchFilter');
+      break;
+    case 'report':
+      // Focus on first form field
+      focusTarget = document.getElementById('itemTitle');
+      break;
+    case 'claim':
+      // Focus on item selection dropdown
+      focusTarget = document.getElementById('claimItemId');
+      break;
+    case 'hero':
+      // Focus on primary CTA button
+      focusTarget = document.querySelector('#page-hero .btn-primary');
+      break;
+    case 'dashboard':
+    case 'admin':
+      // Focus on section heading for screen reader context
+      focusTarget = document.querySelector(`#page-${sectionId} h2`);
+      if (focusTarget) focusTarget.setAttribute('tabindex', '-1');
+      break;
+    default:
+      // No specific focus target
+      break;
+  }
+
+  if (focusTarget) {
+    focusTarget.focus({ preventScroll: true });
+  }
 }
 
 window.navigateToSection = navigateToSection;
@@ -1117,15 +1150,101 @@ async function simulateAiScan() {
 // ------------------------------
 // Forms
 // ------------------------------
+
+// Form validation helper
+function validateReportForm() {
+  const form = document.getElementById('reportForm');
+  resetFormValidation(form);
+
+  let isValid = true;
+  const errors = [];
+
+  // Required field validation
+  const title = document.getElementById('itemTitle').value.trim();
+  if (!title) {
+    setFieldState('itemTitle', false, 'ITEM TITLE IS REQUIRED');
+    errors.push('title');
+    isValid = false;
+  }
+
+  const category = document.getElementById('itemCategory').value;
+  if (!category) {
+    setFieldState('itemCategory', false, 'CATEGORY IS REQUIRED');
+    errors.push('category');
+    isValid = false;
+  }
+
+  const location = document.getElementById('itemLocation').value.trim();
+  if (!location) {
+    setFieldState('itemLocation', false, 'LOCATION IS REQUIRED');
+    errors.push('location');
+    isValid = false;
+  }
+
+  const date = document.getElementById('itemDate').value;
+  if (!date) {
+    setFieldState('itemDate', false, 'DATE IS REQUIRED');
+    errors.push('date');
+    isValid = false;
+  }
+
+  const name = document.getElementById('contactName').value.trim();
+  if (!name) {
+    setFieldState('contactName', false, 'NAME IS REQUIRED');
+    errors.push('name');
+    isValid = false;
+  }
+
+  const email = document.getElementById('contactEmail').value.trim();
+  if (!email) {
+    setFieldState('contactEmail', false, 'EMAIL IS REQUIRED');
+    errors.push('email');
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    setFieldState('contactEmail', false, 'INVALID EMAIL FORMAT');
+    errors.push('email');
+    isValid = false;
+  }
+
+  // Focus first invalid field for accessibility
+  if (errors.length > 0) {
+    const firstErrorField = document.getElementById(
+      errors[0] === 'title' ? 'itemTitle' :
+        errors[0] === 'category' ? 'itemCategory' :
+          errors[0] === 'location' ? 'itemLocation' :
+            errors[0] === 'date' ? 'itemDate' :
+              errors[0] === 'name' ? 'contactName' : 'contactEmail'
+    );
+    if (firstErrorField) firstErrorField.focus();
+  }
+
+  return isValid;
+}
+
 async function handleReportSubmit(e) {
   e.preventDefault();
-  const title = document.getElementById('itemTitle').value;
+  const statusEl = document.getElementById('reportStatus');
+
+  // Clear previous status
+  statusEl.textContent = '';
+  statusEl.classList.remove('error', 'success');
+
+  // Validate form first
+  if (!validateReportForm()) {
+    setStatusMessage('reportStatus', 'PLEASE FILL ALL REQUIRED FIELDS', true);
+    return;
+  }
+
+  // Show loading state
+  showLoading('Submitting report...');
+
+  const title = document.getElementById('itemTitle').value.trim();
   const category = document.getElementById('itemCategory').value;
-  const location = document.getElementById('itemLocation').value;
+  const location = document.getElementById('itemLocation').value.trim();
   const date = document.getElementById('itemDate').value;
-  const description = document.getElementById('itemDescription').value;
-  const name = document.getElementById('contactName').value;
-  const email = document.getElementById('contactEmail').value;
+  const description = document.getElementById('itemDescription').value.trim();
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
   const preview = document.getElementById('reportPhotoPreview');
   const photoBase64 = preview.src;
 
@@ -1143,41 +1262,118 @@ async function handleReportSubmit(e) {
     contact_name: name, contact_email: email,
     image: dhash ? photoBase64 : null,
     dhash: dhash,
-    color: avgColor, // SAVE COLOR DATA
+    color: avgColor,
     status: 'pending',
     created_at: new Date().toISOString(),
     created_by: email
   };
 
-  items.unshift(newItem);
+  // Attempt to save to database
   const success = await supabaseUpsert('items', newItem);
+  hideLoading();
+
   if (success) {
+    // Only add to local array and show success if database save succeeded
+    items.unshift(newItem);
     await syncFromSupabase();
+
+    setStatusMessage('reportStatus', 'REPORT LOGGED SUCCESSFULLY - PENDING REVIEW', false);
+
+    // Clear form and preview
+    document.getElementById('reportPhotoPreview').classList.add('hidden');
+    document.getElementById('reportItemPhoto').parentElement.classList.remove('has-image');
+    e.target.reset();
+
+    // Notify User via Email
+    sendEmailUpdate(
+      newItem.contact_email,
+      newItem.contact_name,
+      "Report Received",
+      "We have successfully logged your report in our system. An administrator will review it shortly.",
+      newItem.title
+    );
+  } else {
+    // Show error if database save failed
+    setStatusMessage('reportStatus', 'FAILED TO SUBMIT REPORT - PLEASE TRY AGAIN', true);
   }
-  document.getElementById('reportStatus').textContent = "REPORT LOGGED SUCCESSFULLY - PENDING REVIEW";
+}
 
-  // Clear preview
-  document.getElementById('reportPhotoPreview').classList.add('hidden');
-  document.getElementById('reportItemPhoto').parentElement.classList.remove('has-image');
+// Claim form validation helper
+function validateClaimForm() {
+  const form = document.getElementById('claimForm');
+  resetFormValidation(form);
 
-  e.target.reset();
+  let isValid = true;
+  const errors = [];
 
-  // Notify User via Email
-  sendEmailUpdate(
-    newItem.contact_email,
-    newItem.contact_name,
-    "Report Received",
-    "We have successfully logged your report in our system. An administrator will review it shortly.",
-    newItem.title
-  );
+  const itemId = document.getElementById('claimItemId').value;
+  if (!itemId) {
+    setFieldState('claimItemId', false, 'PLEASE SELECT AN ITEM');
+    errors.push('itemId');
+    isValid = false;
+  }
+
+  const name = document.getElementById('claimName').value.trim();
+  if (!name) {
+    setFieldState('claimName', false, 'NAME IS REQUIRED');
+    errors.push('name');
+    isValid = false;
+  }
+
+  const email = document.getElementById('claimEmail').value.trim();
+  if (!email) {
+    setFieldState('claimEmail', false, 'EMAIL IS REQUIRED');
+    errors.push('email');
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    setFieldState('claimEmail', false, 'INVALID EMAIL FORMAT');
+    errors.push('email');
+    isValid = false;
+  }
+
+  const message = document.getElementById('claimMessage').value.trim();
+  if (!message) {
+    setFieldState('claimMessage', false, 'PROOF OF OWNERSHIP IS REQUIRED');
+    errors.push('message');
+    isValid = false;
+  }
+
+  // Focus first invalid field for accessibility
+  if (errors.length > 0) {
+    const fieldMap = {
+      'itemId': 'claimItemId',
+      'name': 'claimName',
+      'email': 'claimEmail',
+      'message': 'claimMessage'
+    };
+    const firstErrorField = document.getElementById(fieldMap[errors[0]]);
+    if (firstErrorField) firstErrorField.focus();
+  }
+
+  return isValid;
 }
 
 async function handleClaimSubmit(e) {
   e.preventDefault();
+  const statusEl = document.getElementById('claimStatus');
+
+  // Clear previous status
+  statusEl.textContent = '';
+  statusEl.classList.remove('error', 'success');
+
+  // Validate form first
+  if (!validateClaimForm()) {
+    setStatusMessage('claimStatus', 'PLEASE FILL ALL REQUIRED FIELDS', true);
+    return;
+  }
+
+  // Show loading state
+  showLoading('Submitting claim...');
+
   const itemId = document.getElementById('claimItemId').value;
-  const name = document.getElementById('claimName').value;
-  const email = document.getElementById('claimEmail').value;
-  const message = document.getElementById('claimMessage').value;
+  const name = document.getElementById('claimName').value.trim();
+  const email = document.getElementById('claimEmail').value.trim();
+  const message = document.getElementById('claimMessage').value.trim();
 
   const newClaim = {
     id: "claim_" + Math.random().toString(36).substr(2, 9),
@@ -1189,34 +1385,42 @@ async function handleClaimSubmit(e) {
     created_at: new Date().toISOString()
   };
 
-  claims.unshift(newClaim);
+  // Attempt to save to database
   const success = await supabaseUpsert('claims', newClaim);
+  hideLoading();
+
   if (success) {
+    // Only add to local array and show success if database save succeeded
+    claims.unshift(newClaim);
     await syncFromSupabase();
-  }
-  document.getElementById('claimStatus').textContent = "CLAIM DATA RECEIVED - AWAITING VERIFICATION";
-  e.target.reset();
 
-  // Notify the Original Reporter that someone claimed their item
-  const item = items.find(i => i.id === newClaim.item_id);
-  if (item && item.contact_email) {
+    setStatusMessage('claimStatus', 'CLAIM DATA RECEIVED - AWAITING VERIFICATION', false);
+    e.target.reset();
+
+    // Notify the Original Reporter that someone claimed their item
+    const item = items.find(i => i.id === newClaim.item_id);
+    if (item && item.contact_email) {
+      sendEmailUpdate(
+        item.contact_email,
+        item.contact_name,
+        "New Claim Submitted",
+        `A claim has been submitted for your item "${item.title}". Please log in to the portal to review the claim details.`,
+        item.title
+      );
+    }
+
+    // Notify the Claimant
     sendEmailUpdate(
-      item.contact_email,
-      item.contact_name,
-      "New Claim Submitted",
-      `A claim has been submitted for your item "${item.title}". Please log in to the portal to review the claim details.`,
-      item.title
+      newClaim.claimant_email,
+      newClaim.claimant_name,
+      "Claim Received",
+      "Your claim has been submitted and is currently being reviewed by our administration team.",
+      item ? item.title : "Reported Item"
     );
+  } else {
+    // Show error if database save failed
+    setStatusMessage('claimStatus', 'FAILED TO SUBMIT CLAIM - PLEASE TRY AGAIN', true);
   }
-
-  // Notify the Claimant
-  sendEmailUpdate(
-    newClaim.claimant_email,
-    newClaim.claimant_name,
-    "Claim Received",
-    "Your claim has been submitted and is currently being reviewed by our administration team.",
-    item ? item.title : "Reported Item"
-  );
 }
 
 function renderClaimSelect() {
