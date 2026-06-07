@@ -69,7 +69,7 @@
       </div>
 
       <div class="header-actions">
-        <button id="loginBtn" class="btn-sm btn-outline" onclick="openLoginModal()">SIGN IN</button>
+        <a id="loginBtn" href="login.html" class="btn-sm btn-outline">SIGN IN</a>
         <button id="dashboardBtn" class="btn-sm btn-outline hidden"
           onclick="navigateToSection('dashboard')">DASHBOARD</button>
         <button id="adminBtn" class="btn-sm btn-outline hidden" onclick="navigateToSection('admin')">ADMIN</button>
@@ -404,64 +404,7 @@
 
   </main>
 
-  <!-- LOGIN MODAL -->
-  <div id="loginModal" class="modal-overlay hidden">
-    <div class="modal-box split-modal">
-      <button onclick="closeLoginModal()" class="close-btn-absolute">×</button>
 
-      <div class="modal-form-side">
-        <div class="auth-header">
-          <h3 id="authTitle">WELCOME BACK</h3>
-          <p id="authSubtitle">Please enter your details to access the network.</p>
-        </div>
-
-        <div class="auth-tabs">
-          <button id="tab-login" class="auth-tab active" onclick="setAuthMode('login')">Sign In</button>
-          <button id="tab-signup" class="auth-tab" onclick="setAuthMode('signup')">Sign Up</button>
-        </div>
-
-        <div class="auth-form-container">
-          <div class="input-pill-group">
-            <label>NAME</label>
-            <input type="text" id="loginName" class="input-pill" placeholder="Sherlock Holmes">
-          </div>
-          <div class="input-pill-group">
-            <label>EMAIL</label>
-            <input type="email" id="loginEmail" class="input-pill" placeholder="sherlock@gmail.com">
-          </div>
-
-          <div class="admin-toggle-wrap">
-            <label class="checkbox-container">
-              <input type="checkbox" id="isAdminToggle" onchange="toggleAdminField()">
-              Login as Administrator
-            </label>
-          </div>
-
-          <div id="adminCodeWrap" class="input-pill-group hidden">
-            <label>ACCESS CODE</label>
-            <input type="password" id="adminCode" class="input-pill" placeholder="••••••••">
-          </div>
-
-          <select id="loginRole" class="hidden">
-            <option value="student">STUDENT</option>
-            <option value="admin">ADMINISTRATOR</option>
-          </select>
-
-          <button onclick="handleLogin()" class="btn-primary pill-btn full-width">SIGN IN</button>
-          <div id="loginStatus" class="status-msg"></div>
-        </div>
-      </div>
-
-      <div class="modal-visual-side">
-        <div class="visual-content">
-          <div class="visual-circle"></div>
-          <img src="assets/reunite-logo.png" class="visual-logo-large" alt="Reunite">
-          <h2>REUNITE</h2>
-          <p>Recover what matters.</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- ITEM MODAL -->
   <div id="itemModal" class="modal-overlay hidden">

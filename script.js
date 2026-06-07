@@ -68,10 +68,44 @@ function createSupabaseClient() {
       SUPABASE_ENABLED = !!supabaseClient;
       if (SUPABASE_ENABLED) {
         console.log("🟢 SUPABASE CLIENT INITIALIZED");
+        // Initialize auth check
+        checkInitialSession();
+        // Setup listener
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          console.log("Auth status change:", event);
+          handleSessionUpdate(session);
+        });
       }
     } catch (e) {
       console.error("🔴 SUPABASE INIT ERROR:", e);
     }
+  }
+}
+
+async function checkInitialSession() {
+  if (!supabaseClient) return;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  handleSessionUpdate(session);
+}
+
+function handleSessionUpdate(session) {
+  if (session && session.user) {
+    const user = session.user;
+    currentUser = {
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.full_name || user.email.split('@')[0],
+      role: user.user_metadata?.role || 'student'
+    };
+  } else {
+    currentUser = null;
+  }
+
+  updateAuthUI();
+
+  // If we just logged in, sync the database
+  if (currentUser) {
+    syncFromSupabase();
   }
 }
 
@@ -564,41 +598,20 @@ function handleSplitScroll() {
 }
 
 // ------------------------------
-// Auth & Sessions
+// Auth & Sessions (Supabase Auth)
 // ------------------------------
-function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
-function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
-window.openLoginModal = openLoginModal;
-window.closeLoginModal = closeLoginModal;
 
-function handleLogin() {
-  const role = document.getElementById('loginRole').value;
-  const name = document.getElementById('loginName').value.trim();
-  const email = document.getElementById('loginEmail').value.trim();
-  const code = document.getElementById('adminCode').value;
-  const status = document.getElementById('loginStatus');
-
-  if (!name || !email) {
-    status.textContent = "REQUIRED FIELDS MISSING";
-    return;
+async function handleLogout() {
+  if (SUPABASE_ENABLED) {
+    showLoading("Signing out...");
+    const { error } = await supabaseClient.auth.signOut();
+    hideLoading();
+    if (error) {
+      console.error("Logout error:", error.message);
+    }
+  } else {
+    currentUser = null;
   }
-
-  if (role === 'admin' && code !== ADMIN_ACCESS_CODE) {
-    status.textContent = "INVALID ACCESS CODE";
-    return;
-  }
-
-  currentUser = { role, name, email };
-  localStorage.setItem(LS_KEYS.session, JSON.stringify(currentUser));
-  updateAuthUI();
-  closeLoginModal();
-  navigateToSection(role === 'admin' ? 'admin' : 'dashboard');
-}
-window.handleLogin = handleLogin;
-
-function handleLogout() {
-  currentUser = null;
-  localStorage.removeItem(LS_KEYS.session);
   updateAuthUI();
   navigateToSection('hero');
 }
@@ -609,6 +622,8 @@ function updateAuthUI() {
   const dashboardBtn = document.getElementById('dashboardBtn');
   const adminBtn = document.getElementById('adminBtn');
   const logoutBtn = document.getElementById('logoutBtn');
+
+  if (!loginBtn || !dashboardBtn || !adminBtn || !logoutBtn) return;
 
   if (currentUser) {
     loginBtn.classList.add('hidden');
@@ -672,8 +687,7 @@ function saveAll() {
 }
 
 function loadSession() {
-  const s = localStorage.getItem(LS_KEYS.session);
-  currentUser = s ? JSON.parse(s) : null;
+  // Session is now handled by Supabase checkInitialSession
 }
 
 // ------------------------------
