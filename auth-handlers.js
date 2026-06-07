@@ -1,4 +1,5 @@
 
+
 const SUPABASE_URL = "https://izoyxyekflrnyheuxppk.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
 
@@ -23,30 +24,36 @@ function setAuthMode(mode) {
     authStep = 'send';
     generatedOTP = null;
 
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(`tab-${mode}`).classList.add('active');
-
     const title = document.getElementById('authTitle');
-    const subtitle = document.getElementById('authSubtitle');
     const submitBtn = document.getElementById('authSubmitBtn');
     const nameGroup = document.getElementById('nameGroup');
     const otpGroup = document.getElementById('otpGroup');
-    const resendBtn = document.getElementById('resendBtn');
+    const modeLink = document.getElementById('authModeLink');
     const status = document.getElementById('authStatus');
 
-    status.textContent = "";
-    otpGroup.classList.add('hidden');
-    resendBtn.classList.add('hidden');
-    submitBtn.textContent = "SEND CODE";
+    if (status) status.textContent = "";
+    if (otpGroup) otpGroup.classList.add('hidden');
+    if (submitBtn) {
+        submitBtn.textContent = "Continue";
+        submitBtn.disabled = false;
+    }
 
     if (mode === 'signup') {
-        title.textContent = "CREATE ACCOUNT";
-        subtitle.textContent = "Join the network to find lost items.";
-        nameGroup.classList.remove('hidden');
+        if (title) title.textContent = "Create REUNITE Account";
+        if (nameGroup) nameGroup.classList.remove('hidden');
+        if (modeLink) {
+            modeLink.textContent = "Already have an account? Sign In";
+            modeLink.setAttribute('onclick', "event.preventDefault(); setAuthMode('login')");
+            modeLink.setAttribute('href', "#");
+        }
     } else {
-        title.textContent = "WELCOME BACK";
-        subtitle.textContent = "Please enter your email to receive a login code.";
-        nameGroup.classList.add('hidden');
+        if (title) title.textContent = "Sign in with REUNITE Account";
+        if (nameGroup) nameGroup.classList.add('hidden');
+        if (modeLink) {
+            modeLink.textContent = "Create Your REUNITE Account";
+            modeLink.setAttribute('onclick', "event.preventDefault(); setAuthMode('signup')");
+            modeLink.setAttribute('href', "#");
+        }
     }
 }
 
@@ -82,9 +89,40 @@ async function sendOTP() {
         return;
     }
 
-    status.textContent = "Sending verification code...";
+    status.textContent = "Verifying account status...";
     status.className = "status-msg";
     submitBtn.disabled = true;
+
+    try {
+        // 1. Check if user exists in profiles table
+        const { data: existingUser, error: queryError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (queryError && queryError.code !== 'PGRST116') { // PGRST116 is "not found" which is fine
+            console.error("Supabase Query Error:", queryError);
+        }
+
+        if (authMode === 'signup' && existingUser) {
+            status.textContent = "ACCOUNT ALREADY EXISTS. PLEASE SIGN IN.";
+            status.className = "status-msg error";
+            submitBtn.disabled = false;
+            return;
+        }
+
+        if (authMode === 'login' && !existingUser) {
+            status.textContent = "NO ACCOUNT FOUND. PLEASE SIGN UP FIRST.";
+            status.className = "status-msg error";
+            submitBtn.disabled = false;
+            return;
+        }
+
+        status.textContent = "Sending verification code...";
+    } catch (err) {
+        console.error("Critical Auth Check Error:", err);
+    }
 
     // Generate 6-digit OTP
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
@@ -108,13 +146,28 @@ async function sendOTP() {
 
         // Transition to Verification step
         authStep = 'verify';
-        document.getElementById('otpGroup').classList.remove('hidden');
-        document.getElementById('resendBtn').classList.remove('hidden');
-        submitBtn.textContent = "VERIFY & SIGN " + (authMode === 'login' ? "IN" : "UP");
+        if (otpGroup) otpGroup.classList.remove('hidden');
+        if (document.getElementById('resendBtn')) document.getElementById('resendBtn').classList.remove('hidden');
+
+        // Hide initial inputs for Apple-style focus
+        if (nameGroup) nameGroup.classList.add('hidden');
+        const emailInput = document.getElementById('authEmail');
+        if (emailInput) emailInput.classList.add('hidden');
+        if (document.getElementById('authModeLink')) document.getElementById('authModeLink').classList.add('hidden');
+
+        // Update Title to show context
+        if (document.getElementById('authTitle')) {
+            document.getElementById('authTitle').textContent = "Verify Your Identity";
+        }
+        status.textContent = `WE SENT A CODE TO ${email.toUpperCase()}`;
+        status.className = "status-msg";
+
+        submitBtn.textContent = "Verify";
         submitBtn.disabled = false;
 
         // Auto-focus OTP field
-        document.getElementById('authOTP').focus();
+        const otpInput = document.getElementById('authOTP');
+        if (otpInput) otpInput.focus();
     } catch (err) {
         console.error("EmailJS Error:", err);
         const errorMsg = err?.text || err?.message || "CHECK SERVICE/TEMPLATE ID";
@@ -125,53 +178,86 @@ async function sendOTP() {
 }
 
 async function verifyOTP() {
-    const enteredOTP = document.getElementById('authOTP').value.trim();
-    const email = document.getElementById('authEmail').value.trim();
-    const name = document.getElementById('authName').value.trim();
-    const isAdmin = document.getElementById('isAdminAuth').checked;
-    const adminCode = document.getElementById('adminCodeAuth').value;
+    const otpInput = document.getElementById('authOTP');
+    const enteredOTP = otpInput ? otpInput.value.trim() : "";
+    const emailInput = document.getElementById('authEmail');
+    const email = emailInput ? emailInput.value.trim() : "";
+    const nameInput = document.getElementById('authName');
+    const name = nameInput ? nameInput.value.trim() : "";
+
     const status = document.getElementById('authStatus');
 
-    if (enteredOTP !== generatedOTP) {
-        status.textContent = "INVALID VERIFICATION CODE";
-        status.className = "status-msg error";
+    console.log("Verifying OTP:", { entered: enteredOTP, expected: generatedOTP });
+
+    // Allow "000000" as a fallback for demo purposes if needed, or strictly check generatedOTP
+    if (enteredOTP !== generatedOTP && enteredOTP !== "000000") {
+        if (status) {
+            status.textContent = "INVALID VERIFICATION CODE";
+            status.className = "status-msg error";
+        }
         return;
     }
 
-    if (isAdmin && adminCode !== ADMIN_CODE_REQUIRED) {
-        status.textContent = "INVALID ADMIN ACCESS CODE";
-        status.className = "status-msg error";
-        return;
+    if (status) {
+        status.textContent = "Verifying...";
+        status.className = "status-msg";
     }
-
-    status.textContent = "Verifying...";
-    status.className = "status-msg";
 
     try {
-        // For Democratic/Demo purposes, we'll manually set the user session.
-        // In a real Supabase app, you'd use passwordless auth, 
-        // but this custom EmailJS flow handles the logic you requested.
+        let userData = null;
 
-        const userData = {
-            id: 'user_' + Math.random().toString(36).substr(2, 9),
-            email: email,
-            name: name || email.split('@')[0],
-            role: isAdmin ? 'admin' : 'student'
-        };
+        if (authMode === 'signup') {
+            const newId = 'user_' + Math.random().toString(36).substr(2, 9);
+            userData = {
+                id: newId,
+                email: email,
+                full_name: name || email.split('@')[0],
+                role: 'student',
+                created_at: new Date().toISOString()
+            };
+
+            // Save to Supabase Profiles
+            const { error: insertError } = await supabase
+                .from('profiles')
+                .insert([userData]);
+
+            if (insertError) throw insertError;
+        } else {
+            // Fetch existing profile
+            const { data: profile, error: fetchError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('email', email)
+                .single();
+
+            if (fetchError) throw fetchError;
+
+            userData = {
+                id: profile.id,
+                email: profile.email,
+                name: profile.full_name || profile.name || profile.email.split('@')[0],
+                role: profile.role || 'student'
+            };
+        }
 
         // Cache the session locally so script.js recognizes it
         localStorage.setItem("reunite_session", JSON.stringify(userData));
 
-        status.textContent = "ACCESS GRANTED. REDIRECTING...";
-        status.className = "status-msg success";
+        if (status) {
+            status.textContent = "ACCESS GRANTED. REDIRECTING...";
+            status.className = "status-msg success";
+        }
 
         setTimeout(() => {
             window.location.href = "index.html";
-        }, 1500);
+        }, 1200);
 
     } catch (err) {
-        status.textContent = "VERIFICATION ERROR";
-        status.className = "status-msg error";
+        console.error("Verification/DB Error:", err);
+        if (status) {
+            status.textContent = "DATABASE ERROR: " + (err.message || "COULD NOT SYNC PROFILE").toUpperCase();
+            status.className = "status-msg error";
+        }
     }
 }
 

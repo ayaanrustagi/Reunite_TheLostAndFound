@@ -9,10 +9,12 @@
 
 :root {
     --bg-color: #f3f3f3;
+    --bg-color-rgb: 243, 243, 243;
     --text-color: #1a1a1a;
     --accent-color: #004ecc;
     --border-color: #e5e5e5;
     --panel-bg: #ffffff;
+    --panel-bg-rgb: 255, 255, 255;
     --muted-text: #666666;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'Roboto Mono', monospace;
@@ -20,6 +22,7 @@
     --glow-opacity: 0.15;
     --accent-glow: rgba(0, 106, 255, 0.4);
 }
+
 
 .skip-link {
     position: absolute;
@@ -103,7 +106,7 @@ body {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(243, 243, 243, 0.1);
+    background: rgba(var(--bg-color-rgb), 0.1);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
@@ -149,7 +152,7 @@ body {
     display: none;
     flex-direction: column;
     gap: 5px;
-    background: #fff;
+    background: var(--panel-bg);
     border: 1px solid var(--border-color);
     cursor: pointer;
     padding: 12px;
@@ -179,7 +182,7 @@ body {
     top: 0.75rem;
     right: 1rem;
     z-index: 1100;
-    background: #fff;
+    background: var(--panel-bg);
 }
 
 .menu-toggle.active span:nth-child(1) {
@@ -212,7 +215,7 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(var(--panel-bg-rgb), 0.6);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 0.5rem 1.2rem;
@@ -307,6 +310,7 @@ body {
 
 .header-actions {
     display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -349,7 +353,7 @@ body {
 .view-section {
     display: none;
     min-height: calc(100vh - 5rem);
-    padding: 4rem 2rem;
+    padding: 3rem 2rem;
 }
 
 .view-section.active {
@@ -696,11 +700,10 @@ body {
 
 .label-tech {
     font-family: var(--font-mono);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: var(--accent-color);
     margin-bottom: 1rem;
     display: block;
-    letter-spacing: 0.1em;
 }
 
 .preview-title {
@@ -814,7 +817,7 @@ body {
 }
 
 .section-head {
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
 }
 
 .section-head h2 {
@@ -835,8 +838,8 @@ body {
 .filter-ui {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 4rem;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .filter-meta {
@@ -893,7 +896,7 @@ select::-ms-expand {
     width: 100%;
     height: 52px;
     padding: 0 1.25rem;
-    background: #fff;
+    background: var(--panel-bg);
     border: 1px solid var(--border-color);
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -921,7 +924,7 @@ select::-ms-expand {
     outline: none;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 2px;
-    background: #fdfdfd;
+    background: var(--bg-color);
     box-sizing: border-box;
 }
 
@@ -935,7 +938,7 @@ select::-ms-expand {
 .input-group select:focus,
 .input-group textarea:focus {
     border-color: var(--accent-color);
-    background: #fff;
+    background: var(--panel-bg);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
@@ -966,7 +969,7 @@ select::-ms-expand {
     font-weight: 500;
     letter-spacing: 0.1em;
     color: var(--muted-text);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
 }
 
@@ -978,13 +981,13 @@ select::-ms-expand {
 .grid-layout {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2.5rem;
+    gap: 1.5rem;
 }
 
 .card-image-wrap {
     width: 100%;
     height: 180px;
-    background: #f9f9f9;
+    background: var(--bg-color);
     border-bottom: 1px solid var(--border-color);
     margin: -2rem -2rem 1.5rem -2rem;
     overflow: hidden;
@@ -1003,7 +1006,7 @@ select::-ms-expand {
 
 /* Item Card Enhancement */
 .item-card {
-    background: #fff;
+    background: var(--panel-bg);
     border: 1px solid var(--border-color);
     padding: 2rem;
     cursor: pointer;
@@ -1107,7 +1110,7 @@ select::-ms-expand {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    background: #fff;
+    background: var(--panel-bg);
     padding: 2rem;
     border: 1px solid var(--text-color);
     box-shadow: 8px 8px 0 var(--border-color);
@@ -1152,7 +1155,7 @@ select::-ms-expand {
 .file-upload-ui {
     position: relative;
     width: 100%;
-    min-height: 120px;
+    min-height: 100px;
     border: 2px dashed var(--border-color);
     display: flex;
     flex-direction: column;
@@ -1162,7 +1165,7 @@ select::-ms-expand {
     padding: 1.5rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(243, 243, 243, 0.3);
+    background: rgba(var(--bg-color-rgb), 0.3);
 }
 
 .file-upload-ui:hover {
@@ -1247,7 +1250,7 @@ select::-ms-expand {
 }
 
 .list-item {
-    background: #fff;
+    background: var(--panel-bg);
     border: 1px solid var(--border-color);
     padding: 1.5rem;
     display: flex;
@@ -1303,7 +1306,7 @@ select::-ms-expand {
 }
 
 .modal-box {
-    background: #fff;
+    background: var(--panel-bg);
     border: 1px solid var(--text-color);
     width: 100%;
     max-width: 480px;
@@ -1335,7 +1338,7 @@ select::-ms-expand {
     width: 100%;
     max-height: 400px;
     object-fit: contain;
-    background: #fdfdfd;
+    background: var(--bg-color);
     border: 1px solid var(--border-color);
     margin: 1.5rem 0;
     padding: 1rem;
@@ -1404,7 +1407,7 @@ select::-ms-expand {
     gap: 0.4rem;
     padding: 1.25rem;
     border: 1px dashed var(--border-color);
-    background: #fff;
+    background: var(--panel-bg);
 }
 
 .tip-card strong {

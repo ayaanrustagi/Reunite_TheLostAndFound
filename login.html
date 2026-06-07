@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>REUNITE - Authentication</title>
+    <title>Reunite - Authentication</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,70 +18,69 @@
     <link rel="stylesheet" href="login.css" />
 </head>
 
-<body class="auth-page theme-light">
+<body class="auth-page">
     <!-- Blue Glow / Scanline Overlays (Consistent with Main App) -->
     <div class="screen-vignette"></div>
     <div class="scan-line"></div>
 
-    <div class="auth-container">
-        <a href="index.html" class="back-home">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            BACK TO NETWORK
-        </a>
+    <div class="auth-container centered">
+        <div class="auth-form-card">
+            <!-- Back Button -->
+            <a href="index.html" class="back-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                BACK
+            </a>
 
-        <div class="auth-form-side">
-            <div class="auth-form-wrapper">
-                <div class="auth-header">
-                    <h3 id="authTitle">WELCOME BACK</h3>
-                    <p id="authSubtitle">Please enter your credentials to access the network.</p>
+            <!-- Logo Section -->
+            <div class="auth-logo-section">
+                <div class="logo-orb">
+                    <img src="assets/reunite-logo.png" alt="Reunite" class="auth-logo-img">
+                </div>
+            </div>
+
+            <div class="auth-header">
+                <h1 id="authTitle">Sign in with Reunite Account</h1>
+            </div>
+
+            <div class="auth-form-container">
+                <div id="nameGroup" class="input-pill-group hidden">
+                    <input type="text" id="authName" class="input-pill" placeholder="First and Last Name">
+                </div>
+                <div class="input-pill-group">
+                    <input type="email" id="authEmail" class="input-pill" placeholder="Email or Phone Number">
                 </div>
 
-                <div class="auth-tabs">
-                    <button id="tab-login" class="auth-tab active" onclick="setAuthMode('login')">Sign In</button>
-                    <button id="tab-signup" class="auth-tab" onclick="setAuthMode('signup')">Sign Up</button>
+                <!-- OTP Verification Group (Hidden initially) -->
+                <div id="otpGroup" class="input-pill-group hidden">
+                    <input type="text" id="authOTP" class="input-pill" placeholder="Verification Code" maxlength="6">
+                    <p class="field-hint">Check your device for the 6-digit code.</p>
                 </div>
 
-                <div class="auth-form-container">
-                    <div id="nameGroup" class="input-pill-group hidden">
-                        <label>FULL NAME</label>
-                        <input type="text" id="authName" class="input-pill" placeholder="Ayaan Rustagi">
-                    </div>
-                    <div class="input-pill-group">
-                        <label>EMAIL ADDRESS</label>
-                        <input type="email" id="authEmail" class="input-pill" placeholder="ayaanrustagi@gmail.com">
-                    </div>
+                <div class="auth-links-group">
+                    <a href="#" class="auth-link" id="authModeLink"
+                        onclick="event.preventDefault(); setAuthMode('signup')">Create Your Reunite Account</a>
+                </div>
 
-                    <!-- OTP Verification Group (Hidden initially) -->
-                    <div id="otpGroup" class="input-pill-group hidden">
-                        <label>VERIFICATION CODE</label>
-                        <input type="text" id="authOTP" class="input-pill" placeholder="000000" maxlength="6">
-                        <p style="font-size: 0.7rem; color: var(--muted-text); margin-top: 0.5rem;">Check your inbox for
-                            the 6-digit code.</p>
-                    </div>
+                <div class="auth-privacy-info">
+                    <img src="https://img.icons8.com/ios-filled/50/000000/conference-call.png" alt="Privacy"
+                        class="privacy-icon">
+                    <p>Your Reunite Account information is used to allow you to sign in securely and access your data.
+                        Reunite records certain data for security, support, and reporting purposes.</p>
+                </div>
 
-                    <div class="admin-toggle-wrap">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="isAdminAuth" onchange="toggleAdminAuth()">
-                            Access as Administrator
-                        </label>
-                    </div>
-
-                    <div id="adminCodeAuthWrap" class="input-pill-group hidden">
-                        <label>ADMIN ACCESS CODE</label>
-                        <input type="password" id="adminCodeAuth" class="input-pill" placeholder="••••••••">
-                    </div>
-
-                    <button id="authSubmitBtn" onclick="handleAuthStep()" class="btn-primary pill-btn full-width">SEND
-                        CODE</button>
+                <div class="auth-footer-btns">
+                    <button id="authSubmitBtn" onclick="handleAuthStep()"
+                        class="btn-primary auth-submit-btn">Continue</button>
                     <button id="resendBtn" onclick="sendOTP()" class="btn-text hidden"
-                        style="font-size: 0.7rem; margin-top: 1rem;">RESEND CODE</button>
-
-                    <div id="authStatus" class="status-msg"></div>
+                        style="font-size: 0.7rem; margin-top: 0.5rem; text-align: center; background: none; border: none; color: var(--accent-color); cursor: pointer;">Didn't
+                        get a code? Resend</button>
                 </div>
+
+                <div id="authStatus" class="status-msg"></div>
             </div>
         </div>
     </div>
