@@ -176,9 +176,25 @@ window.initHeroRotation = initHeroRotation;
 // ------------------------------
 // "How It Works" Interaction
 // ------------------------------
+// ------------------------------
+// "How It Works" Interaction
+// ------------------------------
+function navigateToHow() {
+    navigateToSection('hero');
+    setTimeout(() => {
+        const howSection = document.getElementById('how-content-area');
+        if (howSection) {
+            howSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 100);
+}
+window.navigateToHow = navigateToHow;
+
+
 function handleSplitScroll() {
-    const section = document.getElementById('page-how');
-    if (!section || !section.classList.contains('active')) return;
+    const section = document.getElementById('how-content-area');
+    // Ensure element exists
+    if (!section) return;
 
     const stepItems = document.querySelectorAll('.step-item');
     const previewTitle = document.getElementById('preview-title');
@@ -199,9 +215,17 @@ function handleSplitScroll() {
         currentStep = stepItems.length - 1;
     } else {
         // Find the active step based on scroll position
+        // improved logic: find the step that is closest to the visually "active" center point (roughly 40% down screen)
+        let minDiff = Infinity;
+
         stepItems.forEach((item, index) => {
             const rect = item.getBoundingClientRect();
-            if (rect.top < window.innerHeight * 0.6) {
+            const center = rect.top + (rect.height / 2);
+            const target = window.innerHeight * 0.4; // Target area is 40% down the viewport
+            const diff = Math.abs(center - target);
+
+            if (diff < minDiff) {
+                minDiff = diff;
                 currentStep = index;
             }
         });
@@ -217,16 +241,29 @@ function handleSplitScroll() {
     });
 
     if (previewTitle && stepData[currentStep]) {
-        previewTitle.textContent = stepData[currentStep].title;
-        previewDesc.textContent = stepData[currentStep].desc;
+        // Only update if text matches (prevents flickering if unnecessary)
+        if (previewTitle.textContent !== stepData[currentStep].title) {
+            previewTitle.textContent = stepData[currentStep].title;
+            previewDesc.textContent = stepData[currentStep].desc;
+        }
     }
 
-    // Fade out scroll hint if we've scrolled a bit
+    // Smoothly fade out the scroll hint
     const hint = section.querySelector('.scroll-hint');
     if (hint) {
         const sectionRect = section.getBoundingClientRect();
-        const scrollProgress = -sectionRect.top / 100; // start fading almost immediately
-        hint.style.opacity = Math.max(0, 0.6 - scrollProgress);
+        // Calculate progress: 0 when top is at bottom of screen, 1 when top is at top of screen
+        // We want to fade OUT as it approaches the top.
+        // Let's say we fade out when the section top passes the middle of the viewport
+
+        const triggerPoint = window.innerHeight * 0.5;
+        if (sectionRect.top < triggerPoint) {
+            const opacity = Math.max(0, (sectionRect.top + 200) / (triggerPoint + 200));
+            // Logic: as top gets smaller (scrolling down), opacity decreases
+            hint.style.opacity = sectionRect.top < 0 ? '0' : opacity.toFixed(2);
+        } else {
+            hint.style.opacity = '1';
+        }
     }
 }
 window.handleSplitScroll = handleSplitScroll;

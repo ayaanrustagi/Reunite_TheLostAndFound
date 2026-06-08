@@ -23,9 +23,15 @@ const DASHBOARD_TUTORIALS = [
 ];
 
 function renderDashboardTips() {
-    // Stub implementation if original was missing
-    // or checks for an element to render tips into
-    console.log("Rendering dashboard tips...");
+    const tipsEl = document.getElementById('dashboardTips');
+    if (!tipsEl) return;
+    tipsEl.innerHTML = DASHBOARD_TUTORIALS.map(t => `
+        <div class="tip-card">
+            <span>${t.action}</span>
+            <strong>${t.title}</strong>
+            <p>${t.detail}</p>
+        </div>
+    `).join('');
 }
 window.renderDashboardTips = renderDashboardTips;
 
@@ -190,90 +196,134 @@ function renderDashboard() {
     if (!window.currentUser) return;
     const reportsEl = document.getElementById('myReports');
     const claimsEl = document.getElementById('myClaims');
+    const countActiveReportsEl = document.getElementById('countActiveReports');
+    const countPendingClaimsEl = document.getElementById('countPendingClaims');
+    const repCountEl = document.getElementById('repCount');
+    const claimCountEl = document.getElementById('claimCount');
+    const userNameEl = document.getElementById('dashboardUserName');
 
     const myReports = window.items.filter(i => i.contact_email === window.currentUser.email);
     const myClaims = window.claims.filter(c => c.claimant_email === window.currentUser.email);
 
-    if (reportsEl) reportsEl.innerHTML = myReports.length ? myReports.map(r => `
-        <div class="list-item">
-            <div>
-              <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted-text); margin-bottom:0.25rem;">REF: ${r.id.substring(5, 13).toUpperCase()}</div>
-              <strong>${r.title}</strong>
+    if (userNameEl) userNameEl.textContent = window.currentUser.name;
+    if (countActiveReportsEl) countActiveReportsEl.textContent = myReports.length;
+    if (repCountEl) repCountEl.textContent = myReports.length;
+    if (countPendingClaimsEl) countPendingClaimsEl.textContent = myClaims.filter(c => c.status === 'pending').length;
+    if (claimCountEl) claimCountEl.textContent = myClaims.length;
+
+    if (reportsEl) reportsEl.innerHTML = myReports.length ? myReports.map(r => {
+        const isAppr = (r.status || "").toLowerCase().trim() === 'approved';
+        return `
+            <div class="list-item">
+                <div class="item-info">
+                  <div class="ref-code">REF: ${r.id.substring(5, 13).toUpperCase()}</div>
+                  <strong>${r.title}</strong>
+                </div>
+                <div class="status-badge ${isAppr ? 'approved' : 'pending'}">
+                  ${(r.status || "PENDING").toUpperCase()}
+                </div>
             </div>
-            <span class="status-tag" style="border-color:${(r.status || "").toLowerCase() === 'approved' ? '#0f0' : (r.status || "").toLowerCase() === 'rejected' ? '#f00' : 'var(--border-color)'}">
-              ${(r.status || "PENDING").toUpperCase()}
-            </span>
-        </div>
-    `).join('') : '<div class="status-msg">NO REPORTS LOGGED</div>';
+        `;
+    }).join('') : '<div class="status-msg">NO REPORTS LOGGED</div>';
 
     if (claimsEl) claimsEl.innerHTML = myClaims.length ? myClaims.map(c => {
         const item = window.items.find(i => i.id === c.item_id);
+        const isAppr = (c.status || "").toLowerCase().trim() === 'approved';
         return `
             <div class="list-item">
-                <div>
-                  <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted-text); margin-bottom:0.25rem;">CLAIM ID: ${c.id.substring(6, 14).toUpperCase()}</div>
+                <div class="item-info">
+                  <div class="ref-code">CLAIM ID: ${c.id.substring(6, 14).toUpperCase()}</div>
                   <strong>${item?.title || 'Unknown Item'}</strong>
                 </div>
-                <span class="status-tag" style="border-color:${(c.status || "").toLowerCase() === 'approved' ? '#0f0' : 'var(--border-color)'}">
+                <div class="status-badge ${isAppr ? 'approved' : 'pending'}">
                   ${(c.status || "PENDING").toUpperCase()}
-                </span>
+                </div>
             </div>
         `;
     }).join('') : '<div class="status-msg">NO CLAIMS IN PROGRESS</div>';
+
+    renderDashboardTips();
 }
 window.renderDashboard = renderDashboard;
 
 function renderAdmin() {
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
 
-    const pendingEl = document.getElementById('adminPendingItems');
+    // Filter relevant datasets
     const pending = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');
+    const pendingClaims = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'pending');
+    const approved = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
+    const verified = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
+
+    // Update Stats
+    const stats = {
+        'adminTotalReports': window.items.length,
+        'adminPendingApprovals': pending.length,
+        'adminPendingClaims': pendingClaims.length,
+        'adminLiveInventory': approved.length,
+        'adminPendingCount': pending.length,
+        'adminClaimQueueCount': pendingClaims.length,
+        'adminApprovedCount': approved.length,
+        'adminVerifiedCount': verified.length
+    };
+
+    Object.entries(stats).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    });
+
+    // Render Lists
+    const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">
-            <strong>${i.title}</strong>
-            <div>
+            <div class="item-info">
+              <div class="ref-code">REF: ${i.id.substring(5, 13).toUpperCase()}</div>
+              <strong>${i.title}</strong>
+            </div>
+            <div class="admin-actions-inline">
                 <button onclick="approveItem('${i.id}')" class="btn-sm btn-outline">APPROVE</button>
-                <button onclick="rejectItem('${i.id}')" class="btn-sm btn-outline">REJECT</button>
-                <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
+                <button onclick="rejectItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">REJECT</button>
             </div>
         </div>
-    `).join('') : 'NO PENDING ITEMS';
+    `).join('') : '<div class="status-msg">NO PENDING REPORTS</div>';
 
     const claimsEl = document.getElementById('adminClaims');
-    const pendingClaims = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'pending');
     if (claimsEl) claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
         const item = window.items.find(it => it.id === c.item_id);
         return `
             <div class="list-item">
-                <strong>${item?.title || 'Unknown Item'} / BY ${c.claimant_name}</strong>
+                <div class="item-info">
+                  <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
+                  <strong>${item?.title || 'Unknown Item'}</strong>
+                </div>
                 <button onclick="approveClaim('${c.id}')" class="btn-sm btn-outline">VERIFY</button>
             </div>
         `;
-    }).join('') : 'NO PENDING CLAIMS';
+    }).join('') : '<div class="status-msg">NO PENDING CLAIMS</div>';
 
-    // Approved Inventory
     const approvedEl = document.getElementById('adminApprovedItems');
-    const approved = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
     if (approvedEl) approvedEl.innerHTML = approved.length ? approved.map(i => `
         <div class="list-item">
-            <strong>${i.title}</strong>
+            <div class="item-info">
+              <div class="ref-code">ID: ${i.id.substring(0, 8)}</div>
+              <strong>${i.title}</strong>
+            </div>
             <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
         </div>
-    `).join('') : 'EMPTY';
+    `).join('') : '<div class="status-msg">EMPTY</div>';
 
-    // Verified Claims
     const verifiedEl = document.getElementById('adminVerifiedClaims');
-    const verified = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
-    if (verifiedEl) {
-        verifiedEl.innerHTML = verified.length ? verified.map(c => {
-            const item = window.items.find(it => it.id === c.item_id);
-            return `
+    if (verifiedEl) verifiedEl.innerHTML = verified.length ? verified.map(c => {
+        const item = window.items.find(it => it.id === c.item_id);
+        return `
             <div class="list-item">
-                <strong>${item?.title || 'Unknown Item'} / BY ${c.claimant_name}</strong>
-                <button onclick="deleteClaim('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE ENTRY</button>
+                <div class="item-info">
+                  <div class="ref-code">VERIFIED FOR: ${c.claimant_name.toUpperCase()}</div>
+                  <strong>${item?.title || 'Unknown Item'}</strong>
+                </div>
+                <button onclick="deleteClaim('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">PURGE</button>
             </div>
         `;
-        }).join('') : 'EMPTY';
-    }
+    }).join('') : '<div class="status-msg">EMPTY</div>';
 }
 window.renderAdmin = renderAdmin;

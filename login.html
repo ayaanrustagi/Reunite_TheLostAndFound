@@ -46,6 +46,12 @@
                 <div class="card-serial">SEC-ID: 884-X921</div>
             </div>
 
+            <!-- Login Methods Tabs -->
+            <div id="loginMethods" class="auth-tabs">
+                <button id="tabPassword" class="auth-tab active" onclick="setLoginMethod('password')">Password</button>
+                <button id="tabOTP" class="auth-tab" onclick="setLoginMethod('otp')">Email Code (OTP)</button>
+            </div>
+
             <div class="auth-form-container">
                 <div id="nameGroup" class="input-pill-group hidden">
                     <input type="text" id="authName" class="input-pill" placeholder="First and Last Name">
@@ -65,6 +71,10 @@
                 </div>
                 <div class="input-pill-group">
                     <input type="email" id="authEmail" class="input-pill" placeholder="Email or Phone Number">
+                </div>
+
+                <div id="passwordGroup" class="input-pill-group">
+                    <input type="password" id="authPassword" class="input-pill" placeholder="Password">
                 </div>
 
                 <!-- OTP Verification Group (Hidden initially) -->

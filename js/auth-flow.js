@@ -9,6 +9,7 @@ const EMAILJS_OTP_TEMPLATE_ID = "template_35ebnrp";
 const EMAILJS_PUBLIC_KEY = window.EMAILJS_PUBLIC_KEY || "vQdFZ_3TQhMLDP1z3";
 
 let authMode = 'login';
+let loginMethod = 'password'; // 'password' or 'otp'
 let authStep = 'send'; // 'send' or 'verify'
 let generatedOTP = null;
 const ADMIN_CODE_REQUIRED = "FBLA2025";
@@ -26,10 +27,20 @@ function setAuthMode(mode) {
     const modeLink = document.getElementById('authModeLink');
     const status = document.getElementById('authStatus');
 
+    const passwordGroup = document.getElementById('passwordGroup');
+    const authPassword = document.getElementById('authPassword');
+    const emailInput = document.getElementById('authEmail');
+
+    const loginMethods = document.getElementById('loginMethods');
+
     if (status) status.textContent = "";
     if (otpGroup) otpGroup.classList.add('hidden');
+    if (passwordGroup) passwordGroup.classList.remove('hidden');
+    if (emailInput) emailInput.classList.remove('hidden');
+    if (authPassword) authPassword.value = "";
+
     if (submitBtn) {
-        submitBtn.textContent = "Continue";
+        submitBtn.textContent = (mode === 'login' && loginMethod === 'password') ? "Sign In" : "Continue";
         submitBtn.disabled = false;
     }
 
@@ -43,6 +54,7 @@ function setAuthMode(mode) {
         if (title) title.textContent = "Create REUNITE Account";
         if (nameGroup) nameGroup.classList.remove('hidden');
         if (adminAuthGroup) adminAuthGroup.classList.remove('hidden');
+        if (loginMethods) loginMethods.classList.add('hidden');
         if (modeLink) {
             modeLink.textContent = "Already have an account? Sign In";
             modeLink.setAttribute('onclick', "event.preventDefault(); setAuthMode('login')");
@@ -52,6 +64,11 @@ function setAuthMode(mode) {
         if (title) title.textContent = "Sign in with REUNITE Account";
         if (nameGroup) nameGroup.classList.add('hidden');
         if (adminAuthGroup) adminAuthGroup.classList.add('hidden');
+        if (loginMethods) loginMethods.classList.remove('hidden');
+
+        // Show/hide password based on method
+        setLoginMethod(loginMethod);
+
         if (modeLink) {
             modeLink.textContent = "Create Your REUNITE Account";
             modeLink.setAttribute('onclick', "event.preventDefault(); setAuthMode('signup')");
@@ -61,6 +78,27 @@ function setAuthMode(mode) {
 }
 window.setAuthMode = setAuthMode;
 
+function setLoginMethod(method) {
+    loginMethod = method;
+    const passwordGroup = document.getElementById('passwordGroup');
+    const submitBtn = document.getElementById('authSubmitBtn');
+    const tabPassword = document.getElementById('tabPassword');
+    const tabOTP = document.getElementById('tabOTP');
+
+    if (method === 'password') {
+        if (passwordGroup) passwordGroup.classList.remove('hidden');
+        if (submitBtn) submitBtn.textContent = "Sign In";
+        if (tabPassword) tabPassword.classList.add('active');
+        if (tabOTP) tabOTP.classList.remove('active');
+    } else {
+        if (passwordGroup) passwordGroup.classList.add('hidden');
+        if (submitBtn) submitBtn.textContent = "Continue";
+        if (tabPassword) tabPassword.classList.remove('active');
+        if (tabOTP) tabOTP.classList.add('active');
+    }
+}
+window.setLoginMethod = setLoginMethod;
+
 function toggleAdminAuth() {
     const isChecked = document.getElementById('isAdminAuth').checked;
     const codeWrap = document.getElementById('adminCodeAuthWrap');
@@ -69,6 +107,11 @@ function toggleAdminAuth() {
 window.toggleAdminAuth = toggleAdminAuth;
 
 async function handleAuthStep() {
+    if (authMode === 'login' && loginMethod === 'password') {
+        await loginWithPassword();
+        return;
+    }
+
     if (authStep === 'send') {
         await sendOTP();
     } else {
@@ -77,9 +120,74 @@ async function handleAuthStep() {
 }
 window.handleAuthStep = handleAuthStep;
 
+async function loginWithPassword() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+    const status = document.getElementById('authStatus');
+    const submitBtn = document.getElementById('authSubmitBtn');
+
+    if (!email || !password) {
+        status.textContent = "EMAIL AND PASSWORD REQUIRED";
+        status.className = "status-msg error";
+        return;
+    }
+
+    status.textContent = "Verifying credentials...";
+    status.className = "status-msg";
+    submitBtn.disabled = true;
+
+    const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    try {
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+        if (error || !profile) {
+            status.textContent = "ACCOUNT NOT FOUND";
+            status.className = "status-msg error";
+            submitBtn.disabled = false;
+            return;
+        }
+
+        if (profile.password !== password) {
+            status.textContent = "INVALID PASSWORD";
+            status.className = "status-msg error";
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const userData = {
+            id: profile.id,
+            email: profile.email,
+            name: profile.full_name || profile.name || profile.email.split('@')[0],
+            role: profile.role || 'student'
+        };
+
+        localStorage.setItem("reunite_session", JSON.stringify(userData));
+
+        status.textContent = "ACCESS GRANTED. REDIRECTING...";
+        status.className = "status-msg success";
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
+
+    } catch (err) {
+        console.error("Login Error:", err);
+        status.textContent = "DATABASE ERROR";
+        status.className = "status-msg error";
+        submitBtn.disabled = false;
+    }
+}
+window.loginWithPassword = loginWithPassword;
+
 async function sendOTP() {
     const email = document.getElementById('authEmail').value.trim();
     const name = document.getElementById('authName').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
     const status = document.getElementById('authStatus');
     const submitBtn = document.getElementById('authSubmitBtn');
 
@@ -91,6 +199,12 @@ async function sendOTP() {
 
     if (authMode === 'signup' && !name) {
         status.textContent = "FULL NAME IS REQUIRED";
+        status.className = "status-msg error";
+        return;
+    }
+
+    if (authMode === 'signup' && !password) {
+        status.textContent = "PASSWORD IS REQUIRED FOR SIGNUP";
         status.className = "status-msg error";
         return;
     }
@@ -179,8 +293,12 @@ async function sendOTP() {
             if (nameGroup) nameGroup.classList.add('hidden');
             const emailInput = document.getElementById('authEmail');
             if (emailInput) emailInput.classList.add('hidden');
+            const passwordGroup = document.getElementById('passwordGroup');
+            if (passwordGroup) passwordGroup.classList.add('hidden');
             const modeLink = document.getElementById('authModeLink');
             if (modeLink) modeLink.classList.add('hidden');
+            const adminAuthGroup = document.getElementById('adminAuthGroup');
+            if (adminAuthGroup) adminAuthGroup.classList.add('hidden');
 
             if (document.getElementById('authTitle')) {
                 document.getElementById('authTitle').textContent = "Verify Your Identity";
@@ -213,6 +331,8 @@ async function verifyOTP() {
     const email = emailInput ? emailInput.value.trim() : "";
     const nameInput = document.getElementById('authName');
     const name = nameInput ? nameInput.value.trim() : "";
+    const passwordInput = document.getElementById('authPassword');
+    const password = passwordInput ? passwordInput.value.trim() : "";
 
     const status = document.getElementById('authStatus');
 
@@ -248,6 +368,7 @@ async function verifyOTP() {
                 id: newId,
                 email: email,
                 full_name: name || email.split('@')[0],
+                password: password, // Storing password in profiles
                 role: userRole,
                 created_at: new Date().toISOString()
             };
@@ -267,6 +388,13 @@ async function verifyOTP() {
                 .single();
 
             if (fetchError) throw fetchError;
+
+            // Password check (simple plaintext check for demo)
+            if (profile.password && profile.password !== password) {
+                status.textContent = "INVALID PASSWORD";
+                status.className = "status-msg error";
+                return;
+            }
 
             userData = {
                 id: profile.id,

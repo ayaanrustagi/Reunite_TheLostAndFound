@@ -88,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Scroll listener for "How It Works" split section
-    const howSection = document.getElementById('page-how');
+    // Scroll listener for "How It Works" split section
+    const howSection = document.getElementById('how-content-area');
     if (howSection && window.handleSplitScroll) {
         window.addEventListener('scroll', window.handleSplitScroll);
     }
