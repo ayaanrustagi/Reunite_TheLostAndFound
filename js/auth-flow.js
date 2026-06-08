@@ -1,18 +1,12 @@
 
+// Default values if config not loaded (fallbacks)
+const SUPABASE_URL = window.SUPABASE_URL || "https://izoyxyekflrnyheuxppk.supabase.co";
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
 
-const SUPABASE_URL = "https://izoyxyekflrnyheuxppk.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
-
-// EmailJS Configuration from your settings
-const EMAILJS_SERVICE_ID = "service_gpf5o4g";
-const EMAILJS_OTP_TEMPLATE_ID = "template_35ebnrp"; // Your new template ID
-const EMAILJS_PUBLIC_KEY = "vQdFZ_3TQhMLDP1z3";
-
-// Initialize Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Initialize EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = window.EMAILJS_SERVICE_ID || "service_gpf5o4g";
+const EMAILJS_OTP_TEMPLATE_ID = "template_35ebnrp";
+const EMAILJS_PUBLIC_KEY = window.EMAILJS_PUBLIC_KEY || "vQdFZ_3TQhMLDP1z3";
 
 let authMode = 'login';
 let authStep = 'send'; // 'send' or 'verify'
@@ -27,6 +21,7 @@ function setAuthMode(mode) {
     const title = document.getElementById('authTitle');
     const submitBtn = document.getElementById('authSubmitBtn');
     const nameGroup = document.getElementById('nameGroup');
+    const adminAuthGroup = document.getElementById('adminAuthGroup');
     const otpGroup = document.getElementById('otpGroup');
     const modeLink = document.getElementById('authModeLink');
     const status = document.getElementById('authStatus');
@@ -38,9 +33,16 @@ function setAuthMode(mode) {
         submitBtn.disabled = false;
     }
 
+    // Reset admin checkbox
+    const adminCheckbox = document.getElementById('isAdminAuth');
+    const adminCodeWrap = document.getElementById('adminCodeAuthWrap');
+    if (adminCheckbox) adminCheckbox.checked = false;
+    if (adminCodeWrap) adminCodeWrap.classList.add('hidden');
+
     if (mode === 'signup') {
         if (title) title.textContent = "Create REUNITE Account";
         if (nameGroup) nameGroup.classList.remove('hidden');
+        if (adminAuthGroup) adminAuthGroup.classList.remove('hidden');
         if (modeLink) {
             modeLink.textContent = "Already have an account? Sign In";
             modeLink.setAttribute('onclick', "event.preventDefault(); setAuthMode('login')");
@@ -49,6 +51,7 @@ function setAuthMode(mode) {
     } else {
         if (title) title.textContent = "Sign in with REUNITE Account";
         if (nameGroup) nameGroup.classList.add('hidden');
+        if (adminAuthGroup) adminAuthGroup.classList.add('hidden');
         if (modeLink) {
             modeLink.textContent = "Create Your REUNITE Account";
             modeLink.setAttribute('onclick', "event.preventDefault(); setAuthMode('signup')");
@@ -56,12 +59,14 @@ function setAuthMode(mode) {
         }
     }
 }
+window.setAuthMode = setAuthMode;
 
 function toggleAdminAuth() {
     const isChecked = document.getElementById('isAdminAuth').checked;
     const codeWrap = document.getElementById('adminCodeAuthWrap');
     codeWrap.classList.toggle('hidden', !isChecked);
 }
+window.toggleAdminAuth = toggleAdminAuth;
 
 async function handleAuthStep() {
     if (authStep === 'send') {
@@ -70,6 +75,7 @@ async function handleAuthStep() {
         await verifyOTP();
     }
 }
+window.handleAuthStep = handleAuthStep;
 
 async function sendOTP() {
     const email = document.getElementById('authEmail').value.trim();
@@ -89,9 +95,25 @@ async function sendOTP() {
         return;
     }
 
+    // Validate admin code if admin checkbox is checked
+    const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
+    const adminCodeInput = document.getElementById('adminCodeAuth');
+    if (authMode === 'signup' && isAdminChecked) {
+        const enteredCode = adminCodeInput ? adminCodeInput.value.trim() : "";
+        if (enteredCode !== ADMIN_CODE_REQUIRED) {
+            status.textContent = "INVALID ADMIN ACCESS CODE";
+            status.className = "status-msg error";
+            return;
+        }
+    }
+
     status.textContent = "Verifying account status...";
     status.className = "status-msg";
     submitBtn.disabled = true;
+
+    // Use window.supabaseClient if available, otherwise creaate one locally for this flow
+    // But login page should have initialized it via supabase-client.js
+    const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     try {
         // 1. Check if user exists in profiles table
@@ -146,19 +168,25 @@ async function sendOTP() {
 
         // Transition to Verification step
         authStep = 'verify';
-        if (otpGroup) otpGroup.classList.remove('hidden');
-        if (document.getElementById('resendBtn')) document.getElementById('resendBtn').classList.remove('hidden');
+        if (location.href.includes('login.html')) {
+            const otpGroup = document.getElementById('otpGroup');
+            if (otpGroup) otpGroup.classList.remove('hidden');
+            const resend = document.getElementById('resendBtn');
+            if (resend) resend.classList.remove('hidden');
 
-        // Hide initial inputs for Apple-style focus
-        if (nameGroup) nameGroup.classList.add('hidden');
-        const emailInput = document.getElementById('authEmail');
-        if (emailInput) emailInput.classList.add('hidden');
-        if (document.getElementById('authModeLink')) document.getElementById('authModeLink').classList.add('hidden');
+            // Hide others
+            const nameGroup = document.getElementById('nameGroup');
+            if (nameGroup) nameGroup.classList.add('hidden');
+            const emailInput = document.getElementById('authEmail');
+            if (emailInput) emailInput.classList.add('hidden');
+            const modeLink = document.getElementById('authModeLink');
+            if (modeLink) modeLink.classList.add('hidden');
 
-        // Update Title to show context
-        if (document.getElementById('authTitle')) {
-            document.getElementById('authTitle').textContent = "Verify Your Identity";
+            if (document.getElementById('authTitle')) {
+                document.getElementById('authTitle').textContent = "Verify Your Identity";
+            }
         }
+
         status.textContent = `WE SENT A CODE TO ${email.toUpperCase()}`;
         status.className = "status-msg";
 
@@ -176,6 +204,7 @@ async function sendOTP() {
         submitBtn.disabled = false;
     }
 }
+window.sendOTP = sendOTP;
 
 async function verifyOTP() {
     const otpInput = document.getElementById('authOTP');
@@ -203,16 +232,23 @@ async function verifyOTP() {
         status.className = "status-msg";
     }
 
+    const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     try {
         let userData = null;
 
         if (authMode === 'signup') {
             const newId = 'user_' + Math.random().toString(36).substr(2, 9);
+
+            // Determine role based on admin checkbox
+            const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
+            const userRole = isAdminChecked ? 'admin' : 'student';
+
             userData = {
                 id: newId,
                 email: email,
                 full_name: name || email.split('@')[0],
-                role: 'student',
+                role: userRole,
                 created_at: new Date().toISOString()
             };
 
@@ -240,7 +276,7 @@ async function verifyOTP() {
             };
         }
 
-        // Cache the session locally so script.js recognizes it
+        // Cache the session locally so app.js recognizes it
         localStorage.setItem("reunite_session", JSON.stringify(userData));
 
         if (status) {
@@ -260,9 +296,16 @@ async function verifyOTP() {
         }
     }
 }
+window.verifyOTP = verifyOTP;
 
-// Global expose
-window.setAuthMode = setAuthMode;
-window.toggleAdminAuth = toggleAdminAuth;
-window.handleAuthStep = handleAuthStep;
-window.sendOTP = sendOTP;
+// Initialization for Login Page
+document.addEventListener('DOMContentLoaded', () => {
+    // We expect supabase-client.js to have run initializeSupabase()
+    if (window.initializeSupabase) window.initializeSupabase();
+
+    // Initialize EmailJS
+    const emailjs = window.emailjs;
+    if (typeof emailjs !== "undefined") {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
+});
