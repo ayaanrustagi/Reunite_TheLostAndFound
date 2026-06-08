@@ -1,9 +1,9 @@
 
-// Initialize Supabase after DOM is ready to ensure script is loaded
+
 function initializeSupabase() {
     console.log("window.supabase available:", typeof window.supabase !== "undefined");
 
-    // If Supabase isn't loaded, try to load it dynamically
+
     if (typeof window.supabase === "undefined") {
         console.log("Loading Supabase dynamically...");
         const script = document.createElement('script');
@@ -30,9 +30,9 @@ function createSupabaseClient() {
             window.SUPABASE_ENABLED = !!window.supabaseClient;
             if (window.SUPABASE_ENABLED) {
                 console.log("🟢 SUPABASE CLIENT INITIALIZED");
-                // Initialize auth check
+
                 checkInitialSession();
-                // Setup listener
+
                 window.supabaseClient.auth.onAuthStateChange((event, session) => {
                     console.log("Auth status change:", event);
                     handleSessionUpdate(session);
@@ -61,10 +61,10 @@ function handleSessionUpdate(session) {
             name: user.user_metadata?.full_name || user.email.split('@')[0],
             role: user.user_metadata?.role || 'student'
         };
-        // Also save to localStorage for manual fallback
+
         localStorage.setItem("reunite_session", JSON.stringify(window.currentUser));
     } else {
-        // Fallback: Check manual session if Supabase session is null
+
         const manualSession = localStorage.getItem("reunite_session");
         if (manualSession) {
             try {
@@ -80,14 +80,14 @@ function handleSessionUpdate(session) {
 
     if (window.updateAuthUI) window.updateAuthUI();
 
-    // If we just logged in, sync the database
+
     if (window.currentUser) {
         syncFromSupabase();
     }
 }
 window.handleSessionUpdate = handleSessionUpdate;
 
-// Sync logic
+
 let isSyncing = false;
 async function syncFromSupabase() {
     if (!window.SUPABASE_ENABLED || isSyncing) return;
@@ -106,12 +106,12 @@ async function syncFromSupabase() {
         window.items = itRes.data || [];
         window.claims = clRes.data || [];
 
-        // Local sort is faster than DB sort for small datasets
+
         window.items.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
         console.log(`✅ SYNC SUCCESS: ${window.items.length} items cached.`);
 
-        // Debounced renders to prevent UI lockup
+
         requestAnimationFrame(() => {
             if (window.renderFound) window.renderFound();
             if (window.renderClaimSelect) window.renderClaimSelect();
@@ -164,7 +164,7 @@ window.supabaseDelete = supabaseDelete;
 async function handleLogout() {
     showLoading("Signing out...");
 
-    // 1. Clear Supabase session if possible
+
     if (window.SUPABASE_ENABLED && window.supabaseClient) {
         try {
             await window.supabaseClient.auth.signOut();
@@ -173,7 +173,7 @@ async function handleLogout() {
         }
     }
 
-    // 2. Clear manual session
+
     localStorage.removeItem("reunite_session");
     window.currentUser = null;
 
@@ -184,30 +184,46 @@ async function handleLogout() {
 }
 window.handleLogout = handleLogout;
 
-// UI Helper for Auth - depends on currentUser
+
 function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
     const dashboardBtn = document.getElementById('dashboardBtn');
     const adminBtn = document.getElementById('adminBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
+    const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+    const mobileDashboardBtn = document.getElementById('mobileDashboardBtn');
+    const mobileAdminBtn = document.getElementById('mobileAdminBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
     if (!loginBtn || !dashboardBtn || !adminBtn || !logoutBtn) return;
 
     if (window.currentUser) {
         loginBtn.classList.add('hidden');
         logoutBtn.classList.remove('hidden');
+        if (mobileLoginBtn) mobileLoginBtn.classList.add('hidden');
+        if (mobileLogoutBtn) mobileLogoutBtn.classList.remove('hidden');
+
         if (window.currentUser.role === 'admin') {
             adminBtn.classList.remove('hidden');
             dashboardBtn.classList.add('hidden');
+            if (mobileAdminBtn) mobileAdminBtn.classList.remove('hidden');
+            if (mobileDashboardBtn) mobileDashboardBtn.classList.add('hidden');
         } else {
             dashboardBtn.classList.remove('hidden');
             adminBtn.classList.add('hidden');
+            if (mobileDashboardBtn) mobileDashboardBtn.classList.remove('hidden');
+            if (mobileAdminBtn) mobileAdminBtn.classList.add('hidden');
         }
     } else {
         loginBtn.classList.remove('hidden');
         dashboardBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
         logoutBtn.classList.add('hidden');
+        if (mobileLoginBtn) mobileLoginBtn.classList.remove('hidden');
+        if (mobileDashboardBtn) mobileDashboardBtn.classList.add('hidden');
+        if (mobileAdminBtn) mobileAdminBtn.classList.add('hidden');
+        if (mobileLogoutBtn) mobileLogoutBtn.classList.add('hidden');
     }
 }
 window.updateAuthUI = updateAuthUI;

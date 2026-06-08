@@ -23,6 +23,7 @@
 </head>
 
 <body>
+  <div id="waves-container"></div>
   <a class="skip-link" href="#main-container">Skip to main content</a>
 
 
@@ -51,6 +52,14 @@
         <button class="nav-btn" onclick="navigateToSection('report')">FOUND AN ITEM</button>
         <button class="nav-btn" onclick="navigateToSection('claim')">CLAIM ITEM</button>
 
+        <!-- Mobile-only action buttons (shown in hamburger menu) -->
+        <div class="mobile-nav-actions">
+          <button id="mobileLoginBtn" class="nav-btn" onclick="window.location.href='login.html'">SIGN IN</button>
+          <button id="mobileDashboardBtn" class="nav-btn hidden"
+            onclick="navigateToSection('dashboard')">DASHBOARD</button>
+          <button id="mobileAdminBtn" class="nav-btn hidden" onclick="navigateToSection('admin')">ADMIN</button>
+          <button id="mobileLogoutBtn" class="nav-btn hidden" onclick="handleLogout()">LOGOUT</button>
+        </div>
       </nav>
 
       <div class="header-search-wrap">
@@ -107,6 +116,15 @@
         </div>
       </div>
 
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator"
+        onclick="document.getElementById('how-content-area').scrollIntoView({ behavior: 'smooth' })">
+        <span class="scroll-text">Go back up</span>
+        <div class="scroll-mouse">
+          <div class="scroll-wheel"></div>
+        </div>
+      </div>
+
       <!-- MERGED HOW IT WORKS -->
       <div id="how-content-area">
         <div class="split-layout">
@@ -147,7 +165,7 @@
 
     <!-- SECTION: FOUND ITEMS (Search) -->
     <section id="page-found" class="view-section">
-      <div class="content-wrapper">
+      <div class="content-wrapper content-box">
         <div class="section-head">
           <span class="label-tech">DATABASE ACCESS</span>
           <h2>BROWSE INVENTORY</h2>
@@ -219,128 +237,126 @@
 
     <!-- SECTION: REPORT -->
     <section id="page-report" class="view-section">
-      <div class="content-wrapper">
-        <div class="section-centered">
-          <span class="label-tech">NEW ENTRY</span>
-          <h2>FILE A REPORT</h2>
+      <div class="section-centered">
+        <span class="label-tech">NEW ENTRY</span>
+        <h2>FILE A REPORT</h2>
 
-          <form id="reportForm" class="tech-form" novalidate>
-            <div class="form-row">
-              <div class="input-group required">
-                <label for="itemTitle">ITEM TITLE</label>
-                <input type="text" id="itemTitle" required aria-describedby="itemTitleError">
-                <p class="input-error" id="itemTitleError" role="alert"></p>
-              </div>
-              <div class="input-group required">
-                <label for="itemCategory">CATEGORY</label>
-                <select id="itemCategory" required onchange="toggleOtherCat()" aria-describedby="itemCategoryError">
-                  <option value="">SELECT...</option>
-                  <option value="Keys">KEYS</option>
-                  <option value="Wallet">WALLET</option>
-                  <option value="Phone">PHONE</option>
-                  <option value="Bag">BAG</option>
-                  <option value="Other">OTHER</option>
-                </select>
-                <p class="input-error" id="itemCategoryError" role="alert"></p>
-              </div>
+        <form id="reportForm" class="tech-form" novalidate>
+          <div class="form-row">
+            <div class="input-group required">
+              <label for="itemTitle">ITEM TITLE</label>
+              <input type="text" id="itemTitle" required aria-describedby="itemTitleError">
+              <p class="input-error" id="itemTitleError" role="alert"></p>
             </div>
+            <div class="input-group required">
+              <label for="itemCategory">CATEGORY</label>
+              <select id="itemCategory" required onchange="toggleOtherCat()" aria-describedby="itemCategoryError">
+                <option value="">SELECT...</option>
+                <option value="Keys">KEYS</option>
+                <option value="Wallet">WALLET</option>
+                <option value="Phone">PHONE</option>
+                <option value="Bag">BAG</option>
+                <option value="Other">OTHER</option>
+              </select>
+              <p class="input-error" id="itemCategoryError" role="alert"></p>
+            </div>
+          </div>
 
-            <div id="otherCategoryWrap" class="input-group hidden">
-              <label for="otherCategory">SPECIFY TYPE</label>
-              <input type="text" id="otherCategory">
-            </div>
+          <div id="otherCategoryWrap" class="input-group hidden">
+            <label for="otherCategory">SPECIFY TYPE</label>
+            <input type="text" id="otherCategory">
+          </div>
 
-            <div class="form-row">
-              <div class="input-group required">
-                <label for="itemLocation">LOCATION FOUND</label>
-                <input type="text" id="itemLocation" required aria-describedby="itemLocationError">
-                <p class="input-error" id="itemLocationError" role="alert"></p>
-              </div>
-              <div class="input-group required">
-                <label for="itemDate">DATE</label>
-                <input type="date" id="itemDate" required aria-describedby="itemDateError">
-                <p class="input-error" id="itemDateError" role="alert"></p>
-              </div>
+          <div class="form-row">
+            <div class="input-group required">
+              <label for="itemLocation">LOCATION FOUND</label>
+              <input type="text" id="itemLocation" required aria-describedby="itemLocationError">
+              <p class="input-error" id="itemLocationError" role="alert"></p>
             </div>
+            <div class="input-group required">
+              <label for="itemDate">DATE</label>
+              <input type="date" id="itemDate" required aria-describedby="itemDateError">
+              <p class="input-error" id="itemDateError" role="alert"></p>
+            </div>
+          </div>
 
-            <div class="input-group">
-              <label for="itemDescription">DESCRIPTION</label>
-              <textarea id="itemDescription" rows="3"></textarea>
-            </div>
+          <div class="input-group">
+            <label for="itemDescription">DESCRIPTION</label>
+            <textarea id="itemDescription" rows="3"></textarea>
+          </div>
 
-            <div class="input-group">
-              <label for="reportItemPhoto">ITEM PHOTO (OPTIONAL)</label>
-              <div class="file-upload-ui">
-                <input type="file" id="reportItemPhoto" accept="image/*" onchange="previewFileReport()">
-                <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO</span>
-                <img id="reportPhotoPreview" class="photo-preview hidden" alt="Preview">
-              </div>
+          <div class="input-group">
+            <label for="reportItemPhoto">ITEM PHOTO (OPTIONAL)</label>
+            <div class="file-upload-ui">
+              <input type="file" id="reportItemPhoto" accept="image/*" onchange="previewFileReport()">
+              <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO</span>
+              <img id="reportPhotoPreview" class="photo-preview hidden" alt="Preview">
             </div>
+          </div>
 
-            <div class="section-divider">CONTACT INFO</div>
-            <div class="form-row">
-              <div class="input-group required">
-                <label for="contactName">YOUR NAME</label>
-                <input type="text" id="contactName" required aria-describedby="contactNameError">
-                <p class="input-error" id="contactNameError" role="alert"></p>
-              </div>
-              <div class="input-group required">
-                <label for="contactEmail">SCHOOL EMAIL</label>
-                <input type="email" id="contactEmail" required aria-describedby="contactEmailError">
-                <p class="input-error" id="contactEmailError" role="alert"></p>
-              </div>
+          <div class="section-divider">CONTACT INFO</div>
+          <div class="form-row">
+            <div class="input-group required">
+              <label for="contactName">YOUR NAME</label>
+              <input type="text" id="contactName" required aria-describedby="contactNameError">
+              <p class="input-error" id="contactNameError" role="alert"></p>
             </div>
-            <div class="input-group">
-              <label for="contactPhone">PHONE (OPTIONAL)</label>
-              <input type="tel" id="contactPhone">
+            <div class="input-group required">
+              <label for="contactEmail">SCHOOL EMAIL</label>
+              <input type="email" id="contactEmail" required aria-describedby="contactEmailError">
+              <p class="input-error" id="contactEmailError" role="alert"></p>
             </div>
+          </div>
+          <div class="input-group">
+            <label for="contactPhone">PHONE (OPTIONAL)</label>
+            <input type="tel" id="contactPhone">
+          </div>
 
-            <button type="submit" class="btn-primary full-width">SUBMIT ENTRY</button>
-            <div id="reportStatus" class="status-msg" role="status" aria-live="polite"></div>
-          </form>
-        </div>
+          <button type="submit" class="btn-primary full-width">SUBMIT ENTRY</button>
+          <div id="reportStatus" class="status-msg" role="status" aria-live="polite"></div>
+        </form>
+      </div>
       </div>
     </section>
 
     <!-- SECTION: CLAIM -->
     <section id="page-claim" class="view-section">
-      <div class="content-wrapper">
-        <div class="section-centered">
-          <span class="label-tech">VERIFICATION</span>
-          <h2>CLAIM ITEM</h2>
-          <form id="claimForm" class="tech-form" novalidate>
-            <div class="input-group required">
-              <label for="claimItemId">ITEM SELECTION</label>
-              <select id="claimItemId" required aria-describedby="claimItemIdError"></select>
-              <p class="input-error" id="claimItemIdError" role="alert"></p>
-            </div>
-            <div class="input-group required">
-              <label for="claimName">YOUR NAME</label>
-              <input type="text" id="claimName" required aria-describedby="claimNameError">
-              <p class="input-error" id="claimNameError" role="alert"></p>
-            </div>
-            <div class="input-group required">
-              <label for="claimEmail">SCHOOL EMAIL</label>
-              <input type="email" id="claimEmail" required aria-describedby="claimEmailError">
-              <p class="input-error" id="claimEmailError" role="alert"></p>
-            </div>
-            <div class="input-group required">
-              <label for="claimMessage">PROOF OF OWNERSHIP</label>
-              <textarea id="claimMessage" rows="4"
-                placeholder="Describe unique details (e.g. color, shape, size, passwords, ID numbers, etc.)" required
-                aria-describedby="claimMessageError"></textarea>
-              <p class="input-error" id="claimMessageError" role="alert"></p>
-            </div>
-            <button type="submit" class="btn-primary full-width">SUBMIT CLAIM</button>
-            <div id="claimStatus" class="status-msg" role="status" aria-live="polite"></div>
-          </form>
-        </div>
+      <div class="section-centered">
+        <span class="label-tech">VERIFICATION</span>
+        <h2>CLAIM ITEM</h2>
+        <form id="claimForm" class="tech-form" novalidate>
+          <div class="input-group required">
+            <label for="claimItemId">ITEM SELECTION</label>
+            <select id="claimItemId" required aria-describedby="claimItemIdError"></select>
+            <p class="input-error" id="claimItemIdError" role="alert"></p>
+          </div>
+          <div class="input-group required">
+            <label for="claimName">YOUR NAME</label>
+            <input type="text" id="claimName" required aria-describedby="claimNameError">
+            <p class="input-error" id="claimNameError" role="alert"></p>
+          </div>
+          <div class="input-group required">
+            <label for="claimEmail">SCHOOL EMAIL</label>
+            <input type="email" id="claimEmail" required aria-describedby="claimEmailError">
+            <p class="input-error" id="claimEmailError" role="alert"></p>
+          </div>
+          <div class="input-group required">
+            <label for="claimMessage">PROOF OF OWNERSHIP</label>
+            <textarea id="claimMessage" rows="4"
+              placeholder="Describe unique details (e.g. color, shape, size, passwords, ID numbers, etc.)" required
+              aria-describedby="claimMessageError"></textarea>
+            <p class="input-error" id="claimMessageError" role="alert"></p>
+          </div>
+          <button type="submit" class="btn-primary full-width">SUBMIT CLAIM</button>
+          <div id="claimStatus" class="status-msg" role="status" aria-live="polite"></div>
+        </form>
+      </div>
       </div>
     </section>
 
     <!-- SECTION: DASHBOARD -->
     <section id="page-dashboard" class="view-section">
-      <div class="content-wrapper">
+      <div class="content-wrapper content-box">
         <div class="section-head">
           <span class="label-tech">ACTIVE PORTAL</span>
           <h2>HI, <span id="dashboardUserName">User</span></h2>
@@ -402,7 +418,7 @@
 
     <!-- SECTION: ADMIN -->
     <section id="page-admin" class="view-section">
-      <div class="content-wrapper">
+      <div class="content-wrapper content-box">
         <div class="section-head admin-header">
           <div class="admin-title-group">
             <span class="label-tech">ADMINISTRATION</span>
@@ -521,6 +537,7 @@
   <script src="js/render.js"></script>
   <script src="js/forms.js"></script>
   <script src="js/app.js"></script>
+  <script type="module" src="js/waves.js"></script>
 </body>
 
 </html>

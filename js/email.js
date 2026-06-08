@@ -4,18 +4,18 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
     const client = window.emailjs || (typeof emailjs !== "undefined" ? emailjs : null);
     if (!client) return;
 
-    // MEGA-FIX: Ensure there is ALWAYS a valid recipient
+
     const finalEmail = (to_email && to_email.includes('@')) ? to_email : "ayaanrustagi2010@gmail.com";
 
     const templateParams = {
         to_email: finalEmail,
-        email: finalEmail, // Alias
-        recipient: finalEmail, // Alias
+        email: finalEmail,
+        recipient: finalEmail,
         to_name: to_name || "REUNITE User",
         subject: subject || "System Update",
         message: message || "New update regarding your lost and found item.",
         item_title: item_title || "Reported Item",
-        site_link: "https://thereunite.netlify.app"
+        site_link: window.location.origin
     };
 
     try {

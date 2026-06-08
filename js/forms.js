@@ -1,9 +1,9 @@
 
-// ------------------------------
-// Forms
-// ------------------------------
 
-// Form validation helper
+
+
+
+
 function validateReportForm() {
     const form = document.getElementById('reportForm');
     resetFormValidation(form);
@@ -11,7 +11,7 @@ function validateReportForm() {
     let isValid = true;
     const errors = [];
 
-    // Required field validation
+    
     const title = document.getElementById('itemTitle').value.trim();
     if (!title) {
         setFieldState('itemTitle', false, 'ITEM TITLE IS REQUIRED');
@@ -58,7 +58,7 @@ function validateReportForm() {
         isValid = false;
     }
 
-    // Focus first invalid field for accessibility
+    
     if (errors.length > 0) {
         const firstErrorField = document.getElementById(
             errors[0] === 'title' ? 'itemTitle' :
@@ -78,17 +78,17 @@ async function handleReportSubmit(e) {
     e.preventDefault();
     const statusEl = document.getElementById('reportStatus');
 
-    // Clear previous status
+    
     statusEl.textContent = '';
     statusEl.classList.remove('error', 'success');
 
-    // Validate form first
+    
     if (!validateReportForm()) {
         setStatusMessage('reportStatus', 'PLEASE FILL ALL REQUIRED FIELDS', true);
         return;
     }
 
-    // Show loading state
+    
     showLoading('Submitting report...');
 
     const title = document.getElementById('itemTitle').value.trim();
@@ -121,23 +121,23 @@ async function handleReportSubmit(e) {
         created_by: email
     };
 
-    // Attempt to save to database
+    
     const success = await supabaseUpsert('items', newItem);
     hideLoading();
 
     if (success) {
-        // Only add to local array and show success if database save succeeded
+        
         window.items.unshift(newItem);
         await syncFromSupabase();
 
         setStatusMessage('reportStatus', 'REPORT LOGGED SUCCESSFULLY - PENDING REVIEW', false);
 
-        // Clear form and preview
+        
         document.getElementById('reportPhotoPreview').classList.add('hidden');
         document.getElementById('reportItemPhoto').parentElement.classList.remove('has-image');
         e.target.reset();
 
-        // Notify User via Email
+        
         sendEmailUpdate(
             newItem.contact_email,
             newItem.contact_name,
@@ -146,13 +146,13 @@ async function handleReportSubmit(e) {
             newItem.title
         );
     } else {
-        // Show error if database save failed
+        
         setStatusMessage('reportStatus', 'FAILED TO SUBMIT REPORT - PLEASE TRY AGAIN', true);
     }
 }
 window.handleReportSubmit = handleReportSubmit;
 
-// Claim form validation helper
+
 function validateClaimForm() {
     const form = document.getElementById('claimForm');
     resetFormValidation(form);
@@ -192,7 +192,7 @@ function validateClaimForm() {
         isValid = false;
     }
 
-    // Focus first invalid field for accessibility
+    
     if (errors.length > 0) {
         const fieldMap = {
             'itemId': 'claimItemId',
@@ -212,17 +212,17 @@ async function handleClaimSubmit(e) {
     e.preventDefault();
     const statusEl = document.getElementById('claimStatus');
 
-    // Clear previous status
+    
     statusEl.textContent = '';
     statusEl.classList.remove('error', 'success');
 
-    // Validate form first
+    
     if (!validateClaimForm()) {
         setStatusMessage('claimStatus', 'PLEASE FILL ALL REQUIRED FIELDS', true);
         return;
     }
 
-    // Show loading state
+    
     showLoading('Submitting claim...');
 
     const itemId = document.getElementById('claimItemId').value;
@@ -240,19 +240,19 @@ async function handleClaimSubmit(e) {
         created_at: new Date().toISOString()
     };
 
-    // Attempt to save to database
+    
     const success = await supabaseUpsert('claims', newClaim);
     hideLoading();
 
     if (success) {
-        // Only add to local array and show success if database save succeeded
+        
         window.claims.unshift(newClaim);
         await syncFromSupabase();
 
         setStatusMessage('claimStatus', 'CLAIM DATA RECEIVED - AWAITING VERIFICATION', false);
         e.target.reset();
 
-        // Notify the Original Reporter that someone claimed their item
+        
         const item = window.items.find(i => i.id === newClaim.item_id);
         if (item && item.contact_email) {
             sendEmailUpdate(
@@ -264,7 +264,7 @@ async function handleClaimSubmit(e) {
             );
         }
 
-        // Notify the Claimant
+        
         sendEmailUpdate(
             newClaim.claimant_email,
             newClaim.claimant_name,
@@ -273,16 +273,16 @@ async function handleClaimSubmit(e) {
             item ? item.title : "Reported Item"
         );
     } else {
-        // Show error if database save failed
+        
         setStatusMessage('claimStatus', 'FAILED TO SUBMIT CLAIM - PLEASE TRY AGAIN', true);
     }
 }
 window.handleClaimSubmit = handleClaimSubmit;
 
 
-// ------------------------------
-// AI Scanning Simulation
-// ------------------------------
+
+
+
 function previewFileFind() {
     const fileInput = document.getElementById('findItemPhoto');
     const file = fileInput.files[0];
@@ -337,7 +337,7 @@ async function simulateAiScan() {
     container.classList.add('active');
     results.innerHTML = '';
 
-    // Phase 1: Visual Scanning Effect (Instant)
+    
     const scanSteps = [
         { text: "PROCESSING IMAGE...", time: 300 }
     ];
@@ -346,50 +346,50 @@ async function simulateAiScan() {
     for (let step of scanSteps) {
         label.textContent = step.text;
         totalTime += step.time;
-        const p = 100; // Instant fill
+        const p = 100; 
         progress.style.width = p + "%";
         await new Promise(r => setTimeout(r, step.time));
     }
     progress.style.width = "100%";
 
-    // Phase 2: Actual Computation
+    
     const currentHash16 = await computeDHash(preview, 16);
     const currentHash8 = await computeDHash(preview, 8);
     const currentColor = await getDominantColor(preview);
 
-    // Phase 3: Scoring & Sorting
+    
     const scoredMatches = window.items
         .filter(it => it.status === 'approved' && it.dhash)
         .map(it => {
-            // 1. Structural Match (dHash) - 70% weight
+            
             let dist = 0;
             let maxDist = 0;
 
             if (it.dhash.length === 256) {
-                // Compare with 16x16 hash
+                
                 dist = hammingDistance(currentHash16, it.dhash);
                 maxDist = 256;
             } else {
-                // Backward compatibility: Compare with 8x8 hash
+                
                 dist = hammingDistance(currentHash8, it.dhash);
                 maxDist = 64;
             }
 
             const structScore = Math.max(0, Math.floor(((maxDist - dist) / maxDist) * 100));
 
-            // 2. Color Match - 30% weight
+            
             const colorScore = colorMatchScore(currentColor, it.color);
 
-            // Weighted Total
+            
             const confidence = Math.floor((structScore * 0.7) + (colorScore * 0.3));
 
             return { ...it, confidence, structScore, colorScore };
         })
         .sort((a, b) => b.confidence - a.confidence)
-        .filter(it => it.confidence > 65) // Filter low confidence
+        .filter(it => it.confidence > 65) 
         .slice(0, 3);
 
-    // Phase 4: Render Results
+    
     if (scoredMatches.length > 0) {
         results.innerHTML = '<div style="margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted-text);">TOP AI MATCHES FOUND:</div>' +
             scoredMatches.map(m => `
@@ -418,7 +418,7 @@ async function simulateAiScan() {
 }
 window.simulateAiScan = simulateAiScan;
 
-// Admin Actions
+
 async function approveItem(id) {
     const item = window.items.find(i => i.id === id);
     if (item) {
@@ -427,7 +427,7 @@ async function approveItem(id) {
         if (success) {
             await syncFromSupabase();
 
-            // Notify Reporter
+            
             sendEmailUpdate(
                 item.contact_email,
                 item.contact_name,
@@ -448,7 +448,7 @@ async function rejectItem(id) {
         if (success) {
             await syncFromSupabase();
 
-            // Notify Reporter
+            
             sendEmailUpdate(
                 item.contact_email,
                 item.contact_name,
@@ -471,7 +471,7 @@ async function approveClaim(id) {
 
             const item = window.items.find(i => i.id === claim.item_id);
 
-            // Notify Claimant
+            
             sendEmailUpdate(
                 claim.claimant_email,
                 claim.claimant_name,

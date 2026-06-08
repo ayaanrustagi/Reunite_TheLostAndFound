@@ -73,7 +73,7 @@ function resetFormValidation(formEl) {
 }
 window.resetFormValidation = resetFormValidation;
 
-// Levenshtein function for fuzzy search
+
 function levenshteinDistance(a, b) {
     const matrix = [];
     for (let i = 0; i <= b.length; i++) {
@@ -89,10 +89,10 @@ function levenshteinDistance(a, b) {
                 matrix[i][j] = matrix[i - 1][j - 1];
             } else {
                 matrix[i][j] = Math.min(
-                    matrix[i - 1][j - 1] + 1, // substitution
+                    matrix[i - 1][j - 1] + 1, 
                     Math.min(
-                        matrix[i][j - 1] + 1, // insertion
-                        matrix[i - 1][j] + 1 // deletion
+                        matrix[i][j - 1] + 1, 
+                        matrix[i - 1][j] + 1 
                     )
                 );
             }
@@ -107,16 +107,16 @@ function isFuzzyMatch(text, searchToken) {
     const cleanText = text.toLowerCase();
     const token = searchToken.toLowerCase();
 
-    // Direct match is always best
+    
     if (cleanText.includes(token)) return true;
 
-    // Check word by word for close matches
+    
     const words = cleanText.split(/\s+/);
     return words.some(word => {
-        // Optimization: length difference check
+        
         if (Math.abs(word.length - token.length) > 2) return false;
 
-        // Allow more errors for longer words
+        
         const maxErrors = token.length > 5 ? 2 : 1;
         const dist = levenshteinDistance(word, token);
         return dist <= maxErrors;
@@ -124,9 +124,9 @@ function isFuzzyMatch(text, searchToken) {
 }
 window.isFuzzyMatch = isFuzzyMatch;
 
-// ------------------------------
-// dHash (Perceptual Hashing)
-// ------------------------------
+
+
+
 function computeDHash(imgElement, size = 16) {
     return new Promise((resolve) => {
         const process = () => {
@@ -167,13 +167,13 @@ function getDominantColor(imgElement) {
     return new Promise((resolve) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 1; // Downsample to single pixel for average
+        canvas.width = 1; 
         canvas.height = 1;
 
-        // Use a slight timeout to ensure image is ready
+        
         setTimeout(() => {
             try {
-                // Focus on the center 50% of the image to avoid background noise
+                
                 const w = imgElement.naturalWidth || imgElement.width;
                 const h = imgElement.naturalHeight || imgElement.height;
 
@@ -195,15 +195,15 @@ function getDominantColor(imgElement) {
 window.getDominantColor = getDominantColor;
 
 function colorMatchScore(c1, c2) {
-    if (!c1 || !c2) return 100; // Ignore if missing
-    // Euclidean distance in RGB space
+    if (!c1 || !c2) return 100; 
+    
     const dist = Math.sqrt(
         Math.pow(c1.r - c2.r, 2) +
         Math.pow(c1.g - c2.g, 2) +
         Math.pow(c1.b - c2.b, 2)
     );
-    // Max distance is sqrt(3 * 255^2) ≈ 441
-    // Normalize to 0-100 score (lower distance = higher score)
+    
+    
     return Math.max(0, 100 - (dist / 4.41));
 }
 window.colorMatchScore = colorMatchScore;

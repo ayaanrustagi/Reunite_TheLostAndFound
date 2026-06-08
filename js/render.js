@@ -1,9 +1,9 @@
 
-// ------------------------------
-// Rendering Logic
-// ------------------------------
 
-// Dashboard Tutorials Data
+
+
+
+
 const DASHBOARD_TUTORIALS = [
     {
         title: "HOW TO LOG A REPORT",
@@ -105,12 +105,12 @@ function renderFound() {
     const grid = document.getElementById('itemsGrid');
     if (!grid) return;
 
-    // Get search inputs from both possible sources (header or page)
+    
     const headerInput = document.getElementById('headerSearchInput');
     const headerSearchVal = headerInput?.value || "";
     const pageSearchVal = document.getElementById('searchFilter')?.value || "";
 
-    // Toggle pure search mode if using header search is active (focused or has text)
+    
     const foundSection = document.getElementById('page-found');
     if (foundSection) {
         const isSearchFocused = document.activeElement === headerInput;
@@ -132,7 +132,7 @@ function renderFound() {
 
     let filtered = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'approved');
 
-    // Apply Fuzzy Search
+    
     if (search) {
         const searchTokens = search.split(/\s+/);
         filtered = filtered.filter(item => {
@@ -249,13 +249,13 @@ window.renderDashboard = renderDashboard;
 function renderAdmin() {
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
 
-    // Filter relevant datasets
+    
     const pending = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');
     const pendingClaims = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'pending');
     const approved = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
     const verified = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
 
-    // Update Stats
+    
     const stats = {
         'adminTotalReports': window.items.length,
         'adminPendingApprovals': pending.length,
@@ -272,7 +272,7 @@ function renderAdmin() {
         if (el) el.textContent = val;
     });
 
-    // Render Lists
+    
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">

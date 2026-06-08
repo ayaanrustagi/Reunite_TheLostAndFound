@@ -1,16 +1,16 @@
 
-// Default values if config not loaded (fallbacks)
+
 const SUPABASE_URL = window.SUPABASE_URL || "https://izoyxyekflrnyheuxppk.supabase.co";
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
 
-// EmailJS Configuration
+
 const EMAILJS_SERVICE_ID = window.EMAILJS_SERVICE_ID || "service_gpf5o4g";
 const EMAILJS_OTP_TEMPLATE_ID = "template_35ebnrp";
 const EMAILJS_PUBLIC_KEY = window.EMAILJS_PUBLIC_KEY || "vQdFZ_3TQhMLDP1z3";
 
 let authMode = 'login';
-let loginMethod = 'password'; // 'password' or 'otp'
-let authStep = 'send'; // 'send' or 'verify'
+let loginMethod = 'password';
+let authStep = 'send';
 let generatedOTP = null;
 const ADMIN_CODE_REQUIRED = "FBLA2025";
 
@@ -44,7 +44,7 @@ function setAuthMode(mode) {
         submitBtn.disabled = false;
     }
 
-    // Reset admin checkbox
+
     const adminCheckbox = document.getElementById('isAdminAuth');
     const adminCodeWrap = document.getElementById('adminCodeAuthWrap');
     if (adminCheckbox) adminCheckbox.checked = false;
@@ -66,7 +66,7 @@ function setAuthMode(mode) {
         if (adminAuthGroup) adminAuthGroup.classList.add('hidden');
         if (loginMethods) loginMethods.classList.remove('hidden');
 
-        // Show/hide password based on method
+
         setLoginMethod(loginMethod);
 
         if (modeLink) {
@@ -209,7 +209,7 @@ async function sendOTP() {
         return;
     }
 
-    // Validate admin code if admin checkbox is checked
+
     const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
     const adminCodeInput = document.getElementById('adminCodeAuth');
     if (authMode === 'signup' && isAdminChecked) {
@@ -225,19 +225,19 @@ async function sendOTP() {
     status.className = "status-msg";
     submitBtn.disabled = true;
 
-    // Use window.supabaseClient if available, otherwise creaate one locally for this flow
-    // But login page should have initialized it via supabase-client.js
+
+
     const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     try {
-        // 1. Check if user exists in profiles table
+
         const { data: existingUser, error: queryError } = await supabase
             .from('profiles')
             .select('*')
             .eq('email', email)
             .maybeSingle();
 
-        if (queryError && queryError.code !== 'PGRST116') { // PGRST116 is "not found" which is fine
+        if (queryError && queryError.code !== 'PGRST116') {
             console.error("Supabase Query Error:", queryError);
         }
 
@@ -260,15 +260,15 @@ async function sendOTP() {
         console.error("Critical Auth Check Error:", err);
     }
 
-    // Generate 6-digit OTP
+
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
     const templateParams = {
         to_email: email,
-        email: email, // Alias for template flexibility
-        recipient: email, // Alias for template flexibility
+        email: email,
+        recipient: email,
         to_name: name || "REUNITE User",
-        otp_code: generatedOTP, // Ensure your template uses {{otp_code}}
+        otp_code: generatedOTP,
         subject: "Security Verification Code"
     };
 
@@ -280,7 +280,7 @@ async function sendOTP() {
         status.textContent = "CODE SENT SUCCESSFULLY";
         status.className = "status-msg success";
 
-        // Transition to Verification step
+
         authStep = 'verify';
         if (location.href.includes('login.html')) {
             const otpGroup = document.getElementById('otpGroup');
@@ -288,7 +288,7 @@ async function sendOTP() {
             const resend = document.getElementById('resendBtn');
             if (resend) resend.classList.remove('hidden');
 
-            // Hide others
+
             const nameGroup = document.getElementById('nameGroup');
             if (nameGroup) nameGroup.classList.add('hidden');
             const emailInput = document.getElementById('authEmail');
@@ -311,7 +311,7 @@ async function sendOTP() {
         submitBtn.textContent = "Verify";
         submitBtn.disabled = false;
 
-        // Auto-focus OTP field
+
         const otpInput = document.getElementById('authOTP');
         if (otpInput) otpInput.focus();
     } catch (err) {
@@ -338,7 +338,7 @@ async function verifyOTP() {
 
     console.log("Verifying OTP:", { entered: enteredOTP, expected: generatedOTP });
 
-    // Allow "000000" as a fallback for demo purposes if needed, or strictly check generatedOTP
+
     if (enteredOTP !== generatedOTP && enteredOTP !== "000000") {
         if (status) {
             status.textContent = "INVALID VERIFICATION CODE";
@@ -360,7 +360,7 @@ async function verifyOTP() {
         if (authMode === 'signup') {
             const newId = 'user_' + Math.random().toString(36).substr(2, 9);
 
-            // Determine role based on admin checkbox
+
             const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
             const userRole = isAdminChecked ? 'admin' : 'student';
 
@@ -368,19 +368,19 @@ async function verifyOTP() {
                 id: newId,
                 email: email,
                 full_name: name || email.split('@')[0],
-                password: password, // Storing password in profiles
+                password: password,
                 role: userRole,
                 created_at: new Date().toISOString()
             };
 
-            // Save to Supabase Profiles
+
             const { error: insertError } = await supabase
                 .from('profiles')
                 .insert([userData]);
 
             if (insertError) throw insertError;
         } else {
-            // Fetch existing profile
+
             const { data: profile, error: fetchError } = await supabase
                 .from('profiles')
                 .select('*')
@@ -389,7 +389,7 @@ async function verifyOTP() {
 
             if (fetchError) throw fetchError;
 
-            // Password check (simple plaintext check for demo)
+
             if (profile.password && profile.password !== password) {
                 status.textContent = "INVALID PASSWORD";
                 status.className = "status-msg error";
@@ -404,7 +404,7 @@ async function verifyOTP() {
             };
         }
 
-        // Cache the session locally so app.js recognizes it
+
         localStorage.setItem("reunite_session", JSON.stringify(userData));
 
         if (status) {
@@ -426,12 +426,12 @@ async function verifyOTP() {
 }
 window.verifyOTP = verifyOTP;
 
-// Initialization for Login Page
+
 document.addEventListener('DOMContentLoaded', () => {
-    // We expect supabase-client.js to have run initializeSupabase()
+
     if (window.initializeSupabase) window.initializeSupabase();
 
-    // Initialize EmailJS
+
     const emailjs = window.emailjs;
     if (typeof emailjs !== "undefined") {
         emailjs.init(EMAILJS_PUBLIC_KEY);
