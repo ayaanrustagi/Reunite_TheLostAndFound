@@ -254,50 +254,35 @@ body {
 /* Header - Floating Style */
 .site-header {
     position: fixed;
-    top: 1rem;
+    top: 0.75rem;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 3rem);
+    width: calc(100% - 2rem);
     max-width: 1400px;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+    /* Liquid Glass Effect - Unified Premium */
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.6) 0%,
+            rgba(255, 255, 255, 0.35) 100%);
+    backdrop-filter: blur(40px) saturate(220%);
+    -webkit-backdrop-filter: blur(40px) saturate(220%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+
+    /* Layered highlights for "liquid" depth */
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+        inset 0 2px 8px rgba(255, 255, 255, 0.4),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.2);
+
+    border-radius: 16px;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .site-header.scrolled {
-    top: 0.75rem;
-    width: calc(100% - 2rem);
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.site-header.scrolled .header-inner {
-    padding: 0.85rem 1.5rem;
-}
-
-.site-header.scrolled .logo-text {
-    font-size: 1rem;
-}
-
-.site-header.scrolled .nav-btn {
-    font-size: 0.72rem;
-    padding: 0.35rem 0.75rem;
-}
-
-.site-header.scrolled .header-search-wrap {
-    width: 200px;
-    padding: 0.4rem 1rem;
-}
-
-.site-header.scrolled .btn-sm {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.65rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
 /* Hide when scrolling down */
@@ -311,7 +296,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.25rem 2rem;
+    padding: 0.85rem 1.5rem;
+    /* Consistently compact */
 }
 
 .logo-area {
@@ -331,7 +317,8 @@ body {
     font-family: var(--font-mono);
     font-weight: 800;
     letter-spacing: 0.15em;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    /* Compact font */
     text-transform: uppercase;
 }
 
@@ -384,18 +371,15 @@ body {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
+/* Main Navigation */
 .main-nav {
     display: flex;
-    gap: 1rem;
-    transition: gap 0.4s ease;
+    gap: 0.6rem;
+    /* Consistently compact */
     margin-right: auto;
-    margin-left: 2rem;
+    margin-left: 1.5rem;
     flex-shrink: 0;
     white-space: nowrap;
-}
-
-.site-header.scrolled .main-nav {
-    gap: 0.5rem;
 }
 
 /* Hide mobile nav actions on desktop */
@@ -411,12 +395,14 @@ body {
     background: rgba(var(--panel-bg-rgb), 0.6);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: var(--radius-md);
-    padding: 0.5rem 1rem;
-    width: 180px;
-    margin-right: 1rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0.45rem 1rem;
+    /* Compact padding */
+    width: 200px;
+    /* Locked compact width */
+    margin-right: 1.25rem;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     flex-shrink: 1;
-    min-width: 120px;
+    min-width: 140px;
 }
 
 .header-search-wrap:focus-within {
@@ -462,14 +448,16 @@ body {
     background: none;
     border: none;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.72rem;
+    /* Compact font */
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--muted-text);
     cursor: pointer;
     transition: all 0.25s ease;
     position: relative;
-    padding: 0.45rem 1rem;
+    padding: 0.35rem 0.8rem;
+    /* Compact padding */
     border-radius: 4px;
 }
 
@@ -515,8 +503,10 @@ body {
 }
 
 .btn-sm {
-    padding: 0.65rem 1.5rem;
-    font-size: 0.7rem;
+    padding: 0.45rem 1.25rem;
+    /* Consistently compact */
+    font-size: 0.65rem;
+    /* Consistently compact */
     font-family: var(--font-mono);
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2210,12 +2200,18 @@ select::-ms-expand {
         top: 0.5rem;
         width: calc(100% - 1rem);
         border-radius: 14px;
+        box-shadow:
+            0 8px 24px rgba(0, 50, 150, 0.06),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.4);
     }
 
     .site-header.scrolled {
         top: 0.5rem;
         width: calc(100% - 1rem);
         border-radius: 12px;
+        box-shadow:
+            0 6px 20px rgba(0, 0, 0, 0.08),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.5);
     }
 
     /* Hide nav by default on mobile */
