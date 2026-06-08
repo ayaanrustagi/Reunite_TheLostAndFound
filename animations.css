@@ -96,28 +96,3 @@
         transform: rotate(360deg);
     }
 }
-
-/* Auth Page Vignettes */
-.screen-vignette {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1000;
-    box-shadow: inset 0 0 15vw rgba(0, 78, 204, var(--glow-opacity));
-}
-
-.scan-line {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, transparent, rgba(0, 78, 204, 0.03), transparent);
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 1001;
-    opacity: 0.3;
-}

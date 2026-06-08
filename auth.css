@@ -7,12 +7,12 @@
     height: 600px;
     max-height: 90vh;
     padding: 0;
-    border-radius: 0;
+    border-radius: 16px;
     overflow: hidden;
     background: var(--panel-bg);
-    /* Clean white/dark base */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    border: none;
+    /* Clean white base */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 /* Close Button Positioned Absolute */
@@ -112,8 +112,8 @@
 .input-pill {
     width: 100%;
     padding: 0.8rem 1.5rem;
-    border-radius: 2px;
-    /* BOXY SHAPE */
+    border-radius: 8px;
+    /* CURVED SHAPE */
     border: 1px solid var(--border-color);
     background: var(--bg-color);
     color: var(--text-color);
@@ -131,7 +131,7 @@
 
 /* Button */
 .pill-btn {
-    border-radius: 2px;
+    border-radius: 8px;
     padding: 1rem;
     margin-top: 1rem;
     font-weight: 600;
