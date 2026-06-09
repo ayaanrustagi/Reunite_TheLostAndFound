@@ -125,8 +125,7 @@ function initHeroRotation() {
         "WHERE DID IT GO",
         "LOST AN ITEM",
         "CAN'T FIND IT",
-        "MISSING BELONGINGS",
-        "MISPLACED SOMETHING"
+        "MISSING BELONGINGS"
     ];
     const subs = [
         "REUNITE YOUR WORLD FASTER",
@@ -136,52 +135,46 @@ function initHeroRotation() {
         "RECOVER YOUR BELONGINGS"
     ];
 
-    let tIndex = 0;
-    let sIndex = 0;
+    let index = 0;
     const titleEl = document.getElementById('hero-title');
     const subEl = document.getElementById('hero-subtitle');
 
     if (!titleEl || !subEl) return;
 
-
+    // Apply the transition class
+    titleEl.classList.add('hero-text-fade');
+    subEl.classList.add('hero-text-fade');
 
     setInterval(() => {
-        tIndex = (tIndex + 1) % titles.length;
-        sIndex = (sIndex + 1) % subs.length;
-
-        // 1. Slide up and fade out
+        // Step 1: Fade out and move slightly
         titleEl.style.opacity = '0';
-        titleEl.style.transform = 'translateY(-20px)';
+        titleEl.style.transform = 'translateY(-10px)';
         subEl.style.opacity = '0';
-        subEl.style.transform = 'translateY(-20px)';
+        subEl.style.transform = 'translateY(-10px)';
 
         setTimeout(() => {
-            // 2. Disable transition for instant "jump" behind the scenes
+            // Step 2: Change content
+            index = (index + 1) % titles.length;
+            titleEl.textContent = titles[index];
+            subEl.textContent = subs[index];
+
+            // Step 3: Jump to bottom position (invisible)
             titleEl.style.transition = 'none';
             subEl.style.transition = 'none';
+            titleEl.style.transform = 'translateY(10px)';
+            subEl.style.transform = 'translateY(10px)';
 
-            // 3. Change text and position below
-            titleEl.textContent = titles[tIndex];
-            subEl.textContent = subs[sIndex];
-            titleEl.style.transform = 'translateY(20px)';
-            subEl.style.transform = 'translateY(20px)';
-
-            // 4. Force reflow to ensure the 'none' transition is applied
+            // Trigger reflow
             void titleEl.offsetWidth;
 
-            // 5. Re-enable transition and animate in
-            titleEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            subEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-            requestAnimationFrame(() => {
-                titleEl.style.opacity = '1';
-                titleEl.style.transform = 'translateY(0)';
-                subEl.style.opacity = '1';
-                subEl.style.transform = 'translateY(0)';
-            });
-        }, 400); // Wait for fade out to complete
-
-    }, 3800);
+            // Step 4: Fade in and slide to center
+            titleEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            subEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            titleEl.style.opacity = '1';
+            titleEl.style.transform = 'translateY(0)';
+            subEl.style.transform = 'translateY(0)';
+        }, 600);
+    }, 4500);
 }
 window.initHeroRotation = initHeroRotation;
 
