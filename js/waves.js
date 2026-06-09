@@ -1,5 +1,5 @@
 
-import { createNoise2D } from './vendor/simplex-noise.js';
+import { createNoise2D } from './background.js';
 
 class Waves {
     constructor(container, options = {}) {
@@ -64,7 +64,7 @@ class Waves {
             width: 100%;
             height: 100%;
             background: white;
-            opacity: 0.011;
+            opacity: 0.0091;
             pointer-events: none;
             z-index: 1;
         `;
@@ -104,10 +104,10 @@ class Waves {
         this.paths.forEach(path => path.remove());
         this.paths = [];
 
-        const xGap = 15; // Slightly larger gap for performance in vanilla JS maybe? Or keep 8.
-        const yGap = 15;
-        // User React code had xGap=8, yGap=8. Let's stick to relatively dense but performant.
-        // Let's go with 12 to be safe on performance for full screen.
+        // Reduce density on mobile for better performance
+        const isMobile = window.innerWidth <= 768;
+        const xGap = isMobile ? 25 : 15;
+        const yGap = isMobile ? 25 : 15;
 
         const oWidth = width + 200;
         const oHeight = height + 30;
@@ -133,7 +133,7 @@ class Waves {
             path.setAttribute('fill', 'none');
             path.setAttribute('stroke', this.options.strokeColor);
             path.setAttribute('stroke-width', '2');
-            path.setAttribute('stroke-opacity', '0.1'); // Slightly more visible
+            path.setAttribute('stroke-opacity', '0.08'); // Slightly more visible
 
             this.svg.appendChild(path);
             this.paths.push(path);
@@ -278,10 +278,24 @@ class Waves {
 // Auto-initialize if the container exists
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('waves-container');
-    if (container) {
+
+    // Completely disable waves on mobile for performance
+    const isMobile = window.innerWidth <= 768 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (container && !isMobile) {
         new Waves(container, {
             strokeColor: '#004ecc', // Blue lines
             backgroundColor: '#ffffff' // White background
         });
+    } else if (container) {
+        // Just set the background color on mobile, no animation
+        container.style.backgroundColor = '#ffffff';
+        container.style.position = 'fixed';
+        container.style.top = '0';
+        container.style.left = '0';
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.zIndex = '-1';
     }
 });

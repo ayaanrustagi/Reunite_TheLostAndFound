@@ -121,12 +121,9 @@ window.toggleAdminField = toggleAdminField;
 
 function initHeroRotation() {
     const titles = [
-        "CAN'T FIND IT",
         "LOST VALUABLES",
         "WHERE DID IT GO",
-        "MISSING BELONGINGS",
         "LOST AN ITEM",
-        "MISPLACED SOMETHING"
     ];
     const subs = [
         "REUNITE YOUR WORLD FASTER",
@@ -143,33 +140,39 @@ function initHeroRotation() {
 
     if (!titleEl || !subEl) return;
 
-    setInterval(() => {
 
+
+    setInterval(() => {
         tIndex = (tIndex + 1) % titles.length;
         sIndex = (sIndex + 1) % subs.length;
 
-
-        titleEl.classList.remove('text-slide-in');
-        subEl.classList.remove('text-slide-in');
-
-        void titleEl.offsetWidth;
-
-        titleEl.classList.add('text-slide-out');
-        subEl.classList.add('text-slide-out');
-
+        // Slide up and fade out
+        titleEl.style.opacity = '0';
+        titleEl.style.transform = 'translateY(-20px)';
+        subEl.style.opacity = '0';
+        subEl.style.transform = 'translateY(-20px)';
 
         setTimeout(() => {
+            // Change text while hidden
             titleEl.textContent = titles[tIndex];
             subEl.textContent = subs[sIndex];
 
-            titleEl.classList.remove('text-slide-out');
-            subEl.classList.remove('text-slide-out');
+            // Position below then slide up
+            titleEl.style.transform = 'translateY(20px)';
+            subEl.style.transform = 'translateY(20px)';
 
-            titleEl.classList.add('text-slide-in');
-            subEl.classList.add('text-slide-in');
-        }, 500);
+            // Animate in on next frame
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    titleEl.style.opacity = '1';
+                    titleEl.style.transform = 'translateY(0)';
+                    subEl.style.opacity = '1';
+                    subEl.style.transform = 'translateY(0)';
+                });
+            });
+        }, 350);
 
-    }, 3000);
+    }, 3500);
 }
 window.initHeroRotation = initHeroRotation;
 
