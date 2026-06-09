@@ -279,23 +279,10 @@ class Waves {
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('waves-container');
 
-    // Completely disable waves on mobile for performance
-    const isMobile = window.innerWidth <= 768 ||
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    if (container && !isMobile) {
+    if (container) {
         new Waves(container, {
             strokeColor: '#004ecc', // Blue lines
             backgroundColor: '#ffffff' // White background
         });
-    } else if (container) {
-        // Just set the background color on mobile, no animation
-        container.style.backgroundColor = '#ffffff';
-        container.style.position = 'fixed';
-        container.style.top = '0';
-        container.style.left = '0';
-        container.style.width = '100%';
-        container.style.height = '100%';
-        container.style.zIndex = '-1';
     }
 });
