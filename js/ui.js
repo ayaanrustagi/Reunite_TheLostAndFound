@@ -135,46 +135,49 @@ function initHeroRotation() {
         "RECOVER YOUR BELONGINGS"
     ];
 
-    let index = 0;
+    let tIndex = 0;
+    let sIndex = 0;
     const titleEl = document.getElementById('hero-title');
     const subEl = document.getElementById('hero-subtitle');
 
     if (!titleEl || !subEl) return;
 
-    // Apply the transition class
-    titleEl.classList.add('hero-text-fade');
-    subEl.classList.add('hero-text-fade');
+    // Ensure we start clean
+    titleEl.classList.remove('hero-text-fade');
+    subEl.classList.remove('hero-text-fade');
+
+    // Reset styles that might have been set by the previous JS implementation
+    titleEl.style.cssText = '';
+    subEl.style.cssText = '';
 
     setInterval(() => {
-        // Step 1: Fade out and move slightly
-        titleEl.style.opacity = '0';
-        titleEl.style.transform = 'translateY(-10px)';
-        subEl.style.opacity = '0';
-        subEl.style.transform = 'translateY(-10px)';
+        tIndex = (tIndex + 1) % titles.length;
+        sIndex = (sIndex + 1) % subs.length;
+
+        // Add exit class
+        titleEl.classList.remove('text-slide-in');
+        subEl.classList.remove('text-slide-in');
+
+        // Force reflow
+        void titleEl.offsetWidth;
+
+        titleEl.classList.add('text-slide-out');
+        subEl.classList.add('text-slide-out');
 
         setTimeout(() => {
-            // Step 2: Change content
-            index = (index + 1) % titles.length;
-            titleEl.textContent = titles[index];
-            subEl.textContent = subs[index];
+            // Swap text
+            titleEl.textContent = titles[tIndex];
+            subEl.textContent = subs[sIndex];
 
-            // Step 3: Jump to bottom position (invisible)
-            titleEl.style.transition = 'none';
-            subEl.style.transition = 'none';
-            titleEl.style.transform = 'translateY(10px)';
-            subEl.style.transform = 'translateY(10px)';
+            // Remove exit, add enter
+            titleEl.classList.remove('text-slide-out');
+            subEl.classList.remove('text-slide-out');
 
-            // Trigger reflow
-            void titleEl.offsetWidth;
+            titleEl.classList.add('text-slide-in');
+            subEl.classList.add('text-slide-in');
+        }, 500); // 500ms matches the CSS animation duration
 
-            // Step 4: Fade in and slide to center
-            titleEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            subEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            titleEl.style.opacity = '1';
-            titleEl.style.transform = 'translateY(0)';
-            subEl.style.transform = 'translateY(0)';
-        }, 600);
-    }, 4500);
+    }, 3500);
 }
 window.initHeroRotation = initHeroRotation;
 
