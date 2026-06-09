@@ -124,6 +124,9 @@ function initHeroRotation() {
         "LOST VALUABLES",
         "WHERE DID IT GO",
         "LOST AN ITEM",
+        "CAN'T FIND IT",
+        "MISSING BELONGINGS",
+        "MISPLACED SOMETHING"
     ];
     const subs = [
         "REUNITE YOUR WORLD FASTER",
@@ -146,33 +149,39 @@ function initHeroRotation() {
         tIndex = (tIndex + 1) % titles.length;
         sIndex = (sIndex + 1) % subs.length;
 
-        // Slide up and fade out
+        // 1. Slide up and fade out
         titleEl.style.opacity = '0';
         titleEl.style.transform = 'translateY(-20px)';
         subEl.style.opacity = '0';
         subEl.style.transform = 'translateY(-20px)';
 
         setTimeout(() => {
-            // Change text while hidden
+            // 2. Disable transition for instant "jump" behind the scenes
+            titleEl.style.transition = 'none';
+            subEl.style.transition = 'none';
+
+            // 3. Change text and position below
             titleEl.textContent = titles[tIndex];
             subEl.textContent = subs[sIndex];
-
-            // Position below then slide up
             titleEl.style.transform = 'translateY(20px)';
             subEl.style.transform = 'translateY(20px)';
 
-            // Animate in on next frame
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    titleEl.style.opacity = '1';
-                    titleEl.style.transform = 'translateY(0)';
-                    subEl.style.opacity = '1';
-                    subEl.style.transform = 'translateY(0)';
-                });
-            });
-        }, 350);
+            // 4. Force reflow to ensure the 'none' transition is applied
+            void titleEl.offsetWidth;
 
-    }, 3500);
+            // 5. Re-enable transition and animate in
+            titleEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            subEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+            requestAnimationFrame(() => {
+                titleEl.style.opacity = '1';
+                titleEl.style.transform = 'translateY(0)';
+                subEl.style.opacity = '1';
+                subEl.style.transform = 'translateY(0)';
+            });
+        }, 400); // Wait for fade out to complete
+
+    }, 3800);
 }
 window.initHeroRotation = initHeroRotation;
 
