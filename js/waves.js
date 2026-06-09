@@ -1,5 +1,5 @@
 
-import { createNoise2D } from './simplex-noise.js';
+import { createNoise2D } from './vendor/simplex-noise.js';
 
 class Waves {
     constructor(container, options = {}) {
@@ -132,8 +132,8 @@ class Waves {
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             path.setAttribute('fill', 'none');
             path.setAttribute('stroke', this.options.strokeColor);
-            path.setAttribute('stroke-width', '3.5');
-            path.setAttribute('stroke-opacity', '0.05'); // Slightly reduced for subtleness
+            path.setAttribute('stroke-width', '2');
+            path.setAttribute('stroke-opacity', '0.1'); // Slightly more visible
 
             this.svg.appendChild(path);
             this.paths.push(path);

@@ -31,7 +31,7 @@ body.auth-page::before {
     align-items: center;
     justify-content: center;
     width: 100%;
-    background: var(--bg-color);
+    background: transparent;
 }
 
 .auth-form-card {
