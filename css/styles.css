@@ -2833,17 +2833,22 @@ select::-ms-expand {
 @media (max-width: 768px) {
     .scroll-indicator {
         display: flex;
-        bottom: 2rem;
-        transform: translateX(-50%) scale(0.9);
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        width: 100%;
+        animation: bounceMobile 2s infinite;
     }
 
     .scroll-indicator::after {
         display: none;
-        /* Hide the long line on mobile */
     }
 }
 
-/* Global Bounce Animation */
+/* Base Bounce (Desktop) - Includes centering */
 @keyframes bounceTotal {
 
     0%,
@@ -2860,6 +2865,26 @@ select::-ms-expand {
 
     60% {
         transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+/* Mobile Bounce - No horizontal centering needed (flex handles it) */
+@keyframes bounceMobile {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0) scale(0.9);
+    }
+
+    40% {
+        transform: translateY(-10px) scale(0.9);
+    }
+
+    60% {
+        transform: translateY(-5px) scale(0.9);
     }
 }
 
