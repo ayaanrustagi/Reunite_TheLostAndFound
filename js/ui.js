@@ -142,13 +142,17 @@ function initHeroRotation() {
 
     if (!titleEl || !subEl) return;
 
-    // Ensure we start clean
-    titleEl.classList.remove('hero-text-fade');
-    subEl.classList.remove('hero-text-fade');
+    // Ensure we start clean by removing initial reveal class which has a delay
+    titleEl.classList.remove('text-reveal');
+    subEl.classList.remove('text-reveal');
 
     // Reset styles that might have been set by the previous JS implementation
     titleEl.style.cssText = '';
     subEl.style.cssText = '';
+
+    // Apply explicit 0 delay to ensure sync
+    titleEl.style.animationDelay = '0s';
+    subEl.style.animationDelay = '0s';
 
     setInterval(() => {
         tIndex = (tIndex + 1) % titles.length;
