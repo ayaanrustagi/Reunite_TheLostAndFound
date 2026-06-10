@@ -3006,12 +3006,13 @@ select::-ms-expand {
 
 
     .hero-display-text {
-        font-size: 2.2rem;
-        /* Reduced to fit long words on one line */
+        font-size: clamp(1.5rem, 9vw, 2.2rem);
+        /* Responsive scaling */
         line-height: 1.1;
         margin-bottom: 1rem;
+        padding: 0 0.5rem;
+        /* Reducing side padding */
         word-spacing: -2px;
-        /* Pull letters slightly closer */
     }
 
     .hero-display-text .sub-hero {
