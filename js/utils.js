@@ -17,11 +17,35 @@ function hideLoading() {
     const overlay = document.getElementById('loadingOverlay');
     if (!overlay) return;
     window.loadingCounter = Math.max(0, window.loadingCounter - 1);
+
+    // If we're in success state, don't hide yet - showSuccess handles it
+    if (overlay.classList.contains('success-state')) return;
+
     if (window.loadingCounter === 0) {
         overlay.classList.add('hidden');
     }
 }
 window.hideLoading = hideLoading;
+
+function showSuccess(message = "SUCCESSFUL") {
+    const overlay = document.getElementById('loadingOverlay');
+    const messageEl = document.getElementById('loadingMessage');
+    if (!overlay || !messageEl) return;
+
+    overlay.classList.add('success-state');
+    messageEl.textContent = message.toUpperCase();
+    overlay.classList.remove('hidden');
+
+    // Auto-hide after 2 seconds
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+        setTimeout(() => {
+            overlay.classList.remove('success-state');
+            window.loadingCounter = 0; // Reset counter after success flow
+        }, 500);
+    }, 2000);
+}
+window.showSuccess = showSuccess;
 
 function setStatusMessage(elementId, message, isError = false) {
     const el = document.getElementById(elementId);
@@ -89,10 +113,10 @@ function levenshteinDistance(a, b) {
                 matrix[i][j] = matrix[i - 1][j - 1];
             } else {
                 matrix[i][j] = Math.min(
-                    matrix[i - 1][j - 1] + 1, 
+                    matrix[i - 1][j - 1] + 1,
                     Math.min(
-                        matrix[i][j - 1] + 1, 
-                        matrix[i - 1][j] + 1 
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
                     )
                 );
             }
@@ -107,16 +131,16 @@ function isFuzzyMatch(text, searchToken) {
     const cleanText = text.toLowerCase();
     const token = searchToken.toLowerCase();
 
-    
+
     if (cleanText.includes(token)) return true;
 
-    
+
     const words = cleanText.split(/\s+/);
     return words.some(word => {
-        
+
         if (Math.abs(word.length - token.length) > 2) return false;
 
-        
+
         const maxErrors = token.length > 5 ? 2 : 1;
         const dist = levenshteinDistance(word, token);
         return dist <= maxErrors;
@@ -167,13 +191,13 @@ function getDominantColor(imgElement) {
     return new Promise((resolve) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 1; 
+        canvas.width = 1;
         canvas.height = 1;
 
-        
+
         setTimeout(() => {
             try {
-                
+
                 const w = imgElement.naturalWidth || imgElement.width;
                 const h = imgElement.naturalHeight || imgElement.height;
 
@@ -195,15 +219,15 @@ function getDominantColor(imgElement) {
 window.getDominantColor = getDominantColor;
 
 function colorMatchScore(c1, c2) {
-    if (!c1 || !c2) return 100; 
-    
+    if (!c1 || !c2) return 100;
+
     const dist = Math.sqrt(
         Math.pow(c1.r - c2.r, 2) +
         Math.pow(c1.g - c2.g, 2) +
         Math.pow(c1.b - c2.b, 2)
     );
-    
-    
+
+
     return Math.max(0, 100 - (dist / 4.41));
 }
 window.colorMatchScore = colorMatchScore;

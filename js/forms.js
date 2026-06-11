@@ -123,14 +123,14 @@ async function handleReportSubmit(e) {
 
 
     const success = await supabaseUpsert('items', newItem);
-    hideLoading();
 
     if (success) {
+        showSuccess('REPORT LOGGED SUCCESSFULLY');
 
         window.items.unshift(newItem);
         await syncFromSupabase();
 
-        setStatusMessage('reportStatus', 'REPORT LOGGED SUCCESSFULLY - PENDING REVIEW', false);
+        setStatusMessage('reportStatus', 'PENDING REVIEW', false);
 
 
         document.getElementById('reportPhotoPreview').classList.add('hidden');
@@ -146,7 +146,7 @@ async function handleReportSubmit(e) {
             newItem.title
         );
     } else {
-
+        hideLoading();
         setStatusMessage('reportStatus', 'FAILED TO SUBMIT REPORT - PLEASE TRY AGAIN', true);
     }
 }
@@ -246,14 +246,14 @@ async function handleClaimSubmit(e) {
 
 
     const success = await supabaseUpsert('claims', newClaim);
-    hideLoading();
 
     if (success) {
+        showSuccess('CLAIM SUBMITTED - AWAITING REVIEW');
 
         window.claims.unshift(newClaim);
         await syncFromSupabase();
 
-        setStatusMessage('claimStatus', 'CLAIM DATA RECEIVED - AWAITING VERIFICATION', false);
+        setStatusMessage('claimStatus', 'AWAITING VERIFICATION', false);
         e.target.reset();
 
 
@@ -277,7 +277,7 @@ async function handleClaimSubmit(e) {
             item ? item.title : "Reported Item"
         );
     } else {
-
+        hideLoading();
         setStatusMessage('claimStatus', 'FAILED TO SUBMIT CLAIM - PLEASE TRY AGAIN', true);
     }
 }
