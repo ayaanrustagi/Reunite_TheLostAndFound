@@ -125,7 +125,6 @@ function initHeroRotation() {
         "WHERE DID IT GO",
         "LOST AN ITEM",
         "CAN'T FIND IT",
-        "MISSING BELONGINGS"
     ];
     const subs = [
         "REUNITE YOUR WORLD FASTER",

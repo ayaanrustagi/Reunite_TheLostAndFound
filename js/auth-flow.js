@@ -389,12 +389,7 @@ async function verifyOTP() {
 
             if (fetchError) throw fetchError;
 
-
-            if (profile.password && profile.password !== password) {
-                status.textContent = "INVALID PASSWORD";
-                status.className = "status-msg error";
-                return;
-            }
+            // OTP Login: Password check skipped as identity is verified via Email OTP
 
             userData = {
                 id: profile.id,
