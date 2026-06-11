@@ -1627,6 +1627,12 @@ select::-ms-expand {
     margin-bottom: 0 !important;
 }
 
+.admin-title-group .label-tech {
+    padding-left: 0;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
 .admin-actions {
     margin-bottom: 0.25rem;
 }
