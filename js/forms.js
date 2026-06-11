@@ -11,7 +11,7 @@ function validateReportForm() {
     let isValid = true;
     const errors = [];
 
-    
+
     const title = document.getElementById('itemTitle').value.trim();
     if (!title) {
         setFieldState('itemTitle', false, 'ITEM TITLE IS REQUIRED');
@@ -58,7 +58,7 @@ function validateReportForm() {
         isValid = false;
     }
 
-    
+
     if (errors.length > 0) {
         const firstErrorField = document.getElementById(
             errors[0] === 'title' ? 'itemTitle' :
@@ -78,17 +78,17 @@ async function handleReportSubmit(e) {
     e.preventDefault();
     const statusEl = document.getElementById('reportStatus');
 
-    
+
     statusEl.textContent = '';
     statusEl.classList.remove('error', 'success');
 
-    
+
     if (!validateReportForm()) {
         setStatusMessage('reportStatus', 'PLEASE FILL ALL REQUIRED FIELDS', true);
         return;
     }
 
-    
+
     showLoading('Submitting report...');
 
     const title = document.getElementById('itemTitle').value.trim();
@@ -121,23 +121,23 @@ async function handleReportSubmit(e) {
         created_by: email
     };
 
-    
+
     const success = await supabaseUpsert('items', newItem);
     hideLoading();
 
     if (success) {
-        
+
         window.items.unshift(newItem);
         await syncFromSupabase();
 
         setStatusMessage('reportStatus', 'REPORT LOGGED SUCCESSFULLY - PENDING REVIEW', false);
 
-        
+
         document.getElementById('reportPhotoPreview').classList.add('hidden');
         document.getElementById('reportItemPhoto').parentElement.classList.remove('has-image');
         e.target.reset();
 
-        
+
         sendEmailUpdate(
             newItem.contact_email,
             newItem.contact_name,
@@ -146,7 +146,7 @@ async function handleReportSubmit(e) {
             newItem.title
         );
     } else {
-        
+
         setStatusMessage('reportStatus', 'FAILED TO SUBMIT REPORT - PLEASE TRY AGAIN', true);
     }
 }
@@ -192,7 +192,7 @@ function validateClaimForm() {
         isValid = false;
     }
 
-    
+
     if (errors.length > 0) {
         const fieldMap = {
             'itemId': 'claimItemId',
@@ -212,17 +212,17 @@ async function handleClaimSubmit(e) {
     e.preventDefault();
     const statusEl = document.getElementById('claimStatus');
 
-    
+
     statusEl.textContent = '';
     statusEl.classList.remove('error', 'success');
 
-    
+
     if (!validateClaimForm()) {
         setStatusMessage('claimStatus', 'PLEASE FILL ALL REQUIRED FIELDS', true);
         return;
     }
 
-    
+
     showLoading('Submitting claim...');
 
     const itemId = document.getElementById('claimItemId').value;
@@ -230,29 +230,33 @@ async function handleClaimSubmit(e) {
     const email = document.getElementById('claimEmail').value.trim();
     const message = document.getElementById('claimMessage').value.trim();
 
+    const preview = document.getElementById('claimPhotoPreview');
+    const photoBase64 = preview.src;
+
     const newClaim = {
         id: "claim_" + Math.random().toString(36).substr(2, 9),
         item_id: itemId,
         claimant_name: name,
         claimant_email: email,
         message,
+        image: (!preview.classList.contains('hidden')) ? photoBase64 : null,
         status: 'pending',
         created_at: new Date().toISOString()
     };
 
-    
+
     const success = await supabaseUpsert('claims', newClaim);
     hideLoading();
 
     if (success) {
-        
+
         window.claims.unshift(newClaim);
         await syncFromSupabase();
 
         setStatusMessage('claimStatus', 'CLAIM DATA RECEIVED - AWAITING VERIFICATION', false);
         e.target.reset();
 
-        
+
         const item = window.items.find(i => i.id === newClaim.item_id);
         if (item && item.contact_email) {
             sendEmailUpdate(
@@ -264,7 +268,7 @@ async function handleClaimSubmit(e) {
             );
         }
 
-        
+
         sendEmailUpdate(
             newClaim.claimant_email,
             newClaim.claimant_name,
@@ -273,7 +277,7 @@ async function handleClaimSubmit(e) {
             item ? item.title : "Reported Item"
         );
     } else {
-        
+
         setStatusMessage('claimStatus', 'FAILED TO SUBMIT CLAIM - PLEASE TRY AGAIN', true);
     }
 }
@@ -326,6 +330,27 @@ function previewFileReport() {
 }
 window.previewFileReport = previewFileReport;
 
+function previewFileClaim() {
+    const fileInput = document.getElementById('claimItemPhoto');
+    const file = fileInput.files[0];
+    const preview = document.getElementById('claimPhotoPreview');
+    const parent = fileInput.parentElement;
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            parent.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.classList.add('hidden');
+        parent.classList.remove('has-image');
+    }
+}
+window.previewFileClaim = previewFileClaim;
+
 async function simulateAiScan() {
     const fileInput = document.getElementById('findItemPhoto');
     const preview = document.getElementById('findPhotoPreview');
@@ -337,7 +362,7 @@ async function simulateAiScan() {
     container.classList.add('active');
     results.innerHTML = '';
 
-    
+
     const scanSteps = [
         { text: "PROCESSING IMAGE...", time: 300 }
     ];
@@ -346,50 +371,50 @@ async function simulateAiScan() {
     for (let step of scanSteps) {
         label.textContent = step.text;
         totalTime += step.time;
-        const p = 100; 
+        const p = 100;
         progress.style.width = p + "%";
         await new Promise(r => setTimeout(r, step.time));
     }
     progress.style.width = "100%";
 
-    
+
     const currentHash16 = await computeDHash(preview, 16);
     const currentHash8 = await computeDHash(preview, 8);
     const currentColor = await getDominantColor(preview);
 
-    
+
     const scoredMatches = window.items
         .filter(it => it.status === 'approved' && it.dhash)
         .map(it => {
-            
+
             let dist = 0;
             let maxDist = 0;
 
             if (it.dhash.length === 256) {
-                
+
                 dist = hammingDistance(currentHash16, it.dhash);
                 maxDist = 256;
             } else {
-                
+
                 dist = hammingDistance(currentHash8, it.dhash);
                 maxDist = 64;
             }
 
             const structScore = Math.max(0, Math.floor(((maxDist - dist) / maxDist) * 100));
 
-            
+
             const colorScore = colorMatchScore(currentColor, it.color);
 
-            
+
             const confidence = Math.floor((structScore * 0.7) + (colorScore * 0.3));
 
             return { ...it, confidence, structScore, colorScore };
         })
         .sort((a, b) => b.confidence - a.confidence)
-        .filter(it => it.confidence > 65) 
+        .filter(it => it.confidence > 65)
         .slice(0, 3);
 
-    
+
     if (scoredMatches.length > 0) {
         results.innerHTML = '<div style="margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted-text);">TOP AI MATCHES FOUND:</div>' +
             scoredMatches.map(m => `
@@ -427,7 +452,7 @@ async function approveItem(id) {
         if (success) {
             await syncFromSupabase();
 
-            
+
             sendEmailUpdate(
                 item.contact_email,
                 item.contact_name,
@@ -448,7 +473,7 @@ async function rejectItem(id) {
         if (success) {
             await syncFromSupabase();
 
-            
+
             sendEmailUpdate(
                 item.contact_email,
                 item.contact_name,
@@ -471,7 +496,7 @@ async function approveClaim(id) {
 
             const item = window.items.find(i => i.id === claim.item_id);
 
-            
+
             sendEmailUpdate(
                 claim.claimant_email,
                 claim.claimant_name,

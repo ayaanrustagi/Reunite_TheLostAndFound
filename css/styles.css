@@ -1622,6 +1622,12 @@ select::-ms-expand {
     margin-bottom: 2rem;
 }
 
+.admin-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
 .admin-title-group h2 {
     padding-left: 0 !important;
     margin-bottom: 0 !important;
@@ -1629,8 +1635,17 @@ select::-ms-expand {
 
 .admin-title-group .label-tech {
     padding-left: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     display: block;
+}
+
+.admin-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .admin-actions {

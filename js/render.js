@@ -105,12 +105,12 @@ function renderFound() {
     const grid = document.getElementById('itemsGrid');
     if (!grid) return;
 
-    
+
     const headerInput = document.getElementById('headerSearchInput');
     const headerSearchVal = headerInput?.value || "";
     const pageSearchVal = document.getElementById('searchFilter')?.value || "";
 
-    
+
     const foundSection = document.getElementById('page-found');
     if (foundSection) {
         const isSearchFocused = document.activeElement === headerInput;
@@ -132,7 +132,7 @@ function renderFound() {
 
     let filtered = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'approved');
 
-    
+
     if (search) {
         const searchTokens = search.split(/\s+/);
         filtered = filtered.filter(item => {
@@ -249,13 +249,13 @@ window.renderDashboard = renderDashboard;
 function renderAdmin() {
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
 
-    
+
     const pending = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');
     const pendingClaims = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'pending');
     const approved = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
     const verified = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
 
-    
+
     const stats = {
         'adminTotalReports': window.items.length,
         'adminPendingApprovals': pending.length,
@@ -272,13 +272,16 @@ function renderAdmin() {
         if (el) el.textContent = val;
     });
 
-    
+
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">
-            <div class="item-info">
-              <div class="ref-code">REF: ${i.id.substring(5, 13).toUpperCase()}</div>
-              <strong>${i.title}</strong>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">📦</div>'}
+              <div class="item-info">
+                <div class="ref-code">REF: ${i.id.substring(5, 13).toUpperCase()}</div>
+                <strong>${i.title}</strong>
+              </div>
             </div>
             <div class="admin-actions-inline">
                 <button onclick="approveItem('${i.id}')" class="btn-sm btn-outline">APPROVE</button>
@@ -292,9 +295,12 @@ function renderAdmin() {
         const item = window.items.find(it => it.id === c.item_id);
         return `
             <div class="list-item">
-                <div class="item-info">
-                  <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
-                  <strong>${item?.title || 'Unknown Item'}</strong>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<img src="${item?.image || ''}" class="admin-thumb" style="opacity: 0.5;" alt="Item">`}
+                  <div class="item-info">
+                    <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
+                    <strong>${item?.title || 'Unknown Item'}</strong>
+                  </div>
                 </div>
                 <button onclick="approveClaim('${c.id}')" class="btn-sm btn-outline">VERIFY</button>
             </div>

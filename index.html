@@ -352,6 +352,20 @@
               aria-describedby="claimMessageError"></textarea>
             <p class="input-error" id="claimMessageError" role="alert"></p>
           </div>
+
+          <!-- Photo Upload for proof -->
+          <div class="input-group">
+            <label>IMAGE PROOF (OPTIONAL)</label>
+            <div class="photo-upload-container">
+              <input type="file" id="claimItemPhoto" accept="image/*" class="file-input" onchange="previewFileClaim()">
+              <div class="upload-placeholder">
+                <span class="upload-icon">📷</span>
+                <span>Upload Proof Photo</span>
+              </div>
+              <img id="claimPhotoPreview" class="photo-preview hidden">
+            </div>
+            <p class="field-hint">Upload a photo of the item, a receipt, or similar proof.</p>
+          </div>
           <button type="submit" class="btn-primary full-width">SUBMIT CLAIM</button>
           <div id="claimStatus" class="status-msg" role="status" aria-live="polite"></div>
         </form>
