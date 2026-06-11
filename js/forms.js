@@ -522,3 +522,51 @@ async function deleteClaim(id) {
     await syncFromSupabase();
 }
 window.deleteClaim = deleteClaim;
+
+// Admin: Request photo from report submitter
+async function requestItemPhoto(id) {
+    const item = window.items.find(i => i.id === id);
+    if (!item) return;
+
+    showLoading('Sending request...');
+
+    try {
+        await sendEmailUpdate(
+            item.contact_email,
+            item.contact_name,
+            "Photo Requested for Your Report",
+            `Our administration team is reviewing your report for "${item.title}" but noticed no photo was attached. To help us verify and approve your report faster, please reply to this email with a clear photo of the item. Thank you!`,
+            item.title
+        );
+        showSuccess('PHOTO REQUEST SENT');
+    } catch (err) {
+        hideLoading();
+        alert('Failed to send email request.');
+    }
+}
+window.requestItemPhoto = requestItemPhoto;
+
+// Admin: Request more details from claimant
+async function requestClaimDetails(id) {
+    const claim = window.claims.find(c => c.id === id);
+    if (!claim) return;
+
+    const item = window.items.find(i => i.id === claim.item_id);
+
+    showLoading('Sending request...');
+
+    try {
+        await sendEmailUpdate(
+            claim.claimant_email,
+            claim.claimant_name,
+            "Additional Details Needed for Your Claim",
+            `Our team is reviewing your claim for "${item?.title || 'the reported item'}". To help us verify your ownership, please reply with additional proof such as: a photo of the item, a receipt, serial numbers, or any unique identifying details. Thank you for your patience!`,
+            item?.title || "Claimed Item"
+        );
+        showSuccess('DETAILS REQUEST SENT');
+    } catch (err) {
+        hideLoading();
+        alert('Failed to send email request.');
+    }
+}
+window.requestClaimDetails = requestClaimDetails;

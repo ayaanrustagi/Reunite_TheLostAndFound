@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.updateAuthUI) window.updateAuthUI();
 
     const emailjs = window.emailjs;
-    if (typeof emailjs !== "undefined" && window.EMAILS_ENABLED) {
-        emailjs.init(window.EMAILJS_PUBLIC_KEY);
+    if (window.emailjs && window.EMAILS_ENABLED && window.EMAILJS_PUBLIC_KEY) {
+        window.emailjs.init(window.EMAILJS_PUBLIC_KEY);
     }
 
     if (window.syncFromSupabase) window.syncFromSupabase();

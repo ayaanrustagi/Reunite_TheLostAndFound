@@ -261,7 +261,9 @@ async function sendOTP() {
     }
 
 
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    generatedOTP = (100000 + (array[0] % 900000)).toString();
 
     const templateParams = {
         to_email: email,
