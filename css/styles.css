@@ -952,14 +952,17 @@ body {
 .split-left {
     flex: 1;
     position: sticky;
-    top: 0;
-    height: 100vh;
+    top: 50%;
+    transform: translateY(-50%);
+    height: auto;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     z-index: 10;
+    padding-left: 2rem;
 }
 
 .split-right {
@@ -975,7 +978,7 @@ body {
 }
 
 .label-tech {
-    padding-left: 1rem;
+    padding-left: 0;
     font-family: var(--font-mono);
     font-size: 1.3rem;
     color: var(--accent-color);
@@ -984,22 +987,17 @@ body {
 
 .preview-title {
     font-size: clamp(4rem, 8vw, 8rem);
-    /* Responsive scaling to fit laptops */
     font-weight: 800;
     line-height: 1;
     margin: 1rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    text-align: left;
 }
 
 .preview-desc {
     font-size: 1.2rem;
     color: var(--muted-text);
-    margin: 0 auto;
     max-width: 500px;
-    text-align: center;
+    text-align: left;
 }
 
 
