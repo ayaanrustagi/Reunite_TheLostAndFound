@@ -6,7 +6,7 @@ A modern, responsive web application for managing lost and found items. Built fo
 
 Reunite is a comprehensive lost & found system designed to help communities reconnect people with their lost belongings. The platform features user authentication, item reporting, AI-powered visual matching, and an admin dashboard for item verification.
 
-##Team
+## Team
 
 - **Developers**: Ayaan Rustagi, Sree Kondapali, Tushaar Singh
 - **School**: Rouse High School
@@ -20,7 +20,8 @@ Reunite is a comprehensive lost & found system designed to help communities reco
 | HTML5 | Structure & Semantics | [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTML) |
 | CSS3 | Styling & Animations | [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS) |
 | JavaScript (ES6+) | Interactivity & Logic | [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript) |
-| Supabase | Backend Database & Auth | [supabase.com](https://supabase.com/docs) |
+| Node.js & Express | Backend API | [expressjs.com](https://expressjs.com/) |
+| MongoDB & Mongoose | Database | [mongodb.com](https://www.mongodb.com/) |
 | EmailJS | Email Notifications | [emailjs.com](https://www.emailjs.com/docs/) |
 | Google Fonts | Typography (Inter, Roboto Mono) | [fonts.google.com](https://fonts.google.com/) |
 
@@ -30,6 +31,11 @@ Reunite is a comprehensive lost & found system designed to help communities reco
 Reunite_TheLostAndFound/
 ├── index.html          # Main HTML file (single-page application)
 ├── login.html          # Authentication page
+├── server.js           # Backend Server Entry Point
+├── backend/            
+│   ├── models/         # MongoDB Models
+│   ├── controllers/    # API Logic
+│   └── routes/         # Express Routes
 ├── css/
 │   ├── styles.css      # Primary stylesheet with responsive design
 │   ├── auth.css        # Combined Auth & Login styles
@@ -42,7 +48,7 @@ Reunite_TheLostAndFound/
 │   ├── forms.js        # Form handling & validation
 │   ├── render.js       # UI rendering logic
 │   ├── state.js        # Global state management
-│   ├── supabase-client.js # Database client wrapper
+│   ├── api-client.js   # API Client Wrapper (Replaces Supabase)
 │   ├── ui.js           # UI interactions & navigation
 │   └── utils.js        # Shared utility functions
 ├── assets/
@@ -53,35 +59,42 @@ Reunite_TheLostAndFound/
 ## Getting Started
 
 ### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Internet connection (for external services)
+- Node.js and npm installed
+- MongoDB installed and running locally (default port 27017) or a MongoDB Atlas URI
 
-### Local Development
-1. Clone or download the repository
-2. Open `index.html` in a web browser
-3. For live server development, use VS Code Live Server extension or:
+### Installation & Setup
+
+1. **Clone or download the repository**
+
+2. **Install Dependencies**
    ```bash
-   npx http-server . -p 5500
+   npm install
    ```
 
-### Configuration (Optional)
-The application uses Supabase for backend services. To configure your own instance:
-
-1. Create a project at [supabase.com](https://supabase.com)
-2. Create the following tables:
-   - `items` - Lost/found item records
-   - `claims` - Item claim submissions
-3. Update the configuration in `script.js`:
-   ```JavaScript
-   window.SUPABASE_URL = "your-project-url";
-   window.SUPABASE_ANON_KEY = "your-anon-key";
+3. **Configure Environment**
+   The project includes a `.env` file. Ensure `MONGO_URI` points to your MongoDB instance.
    ```
+   MONGO_URI=mongodb://localhost:27017/reunite
+   PORT=3000
+   ```
+
+4. **Start the Server**
+   ```bash
+   node server.js
+   ```
+   The backend will start on http://localhost:3000.
+
+5. **Open the Application**
+   Open your browser and navigate to:
+   http://localhost:3000
+
+   (The server serves the static frontend files automatically).
 
 ## Features
 
 ### For Users
--**Report Items** - Submit detailed lost/found item reports with photos
--**Search & Filter** - Find items by keyword, category, location
+- **Report Items** - Submit detailed lost/found item reports with photos
+- **Search & Filter** - Find items by keyword, category, location
 - **AI Visual Matching** - Upload a photo to find matching items
 - **Email Notifications** - Get updates when items are claimed or verified
 - **Personal Dashboard** - Track your reports and claims
@@ -92,54 +105,19 @@ The application uses Supabase for backend services. To configure your own instan
 - **Audit Log** - Track all system activities
 - **User Management** - Manage user access levels
 
-## Accessibility Features
-
-- Skip navigation link for keyboard users
-- ARIA labels on interactive elements
-- Screen reader compatible structure
-- High contrast color scheme
-- Keyboard navigable forms and menus
-- Focus indicators on all interactive elements
-
-## 📱 Responsive Design
-
-The application is fully responsive across:
-- Desktop (1200px+)
-- Laptop (1024px)
-- Tablet (768px)
-- Mobile (480px and below)
-
 ## Security Considerations
 
 ### Current Implementation
-- Client-side form validation
+- Server-side API with MongoDB
 - Session management via localStorage
-- Admin access requires a separate access code
+- Admin access with role-based checks
 
 ### Production Recommendations
-For production deployment, consider:
-- Moving sensitive credentials to environment variables
-- Implementing server-side validation
-- Using Supabase Row Level Security (RLS)
-- Adding rate limiting on form submissions
-- Implementing CAPTCHA for public forms
-
-## Credits & Attributions
-
-### External Libraries
-- **Supabase JS Client** v2.39.7 - [MIT License](https://github.com/supabase/supabase-js/blob/master/LICENSE)
-- **EmailJS Browser** v3 - [MIT License](https://github.com/nicebuzzer/emailjs-sdk/blob/master/LICENSE)
-
-### Fonts
-- **Inter** by Rasmus Andersson - [Open Font License](https://fonts.google.com/specimen/Inter)
-- **Roboto Mono** by Christian Robertson - [Apache License 2.0](https://fonts.google.com/specimen/Roboto+Mono)
-
-### Design Resources
-- Grainy gradient texture from [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/)
-- Custom logo designed for the Reunite project
+- Use HTTPS
+- Implement JWT for stateful authentication
+- Use Environment Variables for all secrets (already implemented)
+- Enable MongoDB Auth
 
 ## License
 
 This project was created for the FBLA Website Coding & Development competition. 
-
-

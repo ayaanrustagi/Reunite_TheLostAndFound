@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
-    if (window.initializeSupabase) window.initializeSupabase();
+
     loadAll();
     loadSession();
     if (window.updateAuthUI) window.updateAuthUI();

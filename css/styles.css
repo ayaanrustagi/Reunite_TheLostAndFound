@@ -1375,7 +1375,7 @@ select::-ms-expand {
 
 
 .card-image-wrap {
-    width: 100%;
+    width: auto;
     height: 180px;
     background: var(--bg-color);
     border-bottom: 1px solid var(--border-color);

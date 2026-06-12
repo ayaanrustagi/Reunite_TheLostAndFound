@@ -1,9 +1,4 @@
 
-
-const SUPABASE_URL = window.SUPABASE_URL || "https://izoyxyekflrnyheuxppk.supabase.co";
-const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
-
-
 const EMAILJS_SERVICE_ID = window.EMAILJS_SERVICE_ID || "service_gpf5o4g";
 const EMAILJS_OTP_TEMPLATE_ID = "template_35ebnrp";
 const EMAILJS_PUBLIC_KEY = window.EMAILJS_PUBLIC_KEY || "vQdFZ_3TQhMLDP1z3";
@@ -136,48 +131,22 @@ async function loginWithPassword() {
     status.className = "status-msg";
     submitBtn.disabled = true;
 
-    const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     try {
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('email', email)
-            .single();
+        const user = await window.apiLogin(email, password);
 
-        if (error || !profile) {
-            status.textContent = "ACCOUNT NOT FOUND";
-            status.className = "status-msg error";
-            submitBtn.disabled = false;
-            return;
-        }
-
-        if (profile.password !== password) {
-            status.textContent = "INVALID PASSWORD";
-            status.className = "status-msg error";
-            submitBtn.disabled = false;
-            return;
-        }
-
-        const userData = {
-            id: profile.id,
-            email: profile.email,
-            name: profile.full_name || profile.name || profile.email.split('@')[0],
-            role: profile.role || 'student'
-        };
-
-        localStorage.setItem("reunite_session", JSON.stringify(userData));
+        localStorage.setItem("reunite_session", JSON.stringify(user));
 
         status.textContent = "ACCESS GRANTED. REDIRECTING...";
         status.className = "status-msg success";
 
         setTimeout(() => {
-            window.location.href = "index.html";
+            const target = user.role === 'admin' ? 'admin' : 'dashboard';
+            window.location.href = `index.html#${target}`;
         }, 1000);
 
     } catch (err) {
         console.error("Login Error:", err);
-        status.textContent = "DATABASE ERROR";
+        status.textContent = (err.error || "LOGIN FAILED").toUpperCase();
         status.className = "status-msg error";
         submitBtn.disabled = false;
     }
@@ -225,21 +194,9 @@ async function sendOTP() {
     status.className = "status-msg";
     submitBtn.disabled = true;
 
-
-
-    const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     try {
-
-        const { data: existingUser, error: queryError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('email', email)
-            .maybeSingle();
-
-        if (queryError && queryError.code !== 'PGRST116') {
-            console.error("Supabase Query Error:", queryError);
-        }
+        // Check if user exists using API
+        const existingUser = await window.apiGetProfile(email);
 
         if (authMode === 'signup' && existingUser) {
             status.textContent = "ACCOUNT ALREADY EXISTS. PLEASE SIGN IN.";
@@ -258,6 +215,7 @@ async function sendOTP() {
         status.textContent = "Sending verification code...";
     } catch (err) {
         console.error("Critical Auth Check Error:", err);
+        // Continue? No, better safe than sorry
     }
 
 
@@ -354,53 +312,28 @@ async function verifyOTP() {
         status.className = "status-msg";
     }
 
-    const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     try {
         let userData = null;
 
         if (authMode === 'signup') {
             const newId = 'user_' + Math.random().toString(36).substr(2, 9);
-
-
             const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
             const userRole = isAdminChecked ? 'admin' : 'student';
 
-            userData = {
+            userData = await window.apiRegister({
                 id: newId,
                 email: email,
                 full_name: name || email.split('@')[0],
                 password: password,
-                role: userRole,
-                created_at: new Date().toISOString()
-            };
+                role: userRole
+            });
 
-
-            const { error: insertError } = await supabase
-                .from('profiles')
-                .insert([userData]);
-
-            if (insertError) throw insertError;
         } else {
-
-            const { data: profile, error: fetchError } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('email', email)
-                .single();
-
-            if (fetchError) throw fetchError;
-
-            // OTP Login: Password check skipped as identity is verified via Email OTP
-
-            userData = {
-                id: profile.id,
-                email: profile.email,
-                name: profile.full_name || profile.name || profile.email.split('@')[0],
-                role: profile.role || 'student'
-            };
+            // OTP Login: Password check skipped as identity is verified via Email OTP - just get profile
+            userData = await window.apiGetProfile(email);
         }
 
+        if (!userData) throw new Error("Could not retrieve user profile.");
 
         localStorage.setItem("reunite_session", JSON.stringify(userData));
 
@@ -410,13 +343,14 @@ async function verifyOTP() {
         }
 
         setTimeout(() => {
-            window.location.href = "index.html";
+            const target = userData.role === 'admin' ? 'admin' : 'dashboard';
+            window.location.href = `index.html#${target}`;
         }, 1200);
 
     } catch (err) {
-        console.error("Verification/DB Error:", err);
+        console.error("Verification/API Error:", err);
         if (status) {
-            status.textContent = "DATABASE ERROR: " + (err.message || "COULD NOT SYNC PROFILE").toUpperCase();
+            status.textContent = "API ERROR: " + (err.message || err.error || "COULD NOT SYNC PROFILE").toUpperCase();
             status.className = "status-msg error";
         }
     }
@@ -425,10 +359,6 @@ window.verifyOTP = verifyOTP;
 
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    if (window.initializeSupabase) window.initializeSupabase();
-
-
     const emailjs = window.emailjs;
     if (typeof emailjs !== "undefined") {
         emailjs.init(EMAILJS_PUBLIC_KEY);

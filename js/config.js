@@ -1,6 +1,4 @@
 
-window.SUPABASE_URL = "https://izoyxyekflrnyheuxppk.supabase.co";
-window.SUPABASE_ANON_KEY = "sb_publishable_YHpGZHSw6XfnoC3Kg4QplQ_Wz5Hp3hw";
 window.DEMO_MODE = false;
 
 window.ADMIN_ACCESS_CODE = "FBLA2025";

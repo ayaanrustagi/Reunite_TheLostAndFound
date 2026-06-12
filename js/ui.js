@@ -284,3 +284,55 @@ function handleSplitScroll() {
 }
 
 window.handleSplitScroll = handleSplitScroll;
+
+
+function updateAuthUI() {
+    const loginBtn = document.getElementById('loginBtn');
+    const dashboardBtn = document.getElementById('dashboardBtn');
+    const adminBtn = document.getElementById('adminBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+    const mobileDashboardBtn = document.getElementById('mobileDashboardBtn');
+    const mobileAdminBtn = document.getElementById('mobileAdminBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+    if (!loginBtn || !dashboardBtn || !adminBtn || !logoutBtn) return;
+
+    if (window.currentUser) {
+        loginBtn.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        if (mobileLoginBtn) mobileLoginBtn.classList.add('hidden');
+        if (mobileLogoutBtn) mobileLogoutBtn.classList.remove('hidden');
+
+        if (window.currentUser.role === 'admin') {
+            adminBtn.classList.remove('hidden');
+            dashboardBtn.classList.add('hidden');
+            if (mobileAdminBtn) mobileAdminBtn.classList.remove('hidden');
+            if (mobileDashboardBtn) mobileDashboardBtn.classList.add('hidden');
+        } else {
+            dashboardBtn.classList.remove('hidden');
+            adminBtn.classList.add('hidden');
+            if (mobileDashboardBtn) mobileDashboardBtn.classList.remove('hidden');
+            if (mobileAdminBtn) mobileAdminBtn.classList.add('hidden');
+        }
+    } else {
+        loginBtn.classList.remove('hidden');
+        dashboardBtn.classList.add('hidden');
+        adminBtn.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+        if (mobileLoginBtn) mobileLoginBtn.classList.remove('hidden');
+        if (mobileDashboardBtn) mobileDashboardBtn.classList.add('hidden');
+        if (mobileAdminBtn) mobileAdminBtn.classList.add('hidden');
+        if (mobileLogoutBtn) mobileLogoutBtn.classList.add('hidden');
+    }
+}
+window.updateAuthUI = updateAuthUI;
+
+function handleLogout() {
+    localStorage.removeItem("reunite_session");
+    window.currentUser = null;
+    if (window.updateAuthUI) window.updateAuthUI();
+    if (window.navigateToSection) window.navigateToSection('hero');
+}
+window.handleLogout = handleLogout;

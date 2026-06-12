@@ -165,16 +165,14 @@ function renderFound() {
     }
 
     grid.innerHTML = filtered.map(item => `
-        <button class="item-card" onclick="openItemModal('${item.id}')" style="contain: content;" type="button" aria-label="View details for ${item.title}">
+        <button class="item-card" onclick="openItemModal('${item.id}')" type="button" aria-label="View details for ${item.title}">
             ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" loading="lazy"></div>` : ''}
-            <div class="card-content-wrap">
-              <div class="card-meta">${item.category} / FOUND ${new Date(item.date_found).toLocaleDateString()}</div>
-              <h3 class="card-title">${item.title}</h3>
-              <p class="card-desc">${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}</p>
-              <div class="card-footer">
-                  <span>${item.location}</span>
-                  <span>ID: ${item.id.substring(0, 8)}</span>
-              </div>
+            <div class="card-meta">${item.category} / FOUND ${new Date(item.date_found).toLocaleDateString()}</div>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}</p>
+            <div class="card-footer">
+                <span>${item.location}</span>
+                <span>ID: ${item.id.substring(0, 8)}</span>
             </div>
         </button>
     `).join('');
@@ -205,7 +203,7 @@ function renderDashboard() {
     const myReports = window.items.filter(i => i.contact_email === window.currentUser.email);
     const myClaims = window.claims.filter(c => c.claimant_email === window.currentUser.email);
 
-    if (userNameEl) userNameEl.textContent = window.currentUser.name;
+    if (userNameEl) userNameEl.textContent = window.currentUser.full_name || window.currentUser.name || "User";
     if (countActiveReportsEl) countActiveReportsEl.textContent = myReports.length;
     if (repCountEl) repCountEl.textContent = myReports.length;
     if (countPendingClaimsEl) countPendingClaimsEl.textContent = myClaims.filter(c => c.status === 'pending').length;
