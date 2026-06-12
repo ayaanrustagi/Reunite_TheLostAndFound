@@ -30,6 +30,42 @@
     --shadow-medium: 0 15px 45px rgba(0, 0, 0, 0.1);
 }
 
+/* Accessibility & Structure Buttons */
+button.logo-area,
+button.scroll-indicator,
+button.persistent-trigger,
+button.item-card,
+button.ai-match-item,
+button.action-card {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: inherit;
+    display: block;
+    width: 100%;
+}
+
+button.logo-area {
+    width: auto;
+    display: flex;
+    align-items: center;
+}
+
+button.scroll-indicator {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+button.persistent-trigger {
+    width: auto;
+}
+
+
 /* Activity Feed Styles */
 .activity-feed {
     display: flex;
@@ -998,7 +1034,7 @@ body {
     font-size: 1.3rem;
     color: var(--accent-color);
     display: block;
-    text-align: center;
+    text-align: left;
 }
 
 .preview-title {
@@ -2307,6 +2343,8 @@ select::-ms-expand {
 /* TABLET BREAKPOINT (max-width: 1024px) - Unified header collapse */
 @media (max-width: 1024px) {
 
+    /* 1. HEADER & NAV fixes */
+
     /* Show hamburger menu on tablets */
     .menu-toggle {
         display: flex;
@@ -2316,14 +2354,17 @@ select::-ms-expand {
     .header-inner {
         padding: 0.85rem 1.25rem;
         gap: 0.75rem;
+        justify-content: space-between;
     }
 
     .logo-area {
         order: 1;
-        margin-right: auto;
+        margin-right: 0;
+        /* Remove auto margin to allow centering or space-between */
+        flex-shrink: 0;
     }
 
-    /* Hide main nav and search consistently at this breakpoint */
+    /* Move Nav to Drawer */
     .main-nav {
         display: none;
         position: fixed;
@@ -2347,35 +2388,142 @@ select::-ms-expand {
     }
 
     .nav-btn {
-        font-size: 1rem;
-        padding: 0.85rem 1.5rem;
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
         width: 100%;
-        max-width: 320px;
+        max-width: 340px;
         text-align: center;
         border: 1px solid var(--border-color);
         background: var(--panel-bg);
-        border-radius: 4px;
+        border-radius: 8px;
     }
 
-    .nav-btn:hover,
-    .nav-btn.active {
+    /* Hide Desktop Search & Actions on Tablet to prevent clutter */
+    .header-search-wrap,
+    .header-actions {
+        display: none !important;
+    }
+
+    /* Ensure mobile nav actions appear in the menu drawer */
+    .mobile-nav-actions {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: 340px;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .mobile-nav-actions .nav-btn {
         background: var(--text-color);
         color: #fff;
+        border-color: var(--text-color);
     }
 
-    /* Hide search bar on tablet header */
-    .header-search-wrap {
+    /* 2. LAYOUT FIXES (Overflow & Spacing) */
+
+    #main-container {
+        padding-top: 5rem;
+        overflow-x: hidden;
+        /* Critical for tablet overflow */
+    }
+
+    .hero-centered-content {
+        min-height: 80vh;
+        /* Reduce from 100vh so it doesn't feel endless */
+        padding-top: 2rem;
+    }
+
+    .hero-content-glass {
+        width: 90%;
+        /* Prevent touching edges */
+        max-width: 700px;
+        padding: 3rem 2rem;
+    }
+
+    .hero-display-text {
+        font-size: clamp(3.5rem, 11vw, 6rem);
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+    }
+
+    .hero-display-text .sub-hero {
+        font-size: 1.25rem;
+        margin-top: 1rem;
+        opacity: 0.9;
+    }
+
+    /* 3. HOW IT WORKS - Fix Huge Cards */
+
+    .split-layout {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .split-left {
+        position: relative;
+        height: auto;
+        padding: 3rem 1rem 1rem;
+        background: transparent;
+        margin-bottom: 0;
+    }
+
+    .preview-title {
+        font-size: 3rem;
+        margin: 0.5rem 0;
+    }
+
+    /* Hide redundant preview on tablet (same as mobile) */
+    .step-preview {
         display: none;
     }
 
-    .header-actions {
-        order: 2;
-        gap: 0.75rem;
+    /* Use the Horizontal Scroll Layout (like mobile) for Tablets too */
+    .split-right {
+        padding: 1rem 0 4rem;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 1.5rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .btn-sm {
-        padding: 0.45rem 0.9rem;
-        font-size: 0.7rem;
+    .step-item {
+        flex: 0 0 60vw;
+        /* visible next card */
+        max-width: 500px;
+        min-height: 350px;
+        /* Reduce height */
+        padding: 2.5rem 2rem;
+        margin: 0;
+        scroll-snap-align: center;
+        transform: none !important;
+        /* Disable the scroll transform effect which assumes vertical */
+        opacity: 1 !important;
+    }
+
+    /* Hide the huge background number on smaller screens as it causes clutter */
+    .step-item::after {
+        font-size: 15rem;
+        top: 60%;
+    }
+
+    .scroll-hint {
+        display: none;
+        /* Hide 'scroll to explore' as it's now 'swipe' */
+    }
+
+    /* Adjust scroll indicator for tablet height */
+    .scroll-indicator {
+        bottom: 2rem;
+        transform: translateX(-50%) scale(0.9);
     }
 }
 
@@ -2959,7 +3107,6 @@ select::-ms-expand {
     }
 }
 
-/* Scroll Indicator */
 .scroll-indicator {
     position: absolute;
     bottom: 3.5rem;
@@ -2973,24 +3120,12 @@ select::-ms-expand {
     z-index: 10;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     opacity: 0.8;
+    animation: bounceTotal 2s infinite;
 }
 
-@media (max-width: 768px) {
-    .scroll-indicator {
-        display: flex;
-        position: relative;
-        bottom: auto;
-        left: auto;
-        transform: none;
-        margin-top: 3rem;
-        margin-bottom: 2rem;
-        width: 100%;
-        animation: bounceMobile 2s infinite;
-    }
-
-    .scroll-indicator::after {
-        display: none;
-    }
+.scroll-indicator:hover {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
 }
 
 /* Base Bounce (Desktop) - Includes centering */
@@ -3031,16 +3166,6 @@ select::-ms-expand {
     60% {
         transform: translateY(-5px) scale(0.9);
     }
-}
-
-.scroll-indicator {
-    /* Existing styles plus bounce */
-    animation: bounceTotal 2s infinite;
-}
-
-.scroll-indicator:hover {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-5px);
 }
 
 .scroll-text {
@@ -3237,4 +3362,121 @@ select::-ms-expand {
     }
 
 
+    .scroll-indicator {
+        display: flex;
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+        width: 100%;
+        animation: bounceMobile 2s infinite;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .scroll-indicator:hover {
+        transform: translateY(-5px);
+    }
+
+    .scroll-indicator::after {
+        display: none;
+    }
+}
+
+/* AI Match Results */
+.ai-results-header {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--muted-text);
+}
+
+.ai-match-item {
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+}
+
+.ai-match-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.ai-match-thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.ai-match-thumb-placeholder {
+    width: 48px;
+    height: 48px;
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.ai-match-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ai-match-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.ai-match-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.25rem;
+}
+
+.ai-confidence-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    background: rgba(0, 106, 255, 0.1);
+    color: var(--accent-color);
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.ai-color-match {
+    font-size: 0.65rem;
+    color: var(--muted-text);
+}
+
+.ai-match-arrow {
+    color: var(--muted-text);
+}
+
+.ai-no-match {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted-text);
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.ai-no-match-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.ai-no-match-title {
+    font-weight: 500;
+}
+
+.ai-no-match-hint {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
 }

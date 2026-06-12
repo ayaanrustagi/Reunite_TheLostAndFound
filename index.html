@@ -36,10 +36,10 @@
   <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
-      <div class="logo-area" onclick="navigateToSection('hero')">
+      <button class="logo-area" onclick="navigateToSection('hero')" type="button" aria-label="Go to Hero Section">
         <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
-      </div>
+      </button>
 
       <button class="menu-toggle" aria-label="Toggle Menu">
         <span></span>
@@ -86,11 +86,11 @@
   </header>
 
   <!-- Floating Menu Trigger (appears when header hides) -->
-  <div class="persistent-trigger" onclick="showHeader()">
+  <button class="persistent-trigger" onclick="showHeader()" type="button" aria-label="Show Header">
     <span></span>
     <span></span>
     <span></span>
-  </div>
+  </button>
 
   <!-- Main Content Area -->
   <main id="main-container">
@@ -121,13 +121,14 @@
         </div>
 
         <!-- Scroll Indicator moved inside relative container -->
-        <div class="scroll-indicator"
-          onclick="document.getElementById('how-content-area').scrollIntoView({ behavior: 'smooth' })">
+        <button class="scroll-indicator"
+          onclick="document.getElementById('how-content-area').scrollIntoView({ behavior: 'smooth' })" type="button"
+          aria-label="Scroll down">
           <span class="scroll-text">Scroll for how it works</span>
           <div class="scroll-mouse">
             <div class="scroll-wheel"></div>
           </div>
-        </div>
+        </button>
       </div>
 
       <!-- MERGED HOW IT WORKS -->
@@ -421,13 +422,14 @@
             </div>
 
             <!-- Quick Action / New -->
-            <div class="bento-card card-small-span action-card" onclick="navigateToSection('report')">
+            <button class="bento-card card-small-span action-card" onclick="navigateToSection('report')" type="button"
+              aria-label="Create New Report">
               <div class="action-content">
                 <span class="action-label">INITIATE</span>
                 <h3>NEW<br>REPORT</h3>
                 <div class="action-icon">+</div>
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>

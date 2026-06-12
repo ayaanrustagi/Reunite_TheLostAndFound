@@ -416,28 +416,28 @@ async function simulateAiScan() {
 
 
     if (scoredMatches.length > 0) {
-        results.innerHTML = '<div style="margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted-text);">TOP AI MATCHES FOUND:</div>' +
+        results.innerHTML = '<div class="ai-results-header">TOP AI MATCHES FOUND:</div>' +
             scoredMatches.map(m => `
-                <div class="list-item start-hidden" onclick="openItemModal('${m.id}')" style="cursor: pointer; margin-bottom: 0.75rem;">
-                    <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
-                        ${m.image ? `<img src="${m.image}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);">` : '<div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 4px;"></div>'}
-                        <div>
-                            <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-color);">${m.title}</div>
-                            <div style="display: flex; gap: 1rem; margin-top: 0.25rem;">
-                                <span style="font-size: 0.65rem; padding: 2px 6px; background: rgba(0, 106, 255, 0.1); color: var(--accent-color); border-radius: 3px; font-weight: 600;">${m.confidence}% MATCH</span>
-                                <span style="font-size: 0.65rem; color: var(--muted-text);">Color Match: ${Math.round(m.colorScore)}%</span>
+                <button class="list-item start-hidden ai-match-item" onclick="openItemModal('${m.id}')" type="button" aria-label="View details for ${m.title}">
+                    <div class="ai-match-content">
+                        ${m.image ? `<img src="${m.image}" class="ai-match-thumb" alt="${m.title}">` : '<div class="ai-match-thumb-placeholder"></div>'}
+                        <div class="ai-match-info">
+                            <div class="ai-match-title">${m.title}</div>
+                            <div class="ai-match-meta">
+                                <span class="ai-confidence-badge">${m.confidence}% MATCH</span>
+                                <span class="ai-color-match">Color Match: ${Math.round(m.colorScore)}%</span>
                             </div>
                         </div>
                     </div>
-                    <div style="color: var(--muted-text);">→</div>
-                </div>
+                    <div class="ai-match-arrow">→</div>
+                </button>
             `).join('');
     } else {
         results.innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: var(--muted-text); background: rgba(0,0,0,0.02); border-radius: 6px; margin-top: 1rem;">
-                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
-                <div style="font-weight: 500;">No high-confidence matches found.</div>
-                <div style="font-size: 0.8rem; margin-top: 0.25rem;">Try adjusting the lighting or angle and scan again.</div>
+            <div class="ai-no-match">
+                <div class="ai-no-match-icon">🔍</div>
+                <div class="ai-no-match-title">No high-confidence matches found.</div>
+                <div class="ai-no-match-hint">Try adjusting the lighting or angle and scan again.</div>
             </div>`;
     }
 }

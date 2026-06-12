@@ -165,7 +165,7 @@ function renderFound() {
     }
 
     grid.innerHTML = filtered.map(item => `
-        <div class="item-card" onclick="openItemModal('${item.id}')" style="contain: content;">
+        <button class="item-card" onclick="openItemModal('${item.id}')" style="contain: content;" type="button" aria-label="View details for ${item.title}">
             ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" loading="lazy"></div>` : ''}
             <div class="card-content-wrap">
               <div class="card-meta">${item.category} / FOUND ${new Date(item.date_found).toLocaleDateString()}</div>
@@ -176,7 +176,7 @@ function renderFound() {
                   <span>ID: ${item.id.substring(0, 8)}</span>
               </div>
             </div>
-        </div>
+        </button>
     `).join('');
 }
 window.renderFound = renderFound;
