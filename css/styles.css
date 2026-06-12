@@ -952,17 +952,16 @@ body {
 .split-left {
     flex: 1;
     position: sticky;
-    top: 50%;
-    transform: translateY(-50%);
-    height: auto;
-    max-height: 100vh;
+    top: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     text-align: left;
     z-index: 10;
-    padding-left: 2rem;
+    padding-left: 5vw;
+    /* Respect left positioning better */
 }
 
 .split-right {
