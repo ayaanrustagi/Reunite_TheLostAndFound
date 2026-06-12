@@ -70,7 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const howSection = document.getElementById('how-content-area');
     if (howSection && window.handleSplitScroll) {
         window.addEventListener('scroll', window.handleSplitScroll);
+
+        // Also listen to horizontal scroll on mobile
+        const splitRight = howSection.querySelector('.split-right');
+        if (splitRight) {
+            splitRight.addEventListener('scroll', window.handleSplitScroll);
+        }
     }
+
 
     document.getElementById('reportForm')?.addEventListener('submit', window.handleReportSubmit);
     document.getElementById('claimForm')?.addEventListener('submit', window.handleClaimSubmit);

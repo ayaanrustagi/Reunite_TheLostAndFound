@@ -204,12 +204,12 @@ window.navigateToHow = navigateToHow;
 
 function handleSplitScroll() {
     const section = document.getElementById('how-content-area');
-
     if (!section) return;
 
     const stepItems = document.querySelectorAll('.step-item');
     const previewTitle = document.getElementById('preview-title');
     const previewDesc = document.getElementById('preview-desc');
+    const isMobile = window.innerWidth <= 1024;
 
     const stepData = [
         { title: "REPORT", desc: "Submit a detailed report with optional imagery." },
@@ -218,14 +218,23 @@ function handleSplitScroll() {
     ];
 
     let currentStep = 0;
-
-    // Determine current active step
     let minDiff = Infinity;
+
     stepItems.forEach((item, index) => {
         const rect = item.getBoundingClientRect();
-        const center = rect.top + (rect.height / 2);
-        const target = window.innerHeight * 0.5;
-        const diff = Math.abs(center - target);
+        let diff;
+
+        if (isMobile) {
+            // Check horizontal center on mobile
+            const center = rect.left + (rect.width / 2);
+            const target = window.innerWidth * 0.5;
+            diff = Math.abs(center - target);
+        } else {
+            // Check vertical center on desktop
+            const center = rect.top + (rect.height / 2);
+            const target = window.innerHeight * 0.5;
+            diff = Math.abs(center - target);
+        }
 
         if (diff < minDiff) {
             minDiff = diff;
@@ -233,7 +242,7 @@ function handleSplitScroll() {
         }
     });
 
-    // Update Step Items Opacity/Active state
+    // Update Step Items Active state
     stepItems.forEach((item, index) => {
         if (index === currentStep) {
             item.classList.add('active');
@@ -243,37 +252,35 @@ function handleSplitScroll() {
     });
 
     // Update sticky preview on desktop ONLY
-    if (window.innerWidth > 1024) {
+    if (!isMobile) {
         if (previewTitle && stepData[currentStep]) {
             if (previewTitle.dataset.current !== stepData[currentStep].title) {
                 previewTitle.textContent = stepData[currentStep].title;
                 previewDesc.textContent = stepData[currentStep].desc;
                 previewTitle.dataset.current = stepData[currentStep].title;
 
-                // Add a small re-trigger animation class
                 previewTitle.style.animation = 'none';
                 void previewTitle.offsetWidth;
                 previewTitle.style.animation = 'textFadeIn 0.5s ease forwards';
+
+                previewDesc.style.animation = 'none';
+                void previewDesc.offsetWidth;
+                previewDesc.style.animation = 'textFadeIn 0.5s ease forwards 0.1s';
             }
         }
     }
 
-
     const hint = section.querySelector('.scroll-hint');
     if (hint) {
         const sectionRect = section.getBoundingClientRect();
-
-
-
-
         const triggerPoint = window.innerHeight * 0.5;
         if (sectionRect.top < triggerPoint) {
             const opacity = Math.max(0, (sectionRect.top + 200) / (triggerPoint + 200));
-
             hint.style.opacity = sectionRect.top < 0 ? '0' : opacity.toFixed(2);
         } else {
             hint.style.opacity = '1';
         }
     }
 }
+
 window.handleSplitScroll = handleSplitScroll;

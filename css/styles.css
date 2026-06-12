@@ -405,6 +405,18 @@ body {
     min-width: 140px;
 }
 
+@media (max-width: 1024px) {
+    .header-search-wrap {
+        width: 160px;
+        margin-right: 0.5rem;
+    }
+
+    .header-search-wrap:focus-within {
+        width: 200px;
+    }
+}
+
+
 .header-search-wrap:focus-within {
     background: var(--panel-bg);
     border-color: var(--accent-color);
@@ -563,6 +575,13 @@ body {
     min-height: calc(100vh - 5rem);
     padding: 3rem 2rem;
 }
+
+@media (max-width: 768px) {
+    .view-section {
+        padding: 1.5rem 1rem;
+    }
+}
+
 
 .view-section.active {
     display: block;
@@ -957,11 +976,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
     z-index: 10;
-    padding-left: 5vw;
-    /* Respect left positioning better */
 }
 
 .split-right {
@@ -973,31 +990,37 @@ body {
 
 .step-preview {
     max-width: 600px;
-    padding: 0 2rem;
+    padding: 0;
 }
 
 .label-tech {
-    padding-left: 0;
     font-family: var(--font-mono);
     font-size: 1.3rem;
     color: var(--accent-color);
     display: block;
+    text-align: center;
 }
 
 .preview-title {
-    font-size: clamp(4rem, 8vw, 8rem);
+    font-size: clamp(3rem, 7vw, 6rem);
     font-weight: 800;
-    line-height: 1;
-    margin: 1rem 0;
-    text-align: left;
+    line-height: 1.1;
+    margin: 1.5rem 0 1.5rem 0;
+    text-align: center;
+    color: var(--text-color);
+    letter-spacing: -0.02em;
 }
 
 .preview-desc {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
     color: var(--muted-text);
-    max-width: 500px;
-    text-align: left;
+    max-width: 480px;
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin: 0 auto;
 }
+
 
 
 .step-item {
@@ -1063,18 +1086,18 @@ body {
 /* Scroll Hint */
 .scroll-hint {
     position: relative;
-    margin-top: 2rem;
-    left: auto;
-    bottom: auto;
-    /* Reset */
-    transform: none;
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
     gap: 1.5rem;
     pointer-events: none;
     transition: opacity 0.5s ease;
 }
+
 
 .hint-text {
     font-family: var(--font-mono);
@@ -1133,15 +1156,16 @@ body {
 .section-head h2,
 .section-centered h2,
 .centered-small h2 {
-    padding-left: 1rem;
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
     font-weight: 800;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-color);
     margin-bottom: 0.5rem;
     position: relative;
+    line-height: 1.2;
 }
+
 
 .section-centered {
     max-width: 800px;
@@ -1154,6 +1178,15 @@ body {
     gap: 1.5rem;
     margin-bottom: 2.5rem;
 }
+
+@media (max-width: 768px) {
+    .filter-ui {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
 
 .filter-meta {
     display: flex;
@@ -1297,6 +1330,14 @@ select::-ms-expand {
     gap: 1.5rem;
 }
 
+@media (max-width: 600px) {
+    .grid-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+
 .card-image-wrap {
     width: 100%;
     height: 180px;
@@ -1412,6 +1453,14 @@ select::-ms-expand {
     box-shadow: var(--shadow-soft);
 }
 
+@media (max-width: 768px) {
+    .tech-form {
+        padding: 1.25rem;
+        gap: 1rem;
+    }
+}
+
+
 .section-divider {
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -1428,6 +1477,14 @@ select::-ms-expand {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 }
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
 
 .input-group {
     display: flex;
@@ -2138,7 +2195,8 @@ select::-ms-expand {
         backdrop-filter: blur(30px) saturate(150%);
         -webkit-backdrop-filter: blur(30px) saturate(150%);
         border: 1px solid rgba(255, 255, 255, 0.6);
-        padding: 5rem 1.5rem;
+        padding: 3rem 1.5rem;
+        /* More compact */
         border-radius: 40px;
         margin: 0 1rem;
         width: calc(100% - 2rem);
@@ -2146,6 +2204,7 @@ select::-ms-expand {
             0 30px 60px rgba(0, 0, 0, 0.06),
             inset 0 0 0 1px rgba(255, 255, 255, 0.4);
     }
+
 
     .hero-wrapper {
         margin: 0;
@@ -2206,9 +2265,11 @@ select::-ms-expand {
     }
 
     .preview-title {
-        font-size: 5rem;
+        font-size: 3rem;
         margin: 1rem 0;
+        line-height: 1.1;
     }
+
 
     .split-right {
         padding: 0 1rem 6rem;
@@ -2555,31 +2616,59 @@ select::-ms-expand {
     }
 
     /* Mobile Scroll Hint - "SWIPE" */
-    /* Re-enable and style the Swipe Hint */
     .scroll-hint {
         display: flex !important;
-        justify-content: center;
-        margin-top: 1rem;
-        margin-bottom: 2rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 2rem 0;
         width: 100%;
+        opacity: 0.8;
     }
+
 
     .hint-text {
-        font-size: 0 !important;
-    }
-
-    .hint-text::after {
-        content: '← SWIPE TO EXPLORE →';
-        font-size: 0.7rem;
+        font-size: 0.6rem !important;
         color: var(--accent-color);
-        letter-spacing: 0.22em;
-        font-weight: 600;
+        letter-spacing: 0.25em;
+        font-weight: 700;
+        text-transform: uppercase;
         display: block;
     }
 
     .hint-line {
-        display: none;
+        display: block !important;
+        width: 80px;
+        height: 2px;
+        background: linear-gradient(to right, rgba(0, 78, 204, 0.2), transparent);
+        position: relative;
+        overflow: hidden;
+        border-radius: 2px;
     }
+
+    .hint-line::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--accent-color);
+        box-shadow: 0 0 8px var(--accent-color);
+        animation: hintLineFlowHorizontal 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    @keyframes hintLineFlowHorizontal {
+        0% {
+            left: -100%;
+        }
+
+        50%,
+        100% {
+            left: 100%;
+        }
+    }
+
 
     .step-item {
         flex: 0 0 80vw;
