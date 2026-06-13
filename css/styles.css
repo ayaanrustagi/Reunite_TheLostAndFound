@@ -3540,8 +3540,8 @@ select::-ms-expand {
     .scroll-text {
         letter-spacing: 0.15em;
         font-size: 0.6rem;
-        display: none;
-        /* Hide text on mobile for cleaner look, icon is enough */
+        display: none !important;
+        /* Force hide to override any specificity issues */
     }
 
     /* Ensure mouse icon is visible and has space */
