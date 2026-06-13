@@ -3535,25 +3535,30 @@ select::-ms-expand {
 
 /* Helper fix for mobile spacing overlap */
 @media (max-width: 768px) {
-    #how-content-area {
-        margin-top: 4rem;
-        /* Push down significantly */
-        padding-top: 2rem;
+
+    /* Prevent text overflow on small screens - simplify text */
+    .scroll-text {
+        letter-spacing: 0.15em;
+        font-size: 0.6rem;
+        display: none;
+        /* Hide text on mobile for cleaner look, icon is enough */
     }
 
+    /* Ensure mouse icon is visible and has space */
     .scroll-indicator {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+        opacity: 0.6;
+    }
+
+    /* Aggressive spacing to prevent overlap */
+    #how-content-area {
+        margin-top: 5rem;
+        padding-top: 2rem;
     }
 
     .hero-centered-content {
         min-height: auto;
-        padding-bottom: 2rem;
-    }
-
-    /* Prevent text overflow on small screens */
-    .scroll-text {
-        letter-spacing: 0.15em;
-        font-size: 0.6rem;
+        padding-bottom: 4rem;
     }
 }
