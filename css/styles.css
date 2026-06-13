@@ -1362,11 +1362,12 @@ select::-ms-expand {
 
 .grid-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
+    margin-top: 2rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .grid-layout {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -1395,11 +1396,13 @@ select::-ms-expand {
 }
 
 /* Item Card Enhancement */
+/* Item Card Enhancement */
 .item-card {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 2rem;
+    padding: 0;
+    /* Remove padding from container to let image bleed */
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
@@ -1407,6 +1410,10 @@ select::-ms-expand {
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow-soft);
+    text-align: left;
+    /* Ensure text aligns left */
+    height: 100%;
+    /* Fill grid cell */
 }
 
 .item-card::before {
@@ -1418,6 +1425,8 @@ select::-ms-expand {
     height: 100%;
     background: linear-gradient(to right, transparent, rgba(0, 106, 255, 0.05), transparent);
     transition: left 0.5s;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .item-card:hover {
@@ -1426,37 +1435,77 @@ select::-ms-expand {
     box-shadow: var(--shadow-medium);
 }
 
+.card-image-wrap {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #f0f0f0;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+}
 
-.item-card:hover .card-title {
-    color: var(--accent-color);
+.card-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.item-card:hover .card-thumb {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .card-meta {
     font-family: var(--font-mono);
     font-size: 0.6rem;
     color: var(--accent-color);
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
     display: flex;
     justify-content: space-between;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-title {
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
     color: var(--text-color);
     transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     letter-spacing: -0.01em;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.item-card:hover .card-title {
+    color: var(--accent-color);
 }
 
 .card-desc {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--muted-text);
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
     flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-footer {
@@ -1465,11 +1514,14 @@ select::-ms-expand {
     align-items: center;
     font-family: var(--font-mono);
     font-size: 0.65rem;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--border-color);
     color: var(--muted-text);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    margin-top: auto;
+    /* Push to bottom */
+    width: 100%;
 }
 
 .card-footer span:first-child {
