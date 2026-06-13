@@ -3532,3 +3532,28 @@ select::-ms-expand {
     font-size: 0.8rem;
     margin-top: 0.25rem;
 }
+
+/* Helper fix for mobile spacing overlap */
+@media (max-width: 768px) {
+    #how-content-area {
+        margin-top: 4rem;
+        /* Push down significantly */
+        padding-top: 2rem;
+    }
+
+    .scroll-indicator {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-centered-content {
+        min-height: auto;
+        padding-bottom: 2rem;
+    }
+
+    /* Prevent text overflow on small screens */
+    .scroll-text {
+        letter-spacing: 0.15em;
+        font-size: 0.6rem;
+    }
+}
