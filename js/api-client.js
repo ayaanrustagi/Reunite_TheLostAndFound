@@ -30,7 +30,6 @@ async function apiSync() {
         console.error("🔴 SYNC FAILED:", err);
     }
 }
-window.syncFromSupabase = apiSync; // Keep alias for compatibility
 window.apiSync = apiSync;
 
 
@@ -60,7 +59,6 @@ async function apiUpsert(resource, record) {
         return false;
     }
 }
-window.supabaseUpsert = apiUpsert; // Alias
 window.apiUpsert = apiUpsert;
 
 async function apiDelete(resource, id) {
@@ -71,7 +69,6 @@ async function apiDelete(resource, id) {
         console.error(`🔴 DELETE ERROR:`, err);
     }
 }
-window.supabaseDelete = apiDelete; // Alias
 window.apiDelete = apiDelete;
 
 // Authorization related

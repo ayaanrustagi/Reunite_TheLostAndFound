@@ -122,13 +122,13 @@ async function handleReportSubmit(e) {
     };
 
 
-    const success = await supabaseUpsert('items', newItem);
+    const success = await apiUpsert('items', newItem);
 
     if (success) {
         showSuccess('REPORT LOGGED SUCCESSFULLY');
 
         window.items.unshift(newItem);
-        await syncFromSupabase();
+        await apiSync();
 
         setStatusMessage('reportStatus', 'PENDING REVIEW', false);
 
@@ -245,13 +245,13 @@ async function handleClaimSubmit(e) {
     };
 
 
-    const success = await supabaseUpsert('claims', newClaim);
+    const success = await apiUpsert('claims', newClaim);
 
     if (success) {
         showSuccess('CLAIM SUBMITTED - AWAITING REVIEW');
 
         window.claims.unshift(newClaim);
-        await syncFromSupabase();
+        await apiSync();
 
         setStatusMessage('claimStatus', 'AWAITING VERIFICATION', false);
         e.target.reset();
@@ -448,9 +448,9 @@ async function approveItem(id) {
     const item = window.items.find(i => i.id === id);
     if (item) {
         const updatedItem = { ...item, status: 'approved' };
-        const success = await supabaseUpsert('items', updatedItem);
+        const success = await apiUpsert('items', updatedItem);
         if (success) {
-            await syncFromSupabase();
+            await apiSync();
 
 
             sendEmailUpdate(
@@ -469,9 +469,9 @@ async function rejectItem(id) {
     const item = window.items.find(i => i.id === id);
     if (item) {
         const updatedItem = { ...item, status: 'rejected' };
-        const success = await supabaseUpsert('items', updatedItem);
+        const success = await apiUpsert('items', updatedItem);
         if (success) {
-            await syncFromSupabase();
+            await apiSync();
 
 
             sendEmailUpdate(
@@ -490,9 +490,9 @@ async function approveClaim(id) {
     const claim = window.claims.find(c => c.id === id);
     if (claim) {
         const updatedClaim = { ...claim, status: 'approved' };
-        const success = await supabaseUpsert('claims', updatedClaim);
+        const success = await apiUpsert('claims', updatedClaim);
         if (success) {
-            await syncFromSupabase();
+            await apiSync();
 
             const item = window.items.find(i => i.id === claim.item_id);
 
@@ -511,15 +511,15 @@ window.approveClaim = approveClaim;
 
 async function deleteItem(id) {
     if (!confirm("PERMANENTLY DELETE THIS ITEM FROM DATABASE?")) return;
-    await supabaseDelete('items', id);
-    await syncFromSupabase();
+    await apiDelete('items', id);
+    await apiSync();
 }
 window.deleteItem = deleteItem;
 
 async function deleteClaim(id) {
     if (!confirm("PERMANENTLY DELETE THIS CLAIM RECORD?")) return;
-    await supabaseDelete('claims', id);
-    await syncFromSupabase();
+    await apiDelete('claims', id);
+    await apiSync();
 }
 window.deleteClaim = deleteClaim;
 

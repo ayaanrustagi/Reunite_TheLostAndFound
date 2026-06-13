@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const connectDB = require('./backend/db');
 
 const itemRoutes = require('./backend/routes/items');
 const claimRoutes = require('./backend/routes/claims');
@@ -30,8 +31,14 @@ app.get('*path', (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 REUNITE Server running locally!`);
-    console.log(`🔗 Access it at: http://localhost:${PORT}`);
-    console.log(`📁 Data is being saved to the /data folder`);
+// Connect to MongoDB then start server
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`🚀 REUNITE Server running locally!`);
+        console.log(`🔗 Access it at: http://localhost:${PORT}`);
+        console.log(`📁 Data is stored in MongoDB`);
+    });
+}).catch(err => {
+    console.error('Failed to connect to MongoDB:', err);
+    process.exit(1);
 });

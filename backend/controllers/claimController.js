@@ -1,8 +1,10 @@
-const db = require('../db');
+const connectDB = require('../db');
+const Claim = require('../models/Claim');
 
 exports.getAllClaims = async (req, res) => {
     try {
-        const claims = await db.claims.find({}).sort({ created_at: -1 });
+        await connectDB();
+        const claims = await Claim.find({}).sort({ created_at: -1 }).lean();
         const mappedClaims = claims.map(c => ({ ...c, id: c._id }));
         res.json(mappedClaims);
     } catch (err) {
@@ -12,6 +14,7 @@ exports.getAllClaims = async (req, res) => {
 
 exports.upsertClaim = async (req, res) => {
     try {
+        await connectDB();
         const claimData = req.body;
         const id = claimData.id || claimData._id;
 
@@ -20,8 +23,11 @@ exports.upsertClaim = async (req, res) => {
         const updateData = { ...claimData, _id: id };
         delete updateData.id;
 
-        await db.claims.update({ _id: id }, updateData, { upsert: true });
-        const updated = await db.claims.findOne({ _id: id });
+        const updated = await Claim.findOneAndUpdate(
+            { _id: id },
+            updateData,
+            { upsert: true, returnDocument: 'after', lean: true, setDefaultsOnInsert: true }
+        );
 
         res.json({ ...updated, id: updated._id });
     } catch (err) {
@@ -31,8 +37,9 @@ exports.upsertClaim = async (req, res) => {
 
 exports.deleteClaim = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
-        await db.claims.remove({ _id: id });
+        await Claim.deleteOne({ _id: id });
         res.json({ message: "Claim deleted successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });

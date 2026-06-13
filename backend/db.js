@@ -1,12 +1,18 @@
-const Datastore = require('nedb-promises');
-const path = require('path');
+const mongoose = require('mongoose');
 
-const dbPath = (name) => path.join(__dirname, 'data', `${name}.db`);
+let isConnected = false;
 
-const db = {
-    items: Datastore.create({ filename: dbPath('items'), autoload: true }),
-    claims: Datastore.create({ filename: dbPath('claims'), autoload: true }),
-    users: Datastore.create({ filename: dbPath('users'), autoload: true })
-};
+async function connectDB() {
+    if (isConnected) return;
 
-module.exports = db;
+    try {
+        const conn = await mongoose.connect(process.env.MONGO_URI);
+        isConnected = true;
+        console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+    } catch (err) {
+        console.error('🔴 MongoDB connection error:', err.message);
+        throw err;
+    }
+}
+
+module.exports = connectDB;

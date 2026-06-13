@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.emailjs.init(window.EMAILJS_PUBLIC_KEY);
     }
 
-    if (window.syncFromSupabase) window.syncFromSupabase();
+    if (window.apiSync) window.apiSync();
 
     const hash = window.location.hash.replace('#', '');
     if (hash) {
