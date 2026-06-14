@@ -3420,14 +3420,23 @@ select::-ms-expand {
         bottom: auto;
         left: auto;
         transform: none;
-        margin-top: 4rem;
+        margin-top: 3rem;
+        /* Brought closer to buttons */
         margin-bottom: 4rem;
         /* Generous spacing */
         width: 100%;
         animation: bounceMobile 2s infinite;
         justify-content: center;
         align-items: center;
-        opacity: 0.8;
+        opacity: 1;
+        /* Full visibility */
+    }
+
+    /* Make the mouse icon dark and sharp on mobile */
+    .scroll-indicator .scroll-mouse {
+        border-color: #000;
+        border-width: 2px;
+        opacity: 1;
     }
 
     .scroll-indicator:hover {
