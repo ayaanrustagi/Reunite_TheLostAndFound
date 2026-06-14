@@ -658,8 +658,8 @@ body {
     margin: 0 auto;
     text-align: center;
     padding: 0 1.5rem;
-    padding-top: 8vh;
-    /* Push text down on desktop */
+    padding-top: 15vh;
+    /* Push text down further on desktop */
     position: relative;
     /* Removed negative transform to stop lifting it up */
 }
