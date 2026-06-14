@@ -3563,3 +3563,66 @@ select::-ms-expand {
     font-size: 0.8rem;
     margin-top: 0.25rem;
 }
+/* --- NEW ROBUST SCROLL INDICATOR --- */
+.scroll-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    /* Spacing logic */
+    margin-top: 4rem;      /* Gap from buttons */
+    margin-bottom: 4rem;   /* Gap from next section */
+    position: relative;
+    z-index: 5;
+    animation: bounceFade 2s infinite ease-in-out;
+}
+
+.scroll-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--muted-text);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.scroll-arrow {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    line-height: 1;
+}
+
+@keyframes bounceFade {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(10px);
+        opacity: 1;
+    }
+}
+
+/* Mobile Adjustments for Perfect Fit */
+@media (max-width: 768px) {
+    .scroll-wrapper {
+        margin-top: 3rem;  /* Tighter on mobile */
+        margin-bottom: 3rem; 
+    }
+
+    .scroll-label {
+        font-size: 0.6rem; /* Smaller text */
+        letter-spacing: 0.15em;
+    }
+
+    .scroll-arrow {
+        font-size: 1.25rem;
+    }
+    
+    /* Ensure hero container doesn't force vertical centering */
+    .hero-centered-content {
+        justify-content: flex-start !important;
+        padding-bottom: 0 !important; /* Let margins handle spacing */
+    }
+}
