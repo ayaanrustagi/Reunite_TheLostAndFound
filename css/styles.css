@@ -3420,20 +3420,42 @@ select::-ms-expand {
         bottom: auto;
         left: auto;
         transform: none;
-        margin-top: 5rem;
-        margin-bottom: 2rem;
+        margin-top: 4rem;
+        margin-bottom: 4rem;
+        /* Generous spacing */
         width: 100%;
         animation: bounceMobile 2s infinite;
         justify-content: center;
         align-items: center;
+        opacity: 0.8;
     }
 
     .scroll-indicator:hover {
         transform: translateY(-5px);
     }
 
+    .scroll-text {
+        display: none !important;
+        /* Hide text on mobile to fix layout */
+    }
+
     .scroll-indicator::after {
         display: none;
+    }
+
+    #how-content-area {
+        margin-top: 6rem;
+        /* Push next section way down */
+        padding-top: 2rem;
+    }
+
+    .hero-centered-content {
+        min-height: auto;
+        padding-bottom: 5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        /* Stop vertical centering pulling items up */
     }
 }
 
@@ -3531,34 +3553,4 @@ select::-ms-expand {
 .ai-no-match-hint {
     font-size: 0.8rem;
     margin-top: 0.25rem;
-}
-
-/* Helper fix for mobile spacing overlap */
-@media (max-width: 768px) {
-
-    /* Prevent text overflow on small screens - simplify text */
-    .scroll-text {
-        letter-spacing: 0.15em;
-        font-size: 0.6rem;
-        display: none !important;
-        /* Force hide to override any specificity issues */
-    }
-
-    /* Ensure mouse icon is visible and has space */
-    .scroll-indicator {
-        margin-top: 3rem;
-        margin-bottom: 3rem;
-        opacity: 0.6;
-    }
-
-    /* Aggressive spacing to prevent overlap */
-    #how-content-area {
-        margin-top: 5rem;
-        padding-top: 2rem;
-    }
-
-    .hero-centered-content {
-        min-height: auto;
-        padding-bottom: 4rem;
-    }
 }
