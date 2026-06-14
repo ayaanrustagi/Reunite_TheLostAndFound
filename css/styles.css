@@ -658,8 +658,10 @@ body {
     margin: 0 auto;
     text-align: center;
     padding: 0 1.5rem;
-    transform: translateY(-2rem);
+    padding-top: 8vh;
+    /* Push text down on desktop */
     position: relative;
+    /* Removed negative transform to stop lifting it up */
 }
 
 .hero-content-glass {
@@ -3563,6 +3565,7 @@ select::-ms-expand {
     font-size: 0.8rem;
     margin-top: 0.25rem;
 }
+
 /* --- NEW ROBUST SCROLL INDICATOR --- */
 .scroll-wrapper {
     display: flex;
@@ -3571,8 +3574,10 @@ select::-ms-expand {
     gap: 0.5rem;
     cursor: pointer;
     /* Spacing logic */
-    margin-top: 4rem;      /* Gap from buttons */
-    margin-bottom: 4rem;   /* Gap from next section */
+    margin-top: 6rem;
+    /* Increased gap from buttons */
+    margin-bottom: 4rem;
+    /* Gap from next section */
     position: relative;
     z-index: 5;
     animation: bounceFade 2s infinite ease-in-out;
@@ -3594,10 +3599,13 @@ select::-ms-expand {
 }
 
 @keyframes bounceFade {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
         opacity: 0.7;
     }
+
     50% {
         transform: translateY(10px);
         opacity: 1;
@@ -3607,22 +3615,25 @@ select::-ms-expand {
 /* Mobile Adjustments for Perfect Fit */
 @media (max-width: 768px) {
     .scroll-wrapper {
-        margin-top: 3rem;  /* Tighter on mobile */
-        margin-bottom: 3rem; 
+        margin-top: 3rem;
+        /* Tighter on mobile */
+        margin-bottom: 3rem;
     }
 
     .scroll-label {
-        font-size: 0.6rem; /* Smaller text */
+        font-size: 0.6rem;
+        /* Smaller text */
         letter-spacing: 0.15em;
     }
 
     .scroll-arrow {
         font-size: 1.25rem;
     }
-    
+
     /* Ensure hero container doesn't force vertical centering */
     .hero-centered-content {
         justify-content: flex-start !important;
-        padding-bottom: 0 !important; /* Let margins handle spacing */
+        padding-bottom: 0 !important;
+        /* Let margins handle spacing */
     }
 }
