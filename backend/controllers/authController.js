@@ -32,12 +32,22 @@ exports.register = async (req, res) => {
         const existing = await User.findOne({ email: userData.email }).lean();
         if (existing) return res.status(400).json({ error: "User already exists" });
 
+        // Secure Role Assignment
+        let userRole = 'student'; // Default role
+        if (userData.role === 'admin') {
+            if (userData.admin_code === process.env.ADMIN_SECRET) {
+                userRole = 'admin';
+            } else {
+                return res.status(403).json({ error: "Invalid admin code" });
+            }
+        }
+
         const newUser = new User({
             _id: id,
             email: userData.email,
             full_name: userData.full_name,
             password: userData.password,
-            role: userData.role,
+            role: userRole,
             created_at: new Date().toISOString()
         });
 

@@ -7,7 +7,7 @@ let authMode = 'login';
 let loginMethod = 'password';
 let authStep = 'send';
 let generatedOTP = null;
-const ADMIN_CODE_REQUIRED = "FBLA2025";
+// SECURITY UPDATE: Admin code verification moved to server-side.
 
 function setAuthMode(mode) {
     authMode = mode;
@@ -179,16 +179,7 @@ async function sendOTP() {
     }
 
 
-    const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
-    const adminCodeInput = document.getElementById('adminCodeAuth');
-    if (authMode === 'signup' && isAdminChecked) {
-        const enteredCode = adminCodeInput ? adminCodeInput.value.trim() : "";
-        if (enteredCode !== ADMIN_CODE_REQUIRED) {
-            status.textContent = "INVALID ADMIN ACCESS CODE";
-            status.className = "status-msg error";
-            return;
-        }
-    }
+    // Client-side admin code check removed. Admin code will be sent with registration payload.
 
     status.textContent = "Verifying account status...";
     status.className = "status-msg";
@@ -318,6 +309,9 @@ async function verifyOTP() {
         if (authMode === 'signup') {
             const newId = 'user_' + Math.random().toString(36).substr(2, 9);
             const isAdminChecked = document.getElementById('isAdminAuth')?.checked;
+            const adminCodeInput = document.getElementById('adminCodeAuth');
+            const enteredCode = adminCodeInput ? adminCodeInput.value.trim() : "";
+
             const userRole = isAdminChecked ? 'admin' : 'student';
 
             userData = await window.apiRegister({
@@ -325,7 +319,8 @@ async function verifyOTP() {
                 email: email,
                 full_name: name || email.split('@')[0],
                 password: password,
-                role: userRole
+                role: userRole,
+                admin_code: enteredCode // Send code to backend for verification
             });
 
         } else {
