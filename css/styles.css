@@ -658,8 +658,8 @@ body {
     margin: 0 auto;
     text-align: center;
     padding: 0 1.5rem;
-    padding-top: 15vh;
-    /* Push text down further on desktop */
+    padding-top: 22vh;
+    /* Push text even further down */
     position: relative;
     /* Removed negative transform to stop lifting it up */
 }
@@ -3574,8 +3574,8 @@ select::-ms-expand {
     gap: 0.5rem;
     cursor: pointer;
     /* Spacing logic */
-    margin-top: 6rem;
-    /* Increased gap from buttons */
+    margin-top: 4rem;
+    /* Balanced gap */
     margin-bottom: 4rem;
     /* Gap from next section */
     position: relative;
