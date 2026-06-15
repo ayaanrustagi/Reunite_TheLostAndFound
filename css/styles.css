@@ -770,9 +770,12 @@ body {
 }
 
 .btn-primary {
-    background: var(--accent-color);
+    background: rgba(0, 40, 100, 0.85);
+    /* Darker blue glass base */
     color: #fff;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 1.25rem 3rem;
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -792,7 +795,9 @@ body {
 .btn-primary:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    background: #000;
+    background: rgba(0, 20, 60, 0.95);
+    /* Even darker on hover */
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary .btn-icon {
