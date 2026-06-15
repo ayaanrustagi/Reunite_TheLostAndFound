@@ -768,7 +768,7 @@ body {
 }
 
 .btn-primary {
-    background: #111;
+    background: var(--accent-color);
     color: #fff;
     border: none;
     padding: 1.25rem 3rem;
