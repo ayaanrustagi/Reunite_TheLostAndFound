@@ -3640,3 +3640,51 @@ select::-ms-expand {
         /* Let margins handle spacing */
     }
 }
+/* Claimed Items Section */
+.claimed-items-section {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.toggle-claimed-btn {
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.toggle-claimed-btn:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.claimed-grid {
+    opacity: 0.8;
+}
+
+.claimed-card {
+    cursor: default;
+    pointer-events: none;
+    border-color: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.claimed-card .card-title {
+    color: var(--muted-text);
+}
+
+.claimed-card .status-badge.approved {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+#claimedItemsWrapper {
+    width: 100%;
+}
+
+#claimedItemsWrapper.hidden {
+    display: none;
+}

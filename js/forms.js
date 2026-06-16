@@ -492,10 +492,14 @@ async function approveClaim(id) {
         const updatedClaim = { ...claim, status: 'approved' };
         const success = await apiUpsert('claims', updatedClaim);
         if (success) {
-            await apiSync();
-
+            // Also mark the item as claimed so it leaves the public feed
             const item = window.items.find(i => i.id === claim.item_id);
+            if (item) {
+                const updatedItem = { ...item, status: 'claimed' };
+                await apiUpsert('items', updatedItem);
+            }
 
+            await apiSync();
 
             sendEmailUpdate(
                 claim.claimant_email,

@@ -132,6 +132,10 @@ function renderFound() {
 
     let filtered = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'approved');
 
+    // Separate claimed items
+    const claimed = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'claimed');
+    renderClaimedItems(claimed);
+
 
     if (search) {
         const searchTokens = search.split(/\s+/);
@@ -183,6 +187,45 @@ function renderFound() {
     `).join('');
 }
 window.renderFound = renderFound;
+
+function renderClaimedItems(claimedItems) {
+    const grid = document.getElementById('claimedItemsGrid');
+    if (!grid) return;
+
+    if (claimedItems.length === 0) {
+        grid.innerHTML = '<div class="status-msg">NO RECENTLY CLAIMED ITEMS</div>';
+        return;
+    }
+
+    grid.innerHTML = claimedItems.map(item => `
+        <div class="item-card claimed-card">
+            ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" style="filter: grayscale(1); opacity: 0.6;"></div>` : ''}
+            <div class="card-content">
+                <div class="card-meta">
+                    <span class="status-badge approved">CLAIMED</span>
+                    <span>${new Date(item.date_found).toLocaleDateString()}</span>
+                </div>
+                <h3 class="card-title">${item.title}</h3>
+                <div class="card-footer">
+                    <span>${item.location}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+window.renderClaimedItems = renderClaimedItems;
+
+function toggleClaimedItems() {
+    const wrapper = document.getElementById('claimedItemsWrapper');
+    const btn = document.getElementById('toggleClaimedBtn');
+    if (!wrapper || !btn) return;
+
+    const isHidden = wrapper.classList.toggle('hidden');
+    btn.innerHTML = isHidden ?
+        'SHOW PAST CLAIMED ITEMS <span class="btn-icon">↓</span>' :
+        'HIDE PAST CLAIMED ITEMS <span class="btn-icon">↑</span>';
+}
+window.toggleClaimedItems = toggleClaimedItems;
 
 function renderClaimSelect() {
     const select = document.getElementById('claimItemId');

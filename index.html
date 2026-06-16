@@ -238,6 +238,20 @@
         <div id="itemsGrid" class="grid-layout">
           <!-- JS Injected Items -->
         </div>
+
+        <!-- PAST CLAIMED ITEMS SECTION -->
+        <div class="claimed-items-section">
+          <button class="btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button"
+            id="toggleClaimedBtn">
+            SHOW PAST CLAIMED ITEMS <span class="btn-icon">↓</span>
+          </button>
+          <div id="claimedItemsWrapper" class="hidden">
+            <div class="section-divider">REMATCHED & RETRIEVED</div>
+            <div id="claimedItemsGrid" class="grid-layout claimed-grid">
+              <!-- JS Injected Claimed Items -->
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -518,7 +532,7 @@
 
 
   <!-- ITEM MODAL -->
-  <div id="itemModal" class="modal-overlay hidden">
+  <div id="itemModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-box large">
       <div class="modal-header">
         <h3>ITEM DETAILS</h3>

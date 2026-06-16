@@ -96,3 +96,30 @@
         transform: rotate(360deg);
     }
 }
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .hero-text-fade,
+    .text-slide-in,
+    .text-slide-out,
+    .fade-in {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+    }
+
+    .scanning-line-overlay {
+        display: none !important;
+    }
+}

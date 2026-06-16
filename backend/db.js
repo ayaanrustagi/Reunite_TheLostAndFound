@@ -1,44 +1,40 @@
 const mongoose = require('mongoose');
 
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections growing exponentially
- * during API Route usage.
- */
-let cached = global.mongoose;
-
-if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
-}
+let cached = global.mongoose || (global.mongoose = { conn: null, promise: null });
 
 async function connectDB() {
-    if (cached.conn) {
-        console.log('Using cached MongoDB connection');
-        return cached.conn;
-    }
+    if (cached.conn) return cached.conn;
 
     if (!cached.promise) {
-        const opts = {
-            bufferCommands: false, // Return connection errors immediately instead of hanging
-            serverSelectionTimeoutMS: 5000, // Reduced from default 30s to fail fast
-            socketTimeoutMS: 45000,
-        };
-
+        const opts = { bufferCommands: false, serverSelectionTimeoutMS: 5000 };
         console.log('Connecting to MongoDB...');
-        cached.promise = mongoose.connect(process.env.MONGO_URI, opts).then((mongoose) => {
-            console.log('✅ New MongoDB connection established');
-            return mongoose;
-        });
+
+        cached.promise = mongoose.connect(process.env.MONGO_URI, opts)
+            .catch(async (err) => {
+                console.warn('🔴 Primary MongoDB connection failed. Starting In-Memory fallback...');
+                try {
+                    const { MongoMemoryServer } = require('mongodb-memory-server');
+                    const mongo = await MongoMemoryServer.create();
+                    const uri = mongo.getUri();
+                    console.log('✨ In-Memory MongoDB started:', uri);
+                    return mongoose.connect(uri, opts);
+                } catch (memErr) {
+                    console.error('❌ Failed to start In-Memory MongoDB:', memErr);
+                    throw err;
+                }
+            })
+            .then((m) => {
+                console.log('✅ MongoDB connection established');
+                return m;
+            });
     }
 
     try {
         cached.conn = await cached.promise;
     } catch (e) {
         cached.promise = null;
-        console.error('🔴 MongoDB connection failed:', e);
         throw e;
     }
-
     return cached.conn;
 }
 

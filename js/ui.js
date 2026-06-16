@@ -74,9 +74,14 @@ function setFocusForSection(sectionId) {
     }
 }
 
+let lastFocusedElement = null;
+
 function openItemModal(id) {
     const item = window.items.find(i => i.id === id);
     if (!item) return;
+
+    // Store element that opened modal
+    lastFocusedElement = document.activeElement;
 
     document.getElementById('modalTitle').textContent = item.title;
     document.getElementById('modalLocation').textContent = item.location;
@@ -89,16 +94,41 @@ function openItemModal(id) {
         modalImg.src = item.image;
         modalImg.classList.remove('hidden');
     } else {
+        modalImg.src = "";
         modalImg.classList.add('hidden');
     }
 
     sessionStorage.setItem('reunite_selected_id', id);
-    document.getElementById('itemModal').classList.remove('hidden');
+    const modal = document.getElementById('itemModal');
+    modal.classList.remove('hidden');
+
+    // Move focus into the modal
+    const closeBtn = modal.querySelector('.close-btn');
+    if (closeBtn) {
+        setTimeout(() => closeBtn.focus(), 50);
+    }
 }
 window.openItemModal = openItemModal;
 
-function closeModal() { document.getElementById('itemModal').classList.add('hidden'); }
+function closeModal() {
+    document.getElementById('itemModal').classList.add('hidden');
+    // Return focus to the element that opened it
+    if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+    }
+}
 window.closeModal = closeModal;
+
+// Keyboard "Escape" to Close
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('itemModal');
+        if (modal && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    }
+});
 
 function toggleOtherCat() {
     const cat = document.getElementById('itemCategory').value;
