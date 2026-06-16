@@ -3688,3 +3688,196 @@ select::-ms-expand {
 #claimedItemsWrapper.hidden {
     display: none;
 }
+
+/* Accessibility Settings Modal specific styles */
+.modal-box.small {
+    max-width: 400px;
+}
+
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.setting-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--text-color);
+}
+
+.setting-desc {
+    font-size: 0.7rem;
+    color: var(--muted-text);
+}
+
+.modal-footer {
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.settings-hint {
+    font-size: 0.65rem;
+    color: var(--muted-text);
+    font-family: var(--font-mono);
+    text-align: center;
+}
+
+/* Toggle Switch Styling */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border-color);
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input:checked + .slider {
+    background-color: var(--accent-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Font Scale Controls */
+.scale-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-color);
+    padding: 0.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.scale-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.scale-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+#fontScaleDisplay {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    min-width: 45px;
+    text-align: center;
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+    --text-color: #000000;
+    --muted-text: #222222;
+    --accent-color: #004ecc;
+    --panel-bg: #ffffff;
+    --bg-color: #f8f9fa;
+    --border-color: #000000;
+}
+
+body.high-contrast .btn-outline {
+    border-width: 2px !important;
+}
+
+body.high-contrast .card-desc {
+    color: #111111;
+}
+
+body.high-contrast .label-tech {
+    background: #000;
+    color: #fff;
+}
+
+/* Text Scaling Implementation */
+html {
+    font-size: 16px;
+    transition: font-size 0.2s ease-out;
+}
+
+/* Icon Button Styling */
+.btn-icon-alt {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+}
+
+.btn-icon-alt:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.05);
+    transform: rotate(45deg);
+}
+
+body.high-contrast .btn-icon-alt {
+    opacity: 1;
+    border: 1px solid #000;
+}

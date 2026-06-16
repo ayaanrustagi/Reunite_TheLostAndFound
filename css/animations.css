@@ -123,3 +123,26 @@
         display: none !important;
     }
 }
+
+body.reduced-motion *,
+body.reduced-motion ::before,
+body.reduced-motion ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+body.reduced-motion .hero-text-fade,
+body.reduced-motion .text-slide-in,
+body.reduced-motion .text-slide-out,
+body.reduced-motion .fade-in {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+body.reduced-motion .scanning-line-overlay {
+    display: none !important;
+}

@@ -79,6 +79,17 @@
       </div>
 
       <div class="header-actions">
+        <!-- Accessibility Trigger -->
+        <button id="settingsBtn" class="btn-icon-alt" onclick="toggleSettingsModal()"
+          aria-label="Accessibility Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+        </button>
         <a id="loginBtn" href="login.html" class="btn-sm btn-outline">SIGN IN</a>
         <button id="dashboardBtn" class="btn-sm btn-outline hidden"
           onclick="navigateToSection('dashboard')">DASHBOARD</button>
@@ -564,6 +575,55 @@
   <div id="loadingOverlay" class="loading-overlay hidden">
     <div class="spinner"></div>
     <p id="loadingMessage">PROCESSING REQUEST...</p>
+  </div>
+
+  <!-- ACCESSIBILITY SETTINGS MODAL -->
+  <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+    aria-labelledby="settingsModalTitle">
+    <div class="modal-box small">
+      <div class="modal-header">
+        <h3 id="settingsModalTitle">ACCESSIBILITY</h3>
+        <button onclick="toggleSettingsModal()" class="close-btn" aria-label="Close settings">×</button>
+      </div>
+      <div class="modal-body settings-body">
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">REDUCED MOTION</span>
+            <span class="setting-desc">Simplify animations & transitions</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="motionToggle" onchange="updateAccessibility('motion')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">HIGH CONTRAST</span>
+            <span class="setting-desc">Increase visibility of text and elements</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="contrastToggle" onchange="updateAccessibility('contrast')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">TEXT SCALING</span>
+            <span class="setting-desc">Increase interface font size</span>
+          </div>
+          <div class="scale-controls">
+            <button class="scale-btn" onclick="updateAccessibility('font', 'down')">-</button>
+            <span id="fontScaleDisplay">100%</span>
+            <button class="scale-btn" onclick="updateAccessibility('font', 'up')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <p class="settings-hint">Settings are saved automatically to this device.</p>
+      </div>
+    </div>
   </div>
 
   <script src="js/config.js"></script>

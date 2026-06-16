@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadAll();
     loadSession();
+    if (window.loadAccessibilitySettings) window.loadAccessibilitySettings();
     if (window.updateAuthUI) window.updateAuthUI();
 
     const emailjs = window.emailjs;

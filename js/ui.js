@@ -366,3 +366,75 @@ function handleLogout() {
     if (window.navigateToSection) window.navigateToSection('hero');
 }
 window.handleLogout = handleLogout;
+
+/**
+ * Accessibility Settings Logic
+ */
+let fontScale = 100;
+
+function toggleSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (!modal) return;
+    
+    const isVisible = !modal.classList.contains('hidden');
+    if (isVisible) {
+        modal.classList.add('hidden');
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+        }
+    } else {
+        lastFocusedElement = document.activeElement;
+        modal.classList.remove('hidden');
+        const closeBtn = modal.querySelector('.close-btn');
+        if (closeBtn) setTimeout(() => closeBtn.focus(), 50);
+        
+        // Sync toggles with current state
+        document.getElementById('motionToggle').checked = document.body.classList.contains('reduced-motion');
+        document.getElementById('contrastToggle').checked = document.body.classList.contains('high-contrast');
+        document.getElementById('fontScaleDisplay').textContent = fontScale + '%';
+    }
+}
+window.toggleSettingsModal = toggleSettingsModal;
+
+function updateAccessibility(type, value) {
+    const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
+
+    if (type === 'motion') {
+        const enabled = document.getElementById('motionToggle').checked;
+        document.body.classList.toggle('reduced-motion', enabled);
+        settings.reducedMotion = enabled;
+    } 
+    else if (type === 'contrast') {
+        const enabled = document.getElementById('contrastToggle').checked;
+        document.body.classList.toggle('high-contrast', enabled);
+        settings.highContrast = enabled;
+    }
+    else if (type === 'font') {
+        if (value === 'up' && fontScale < 150) fontScale += 10;
+        else if (value === 'down' && fontScale > 80) fontScale -= 10;
+        
+        document.documentElement.style.fontSize = (fontScale / 100 * 16) + 'px';
+        document.getElementById('fontScaleDisplay').textContent = fontScale + '%';
+        settings.fontScale = fontScale;
+    }
+
+    localStorage.setItem('reunite_accessibility', JSON.stringify(settings));
+}
+window.updateAccessibility = updateAccessibility;
+
+function loadAccessibilitySettings() {
+    const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
+    
+    if (settings.reducedMotion) {
+        document.body.classList.add('reduced-motion');
+    }
+    if (settings.highContrast) {
+        document.body.classList.add('high-contrast');
+    }
+    if (settings.fontScale) {
+        fontScale = settings.fontScale;
+        document.documentElement.style.fontSize = (fontScale / 100 * 16) + 'px';
+    }
+}
+window.loadAccessibilitySettings = loadAccessibilitySettings;
