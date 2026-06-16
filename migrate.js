@@ -1,5 +1,5 @@
 /**
- * Migration script: NeDB → MongoDB
+ * Migration script: NeDB -> MongoDB
  * Reads existing .db files and inserts them into MongoDB Atlas
  */
 require('dotenv').config();
@@ -30,16 +30,16 @@ function parseNeDB(filePath) {
 }
 
 async function migrate() {
-    console.log('🔄 Connecting to MongoDB Atlas...');
+    console.log('Connecting to MongoDB Atlas...');
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Connected!\n');
+    console.log('Connected!\n');
 
     const dataDir = path.join(__dirname, 'backend', 'data');
 
     // Migrate items
     const items = parseNeDB(path.join(dataDir, 'items.db'));
     if (items.length > 0) {
-        console.log(`📦 Migrating ${items.length} items...`);
+        console.log(`Migrating ${items.length} items...`);
         for (const item of items) {
             try {
                 await Item.findOneAndUpdate(
@@ -47,19 +47,19 @@ async function migrate() {
                     item,
                     { upsert: true, new: true, setDefaultsOnInsert: true }
                 );
-                console.log(`  ✅ Item: ${item.item_name || item._id}`);
+                console.log(`  Item: ${item.item_name || item._id}`);
             } catch (err) {
-                console.log(`  ⚠️  Skipped item ${item._id}: ${err.message}`);
+                console.log(`  Skipped item ${item._id}: ${err.message}`);
             }
         }
     } else {
-        console.log('📦 No items to migrate.');
+        console.log('No items to migrate.');
     }
 
     // Migrate claims
     const claims = parseNeDB(path.join(dataDir, 'claims.db'));
     if (claims.length > 0) {
-        console.log(`\n📋 Migrating ${claims.length} claims...`);
+        console.log(`\nMigrating ${claims.length} claims...`);
         for (const claim of claims) {
             try {
                 await Claim.findOneAndUpdate(
@@ -67,19 +67,19 @@ async function migrate() {
                     claim,
                     { upsert: true, new: true, setDefaultsOnInsert: true }
                 );
-                console.log(`  ✅ Claim: ${claim._id}`);
+                console.log(`  Claim: ${claim._id}`);
             } catch (err) {
-                console.log(`  ⚠️  Skipped claim ${claim._id}: ${err.message}`);
+                console.log(`  Skipped claim ${claim._id}: ${err.message}`);
             }
         }
     } else {
-        console.log('\n📋 No claims to migrate.');
+        console.log('\nNo claims to migrate.');
     }
 
     // Migrate users
     const users = parseNeDB(path.join(dataDir, 'users.db'));
     if (users.length > 0) {
-        console.log(`\n👤 Migrating ${users.length} users...`);
+        console.log(`\nMigrating ${users.length} users...`);
         for (const user of users) {
             try {
                 await User.findOneAndUpdate(
@@ -87,16 +87,16 @@ async function migrate() {
                     user,
                     { upsert: true, new: true, setDefaultsOnInsert: true }
                 );
-                console.log(`  ✅ User: ${user.email}`);
+                console.log(`  User: ${user.email}`);
             } catch (err) {
-                console.log(`  ⚠️  Skipped user ${user._id}: ${err.message}`);
+                console.log(`  Skipped user ${user._id}: ${err.message}`);
             }
         }
     } else {
-        console.log('\n👤 No users to migrate.');
+        console.log('\nNo users to migrate.');
     }
 
-    console.log('\n🎉 Migration complete!');
+    console.log('\nMigration complete!');
     await mongoose.disconnect();
     process.exit(0);
 }

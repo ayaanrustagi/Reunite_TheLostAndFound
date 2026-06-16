@@ -11,20 +11,20 @@ async function connectDB() {
 
         cached.promise = mongoose.connect(process.env.MONGO_URI, opts)
             .catch(async (err) => {
-                console.warn('🔴 Primary MongoDB connection failed. Starting In-Memory fallback...');
+                console.warn('Primary MongoDB connection failed. Starting In-Memory fallback...');
                 try {
                     const { MongoMemoryServer } = require('mongodb-memory-server');
                     const mongo = await MongoMemoryServer.create();
                     const uri = mongo.getUri();
-                    console.log('✨ In-Memory MongoDB started:', uri);
+                    console.log('In-Memory MongoDB started:', uri);
                     return mongoose.connect(uri, opts);
                 } catch (memErr) {
-                    console.error('❌ Failed to start In-Memory MongoDB:', memErr);
+                    console.error('Failed to start In-Memory MongoDB:', memErr);
                     throw err;
                 }
             })
             .then((m) => {
-                console.log('✅ MongoDB connection established');
+                console.log('MongoDB connection established');
                 return m;
             });
     }

@@ -75,6 +75,7 @@ function validateReportForm() {
 window.validateReportForm = validateReportForm;
 
 async function handleReportSubmit(e) {
+    // save the lost item report
     e.preventDefault();
     const statusEl = document.getElementById('reportStatus');
 
@@ -209,6 +210,7 @@ function validateClaimForm() {
 window.validateClaimForm = validateClaimForm;
 
 async function handleClaimSubmit(e) {
+    // process a new claim
     e.preventDefault();
     const statusEl = document.getElementById('claimStatus');
 
@@ -352,6 +354,7 @@ function previewFileClaim() {
 window.previewFileClaim = previewFileClaim;
 
 async function simulateAiScan() {
+    // pretend to be smart with images
     const fileInput = document.getElementById('findItemPhoto');
     const preview = document.getElementById('findPhotoPreview');
     const container = document.getElementById('aiMatchContainer');
@@ -429,13 +432,13 @@ async function simulateAiScan() {
                             </div>
                         </div>
                     </div>
-                    <div class="ai-match-arrow">→</div>
+                    <div class="ai-match-arrow">-></div>
                 </button>
             `).join('');
     } else {
         results.innerHTML = `
             <div class="ai-no-match">
-                <div class="ai-no-match-icon">🔍</div>
+                <div class="ai-no-match-icon"></div>
                 <div class="ai-no-match-title">No high-confidence matches found.</div>
                 <div class="ai-no-match-hint">Try adjusting the lighting or angle and scan again.</div>
             </div>`;

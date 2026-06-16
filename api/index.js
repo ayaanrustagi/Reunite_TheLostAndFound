@@ -24,7 +24,7 @@ app.use(async (req, res, next) => {
     }
 });
 
-// Routes — mounted at root since Vercel rewrites /api/* to this handler
+// Routes - mounted at root since Vercel rewrites /api/* to this handler
 app.use('/api/items', itemRoutes);
 app.use('/api/claims', claimRoutes);
 app.use('/api/auth', authRoutes);

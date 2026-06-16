@@ -1,12 +1,3 @@
-/* Noto Color Emoji - Cross-platform Apple-style emoji font */
-@font-face {
-    font-family: 'Noto Color Emoji';
-    src: url('https://fonts.gstatic.com/s/notocoloremoji/v30/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
 :root {
     --bg-color: #f3f3f3;
     --bg-color-rgb: 243, 243, 243;
@@ -18,7 +9,7 @@
     --muted-text: #666666;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'Roboto Mono', monospace;
-    --font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
+    --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
     --glow-opacity: 0.15;
     --accent-glow: rgba(0, 106, 255, 0.4);
 
@@ -450,8 +441,30 @@ body {
     .header-search-wrap:focus-within {
         width: 200px;
     }
+
+    .header-settings-btn {
+        order: 2;
+        margin-left: auto;
+        margin-right: 0.5rem;
+        opacity: 0.9;
+    }
 }
 
+
+.header-settings-btn {
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.header-settings-btn:hover {
+    transform: rotate(90deg) scale(1.1);
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
 .header-search-wrap:focus-within {
     background: var(--panel-bg);
@@ -2133,7 +2146,7 @@ select::-ms-expand {
 }
 
 .loading-overlay.success-state::before {
-    content: "✓";
+    content: "CHECK";
     font-size: 3rem;
     color: var(--accent-color);
     margin-bottom: 0.5rem;
@@ -3640,6 +3653,7 @@ select::-ms-expand {
         /* Let margins handle spacing */
     }
 }
+
 /* Claimed Items Section */
 .claimed-items-section {
     margin-top: 4rem;
@@ -3777,14 +3791,14 @@ select::-ms-expand {
     background-color: white;
     transition: .4s;
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: var(--accent-color);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(20px);
 }
 

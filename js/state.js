@@ -1,4 +1,4 @@
-
+// the global brain
 window.currentUser = null;
 window.items = [];
 window.claims = [];

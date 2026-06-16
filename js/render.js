@@ -101,6 +101,7 @@ function clearFilters() {
 window.clearFilters = clearFilters;
 
 function renderFound() {
+    // draw the item grid
     if (!window.items) return;
     const grid = document.getElementById('itemsGrid');
     if (!grid) return;
@@ -222,8 +223,8 @@ function toggleClaimedItems() {
 
     const isHidden = wrapper.classList.toggle('hidden');
     btn.innerHTML = isHidden ?
-        'SHOW PAST CLAIMED ITEMS <span class="btn-icon">↓</span>' :
-        'HIDE PAST CLAIMED ITEMS <span class="btn-icon">↑</span>';
+        'SHOW PAST CLAIMED ITEMS <span class="btn-icon">v</span>' :
+        'HIDE PAST CLAIMED ITEMS <span class="btn-icon">^</span>';
 }
 window.toggleClaimedItems = toggleClaimedItems;
 
@@ -239,6 +240,7 @@ function renderClaimSelect() {
 window.renderClaimSelect = renderClaimSelect;
 
 function renderDashboard() {
+    // show user their history
     if (!window.currentUser) return;
     const reportsEl = document.getElementById('myReports');
     const claimsEl = document.getElementById('myClaims');
@@ -293,6 +295,7 @@ function renderDashboard() {
 window.renderDashboard = renderDashboard;
 
 function renderAdmin() {
+    // the master view
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
 
 
@@ -323,7 +326,7 @@ function renderAdmin() {
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">
             <div style="display: flex; align-items: center; gap: 1rem;">
-              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px dashed #ff9500;">📷</div>'}
+              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px dashed #ff9500;"></div>'}
               <div class="item-info">
                 <div class="ref-code">REF: ${i.id.substring(5, 13).toUpperCase()}</div>
                 <strong>${i.title}</strong>
@@ -344,7 +347,7 @@ function renderAdmin() {
         return `
             <div class="list-item">
                 <div style="display: flex; align-items: center; gap: 1rem;">
-                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px dashed #ff9500;">📷</div>`}
+                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px dashed #ff9500;"></div>`}
                   <div class="item-info">
                     <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
                     <strong>${item?.title || 'Unknown Item'}</strong>

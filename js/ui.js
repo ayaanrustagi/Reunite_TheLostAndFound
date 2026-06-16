@@ -3,6 +3,7 @@
 
 
 function navigateToSection(sectionId) {
+    // jump between pages
     const sections = document.querySelectorAll('.view-section');
     sections.forEach(s => s.classList.remove('active'));
 
@@ -77,6 +78,7 @@ function setFocusForSection(sectionId) {
 let lastFocusedElement = null;
 
 function openItemModal(id) {
+    // show item popover
     const item = window.items.find(i => i.id === id);
     if (!item) return;
 
@@ -233,6 +235,7 @@ window.navigateToHow = navigateToHow;
 
 
 function handleSplitScroll() {
+    // handle the how-to scroll effect
     const section = document.getElementById('how-content-area');
     if (!section) return;
 
@@ -375,7 +378,7 @@ let fontScale = 100;
 function toggleSettingsModal() {
     const modal = document.getElementById('settingsModal');
     if (!modal) return;
-    
+
     const isVisible = !modal.classList.contains('hidden');
     if (isVisible) {
         modal.classList.add('hidden');
@@ -388,7 +391,7 @@ function toggleSettingsModal() {
         modal.classList.remove('hidden');
         const closeBtn = modal.querySelector('.close-btn');
         if (closeBtn) setTimeout(() => closeBtn.focus(), 50);
-        
+
         // Sync toggles with current state
         document.getElementById('motionToggle').checked = document.body.classList.contains('reduced-motion');
         document.getElementById('contrastToggle').checked = document.body.classList.contains('high-contrast');
@@ -404,7 +407,7 @@ function updateAccessibility(type, value) {
         const enabled = document.getElementById('motionToggle').checked;
         document.body.classList.toggle('reduced-motion', enabled);
         settings.reducedMotion = enabled;
-    } 
+    }
     else if (type === 'contrast') {
         const enabled = document.getElementById('contrastToggle').checked;
         document.body.classList.toggle('high-contrast', enabled);
@@ -413,7 +416,7 @@ function updateAccessibility(type, value) {
     else if (type === 'font') {
         if (value === 'up' && fontScale < 150) fontScale += 10;
         else if (value === 'down' && fontScale > 80) fontScale -= 10;
-        
+
         document.documentElement.style.fontSize = (fontScale / 100 * 16) + 'px';
         document.getElementById('fontScaleDisplay').textContent = fontScale + '%';
         settings.fontScale = fontScale;
@@ -425,7 +428,7 @@ window.updateAccessibility = updateAccessibility;
 
 function loadAccessibilitySettings() {
     const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
-    
+
     if (settings.reducedMotion) {
         document.body.classList.add('reduced-motion');
     }

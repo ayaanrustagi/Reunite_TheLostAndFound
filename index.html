@@ -44,6 +44,18 @@
         <span class="logo-text">REUNITE</span>
       </button>
 
+      <!-- Accessibility Trigger (Visible on all devices) -->
+      <button id="settingsBtn" class="btn-icon-alt header-settings-btn" onclick="toggleSettingsModal()"
+        aria-label="Accessibility Settings">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1 2-2h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
+        </svg>
+      </button>
+
       <button class="menu-toggle" aria-label="Toggle Menu">
         <span></span>
         <span></span>
@@ -57,6 +69,7 @@
 
         <!-- Mobile-only action buttons (shown in hamburger menu) -->
         <div class="mobile-nav-actions">
+          <button class="nav-btn" onclick="toggleSettingsModal()">ACCESSIBILITY SETTINGS</button>
           <button id="mobileLoginBtn" class="nav-btn" onclick="window.location.href='login.html'">SIGN IN</button>
           <button id="mobileDashboardBtn" class="nav-btn hidden"
             onclick="navigateToSection('dashboard')">DASHBOARD</button>
@@ -79,17 +92,6 @@
       </div>
 
       <div class="header-actions">
-        <!-- Accessibility Trigger -->
-        <button id="settingsBtn" class="btn-icon-alt" onclick="toggleSettingsModal()"
-          aria-label="Accessibility Settings">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path
-              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-            </path>
-          </svg>
-        </button>
         <a id="loginBtn" href="login.html" class="btn-sm btn-outline">SIGN IN</a>
         <button id="dashboardBtn" class="btn-sm btn-outline hidden"
           onclick="navigateToSection('dashboard')">DASHBOARD</button>
@@ -123,7 +125,7 @@
             <div class="hero-cta-group">
               <button class="btn-primary full-width-mobile" onclick="navigateToSection('report')">
                 I FOUND SOMETHING
-                <span class="btn-icon">→</span>
+                <span class="btn-icon">-></span>
               </button>
               <button class="btn-secondary full-width-mobile" onclick="navigateToSection('found')">
                 LOOKING FOR SOMETHING
@@ -137,7 +139,7 @@
         <!-- New robust scroll indicator -->
         <div class="scroll-wrapper">
           <span class="scroll-label">SCROLL TO EXPLORE</span>
-          <div class="scroll-arrow">↓</div>
+          <div class="scroll-arrow">v</div>
         </div>
       </div>
 
@@ -254,7 +256,7 @@
         <div class="claimed-items-section">
           <button class="btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button"
             id="toggleClaimedBtn">
-            SHOW PAST CLAIMED ITEMS <span class="btn-icon">↓</span>
+            SHOW PAST CLAIMED ITEMS <span class="btn-icon">v</span>
           </button>
           <div id="claimedItemsWrapper" class="hidden">
             <div class="section-divider">REMATCHED & RETRIEVED</div>
@@ -547,7 +549,7 @@
     <div class="modal-box large">
       <div class="modal-header">
         <h3>ITEM DETAILS</h3>
-        <button onclick="closeModal()" class="close-btn">×</button>
+        <button onclick="closeModal()" class="close-btn">X</button>
       </div>
       <div class="modal-body">
         <h2 id="modalTitle">TITLE</h2>
@@ -583,7 +585,7 @@
     <div class="modal-box small">
       <div class="modal-header">
         <h3 id="settingsModalTitle">ACCESSIBILITY</h3>
-        <button onclick="toggleSettingsModal()" class="close-btn" aria-label="Close settings">×</button>
+        <button onclick="toggleSettingsModal()" class="close-btn" aria-label="Close settings">X</button>
       </div>
       <div class="modal-body settings-body">
         <div class="setting-item">

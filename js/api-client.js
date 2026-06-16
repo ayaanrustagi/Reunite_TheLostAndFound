@@ -1,7 +1,8 @@
 const API_BASE = '/api';
 
 async function apiSync() {
-    console.log("🔄 STARTING API SYNC...");
+    // pull data from the cloud
+    console.log("STARTING API SYNC...");
     try {
         const [itemsRes, claimsRes] = await Promise.all([
             fetch(`${API_BASE}/items`),
@@ -17,7 +18,7 @@ async function apiSync() {
         // Sort items by date desc
         window.items.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
-        console.log(`✅ SYNC SUCCESS: ${window.items.length} items cached.`);
+        console.log(`SYNC SUCCESS: ${window.items.length} items cached.`);
 
         requestAnimationFrame(() => {
             if (window.renderFound) window.renderFound();
@@ -27,15 +28,16 @@ async function apiSync() {
         });
 
     } catch (err) {
-        console.error("🔴 SYNC FAILED:", err);
+        console.error("SYNC FAILED:", err);
     }
 }
 window.apiSync = apiSync;
 
 
 async function apiUpsert(resource, record) {
+    // push new records
     try {
-        console.log(`📤 UPSERTING TO ${resource}...`, record);
+        console.log(`UPSERTING TO ${resource}...`, record);
         const method = 'POST'; // We will use POST for upsert logic handled by backend or PUT
         // Actually backend implementation uses POST to root for upsert
 
@@ -51,10 +53,10 @@ async function apiUpsert(resource, record) {
         }
 
         const data = await res.json();
-        console.log(`✅ ${resource} RECORD UPSERTED`, data);
+        console.log(`${resource} RECORD UPSERTED`, data);
         return true;
     } catch (err) {
-        console.error(`🔴 API ERROR (${resource}):`, err);
+        console.error(`API ERROR (${resource}):`, err);
         alert(`API ERROR: ${err.message}`);
         return false;
     }
@@ -62,11 +64,12 @@ async function apiUpsert(resource, record) {
 window.apiUpsert = apiUpsert;
 
 async function apiDelete(resource, id) {
+    // nuke a record
     try {
         await fetch(`${API_BASE}/${resource}/${id}`, { method: 'DELETE' });
-        console.log(`✅ ${resource} ${id} DELETED`);
+        console.log(`${resource} ${id} DELETED`);
     } catch (err) {
-        console.error(`🔴 DELETE ERROR:`, err);
+        console.error(`DELETE ERROR:`, err);
     }
 }
 window.apiDelete = apiDelete;

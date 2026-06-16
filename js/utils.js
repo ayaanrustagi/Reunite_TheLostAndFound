@@ -2,6 +2,7 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function showLoading(message = "Processing request...") {
+    // show the spinner
     const overlay = document.getElementById('loadingOverlay');
     if (!overlay) return;
     const messageEl = document.getElementById('loadingMessage');
@@ -14,6 +15,7 @@ function showLoading(message = "Processing request...") {
 window.showLoading = showLoading;
 
 function hideLoading() {
+    // kill the spinner
     const overlay = document.getElementById('loadingOverlay');
     if (!overlay) return;
     window.loadingCounter = Math.max(0, window.loadingCounter - 1);
@@ -99,6 +101,7 @@ window.resetFormValidation = resetFormValidation;
 
 
 function levenshteinDistance(a, b) {
+    // check how many typos
     const matrix = [];
     for (let i = 0; i <= b.length; i++) {
         matrix[i] = [i];
@@ -127,6 +130,7 @@ function levenshteinDistance(a, b) {
 window.levenshteinDistance = levenshteinDistance;
 
 function isFuzzyMatch(text, searchToken) {
+    // search with some wiggle room
     if (!text || !searchToken) return false;
     const cleanText = text.toLowerCase();
     const token = searchToken.toLowerCase();
@@ -152,6 +156,7 @@ window.isFuzzyMatch = isFuzzyMatch;
 
 
 function computeDHash(imgElement, size = 16) {
+    // digital fingerprint for images
     return new Promise((resolve) => {
         const process = () => {
             const canvas = document.createElement('canvas');
@@ -188,6 +193,7 @@ function computeDHash(imgElement, size = 16) {
 window.computeDHash = computeDHash;
 
 function getDominantColor(imgElement) {
+    // grab the main color
     return new Promise((resolve) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');

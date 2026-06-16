@@ -4,6 +4,7 @@ function loadAll() {
 }
 
 function loadSession() {
+    // restore login status
     const session = localStorage.getItem(window.LS_KEYS.session);
     if (session) {
         try {
@@ -16,6 +17,7 @@ function loadSession() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // kick things off
     (function initMobileMenu() {
         const menuToggle = document.querySelector('.menu-toggle');
         const mainNav = document.querySelector('.main-nav');

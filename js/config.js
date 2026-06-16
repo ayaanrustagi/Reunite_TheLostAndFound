@@ -1,4 +1,4 @@
-
+// app settings
 window.DEMO_MODE = false;
 
 window.ADMIN_ACCESS_CODE = "FBLA2025";

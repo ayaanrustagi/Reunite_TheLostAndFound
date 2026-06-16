@@ -3,6 +3,7 @@ import { createNoise2D } from './background.js';
 
 class Waves {
     constructor(container, options = {}) {
+        // setup wave animation
         this.container = container;
         this.options = {
             strokeColor: options.strokeColor || '#004ecc',
@@ -35,7 +36,7 @@ class Waves {
     }
 
     init() {
-        // Create SVG element
+        // build svgs and layers
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.svg.classList.add('js-svg');
         this.svg.style.display = 'block';
@@ -95,6 +96,7 @@ class Waves {
     }
 
     setLines() {
+        // build the grid
         const checkRect = this.container.getBoundingClientRect();
         // If container is hidden or 0 size, we might skip, but for fixed background it should be fine.
         const { width, height } = checkRect;
@@ -181,6 +183,7 @@ class Waves {
     }
 
     movePoints(time) {
+        // math for the wobble
         const lines = this.lines;
         const mouse = this.mouse;
         const noise = this.noise;
@@ -230,6 +233,7 @@ class Waves {
     }
 
     drawLines() {
+        // render the paths
         this.lines.forEach((points, lIndex) => {
             if (points.length < 2 || !this.paths[lIndex]) return;
 
@@ -248,6 +252,7 @@ class Waves {
     }
 
     tick(time) {
+        // the main loop
         // Smooth mouse
         this.mouse.sx += (this.mouse.x - this.mouse.sx) * 0.1;
         this.mouse.sy += (this.mouse.y - this.mouse.sy) * 0.1;

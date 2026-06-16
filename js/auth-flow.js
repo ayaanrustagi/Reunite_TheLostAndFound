@@ -10,6 +10,7 @@ let generatedOTP = null;
 // SECURITY UPDATE: Admin code verification moved to server-side.
 
 function setAuthMode(mode) {
+    // swap between login and signup
     authMode = mode;
     authStep = 'send';
     generatedOTP = null;
@@ -154,6 +155,7 @@ async function loginWithPassword() {
 window.loginWithPassword = loginWithPassword;
 
 async function sendOTP() {
+    // blast an email code
     const email = document.getElementById('authEmail').value.trim();
     const name = document.getElementById('authName').value.trim();
     const password = document.getElementById('authPassword').value.trim();
@@ -276,6 +278,7 @@ async function sendOTP() {
 window.sendOTP = sendOTP;
 
 async function verifyOTP() {
+    // check the code and let them in
     const otpInput = document.getElementById('authOTP');
     const enteredOTP = otpInput ? otpInput.value.trim() : "";
     const emailInput = document.getElementById('authEmail');
