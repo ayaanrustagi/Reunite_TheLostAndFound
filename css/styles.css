@@ -443,9 +443,6 @@ body {
     }
 
     .header-settings-btn {
-        order: 2;
-        margin-left: auto;
-        margin-right: 0.5rem;
         opacity: 0.9;
     }
 }
@@ -2467,9 +2464,18 @@ select::-ms-expand {
         border-radius: 8px;
     }
 
-    /* Hide Desktop Search & Actions on Tablet to prevent clutter */
-    .header-search-wrap,
+    /* Hide Desktop Search on Tablet */
+    .header-search-wrap {
+        display: none !important;
+    }
+
+    /* Keep actions container for gear icon, but hide buttons */
     .header-actions {
+        display: flex !important;
+        gap: 0.5rem;
+    }
+
+    .header-actions .btn-sm {
         display: none !important;
     }
 
@@ -2681,9 +2687,15 @@ select::-ms-expand {
         display: none;
     }
 
-    /* Hide header action buttons on mobile - they go in menu */
+    /* Hide header action buttons on mobile - only gear stays */
     .header-actions {
-        display: none;
+        display: flex;
+        gap: 0.5rem;
+        order: 2;
+    }
+
+    .header-actions .btn-sm {
+        display: none !important;
     }
 
     .btn-sm {
