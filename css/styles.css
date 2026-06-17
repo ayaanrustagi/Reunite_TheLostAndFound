@@ -318,13 +318,13 @@ body {
 }
 
 .header-inner {
+    width: 100%;
     max-width: 1400px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.85rem 1.5rem;
-    /* Consistently compact */
+    padding: 0.85rem 2rem;
 }
 
 .logo-area {
@@ -450,17 +450,15 @@ body {
 
 .header-settings-btn {
     flex-shrink: 0;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.header-settings-btn:hover {
-    transform: rotate(90deg) scale(1.1);
-}
-
-.header-inner {
+    margin-left: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid transparent;
 }
 
 .header-search-wrap:focus-within {
@@ -2425,8 +2423,8 @@ select::-ms-expand {
 
     .logo-area {
         order: 1;
-        margin-right: 0;
-        /* Remove auto margin to allow centering or space-between */
+        margin-right: auto;
+        /* Allow it to push other items */
         flex-shrink: 0;
     }
 
@@ -2473,6 +2471,7 @@ select::-ms-expand {
     .header-actions {
         display: flex !important;
         gap: 0.5rem;
+        order: 2;
     }
 
     .header-actions .btn-sm {
@@ -2620,7 +2619,6 @@ select::-ms-expand {
     .logo-area {
         order: 1;
         margin-right: auto;
-        /* Push actions and menu to the right */
     }
 
     /* Floating header adjustments for mobile */
