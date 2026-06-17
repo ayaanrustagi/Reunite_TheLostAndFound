@@ -1409,7 +1409,7 @@ select::-ms-expand {
 
 /* Item Card Enhancement */
 /* Item Card Enhancement */
-.item-card {
+button.item-card {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
@@ -1831,7 +1831,7 @@ select::-ms-expand {
 }
 
 /* Action Card - Specially styled */
-.action-card {
+button.action-card {
     background: var(--text-color);
     color: #ffffff;
     cursor: pointer;
@@ -1857,6 +1857,13 @@ select::-ms-expand {
     font-size: 0.6rem;
     letter-spacing: 0.2em;
     opacity: 0.6;
+}
+
+.action-icon {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-top: auto;
+    opacity: 0.9;
 }
 
 .action-card h3 {
@@ -3506,7 +3513,7 @@ select::-ms-expand {
     color: var(--muted-text);
 }
 
-.ai-match-item {
+button.ai-match-item {
     cursor: pointer;
     margin-bottom: 0.75rem;
 }
