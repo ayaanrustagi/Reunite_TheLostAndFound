@@ -26,7 +26,6 @@ button.logo-area,
 button.scroll-indicator,
 button.persistent-trigger,
 button.item-card,
-button.ai-match-item,
 button.action-card {
     background: none;
     border: none;
@@ -3525,6 +3524,10 @@ button.action-card {
 button.ai-match-item {
     cursor: pointer;
     margin-bottom: 0.75rem;
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    text-align: left;
 }
 
 .ai-match-content {
