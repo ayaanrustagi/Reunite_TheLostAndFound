@@ -1,0 +1,235 @@
+/* ========================================
+   MODALS - Modal overlays, loading states
+   ======================================== */
+
+/* Modals Enhancement */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px) saturate(180%);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow-y: auto;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-box {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100vh - 4rem);
+    position: relative;
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(40px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-box.large {
+    max-width: 900px;
+}
+
+.modal-photo {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    margin: 1.5rem 0;
+    padding: 1rem;
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-header h3 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.modal-body .btn-primary {
+    margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-primary.full-width {
+    width: 100%;
+    justify-content: center;
+}
+
+.status-msg {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    margin-top: 1rem;
+    color: var(--accent-color);
+}
+
+.tips-panel .list-view {
+    gap: 1.25rem;
+}
+
+.tips-list .tip-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border-radius: var(--radius-md);
+}
+
+.tip-card strong {
+    font-size: 0.9rem;
+}
+
+.tip-card p {
+    font-size: 0.8rem;
+    color: var(--muted-text);
+    line-height: 1.4;
+}
+
+.tip-card span {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--accent-color);
+    letter-spacing: 0.1em;
+}
+
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    color: var(--text-color);
+    font-family: var(--font-mono);
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    border-top-color: var(--accent-color);
+    animation: spin 0.6s linear infinite;
+}
+
+.loading-overlay.success-state .spinner {
+    display: none;
+}
+
+.loading-overlay.success-state #loadingMessage {
+    color: var(--accent-color);
+}
+
+.loading-overlay.success-state::before {
+    content: "\2713";
+    font-size: 3rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Search Active State (Clean View) */
+.search-active .filter-ui,
+.search-active .visual-search-group,
+.search-active .section-head {
+    display: none !important;
+}
+
+.search-active .content-wrapper {
+    padding-top: 2rem;
+}

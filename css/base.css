@@ -1,0 +1,278 @@
+/* ========================================
+   BASE - Variables, resets, accessibility
+   ======================================== */
+
+:root {
+    --bg-color: #f3f3f3;
+    --bg-color-rgb: 243, 243, 243;
+    --text-color: #1a1a1a;
+    --accent-color: #004ecc;
+    --border-color: #e5e5e5;
+    --panel-bg: #ffffff;
+    --panel-bg-rgb: 255, 255, 255;
+    --muted-text: #666666;
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
+    --glow-opacity: 0.15;
+    --accent-glow: rgba(0, 106, 255, 0.4);
+
+    /* New UI Tokens */
+    --radius-lg: 24px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 15px 45px rgba(0, 0, 0, 0.1);
+}
+
+/* Accessibility & Structure Buttons */
+button.logo-area,
+button.scroll-indicator,
+button.persistent-trigger,
+button.item-card,
+button.action-card {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: inherit;
+    display: block;
+    width: 100%;
+}
+
+button.logo-area {
+    width: auto;
+    display: flex;
+    align-items: center;
+}
+
+button.scroll-indicator {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+button.persistent-trigger {
+    width: auto;
+}
+
+
+/* Activity Feed Styles */
+.activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.activity-icon.found {
+    background: rgba(76, 217, 100, 0.1);
+    color: #4cd964;
+}
+
+.activity-icon.lost {
+    background: rgba(255, 59, 48, 0.1);
+    color: #ff3b30;
+}
+
+.activity-icon.match {
+    background: rgba(0, 122, 255, 0.1);
+    color: #007aff;
+}
+
+.activity-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.act-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.act-meta {
+    font-size: 0.75rem;
+    color: var(--muted-text);
+}
+
+/* Chart Area Placeholder */
+.chart-area-placeholder {
+    height: 50px;
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    opacity: 0.5;
+}
+
+.volume-bar {
+    flex: 1;
+    background: #e5e5e5;
+    border-radius: 2px;
+}
+
+.volume-bar.active {
+    background: var(--accent-color);
+}
+
+/* Task List Styles */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.task-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.task-row:hover {
+    background: #f0f0f0;
+}
+
+.task-row.completed span {
+    text-decoration: line-through;
+    color: var(--muted-text);
+}
+
+.task-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: transparent;
+    flex-shrink: 0;
+}
+
+.task-row.completed .task-check {
+    background: #4cd964;
+    border-color: #4cd964;
+    color: white;
+}
+
+.task-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.btn-xs-primary {
+    background: var(--text-color);
+    color: white;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    align-self: flex-start;
+    cursor: pointer;
+}
+
+.progress-ring-mini {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    background: rgba(0, 78, 204, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+}
+
+
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 1rem;
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 0.5rem 1rem;
+    z-index: 9999;
+    text-decoration: none;
+    transition: top 0.2s;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Base Refinements */
+html {
+    scroll-behavior: smooth;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 999;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: transparent;
+    color: var(--text-color);
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}

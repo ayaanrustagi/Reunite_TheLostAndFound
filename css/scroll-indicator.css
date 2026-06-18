@@ -1,0 +1,312 @@
+/* ========================================
+   SCROLL INDICATOR - Scroll UI elements
+   ======================================== */
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 3.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.8;
+    animation: bounceTotal 2s infinite;
+}
+
+.scroll-indicator:hover {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Base Bounce (Desktop) - Includes centering */
+@keyframes bounceTotal {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    40% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    60% {
+        transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+/* Mobile Bounce - No horizontal centering needed (flex handles it) */
+@keyframes bounceMobile {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0) scale(0.9);
+    }
+
+    40% {
+        transform: translateY(-10px) scale(0.9);
+    }
+
+    60% {
+        transform: translateY(-5px) scale(0.9);
+    }
+}
+
+.scroll-text {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--muted-text);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.scroll-mouse {
+    width: 24px;
+    height: 40px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    position: relative;
+}
+
+.scroll-wheel {
+    width: 4px;
+    height: 8px;
+    background: var(--accent-color);
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollWheelMove 2s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+
+@keyframes scrollWheelMove {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-8px);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(14px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(22px);
+    }
+}
+
+.scroll-indicator::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--accent-color), transparent);
+    animation: scrollLineMove 2s infinite;
+}
+
+@keyframes scrollLineMove {
+    0% {
+        transform: scaleY(0);
+        transform-origin: top;
+        opacity: 0;
+    }
+
+    50% {
+        transform: scaleY(1);
+        transform-origin: top;
+        opacity: 0.5;
+    }
+
+    51% {
+        transform: scaleY(1);
+        transform-origin: bottom;
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scaleY(0);
+        transform-origin: bottom;
+        opacity: 0;
+    }
+}
+
+/* Mobile Specific Overrides */
+@media (max-width: 768px) {
+
+
+
+    .hero-display-text {
+        font-size: 2.8rem;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-display-text .sub-hero {
+        font-size: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Stack Buttons */
+    .hero-cta-group {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 320px;
+        margin: 2rem auto 0;
+        padding: 0 1rem;
+    }
+
+    .full-width-mobile {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem 1.5rem;
+        height: auto;
+        min-height: 52px;
+        box-sizing: border-box;
+    }
+
+    .btn-primary.full-width-mobile {
+        gap: 1rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+    }
+
+    .btn-secondary.full-width-mobile {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        padding: 1rem 1.5rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Mobile text animation optimizations - disable blur for performance */
+    .text-slide-out {
+        animation: mobileTextOut 0.4s ease forwards;
+    }
+
+    .text-slide-in {
+        animation: mobileTextIn 0.4s ease forwards;
+    }
+
+    @keyframes mobileTextOut {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(-15px);
+        }
+    }
+
+    @keyframes mobileTextIn {
+        0% {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .text-reveal {
+        animation: mobileReveal 0.6s ease forwards;
+    }
+
+    @keyframes mobileReveal {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    #hero-title,
+    #hero-subtitle {
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+
+
+    .scroll-indicator {
+        display: flex;
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 3rem;
+        /* Brought closer to buttons */
+        margin-bottom: 4rem;
+        /* Generous spacing */
+        width: 100%;
+        animation: bounceMobile 2s infinite;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+        /* Full visibility */
+    }
+
+    /* Make the mouse icon dark and sharp on mobile */
+    .scroll-indicator .scroll-mouse {
+        border-color: #000;
+        border-width: 2px;
+        opacity: 1;
+    }
+
+    .scroll-indicator:hover {
+        transform: translateY(-5px);
+    }
+
+    .scroll-text {
+        display: none !important;
+        /* Hide text on mobile to fix layout */
+    }
+
+    .scroll-indicator::after {
+        display: none;
+    }
+
+    #how-content-area {
+        margin-top: 6rem;
+        /* Push next section way down */
+        padding-top: 2rem;
+    }
+
+    .hero-centered-content {
+        min-height: auto;
+        padding-bottom: 5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        /* Stop vertical centering pulling items up */
+    }
+}
