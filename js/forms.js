@@ -414,7 +414,7 @@ async function simulateAiScan() {
             return { ...it, confidence, structScore, colorScore };
         })
         .sort((a, b) => b.confidence - a.confidence)
-        .filter(it => it.confidence > 65)
+        .filter(it => it.confidence > 50)
         .slice(0, 3);
 
 

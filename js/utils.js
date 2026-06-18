@@ -155,32 +155,53 @@ window.isFuzzyMatch = isFuzzyMatch;
 
 
 
-function computeDHash(imgElement, size = 16) {
-    // digital fingerprint for images
+function computeDHash(imgElement, size = 8) {
+    // Perceptual image fingerprint using difference hashing
+    // Two-step downscale acts as a natural blur/anti-alias filter
     return new Promise((resolve) => {
         const process = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = size + 1;
-            canvas.height = size;
+            try {
+                // Step 1: Scale to intermediate size for anti-aliasing
+                const midSize = (size + 1) * 4;
+                const midCanvas = document.createElement('canvas');
+                const midCtx = midCanvas.getContext('2d');
+                midCanvas.width = midSize;
+                midCanvas.height = midSize;
+                midCtx.imageSmoothingEnabled = true;
+                midCtx.imageSmoothingQuality = 'high';
+                midCtx.drawImage(imgElement, 0, 0, midSize, midSize);
 
-            ctx.drawImage(imgElement, 0, 0, size + 1, size);
-            const imgData = ctx.getImageData(0, 0, size + 1, size).data;
+                // Step 2: Scale down to final hash dimensions
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = size + 1;
+                canvas.height = size;
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(midCanvas, 0, 0, size + 1, size);
 
-            const grays = [];
-            for (let i = 0; i < imgData.length; i += 4) {
-                grays.push(imgData[i] * 0.299 + imgData[i + 1] * 0.587 + imgData[i + 2] * 0.114);
-            }
+                const imgData = ctx.getImageData(0, 0, size + 1, size).data;
 
-            let hash = "";
-            for (let y = 0; y < size; y++) {
-                for (let x = 0; x < size; x++) {
-                    const left = grays[y * (size + 1) + x];
-                    const right = grays[y * (size + 1) + x + 1];
-                    hash += left > right ? "1" : "0";
+                // Convert to grayscale using luminance weights
+                const grays = [];
+                for (let i = 0; i < imgData.length; i += 4) {
+                    grays.push(imgData[i] * 0.299 + imgData[i + 1] * 0.587 + imgData[i + 2] * 0.114);
                 }
+
+                // Build hash by comparing adjacent horizontal pixels
+                let hash = "";
+                for (let y = 0; y < size; y++) {
+                    for (let x = 0; x < size; x++) {
+                        const left = grays[y * (size + 1) + x];
+                        const right = grays[y * (size + 1) + x + 1];
+                        hash += left > right ? "1" : "0";
+                    }
+                }
+                resolve(hash);
+            } catch (e) {
+                console.warn("dHash computation failed:", e);
+                resolve(null);
             }
-            resolve(hash);
         };
 
         if (imgElement.complete && imgElement.naturalWidth !== 0) {
@@ -193,28 +214,62 @@ function computeDHash(imgElement, size = 16) {
 window.computeDHash = computeDHash;
 
 function getDominantColor(imgElement) {
-    // grab the main color
+    // Sample an 8x8 grid from the center of the image for robust color
     return new Promise((resolve) => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 1;
-        canvas.height = 1;
-
-
         setTimeout(() => {
             try {
-
                 const w = imgElement.naturalWidth || imgElement.width;
                 const h = imgElement.naturalHeight || imgElement.height;
 
-                if (w > 0 && h > 0) {
-                    ctx.drawImage(imgElement, w * 0.25, h * 0.25, w * 0.5, h * 0.5, 0, 0, 1, 1);
-                } else {
-                    ctx.drawImage(imgElement, 0, 0, 1, 1);
+                if (w <= 0 || h <= 0) {
+                    resolve(null);
+                    return;
                 }
 
-                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                resolve({ r, g, b });
+                const sampleSize = 8;
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = sampleSize;
+                canvas.height = sampleSize;
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+
+                // Sample center 70% of the image to skip borders/edges
+                const margin = 0.15;
+                ctx.drawImage(
+                    imgElement,
+                    w * margin, h * margin,
+                    w * (1 - 2 * margin), h * (1 - 2 * margin),
+                    0, 0, sampleSize, sampleSize
+                );
+
+                const data = ctx.getImageData(0, 0, sampleSize, sampleSize).data;
+                const pixels = [];
+
+                for (let i = 0; i < data.length; i += 4) {
+                    pixels.push({ r: data[i], g: data[i + 1], b: data[i + 2] });
+                }
+
+                // Filter out extreme dark/bright pixels that skew averages
+                const filtered = pixels.filter(p => {
+                    const lum = p.r * 0.299 + p.g * 0.587 + p.b * 0.114;
+                    return lum > 15 && lum < 240;
+                });
+
+                const source = filtered.length > 10 ? filtered : pixels;
+
+                // Compute average color across all sampled pixels
+                const sum = source.reduce((acc, p) => {
+                    acc.r += p.r; acc.g += p.g; acc.b += p.b;
+                    return acc;
+                }, { r: 0, g: 0, b: 0 });
+
+                const n = source.length;
+                resolve({
+                    r: Math.round(sum.r / n),
+                    g: Math.round(sum.g / n),
+                    b: Math.round(sum.b / n)
+                });
             } catch (e) {
                 console.warn("Color extraction failed:", e);
                 resolve(null);
@@ -225,16 +280,19 @@ function getDominantColor(imgElement) {
 window.getDominantColor = getDominantColor;
 
 function colorMatchScore(c1, c2) {
-    if (!c1 || !c2) return 100;
+    // Neutral score if either color is missing — don't inflate confidence
+    if (!c1 || !c2) return 50;
 
+    // Perceptually-weighted Euclidean distance (green > red > blue)
     const dist = Math.sqrt(
-        Math.pow(c1.r - c2.r, 2) +
-        Math.pow(c1.g - c2.g, 2) +
-        Math.pow(c1.b - c2.b, 2)
+        2 * Math.pow(c1.r - c2.r, 2) +
+        4 * Math.pow(c1.g - c2.g, 2) +
+        3 * Math.pow(c1.b - c2.b, 2)
     );
 
-
-    return Math.max(0, 100 - (dist / 4.41));
+    // Max weighted distance = sqrt(2*255^2 + 4*255^2 + 3*255^2) ≈ 764.8
+    const maxDist = 764.8;
+    return Math.max(0, Math.round(100 - (dist / maxDist) * 100));
 }
 window.colorMatchScore = colorMatchScore;
 
