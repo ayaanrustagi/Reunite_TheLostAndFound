@@ -326,7 +326,7 @@ function renderAdmin() {
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item">
             <div style="display: flex; align-items: center; gap: 1rem;">
-              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px dashed #ff9500;"></div>'}
+              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>'}
               <div class="item-info">
                 <div class="ref-code">REF: ${i.id.substring(5, 13).toUpperCase()}</div>
                 <strong>${i.title}</strong>
@@ -347,7 +347,7 @@ function renderAdmin() {
         return `
             <div class="list-item">
                 <div style="display: flex; align-items: center; gap: 1rem;">
-                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px dashed #ff9500;"></div>`}
+                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>`}
                   <div class="item-info">
                     <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
                     <strong>${item?.title || 'Unknown Item'}</strong>
