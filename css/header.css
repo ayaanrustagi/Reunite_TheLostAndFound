@@ -223,7 +223,7 @@
 .nav-btn {
     background: none;
     border: none;
-    font-family: var(--font-main);
+    font-family: var(--font-mono);
     font-weight: 600;
     font-size: 0.72rem;
     /* Compact font */
