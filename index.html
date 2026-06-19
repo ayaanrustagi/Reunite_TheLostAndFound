@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REUNITE - Lost & Found Network</title>
   <meta name="description"
-    content="REUNITE is a premium, custom-coded lost & found network featuring AI-powered visual matching and a robust Node.js backend to reconnect communities." />
+    content="REUNITE is a premium, custom-coded lost & found network featuring D-hashing powered visual matching and a robust Node.js backend to reconnect communities." />
   <meta name="author" content="Ayaan Rustagi, Sree Kondapali, Tushaar Singh" />
 
   <!-- Fonts -->
@@ -250,7 +250,7 @@
         </div>
 
         <div class="input-group visual-search-group" style="margin-bottom: 2rem;">
-          <label class="label-tech">VISUAL SEARCH (AI MATCHING)</label>
+          <label class="label-tech">VISUAL SEARCH (D-hashing)</label>
           <div class="file-upload-ui">
             <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
             <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO OF LOST ITEM</span>
@@ -258,7 +258,7 @@
           </div>
           <div id="aiMatchContainer" class="ai-scan-container">
             <div class="scanning-line-overlay"></div>
-            <div id="aiMatchLabel">INITIALIZING COMPONENT SCAN...</div>
+            <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
             <div class="scan-progress-bar" id="aiScanProgress"></div>
             <div id="aiMatchResults"></div>
           </div>

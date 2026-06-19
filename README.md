@@ -9,7 +9,7 @@ REUNITE is a full-stack solution that automates the lost and found process. Unli
 ## Key Technical Achievements
 
 - **Custom Node.js Backend**: Built a robust REST API using Express and MongoDB to handle high-concurrency data management.
-- **AI Matching (dHash)**: Implemented a custom Perceptual Hashing algorithm that converts images into binary structural strings, allowing for visual similarity detection.
+- **D-hashing**: Implemented a custom Perceptual Hashing algorithm that converts images into binary structural strings, allowing for visual similarity detection.
 - **Accessibility (A11y)**: Fully compliant with WCAG standards, featuring ARIA labels, semantic HTML5 structure, and full keyboard-only navigation support.
 - **Hybrid Search**: Combines **Levenshtein Distance** (Fuzzy Text Search) with visual color matching and structural hashing for 99% accurate retrieval.
 
@@ -76,7 +76,7 @@ Reunite/
 
 ## Features
 
-- **AI-Powered Visual Scan**: Upload a photo to find matching items in the inventory.
+- **D-hashing Powered Visual Scan**: Upload a photo to find matching items in the inventory.
 - **Admin Command Center**: Real-time approval queue and claim verification system.
 - **Bento Dashboard**: Personalized user experience with real-time status updates.
 - **Smart Search**: Context-aware filtering by category, location, and metadata.
