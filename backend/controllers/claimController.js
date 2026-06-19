@@ -1,5 +1,6 @@
 const connectDB = require('../db');
 const Claim = require('../models/Claim');
+const { logAudit } = require('../utils/auditLogger');
 
 exports.getAllClaims = async (req, res) => {
     try {
@@ -23,11 +24,29 @@ exports.upsertClaim = async (req, res) => {
         const updateData = { ...claimData, _id: id };
         delete updateData.id;
 
+        const existing = await Claim.findById(id).lean();
+        const action = existing ? 'CLAIM_UPDATE' : 'CLAIM_CREATE';
+
         const updated = await Claim.findOneAndUpdate(
             { _id: id },
             updateData,
             { upsert: true, returnDocument: 'after', lean: true, setDefaultsOnInsert: true }
         );
+
+        // Audit Log
+        const requester = claimData._requester || { id: claimData.created_by || 'system', email: claimData.claimer_email || 'system' };
+
+        await logAudit({
+            userId: requester.id,
+            userEmail: requester.email,
+            action: action,
+            resourceType: 'Claim',
+            resourceId: id,
+            details: {
+                item_id: updated.item_id,
+                status: updated.status
+            }
+        });
 
         res.json({ ...updated, id: updated._id });
     } catch (err) {
@@ -39,7 +58,19 @@ exports.deleteClaim = async (req, res) => {
     try {
         await connectDB();
         const { id } = req.params;
+        const { requester_id, requester_email } = req.query;
+
         await Claim.deleteOne({ _id: id });
+
+        await logAudit({
+            userId: requester_id || 'system',
+            userEmail: requester_email || 'system',
+            action: 'CLAIM_DELETE',
+            resourceType: 'Claim',
+            resourceId: id,
+            details: {}
+        });
+
         res.json({ message: "Claim deleted successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });

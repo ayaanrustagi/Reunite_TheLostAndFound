@@ -554,8 +554,24 @@
               <div id="adminVerifiedClaims" class="list-view"></div>
             </div>
 
-            <!-- Audit Log (Hidden for now or repurposed) -->
-            <div id="adminAudit" class="hidden"></div>
+            <!-- Audit Log Panel -->
+            <div class="bento-card card-large-span">
+              <div class="card-header">
+                <h3>SYSTEM AUDIT LOG</h3>
+                <button class="btn-sm btn-outline" onclick="renderAdminAudit()">REFRESH</button>
+              </div>
+              <div class="audit-log-container">
+                <div class="audit-header">
+                  <span>TIMESTAMP</span>
+                  <span>USER</span>
+                  <span>ACTION</span>
+                  <span>RESOURCE</span>
+                </div>
+                <div id="adminAuditList" class="list-view audit-list">
+                  <div class="loading-text">Loading logs...</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

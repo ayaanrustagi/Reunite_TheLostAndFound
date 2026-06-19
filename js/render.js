@@ -321,6 +321,8 @@ function renderAdmin() {
         if (el) el.textContent = val;
     });
 
+    renderAdminAudit();
+
 
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
@@ -388,3 +390,43 @@ function renderAdmin() {
     }).join('') : '<div class="status-msg">EMPTY</div>';
 }
 window.renderAdmin = renderAdmin;
+async function renderAdminAudit() {
+    const listEl = document.getElementById('adminAuditList');
+    if (!listEl) return;
+
+    try {
+        const logs = await window.apiGetAuditLogs();
+        if (!logs || logs.length === 0) {
+            listEl.innerHTML = '<div class="loading-text">NO AUDIT LOGS FOUND.</div>';
+            return;
+        }
+
+        listEl.innerHTML = logs.map(log => {
+            const date = new Date(log.timestamp);
+            const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            let actionClass = 'action-update';
+            if (log.action.includes('LOGIN')) actionClass = 'action-login';
+            else if (log.action.includes('REGISTER')) actionClass = 'action-register';
+            else if (log.action.includes('CREATE')) actionClass = 'action-create';
+            else if (log.action.includes('DELETE')) actionClass = 'action-delete';
+
+            return `
+                <div class="audit-entry">
+                    <div class="audit-time">${timeStr}</div>
+                    <div class="audit-user" title="${log.userEmail}">${log.userEmail.split('@')[0]}</div>
+                    <div class="audit-action">
+                        <span class="audit-action-tag ${actionClass}">${log.action.replace('USER_', '').replace('ITEM_', '').replace('CLAIM_', '')}</span>
+                    </div>
+                    <div class="audit-resource" title="ID: ${log.resourceId || 'N/A'}">
+                        ${log.resourceType}: ${log.details?.title || log.resourceId || 'N/A'}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } catch (err) {
+        console.error('Audit render failed:', err);
+        listEl.innerHTML = '<div class="loading-text" style="color: #ff4d4d;">FAILED TO LOAD AUDIT LOGS.</div>';
+    }
+}
+window.renderAdminAudit = renderAdminAudit;

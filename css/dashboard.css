@@ -285,3 +285,120 @@ button.action-card {
     border-color: rgba(0, 106, 255, 0.3);
     background: rgba(0, 106, 255, 0.02);
 }
+
+/* Audit Log Styles */
+.audit-log-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-md);
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.audit-header {
+    display: grid;
+    grid-template-columns: 140px 1.2fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(0, 0, 0, 0.025);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--muted-text);
+    text-transform: uppercase;
+}
+
+.audit-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0;
+    display: block;
+}
+
+.audit-entry {
+    display: grid;
+    grid-template-columns: 140px 1.2fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    font-size: 0.75rem;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.audit-entry:hover {
+    background: rgba(0, 106, 255, 0.02);
+}
+
+.audit-entry:last-child {
+    border-bottom: none;
+}
+
+.audit-time {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted-text);
+}
+
+.audit-user {
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.audit-action {
+    display: inline-flex;
+}
+
+.audit-action-tag {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.action-login {
+    background: rgba(0, 204, 102, 0.1);
+    color: #00cc66;
+}
+
+.action-register {
+    background: rgba(0, 106, 255, 0.1);
+    color: var(--accent-color);
+}
+
+.action-create {
+    background: rgba(255, 165, 0, 0.1);
+    color: #ff8c00;
+}
+
+.action-update {
+    background: rgba(128, 128, 128, 0.1);
+    color: #555;
+}
+
+.action-delete {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff0000;
+}
+
+.audit-resource {
+    color: var(--muted-text);
+    font-style: italic;
+    font-size: 0.7rem;
+}
+
+.loading-text {
+    padding: 2rem;
+    text-align: center;
+    color: var(--muted-text);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}

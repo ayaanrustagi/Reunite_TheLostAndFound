@@ -6,6 +6,7 @@ const connectDB = require('../backend/db');
 const itemRoutes = require('../backend/routes/items');
 const claimRoutes = require('../backend/routes/claims');
 const authRoutes = require('../backend/routes/auth');
+const auditRoutes = require('../backend/routes/audit');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(async (req, res, next) => {
 app.use('/api/items', itemRoutes);
 app.use('/api/claims', claimRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/audit', auditRoutes);
 
 // Export for Vercel
 module.exports = app;

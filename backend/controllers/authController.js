@@ -1,5 +1,6 @@
 const connectDB = require('../db');
 const User = require('../models/User');
+const { logAudit } = require('../utils/auditLogger');
 
 exports.login = async (req, res) => {
     try {
@@ -9,6 +10,15 @@ exports.login = async (req, res) => {
 
         if (!user) return res.status(404).json({ error: "User not found" });
         if (user.password !== password) return res.status(401).json({ error: "Invalid password" });
+
+        await logAudit({
+            userId: user._id,
+            userEmail: user.email,
+            action: 'USER_LOGIN',
+            resourceType: 'User',
+            resourceId: user._id,
+            details: { role: user.role }
+        });
 
         res.json({
             id: user._id,
@@ -52,6 +62,15 @@ exports.register = async (req, res) => {
         });
 
         const inserted = await newUser.save();
+
+        await logAudit({
+            userId: inserted._id,
+            userEmail: inserted.email,
+            action: 'USER_REGISTER',
+            resourceType: 'User',
+            resourceId: inserted._id,
+            details: { role: inserted.role }
+        });
 
         res.status(201).json({
             id: inserted._id,

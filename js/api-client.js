@@ -41,6 +41,14 @@ async function apiUpsert(resource, record) {
         const method = 'POST'; // We will use POST for upsert logic handled by backend or PUT
         // Actually backend implementation uses POST to root for upsert
 
+        const session = JSON.parse(localStorage.getItem("reunite_session") || "null");
+        if (session) {
+            record._requester = {
+                id: session.id,
+                email: session.email
+            };
+        }
+
         const res = await fetch(`${API_BASE}/${resource}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -66,7 +74,14 @@ window.apiUpsert = apiUpsert;
 async function apiDelete(resource, id) {
     // nuke a record
     try {
-        await fetch(`${API_BASE}/${resource}/${id}`, { method: 'DELETE' });
+        const session = JSON.parse(localStorage.getItem("reunite_session") || "null");
+        const url = new URL(`${window.location.origin}${API_BASE}/${resource}/${id}`);
+        if (session) {
+            url.searchParams.append('requester_id', session.id);
+            url.searchParams.append('requester_email', session.email);
+        }
+
+        await fetch(url.toString(), { method: 'DELETE' });
         console.log(`${resource} ${id} DELETED`);
     } catch (err) {
         console.error(`DELETE ERROR:`, err);
@@ -103,6 +118,13 @@ async function apiGetProfile(email) {
     return await res.json();
 }
 window.apiGetProfile = apiGetProfile;
+
+async function apiGetAuditLogs() {
+    const res = await fetch(`${API_BASE}/audit`);
+    if (!res.ok) return [];
+    return await res.json();
+}
+window.apiGetAuditLogs = apiGetAuditLogs;
 
 // Initial sync is handled by app.js
 // but we expect window.items and window.claims to be available globally
