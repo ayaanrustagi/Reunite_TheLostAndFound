@@ -1,8 +1,4 @@
-/* ========================================
-   SETTINGS - Accessibility, claimed items
-   ======================================== */
-
-/* --- NEW ROBUST SCROLL INDICATOR --- */
+/* NEW ROBUST SCROLL INDICATOR */
 .scroll-wrapper {
     display: flex;
     flex-direction: column;

@@ -413,12 +413,12 @@ async function renderAdminAudit() {
 
             return `
                 <div class="audit-entry">
-                    <div class="audit-time">${timeStr}</div>
-                    <div class="audit-user" title="${log.userEmail}">${log.userEmail.split('@')[0]}</div>
-                    <div class="audit-action">
+                    <div class="audit-time" data-label="Time">${timeStr}</div>
+                    <div class="audit-user" data-label="User" title="${log.userEmail}">${log.userEmail.split('@')[0]}</div>
+                    <div class="audit-action" data-label="Action">
                         <span class="audit-action-tag ${actionClass}">${log.action.replace('USER_', '').replace('ITEM_', '').replace('CLAIM_', '')}</span>
                     </div>
-                    <div class="audit-resource" title="ID: ${log.resourceId || 'N/A'}">
+                    <div class="audit-resource" data-label="Resource" title="ID: ${log.resourceId || 'N/A'}">
                         ${log.resourceType}: ${log.details?.title || log.resourceId || 'N/A'}
                     </div>
                 </div>

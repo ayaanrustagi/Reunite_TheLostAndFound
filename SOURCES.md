@@ -20,5 +20,4 @@
 - **REUNITE Identity**: Brand logo, design language, and "Liquid Glass" system created by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh).
 - **Grainy Textures**: Noise SVG textures generated via [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/).
 
-## Additional Notes
-All code architecture (MVC), algorithms (D-hashing, Levenshtein Distance), and unique design components were developed explicitly for the FBLA Website Coding & Development competition. No copyrighted content has been utilized without appropriate licensing or attribution.
+

@@ -891,20 +891,111 @@
     }
 
     /* Dashboard */
-    .dashboard-panels {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+    .dashboard-grid-container {
+        gap: 1rem;
     }
 
-    .panel h3 {
-        font-size: 0.7rem;
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem;
+    }
+
+    .dashboard-bento-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .card-large-span,
+    .card-mid-span,
+    .card-small-span,
+    .card-full-span {
+        grid-column: span 1;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-actions {
+        width: 100%;
+        margin: 0;
+    }
+
+    .admin-actions .btn-sm {
+        width: 100%;
+        padding: 0.75rem;
+        justify-content: center;
     }
 
     .list-item {
-        padding: 1rem;
+        padding: 1.25rem;
         flex-direction: column;
         align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .admin-actions-inline {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .admin-actions-inline .btn-sm {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Audit Log Mobile Fix */
+    .audit-log-container {
+        border-radius: 12px;
+    }
+
+    .audit-header {
+        display: none;
+    }
+
+    .audit-entry {
+        grid-template-columns: 1fr;
         gap: 0.75rem;
+        padding: 1.25rem;
+        border-bottom: 8px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .audit-entry>div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .audit-entry>div::before {
+        content: attr(data-label);
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted-text);
+        text-transform: uppercase;
+    }
+
+    .audit-time,
+    .audit-user,
+    .audit-resource {
+        font-size: 0.8rem;
+    }
+
+    .audit-user {
+        font-weight: 700;
+    }
+
+    .audit-resource {
+        text-align: right;
+        font-style: normal;
+        color: var(--text-color);
     }
 
     /* Modals */
@@ -994,6 +1085,10 @@
 
     .header-inner {
         padding: 0.6rem 0.75rem;
+    }
+
+    .stats-row {
+        grid-template-columns: 1fr !important;
     }
 }
 
