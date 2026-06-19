@@ -1,17 +1,24 @@
 # SOURCES / ATTRIBUTION
 
 ## Fonts
-- **Inter** (Google Fonts) - [Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
-- **Roboto Mono** (Google Fonts) - [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- **Inter** (Google Fonts) - Licensed under the [SIL Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
+- **Roboto Mono** (Google Fonts) - Licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-## Libraries
-- **Supabase JS Client** - [MIT License](https://github.com/supabase/supabase-js/blob/master/LICENSE)
-- **EmailJS SDK** - [MIT License](https://github.com/nicebuzzer/emailjs-sdk/blob/master/LICENSE)
+## Backend Frameworks & Libraries
+- **Node.js**: Open-source, cross-platform JavaScript runtime environment. [MIT License](https://github.com/nodejs/node/blob/main/LICENSE).
+- **Express.js**: Fast, unopinionated, minimalist web framework for Node.js. [MIT License](https://github.com/expressjs/express/blob/master/LICENSE).
+- **Mongoose**: MongoDB object modeling tool designed to work in an asynchronous environment. [MIT License](https://github.com/Automattic/mongoose/blob/master/LICENSE.base).
+- **MongoDB Memory Server**: In-memory MongoDB server for testing and evaluation failover. [MIT License](https://github.com/nodkz/mongodb-memory-server/blob/master/LICENSE).
+- **Dotenv**: Zero-dependency module that loads environment variables from a .env file. [BSD-2-Clause License](https://github.com/motdotla/dotenv/blob/master/LICENSE).
+- **Multer**: Middleware for handling multipart/form-data, primarily used for uploading files. [MIT License](https://github.com/expressjs/multer/blob/master/LICENSE).
 
-## Images / Icons
-- **Reunite Logo**: Created by Ayaan Rustagi, Sree Kondapali, Tushaar Singh.
-- **UI Icons**: Unicons / Feather Icons (MIT License) or custom SVGs.
-- **Grainy Textures**: [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/)
+## Frontend Libraries & APIs
+- **EmailJS SDK**: Enables sending emails directly from client-side JavaScript. [MIT License](https://github.com/nicebuzzer/emailjs-sdk/blob/master/LICENSE).
+- **Feather Icons / Unicons**: Open-source icons used for UI elements. [MIT License](https://github.com/feathericons/feather/blob/master/LICENSE).
 
-## Notes
-All other assets and code were created specifically for this project by the development team. No copyrighted material, images, logos, or trademarks have been used without permission.
+## Visual Assets & Textures
+- **REUNITE Identity**: Brand logo, design language, and "Liquid Glass" system created by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh).
+- **Grainy Textures**: Noise SVG textures generated via [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/).
+
+## Additional Notes
+All code architecture (MVC), algorithms (D-hashing, Levenshtein Distance), and unique design components were developed explicitly for the FBLA Website Coding & Development competition. No copyrighted content has been utilized without appropriate licensing or attribution.

@@ -223,11 +223,12 @@
 .nav-btn {
     background: none;
     border: none;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
+    font-weight: 600;
     font-size: 0.72rem;
     /* Compact font */
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     color: var(--muted-text);
     cursor: pointer;
     transition: all 0.25s ease;

@@ -1,85 +1,85 @@
-# REUNITE - Lost & Found Network
+# REUNITE — The Intelligent Lost & Found Network
 
-A premium, custom-coded web application designed to reconnect individuals with their lost belongings through a sophisticated blend of **RESTful API architecture** and **Client-Side AI**. Built strictly from scratch for the 2025-2026 FBLA Website Coding & Development competition.
+### 🏆 FBLA Website Coding & Development (2025-2026)
+**Developed by:** Ayaan Rustagi, Sree Kondapali, Tushaar Singh  
+**School:** Rouse High School  
+**Tech Stack:** Node.js, Express, MongoDB, Vanilla JavaScript, CSS3
 
-## Project Overview
+---
 
-REUNITE is a full-stack solution that automates the lost and found process. Unlike traditional registry systems, it utilizes **Perceptual Hashing** to visually match found items against reports even with slight photographic differences.
+## 📖 Executive Summary
+REUNITE is a premium, full-stack digital ecosystem designed to solve the friction of lost and found management in high-density environments like schools and community centers. Unlike static registries, REUNITE leverages **Perceptual D-hashing** and **Fuzzy Logic** to create an automated, high-accuracy matchmaking engine between lost reports and found inventory.
 
-## Key Technical Achievements
+---
 
-- **Custom Node.js Backend**: Built a robust REST API using Express and MongoDB to handle high-concurrency data management.
-- **D-hashing**: Implemented a custom Perceptual Hashing algorithm that converts images into binary structural strings, allowing for visual similarity detection.
-- **Accessibility (A11y)**: Fully compliant with WCAG standards, featuring ARIA labels, semantic HTML5 structure, and full keyboard-only navigation support.
-- **Hybrid Search**: Combines **Levenshtein Distance** (Fuzzy Text Search) with visual color matching and structural hashing for 99% accurate retrieval.
+## 💎 Design Philosophy: "Liquid Glass"
+We moved away from generic templates to build a custom **Liquid Glass Design System**. 
+- **Glassmorphism**: Layered transparency with `backdrop-filter: blur()` for depth.
+- **Bento Logic**: Dashboards use a proportional "Bento Grid" for high information density without clutter.
+- **Micro-interactions**: 60fps hardware-accelerated animations using CSS `transform` and `opacity` to ensure performance on low-end devices.
 
-## Team
+---
 
-- **Developers**: Ayaan Rustagi, Sree Kondapali, Tushaar Singh
-- **School**: Rouse High School
-- **Competition Year**: 2025-2026
+## 🛠 Technical Architecture (MVC)
+REUNITE follows the **Model-View-Controller** architecture to ensure scalability and security.
 
-## Technologies Used
+### 1. The Intelligent Engine (`js/utils.js`)
+- **D-hashing (Difference Hashing)**: A custom-built visual algorithm that converts images into 64-bit structural strings to detect similarity regardless of resolution or minor lighting changes.
+- **Levenshtein Distance**: Implements fuzzy text matching to account for typos in item titles (e.g., "Iphone" matching "iPhone").
 
-| Technology | Purpose | Documentation |
-|------------|---------|---------------|
-| **Node.js** | Server-side runtime | [nodejs.org](https://nodejs.org/) |
-| **Express** | REST API Framework | [expressjs.com](https://expressjs.com/) |
-| **MongoDB** | NoSQL Data Persistence | [mongodb.com](https://www.mongodb.com/) |
-| **JavaScript (ES6+)** | Modular Logic & AI Algorithms | [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript) |
-| **CSS3** | Premium UI & Glassmorphism | [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS) |
-| **EmailJS** | Automated Notifications | [emailjs.com](https://www.emailjs.com/) |
+### 2. The Hardened Backend (`server.js` & `backend/`)
+- **Node.js/Express API**: A secure REST API that handles all data reconciliation.
+- **Hybrid Data Persistence**: MongoDB (Mongoose) for primary storage with an **Automatic In-Memory Fallback** (`mongodb-memory-server`) to ensure 100% uptime during local evaluations.
+- **Security Protocols**: 
+  - Server-side role verification for administrators.
+  - Multi-Factor Authentication via **Secure OTP (EmailJS)**.
+  - Payload limiting (50MB) to prevent Denial-of-Service (DoS) attacks.
 
-## Project Structure
+### 3. The Audit Log System
+Every administrative decision (Approve, Reject, Claim) is recorded in an immutable **Audit Log**, creating a professional-grade paper trail for accountability.
 
-```
-Reunite/
-├── server.js           # Backend Server Entry Point
-├── backend/            # Business Logic & Data Models
-│   ├── models/         # Mongoose Schemas (Items, Claims, Users)
-│   ├── controllers/    # API Request Handlers
-│   └── routes/         # Express Routing
-├── js/
-│   ├── api-client.js   # Custom API wrapper (Fetch/REST)
-│   ├── utils.js        # Core dHash & Levenshtein Algorithms
-│   ├── render.js       # Dynamic DOM orchestration
-│   └── forms.js        # Validation & File processing
-├── css/                # Design Tokens & UI components
-└── assets/             # Original Brand Assets
-```
+---
 
-## Getting Started
+## ♿ Universal Design & Accessibility
+REUNITE features a custom **Accessibility Engine**, allowing the interface to adapt to user needs without page refreshes:
+- **Reduced Motion**: Disables non-essential animations for users with vestibular sensitivities.
+- **High Contrast Mode**: Increases color contrast ratios to meet WCAG 2.1 AAA standards.
+- **Dynamic Text Scaling**: Allows 80% to 150% font scaling across the entire UI.
+- **Aria-Compliance**: Full keyboard navigation support with logical tab-flows and "Skip to Content" links.
+
+---
+
+## 📱 Responsive Performance
+Built with a **Mobile-First** mentality:
+- **Breakpoint Logic**: Custom media queries for Mobile (max 480px), Tablet (max 1024px), and Desktop (max 1400px).
+- **Progressive Enhancement**: Advanced features like visual scanning gracefully degrade on older browsers.
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
-- MongoDB (Local instance or Atlas connection string)
+- **Node.js** (v18.0.0 or higher)
+- **MongoDB** (Local or Cloud instance)
 
 ### Installation
-
-1. **Clone the repository**
-2. **Install Dependencies**
+1. Clone the repository.
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. **Configure Environment**
-   Create/edit the `.env` file in the root directory:
+3. Initialize environment variables in `.env`:
    ```env
-   MONGO_URI=mongodb://localhost:27017/reunite
-   PORT=3000
+   MONGO_URI="your_mongodb_uri"
+   ADMIN_SECRET="your_secure_code"
+   EMAILJS_PUBLIC_KEY="your_key"
    ```
-4. **Run the Application**
+4. Start the production server:
    ```bash
-   node server.js
+   npm start
    ```
-5. **Access Interface**
-   Navigate to `http://localhost:3000`
 
-## Features
+---
 
-- **D-hashing Powered Visual Scan**: Upload a photo to find matching items in the inventory.
-- **Admin Command Center**: Real-time approval queue and claim verification system.
-- **Bento Dashboard**: Personalized user experience with real-time status updates.
-- **Smart Search**: Context-aware filtering by category, location, and metadata.
-
-## Sources & Attributions
-All fonts (Inter, Roboto Mono) and library licenses are documented in [SOURCES.md](./SOURCES.md). The REUNITE identity and code are 100% original work by the development team.
+## 📄 Documentation & Attributions
+Detailed asset licensing and library documentation can be found in [SOURCES.md](./SOURCES.md). All code, logic, and brand identity were created 100% original for this competition.
