@@ -58,9 +58,9 @@ Built with a Mobile-First mentality:
    ```
 3. Initialize environment variables in `.env`:
    ```env
-   MONGO_URI="your_mongodb_uri"
-   ADMIN_SECRET="your_secure_code"
-   EMAILJS_PUBLIC_KEY="your_key"
+   MONGO_URI="our_code"
+   ADMIN_SECRET="code"
+   EMAILJS_PUBLIC_KEY="our_key"
    ```
 4. Start the production server:
    ```bash
