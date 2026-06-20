@@ -122,6 +122,108 @@ function closeModal() {
 }
 window.closeModal = closeModal;
 
+function openAdminDetailModal(type, id) {
+    let content = '';
+    const modal = document.getElementById('adminDetailModal');
+    const contentEl = document.getElementById('adminModalContent');
+    const titleEl = document.getElementById('adminModalTitle');
+
+    if (type === 'report') {
+        const item = window.items.find(i => i.id === id);
+        if (!item) return;
+        titleEl.textContent = "REPORT DETAILS";
+        content = `
+            <div class="admin-detail-view">
+                <div class="admin-detail-main">
+                    <h2>${item.title}</h2>
+                    <div class="meta-tags">
+                        <span class="meta-tag">${item.category}</span>
+                        <span class="meta-tag">${item.location}</span>
+                        <span class="meta-tag">${new Date(item.date_found).toLocaleDateString()}</span>
+                    </div>
+                    ${item.image ? `<img src="${item.image}" class="modal-photo" alt="Item">` : '<div class="no-photo-placeholder">NO IMAGE ATTACHED</div>'}
+                    <div class="detail-section">
+                        <h4>DESCRIPTION</h4>
+                        <p class="desc-text">${item.description || 'No description provided.'}</p>
+                    </div>
+                </div>
+                <div class="admin-detail-sidebar">
+                    <div class="detail-section">
+                        <h4>REPORTER</h4>
+                        <p><strong>Name:</strong> ${item.contact_name || item.finder_name || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${item.contact_email || item.finder_email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${item.contact_phone || item.finder_phone || 'N/A'}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>ACTIONS</h4>
+                        <div class="admin-actions-vertical">
+                            <button onclick="approveItem('${item.id}'); closeAdminDetailModal();" class="btn-primary full-width">APPROVE REPORT</button>
+                            <button onclick="rejectItem('${item.id}'); closeAdminDetailModal();" class="btn-outline full-width" style="border-color:#ff4d4d; color:#ff4d4d;">REJECT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (type === 'claim') {
+        const claim = window.claims.find(c => c.id === id);
+        if (!claim) return;
+        const item = window.items.find(it => it.id === claim.item_id);
+        titleEl.textContent = "CLAIM DETAILS";
+        content = `
+            <div class="admin-detail-view">
+                <div class="admin-detail-main">
+                    <h2>Claim for: ${item?.title || 'Unknown Item'}</h2>
+                    <div class="meta-tags">
+                        <span class="meta-tag">ITEM ID: ${claim.item_id.substring(0, 8)}</span>
+                        <span class="meta-tag">CLAIM STATUS: ${claim.status.toUpperCase()}</span>
+                    </div>
+                    ${claim.image ? `<img src="${claim.image}" class="modal-photo" alt="Proof">` : '<div class="no-photo-placeholder">NO PROOF IMAGE ATTACHED</div>'}
+                    <div class="detail-section">
+                        <h4>PROOF OF OWNERSHIP / DESCRIPTION</h4>
+                        <p class="desc-text">${claim.description || claim.message || claim.claimer_message || 'No description provided.'}</p>
+                    </div>
+                </div>
+                <div class="admin-detail-sidebar">
+                    <div class="detail-section">
+                        <h4>CLAIMANT</h4>
+                        <p><strong>Name:</strong> ${claim.claimant_name || claim.claimer_name || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${claim.claimant_email || claim.claimer_email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${claim.claimant_phone || claim.claimer_phone || 'N/A'}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>ACTIONS</h4>
+                        <div class="admin-actions-vertical">
+                            <button onclick="approveClaim('${claim.id}'); closeAdminDetailModal();" class="btn-primary full-width">VERIFY CLAIM</button>
+                            <button onclick="requestClaimDetails('${claim.id}'); closeAdminDetailModal();" class="btn-outline full-width" style="border-color:#ff9500; color:#ff9500;">REQUEST MORE INFO</button>
+                            <button onclick="deleteClaim('${claim.id}'); closeAdminDetailModal();" class="btn-outline full-width" style="border-color:#ff4d4d; color:#ff4d4d;">PURGE CLAIM</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    contentEl.innerHTML = content;
+    modal.classList.remove('hidden');
+    lastFocusedElement = document.activeElement;
+
+    const closeBtn = modal.querySelector('.close-btn');
+    if (closeBtn) {
+        setTimeout(() => closeBtn.focus(), 50);
+    }
+}
+window.openAdminDetailModal = openAdminDetailModal;
+
+function closeAdminDetailModal() {
+    document.getElementById('adminDetailModal').classList.add('hidden');
+    if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+    }
+}
+window.closeAdminDetailModal = closeAdminDetailModal;
+
+
 // Keyboard "Escape" to Close
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {

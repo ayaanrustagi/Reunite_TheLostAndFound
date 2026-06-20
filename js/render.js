@@ -326,7 +326,7 @@ function renderAdmin() {
 
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
-        <div class="list-item">
+        <div class="list-item clickable" onclick="openAdminDetailModal('report', '${i.id}')">
             <div style="display: flex; align-items: center; gap: 1rem;">
               ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>'}
               <div class="item-info">
@@ -335,7 +335,7 @@ function renderAdmin() {
                 ${!i.image ? '<span style="font-size: 0.65rem; color: #ff9500; display: block;">NO IMAGE ATTACHED</span>' : ''}
               </div>
             </div>
-            <div class="admin-actions-inline">
+            <div class="admin-actions-inline" onclick="event.stopPropagation()">
                 ${!i.image ? `<button onclick="requestItemPhoto('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff9500; color:#ff9500;">REQUEST PHOTO</button>` : ''}
                 <button onclick="approveItem('${i.id}')" class="btn-sm btn-outline">APPROVE</button>
                 <button onclick="rejectItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">REJECT</button>
@@ -347,7 +347,7 @@ function renderAdmin() {
     if (claimsEl) claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
         const item = window.items.find(it => it.id === c.item_id);
         return `
-            <div class="list-item">
+            <div class="list-item clickable" onclick="openAdminDetailModal('claim', '${c.id}')">
                 <div style="display: flex; align-items: center; gap: 1rem;">
                   ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>`}
                   <div class="item-info">
@@ -356,7 +356,7 @@ function renderAdmin() {
                     ${!c.image ? '<span style="font-size: 0.65rem; color: #ff9500; display: block;">NO PROOF IMAGE</span>' : ''}
                   </div>
                 </div>
-                <div class="admin-actions-inline">
+                <div class="admin-actions-inline" onclick="event.stopPropagation()">
                     <button onclick="requestClaimDetails('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff9500; color:#ff9500;">REQUEST DETAILS</button>
                     <button onclick="approveClaim('${c.id}')" class="btn-sm btn-outline">VERIFY</button>
                 </div>
