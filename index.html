@@ -45,6 +45,8 @@
   <link rel="stylesheet" href="css/animations.css" />
   <!-- Homepage hero -->
   <link rel="stylesheet" href="css/homepage.css" />
+  <!-- Find items page -->
+  <link rel="stylesheet" href="css/found-page.css" />
   <!-- API Backend -->
 
   <!-- EmailJS client -->
@@ -207,90 +209,143 @@
 
     </section>
 
-    <!-- SECTION: FOUND ITEMS (Search) -->
+    <!-- SECTION: FOUND ITEMS (Browse / Visual search) -->
     <section id="page-found" class="view-section">
       <div class="content-wrapper content-box">
+
+        <!-- Eyebrow: · BROWSE INVENTORY · VISUAL SEARCH -->
         <div class="section-head">
-          <span class="label-tech">DATABASE ACCESS</span>
-          <h2>BROWSE INVENTORY</h2>
+          <span class="label-tech">Browse inventory</span>
+          <h2>Visual search</h2>
         </div>
 
+        <!-- Hidden legacy filters so existing JS handlers keep working -->
         <div class="filter-ui" role="search" aria-label="Inventory filters">
-          <div class="filter-group">
-            <label class="sr-only" for="searchFilter">Search</label>
-            <input type="text" id="searchFilter" class="input-tech" placeholder="SEARCH KEYWORDS..."
-              oninput="renderFound()">
-          </div>
-          <div class="filter-group">
-            <label class="sr-only" for="categoryFilter">Category</label>
-            <select id="categoryFilter" class="input-tech" onchange="renderFound()">
-              <option value="">ALL CATEGORIES</option>
-              <option value="Keys">KEYS</option>
-              <option value="Wallet">WALLET</option>
-              <option value="Phone">PHONE</option>
-              <option value="Bag">BAG</option>
-              <option value="Other">OTHER</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label class="sr-only" for="locationFilter">Location</label>
-            <input type="text" id="locationFilter" class="input-tech" placeholder="LOCATION..." oninput="renderFound()">
-          </div>
-          <div class="filter-group">
-            <label class="sr-only" for="sortFilter">Sort</label>
-            <select id="sortFilter" class="input-tech" onchange="renderFound()">
-              <option value="newest">NEWEST</option>
-              <option value="oldest">OLDEST</option>
-            </select>
-          </div>
+          <input type="text" id="searchFilter" oninput="renderFound()">
+          <select id="categoryFilter" onchange="renderFound()">
+            <option value="">ALL</option>
+            <option value="Keys">Keys</option>
+            <option value="Wallet">Wallet</option>
+            <option value="Phone">Phone</option>
+            <option value="Bag">Bag</option>
+            <option value="Bottle">Bottle</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" id="locationFilter" oninput="renderFound()">
+          <select id="sortFilter" onchange="renderFound()">
+            <option value="newest">NEWEST</option>
+            <option value="oldest">OLDEST</option>
+          </select>
         </div>
 
-        <div class="filter-meta" aria-live="polite">
-          <div id="activeFilters" class="active-filters">No filters active.</div>
-          <button type="button" id="clearFiltersBtn" class="btn btn-sm btn-outline clear-filters hidden"
-            onclick="clearFilters()">
-            CLEAR FILTERS
-          </button>
-        </div>
+        <div class="browse-grid">
 
-        <div class="input-group visual-search-group" style="margin-bottom: 2rem;">
-          <label class="label-tech">VISUAL SEARCH (D-hashing)</label>
-          <div class="file-upload-ui">
-            <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
-            <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO OF LOST ITEM</span>
-            <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
-          </div>
-          <div id="aiMatchContainer" class="ai-scan-container">
-            <div class="scanning-line-overlay"></div>
-            <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
-            <div class="scan-progress-bar" id="aiScanProgress"></div>
-            <div id="aiMatchResults"></div>
-          </div>
-        </div>
+          <!-- LEFT: filter rail -->
+          <aside class="fp-filters">
 
-        <div class="results-meta">
-          <div class="results-count"><span id="itemsCount">0</span> ITEMS FOUND</div>
-          <div class="results-status" id="resultsStatus" aria-live="polite"></div>
-        </div>
+            <!-- Drag-photo visual search drop zone -->
+            <label class="fp-drop" for="findItemPhoto">
+              <svg class="fp-drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <div class="fp-drop-label">↑ Drag photo of what you lost</div>
+              <div class="fp-drop-hint">Visual search · D-hashing</div>
+              <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
+              <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
+            </label>
 
-        <div id="itemsGrid" class="grid-layout">
-          <!-- JS Injected Items -->
-        </div>
+            <!-- AI scan overlay -->
+            <div id="aiMatchContainer" class="ai-scan-container">
+              <div class="scanning-line-overlay"></div>
+              <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
+              <div class="scan-progress-bar" id="aiScanProgress"></div>
+              <div id="aiMatchResults"></div>
+            </div>
 
-        <!-- PAST CLAIMED ITEMS SECTION -->
-        <div class="claimed-items-section">
-          <button class="btn btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button"
-            id="toggleClaimedBtn">
-            SHOW PAST CLAIMED ITEMS <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </button>
-          <div id="claimedItemsWrapper" class="hidden">
-            <div class="section-divider">REMATCHED & RETRIEVED</div>
-            <div id="claimedItemsGrid" class="grid-layout claimed-grid">
-              <!-- JS Injected Claimed Items -->
+            <div class="fp-group">
+              <h4>Search</h4>
+              <input id="fpSearch" type="text" placeholder="hydroflask, keychain…"
+                     oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
+            </div>
+
+            <div class="fp-group">
+              <label class="fp-label">Category</label>
+              <div class="fp-chips" id="fpChips">
+                <span class="fp-chip active" data-cat="">ALL</span>
+                <span class="fp-chip" data-cat="Keys">KEYS</span>
+                <span class="fp-chip" data-cat="Wallet">WALLET</span>
+                <span class="fp-chip" data-cat="Phone">PHONE</span>
+                <span class="fp-chip" data-cat="Bag">BAG</span>
+                <span class="fp-chip" data-cat="Bottle">BOTTLE</span>
+                <span class="fp-chip" data-cat="Other">OPTICAL</span>
+              </div>
+            </div>
+
+            <div class="fp-group">
+              <label class="fp-label" for="fpLocation">Location</label>
+              <select id="fpLocation"
+                      onchange="document.getElementById('locationFilter').value=this.value; renderFound()">
+                <option value="">All buildings</option>
+                <option value="Engineering">Engineering Quad</option>
+                <option value="Library">Main Library</option>
+                <option value="Gym">Gym A / B</option>
+                <option value="Lecture">Lecture halls</option>
+              </select>
+            </div>
+
+            <div class="fp-group">
+              <label class="fp-label" for="fpDate">Date</label>
+              <select id="fpDate"
+                      onchange="document.getElementById('sortFilter').value=(this.value==='all'?'oldest':'newest'); renderFound()">
+                <option value="1">Last 24h</option>
+                <option value="7" selected>Last 7 days</option>
+                <option value="30">Last 30 days</option>
+                <option value="all">All time</option>
+              </select>
+            </div>
+
+          </aside>
+
+          <!-- RIGHT: items grid -->
+          <div>
+            <div class="results-meta">
+              <div class="results-count"><span id="itemsCount">0</span> items</div>
+              <div class="results-status" id="resultsStatus" aria-live="polite"></div>
+            </div>
+
+            <div id="itemsGrid" class="grid-layout"><!-- JS injected --></div>
+
+            <div class="claimed-items-section">
+              <button class="btn btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button" id="toggleClaimedBtn">
+                SHOW PAST CLAIMED ITEMS
+                <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div id="claimedItemsWrapper" class="hidden">
+                <div class="section-divider">REMATCHED &amp; RETRIEVED</div>
+                <div id="claimedItemsGrid" class="grid-layout claimed-grid"><!-- JS injected --></div>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
+
+      <!-- wire up the chips -->
+      <script>
+        (function(){
+          document.querySelectorAll('#fpChips .fp-chip').forEach(function(chip){
+            chip.addEventListener('click', function(){
+              document.querySelectorAll('#fpChips .fp-chip').forEach(function(c){c.classList.remove('active');});
+              chip.classList.add('active');
+              var sel = document.getElementById('categoryFilter');
+              if (sel) { sel.value = chip.dataset.cat; window.renderFound && window.renderFound(); }
+            });
+          });
+        })();
+      </script>
     </section>
 
     <!-- SECTION: REPORT -->

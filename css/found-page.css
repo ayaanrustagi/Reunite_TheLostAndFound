@@ -1,0 +1,362 @@
+/* =============================================================
+   FIND ITEMS PAGE — Browse / Visual Search
+   Sidebar rail + 3-col grid of pastel-striped cards.
+   Reuses the existing site palette from base.css.
+   ============================================================= */
+
+#page-found {
+  padding: clamp(16px, 2vw, 28px) clamp(16px, 3vw, 40px) !important;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+#page-found .content-wrapper.content-box {
+  background: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft) !important;
+  padding: clamp(20px, 2.5vw, 32px) clamp(20px,3vw,32px) clamp(24px, 3vw, 36px) !important;
+  max-width: 1100px;
+  width: 100%;
+  /* Fit within viewport minus header (~84px) and outer top/bottom padding */
+  height: calc(100vh - 84px - clamp(32px, 4vw, 56px));
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+#page-found .section-head { flex-shrink: 0; margin-bottom: 18px !important; }
+#page-found .browse-grid { flex: 1; min-height: 0; }
+#page-found .browse-grid > div:last-child {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+#page-found .fp-filters { max-height: 100%; overflow-y: auto; }
+#page-found .grid-layout .status-msg { padding: 28px 20px; }
+@media (max-width: 900px) {
+  #page-found .content-wrapper.content-box {
+    height: auto;
+    max-height: none;
+  }
+  #page-found .browse-grid > div:last-child,
+  #page-found .fp-filters {
+    overflow: visible;
+    max-height: none;
+  }
+}
+
+/* Eyebrow: · BROWSE INVENTORY · VISUAL SEARCH */
+#page-found .section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 32px;
+}
+#page-found .section-head .label-tech,
+#page-found .section-head h2 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  margin: 0;
+  font-weight: 500;
+  border: none;
+  padding: 0;
+}
+#page-found .section-head .label-tech::before { content: "· "; color: var(--muted-text); opacity: 0.6; }
+#page-found .section-head h2::before          { content: "· "; color: var(--muted-text); opacity: 0.6; }
+#page-found .section-head h2 { color: var(--text-color); }
+
+/* ---- two-column layout ---- */
+#page-found .browse-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  #page-found .browse-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- sidebar (filters) ---- */
+#page-found .fp-filters {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  align-self: start;
+  position: sticky;
+  top: 96px;
+}
+
+/* drag-photo zone */
+#page-found .fp-drop {
+  position: relative;
+  display: block;
+  padding: 22px 16px 18px;
+  border: 1.5px dashed var(--border-color);
+  border-radius: 10px;
+  text-align: center;
+  background: rgba(0,0,0,0.02);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+#page-found .fp-drop:hover { border-color: var(--accent-color); }
+#page-found .fp-drop input[type="file"] {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0; cursor: pointer;
+}
+#page-found .fp-drop-icon {
+  display: block;
+  margin: 0 auto 10px;
+  color: var(--muted-text);
+}
+#page-found .fp-drop-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: var(--muted-text);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+#page-found .fp-drop-hint {
+  font-family: var(--font-main);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+/* groups */
+#page-found .fp-group { margin-top: 22px; }
+#page-found .fp-group h4,
+#page-found .fp-group label.fp-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 500;
+}
+
+#page-found .fp-group input[type="text"],
+#page-found .fp-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+#page-found .fp-group input::placeholder { color: var(--muted-text); opacity: 0.65; }
+#page-found .fp-group input:focus,
+#page-found .fp-group select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(0,78,204,0.10);
+}
+#page-found .fp-group select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* category chips */
+#page-found .fp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+#page-found .fp-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+#page-found .fp-chip:hover { border-color: var(--text-color); }
+#page-found .fp-chip.active {
+  background: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+}
+
+/* hide the legacy top filter row (kept in DOM only so existing JS works) */
+#page-found > .content-wrapper > .filter-ui,
+#page-found > .content-wrapper > .visual-search-group,
+#page-found > .content-wrapper > .filter-meta { display: none !important; }
+#page-found .filter-ui,
+#page-found .visual-search-group:not(.fp-drop-wrap),
+#page-found .filter-meta { display: none !important; }
+
+/* results meta */
+#page-found .results-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  color: var(--muted-text);
+  text-transform: uppercase;
+}
+
+/* ---- grid + cards ---- */
+#page-found .grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+@media (max-width: 1100px) { #page-found .grid-layout { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { #page-found .grid-layout { grid-template-columns: 1fr; } }
+
+#page-found .item-card {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--panel-bg);
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+#page-found .item-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--text-color);
+}
+
+/* striped pastel photo block (top half of the card) */
+#page-found .fp-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+#page-found .fp-photo svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+}
+#page-found .fp-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+#page-found .fp-photo .fp-photo-label {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+#page-found .fp-tag {
+  position: absolute;
+  top: 10px; left: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.80);
+  color: var(--text-color);
+  backdrop-filter: blur(6px);
+}
+#page-found .fp-match {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+/* card body */
+#page-found .fp-body {
+  padding: 14px 16px 18px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+#page-found .fp-title {
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--text-color);
+  margin: 0;
+}
+#page-found .fp-meta {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted-text);
+}
+
+/* toggle for past claimed items */
+#page-found .toggle-claimed-btn {
+  margin: 32px auto 0;
+  display: block;
+}
+
+/* AI scan overlay (kept functional, tucked under drop zone) */
+#page-found #aiMatchContainer {
+  margin-top: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+/* "no items found" status */
+#page-found .grid-layout .status-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted-text);
+  text-transform: uppercase;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  background: rgba(0,0,0,0.02);
+}
+
+/* section divider for claimed area */
+#page-found .section-divider {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  margin: 40px 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  background: none;
+}

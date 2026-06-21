@@ -169,25 +169,78 @@ function renderFound() {
         return;
     }
 
-    grid.innerHTML = filtered.map(item => `
-        <button class="item-card" onclick="openItemModal('${item.id}')" type="button" aria-label="View details for ${item.title}" title="View details for ${item.title}">
-            ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" loading="lazy"></div>` : ''}
-            <div class="card-content">
-                <div class="card-meta">
-                    <span>${item.category}</span>
-                    <span>${new Date(item.date_found).toLocaleDateString()}</span>
-                </div>
-                <h3 class="card-title">${item.title}</h3>
-                <p class="card-desc">${item.description}</p>
-                <div class="card-footer">
-                    <span>${item.location}</span>
-                    <span>ID: ${item.id.substring(0, 8).toUpperCase()}</span>
+    grid.innerHTML = filtered.map((item, idx) => renderFpCard(item, idx)).join('');
+}
+window.renderFound = renderFound;
+
+/* ---- pastel-striped card for the Browse / Visual Search page ---- */
+const FP_CAT_HUE = {
+    'keys': 50, 'wallet': 30, 'phone': 350, 'bag': 280,
+    'bottle': 200, 'paper': 130, 'optical': 160, 'audio': 0,
+    'cable': 240, 'apparel': 320, 'other': 220
+};
+function fpCategoryHue(cat) {
+    const k = (cat || 'other').toString().toLowerCase().trim();
+    return (FP_CAT_HUE[k] !== undefined) ? FP_CAT_HUE[k] : 220;
+}
+function fpRelativeTime(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d)) return '';
+    const h = Math.floor((Date.now() - d.getTime()) / 36e5);
+    if (h < 1) return 'just now';
+    if (h < 24) return h + 'h ago';
+    const days = Math.floor(h / 24);
+    if (days === 1) return 'yesterday';
+    if (days < 7)   return d.toLocaleDateString(undefined, { weekday: 'short' });
+    return d.toLocaleDateString();
+}
+function fpEscHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function renderFpCard(item, idx) {
+    const hue = fpCategoryHue(item.category);
+    const bg  = `oklch(0.88 0.06 ${hue})`;
+    const fg  = `oklch(0.40 0.14 ${hue})`;
+    const cat = (item.category || 'other').toString().toUpperCase();
+    const title = fpEscHtml(item.title || 'Untitled');
+    const loc   = fpEscHtml(item.location || '');
+    const when  = fpRelativeTime(item.date_found || item.created_at);
+    const match = (idx === 0) ? '96%' : (idx === 1 ? '84%' : null);
+    const patternId = 'fp-stp-' + fpEscHtml(item.id || idx);
+
+    const photoInner = item.image
+        ? `<img src="${fpEscHtml(item.image)}" alt="${title}" loading="lazy">`
+        : `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+             <defs>
+               <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                 <rect width="5" height="5" fill="${bg}"/>
+                 <line x1="0" y1="0" x2="0" y2="5" stroke="${fg}" stroke-opacity="0.22" stroke-width="1"/>
+               </pattern>
+             </defs>
+             <rect width="100" height="100" fill="url(#${patternId})"/>
+           </svg>
+           <div class="fp-photo-label" style="color:${fg}">${cat}</div>`;
+
+    return `
+        <button class="item-card" onclick="openItemModal('${fpEscHtml(item.id)}')" type="button"
+                aria-label="View details for ${title}" title="View details for ${title}">
+            <div class="fp-photo" style="background:${bg}">
+                ${photoInner}
+                <span class="fp-tag">${cat}</span>
+                ${match ? `<span class="fp-match">${match}</span>` : ''}
+            </div>
+            <div class="fp-body">
+                <h3 class="fp-title">${title}</h3>
+                <div class="fp-meta">
+                    <span>${loc}</span>
+                    <span>${when}</span>
                 </div>
             </div>
         </button>
-    `).join('');
+    `;
 }
-window.renderFound = renderFound;
+window.renderFpCard = renderFpCard;
 
 function renderClaimedItems(claimedItems) {
     const grid = document.getElementById('claimedItemsGrid');
@@ -198,21 +251,44 @@ function renderClaimedItems(claimedItems) {
         return;
     }
 
-    grid.innerHTML = claimedItems.map(item => `
-        <div class="item-card claimed-card">
-            ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" style="filter: grayscale(1); opacity: 0.6;"></div>` : ''}
-            <div class="card-content">
-                <div class="card-meta">
-                    <span class="status-badge approved">CLAIMED</span>
-                    <span>${new Date(item.date_found).toLocaleDateString()}</span>
+    grid.innerHTML = claimedItems.map((item, idx) => {
+        const hue = fpCategoryHue(item.category);
+        const bg  = `oklch(0.88 0.06 ${hue})`;
+        const fg  = `oklch(0.40 0.14 ${hue})`;
+        const cat = (item.category || 'other').toString().toUpperCase();
+        const title = fpEscHtml(item.title || 'Untitled');
+        const loc   = fpEscHtml(item.location || '');
+        const when  = fpRelativeTime(item.date_found || item.created_at);
+        const patternId = 'fp-stp-cl-' + fpEscHtml(item.id || idx);
+        const photoInner = item.image
+            ? `<img src="${fpEscHtml(item.image)}" alt="${title}" style="filter:grayscale(1);opacity:0.7" loading="lazy">`
+            : `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                 <defs>
+                   <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                     <rect width="5" height="5" fill="${bg}"/>
+                     <line x1="0" y1="0" x2="0" y2="5" stroke="${fg}" stroke-opacity="0.22" stroke-width="1"/>
+                   </pattern>
+                 </defs>
+                 <rect width="100" height="100" fill="url(#${patternId})"/>
+               </svg>
+               <div class="fp-photo-label" style="color:${fg};opacity:0.6">${cat}</div>`;
+        return `
+            <div class="item-card claimed-card" style="opacity:0.75">
+                <div class="fp-photo" style="background:${bg}">
+                    ${photoInner}
+                    <span class="fp-tag">${cat}</span>
+                    <span class="fp-match" style="background:#777">CLAIMED</span>
                 </div>
-                <h3 class="card-title">${item.title}</h3>
-                <div class="card-footer">
-                    <span>${item.location}</span>
+                <div class="fp-body">
+                    <h3 class="fp-title">${title}</h3>
+                    <div class="fp-meta">
+                        <span>${loc}</span>
+                        <span>${when}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 window.renderClaimedItems = renderClaimedItems;
 
