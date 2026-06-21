@@ -305,4 +305,4 @@ function hammingDistance(h1, h2) {
     return dist;
 }
 window.hammingDistance = hammingDistance;
-  
+   

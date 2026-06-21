@@ -130,4 +130,4 @@ window.apiGetAuditLogs = apiGetAuditLogs;
 // but we expect window.items and window.claims to be available globally
 window.items = window.items || [];
 window.claims = window.claims || [];
-  
+   
