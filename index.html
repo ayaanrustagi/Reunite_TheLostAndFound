@@ -8,12 +8,13 @@
   <meta name="description"
     content="REUNITE is a premium, custom-coded lost & found network featuring D-hashing powered visual matching and a robust Node.js backend to reconnect communities." />
   <meta name="author" content="Ayaan Rustagi, Sree Kondapali, Tushaar Singh" />
+  <link rel="icon" type="image/png" href="assets/reunite-logo.png" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet">
 
   <!-- Base: variables, resets, accessibility -->
@@ -42,6 +43,8 @@
   <link rel="stylesheet" href="css/auth.css" />
   <!-- Animations: keyframes, transitions, reduced motion -->
   <link rel="stylesheet" href="css/animations.css" />
+  <!-- Homepage hero -->
+  <link rel="stylesheet" href="css/homepage.css" />
   <!-- API Backend -->
 
   <!-- EmailJS client -->
@@ -62,11 +65,11 @@
   <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
-      <button class="logo-area" onclick="navigateToSection('hero')" type="button" aria-label="Go to Hero Section">
+      <button class="logo-area" onclick="navigateToSection('hero')" type="button" aria-label="Go to Hero Section" title="Go to Hero Section">
         <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
       </button>
-      <button class="menu-toggle" aria-label="Toggle Menu">
+      <button class="menu-toggle" aria-label="Toggle Menu" title="Toggle Menu">
         <span></span>
         <span></span>
         <span></span>
@@ -104,7 +107,7 @@
       <div class="header-actions">
         <!-- Accessibility Trigger -->
         <button id="settingsBtn" class="btn-icon-alt header-settings-btn" onclick="toggleSettingsModal()"
-          aria-label="Accessibility Settings">
+          aria-label="Accessibility Settings" title="Accessibility Settings">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
@@ -113,17 +116,17 @@
             </path>
           </svg>
         </button>
-        <a id="loginBtn" href="login.html" class="btn-sm btn-outline">SIGN IN</a>
-        <button id="dashboardBtn" class="btn-sm btn-outline hidden"
+        <a id="loginBtn" href="login.html" class="btn btn-sm btn-outline">SIGN IN</a>
+        <button id="dashboardBtn" class="btn btn-sm btn-outline hidden"
           onclick="navigateToSection('dashboard')">DASHBOARD</button>
-        <button id="adminBtn" class="btn-sm btn-outline hidden" onclick="navigateToSection('admin')">ADMIN</button>
-        <button id="logoutBtn" class="btn-sm btn-outline hidden" onclick="handleLogout()">LOGOUT</button>
+        <button id="adminBtn" class="btn btn-sm btn-outline hidden" onclick="navigateToSection('admin')">ADMIN</button>
+        <button id="logoutBtn" class="btn btn-sm btn-outline hidden" onclick="handleLogout()">LOGOUT</button>
       </div>
     </div>
   </header>
 
   <!-- Floating Menu Trigger (appears when header hides) -->
-  <button class="persistent-trigger" onclick="showHeader()" type="button" aria-label="Show Header">
+  <button class="persistent-trigger" onclick="showHeader()" type="button" aria-label="Show Header" title="Show Header">
     <span></span>
     <span></span>
     <span></span>
@@ -134,73 +137,74 @@
 
     <!-- SECTION: HERO -->
     <section id="page-hero" class="view-section active">
-      <div class="hero-centered-content">
-        <div class="hero-content-glass">
-          <div class="hero-wrapper">
-            <h1 class="hero-display-text">
-              <span id="hero-title" class="hero-text-fade">SEARCHING NOW</span>
-              <span id="hero-subtitle" class="sub-hero hero-text-fade">FIND YOUR LOST ITEMS</span>
-            </h1>
 
+      <!-- Mana-style 3D scroll hero — 440 vh pinned experience -->
+      <div class="scrollhero mana" id="sh-wrapper" style="height:440vh">
+        <div class="scrollhero-stage" id="sh-stage">
 
-            <div class="hero-cta-group">
-              <button class="btn-primary full-width-mobile" onclick="navigateToSection('report')">
-                I FOUND SOMETHING
-                <span class="btn-icon">-></span>
-              </button>
-              <button class="btn-secondary full-width-mobile" onclick="navigateToSection('found')">
-                LOOKING FOR SOMETHING
-              </button>
-            </div>
+          <div class="mb-backdrop" id="mb-backdrop" aria-hidden="true"></div>
 
+          <!-- WebGL canvas for the 3D key -->
+          <canvas class="scrollhero-canvas" id="sh-canvas" aria-hidden="true"></canvas>
 
-          </div>
-        </div>
-
-        <!-- New robust scroll indicator -->
-        <div class="scroll-wrapper">
-          <span class="scroll-label">SCROLL TO EXPLORE</span>
-          <div class="scroll-arrow">v</div>
-        </div>
-      </div>
-
-      <!-- MERGED HOW IT WORKS -->
-      <div id="how-content-area">
-        <div class="split-layout">
-          <div class="split-left sticky-content">
-            <div class="label-tech">HOW IT PROCESSES</div>
-            <div id="how-step-preview" class="step-preview">
-              <h2 id="preview-title" class="preview-title">INITIATE</h2>
-              <p id="preview-desc" class="preview-desc">Begin the recovery process by logging the details into our
-                secure
-                network.</p>
-            </div>
-            <div class="scroll-hint">
-              <span class="hint-text">SCROLL TO EXPLORE</span>
-              <div class="hint-line"></div>
-            </div>
-
-          </div>
-
-          <div class="split-right scroll-steps">
-            <div class="step-item active" data-step="1">
-              <span class="step-num">01</span>
-              <h3>REPORT</h3>
-              <p>Submit a detailed report with optional imagery. Our system indexes key features immediately.</p>
-            </div>
-            <div class="step-item" data-step="2">
-              <span class="step-num">02</span>
-              <h3>MATCH</h3>
-              <p>Our algorithm scans existing inventory using perceptual hashing to find potential matches.</p>
-            </div>
-            <div class="step-item" data-step="3">
-              <span class="step-num">03</span>
-              <h3>REUNITE</h3>
-              <p>Verify ownership through our secure claim portal and arrange for item retrieval.</p>
+          <!-- Intro overlay (fades out on scroll) -->
+          <div class="sh-intro" id="sh-intro">
+            <h1>Found things, <span style="color:var(--mana-pink)">unlocked.</span></h1>
+            <div class="sh-cue">
+              <span>Scroll to explore</span>
+              <span class="sh-arrow">↓</span>
             </div>
           </div>
-        </div>
-      </div>
+
+          <!-- Giant ghost step number -->
+          <div class="sh-ghostnum" id="sh-ghostnum" aria-hidden="true"></div>
+
+          <!-- Step panels (right side) -->
+          <div class="sh-steps" id="sh-steps" aria-live="polite">
+            <div class="sh-step">
+              <div class="sh-k" style="color:var(--c-green)">01 · REPORT</div>
+              <h3>Snap what you found</h3>
+              <p>One photo is all it takes. Reunite turns it into a private visual fingerprint right on your device.</p>
+            </div>
+            <div class="sh-step">
+              <div class="sh-k" style="color:var(--c-blue)">02 · FINGERPRINT</div>
+              <h3>Hashed on your device</h3>
+              <p>That fingerprint is matched against every lost report — your actual photo never leaves your phone.</p>
+            </div>
+            <div class="sh-step">
+              <div class="sh-k" style="color:var(--c-orange)">03 · MATCH</div>
+              <h3>The owner gets a nudge</h3>
+              <p>When something lines up, you both get a quiet tap on the shoulder. Contact details stay hidden until you agree.</p>
+            </div>
+            <div class="sh-step">
+              <div class="sh-k" style="color:var(--c-pink)">04 · UNLOCK</div>
+              <h3>Unlock the reunion</h3>
+              <p>Confirm a detail, grab a one-time pickup code, and the thing finds its way home.</p>
+            </div>
+          </div>
+
+          <!-- Progress rail (right edge) -->
+          <div class="sh-rail" id="sh-rail" aria-hidden="true">
+            <span class="dot" style="--dot-on:#82c982"></span>
+            <span class="dot" style="--dot-on:#72a8d8"></span>
+            <span class="dot" style="--dot-on:#d8924a"></span>
+            <span class="dot" style="--dot-on:#d878a8"></span>
+          </div>
+
+          <!-- Step counter -->
+          <div class="sh-counter" id="sh-counter"></div>
+
+          <!-- End CTAs (appear at last step) -->
+          <div class="sh-cta" id="sh-cta">
+            <button class="sh-btn-primary" onclick="navigateToSection('report')">I found something</button>
+            <button class="sh-btn-ghost"   onclick="navigateToSection('found')">
+              I lost something <span class="sh-circle">↗</span>
+            </button>
+          </div>
+
+        </div><!-- /scrollhero-stage -->
+      </div><!-- /scrollhero.mana -->
+
     </section>
 
     <!-- SECTION: FOUND ITEMS (Search) -->
@@ -243,7 +247,7 @@
 
         <div class="filter-meta" aria-live="polite">
           <div id="activeFilters" class="active-filters">No filters active.</div>
-          <button type="button" id="clearFiltersBtn" class="btn-sm btn-outline clear-filters hidden"
+          <button type="button" id="clearFiltersBtn" class="btn btn-sm btn-outline clear-filters hidden"
             onclick="clearFilters()">
             CLEAR FILTERS
           </button>
@@ -275,9 +279,9 @@
 
         <!-- PAST CLAIMED ITEMS SECTION -->
         <div class="claimed-items-section">
-          <button class="btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button"
+          <button class="btn btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button"
             id="toggleClaimedBtn">
-            SHOW PAST CLAIMED ITEMS <span class="btn-icon">v</span>
+            SHOW PAST CLAIMED ITEMS <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
           <div id="claimedItemsWrapper" class="hidden">
             <div class="section-divider">REMATCHED & RETRIEVED</div>
@@ -366,7 +370,7 @@
             <input type="tel" id="contactPhone">
           </div>
 
-          <button type="submit" class="btn-primary full-width">SUBMIT ENTRY</button>
+          <button type="submit" class="btn btn-primary full-width">SUBMIT ENTRY</button>
           <div id="reportStatus" class="status-msg" role="status" aria-live="polite"></div>
         </form>
       </div>
@@ -412,7 +416,7 @@
             </div>
             <p class="field-hint">Upload a photo of the item, a receipt, or similar proof.</p>
           </div>
-          <button type="submit" class="btn-primary full-width">SUBMIT CLAIM</button>
+          <button type="submit" class="btn btn-primary full-width">SUBMIT CLAIM</button>
           <div id="claimStatus" class="status-msg" role="status" aria-live="polite"></div>
         </form>
       </div>
@@ -470,7 +474,7 @@
 
             <!-- Quick Action / New -->
             <button class="bento-card card-small-span action-card" onclick="navigateToSection('report')" type="button"
-              aria-label="Create New Report">
+              aria-label="Create New Report" title="Create New Report">
               <div class="action-content">
                 <span class="action-label">INITIATE</span>
                 <h3>NEW<br>REPORT</h3>
@@ -491,7 +495,7 @@
             <h2>SYSTEM OVERSIGHT</h2>
           </div>
           <div class="admin-actions">
-            <button class="btn-sm btn-outline" onclick="apiSync()">FORCE SYSTEM SYNC</button>
+            <button class="btn btn-sm btn-outline" onclick="apiSync()">FORCE SYSTEM SYNC</button>
           </div>
         </div>
 
@@ -558,7 +562,7 @@
             <div class="bento-card card-large-span">
               <div class="card-header">
                 <h3>SYSTEM AUDIT LOG</h3>
-                <button class="btn-sm btn-outline" onclick="renderAdminAudit()">REFRESH</button>
+                <button class="btn btn-sm btn-outline" onclick="renderAdminAudit()">REFRESH</button>
               </div>
               <div class="audit-log-container">
                 <div class="audit-header">
@@ -604,7 +608,7 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button class="btn-primary" onclick="navigateToSection('claim'); closeModal();">CLAIM THIS ITEM</button>
+          <button class="btn btn-primary" onclick="navigateToSection('claim'); closeModal();">CLAIM THIS ITEM</button>
         </div>
       </div>
     </div>
@@ -623,11 +627,6 @@
     </div>
   </div>
 
-  <!-- Global Overlays -->
-  <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="spinner"></div>
-    <p id="loadingMessage">PROCESSING REQUEST...</p>
-  </div>
 
   <!-- ACCESSIBILITY SETTINGS MODAL -->
   <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true"
@@ -635,7 +634,7 @@
     <div class="modal-box small">
       <div class="modal-header">
         <h3 id="settingsModalTitle">ACCESSIBILITY</h3>
-        <button onclick="toggleSettingsModal()" class="close-btn" aria-label="Close settings">X</button>
+        <button onclick="toggleSettingsModal()" class="close-btn" aria-label="Close settings" title="Close settings">X</button>
       </div>
       <div class="modal-body settings-body">
         <div class="setting-item">
@@ -662,6 +661,17 @@
 
         <div class="setting-item">
           <div class="setting-info">
+            <span class="setting-label">TEXT TO SPEECH</span>
+            <span class="setting-desc">Read interface text aloud on hover</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="ttsToggle" onchange="updateAccessibility('tts')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
             <span class="setting-label">TEXT SCALING</span>
             <span class="setting-desc">Increase interface font size</span>
           </div>
@@ -678,6 +688,9 @@
     </div>
   </div>
 
+  <!-- Three.js for the 3D key in the hero -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <script src="js/config.js"></script>
   <script src="js/state.js"></script>
   <script src="js/utils.js"></script>
@@ -688,6 +701,8 @@
   <script src="js/forms.js"></script>
   <script src="js/app.js"></script>
   <script type="module" src="js/waves.js"></script>
+  <!-- Homepage hero -->
+  <script src="js/homepage.js"></script>
 </body>
 
-</html>   
+</html>

@@ -209,15 +209,7 @@ button.action-card {
     color: #ffffff !important;
 }
 
-.admin-actions-inline {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.admin-actions-inline .btn-sm {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.6rem;
-}
+/* Buttons in dashboard inherit from components.css */
 
 /* Rest of list/view items remain from previous editorial style */
 .list-view {
@@ -402,6 +394,7 @@ button.action-card {
     font-family: var(--font-mono);
     font-size: 0.75rem;
 }
+
 /* Admin Detail Modal Styles */
 .list-item.clickable {
     cursor: pointer;
@@ -468,4 +461,3 @@ button.action-card {
         gap: 2rem;
     }
 }
-   

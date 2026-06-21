@@ -1,0 +1,447 @@
+#page-hero {
+  padding: 0 !important;
+  min-height: 440vh;
+  overflow: visible;
+}
+
+/* Hero is transparent so the site-wide waves animation shows through
+   behind it edge-to-edge, blending with the rest of the page. */
+#page-hero {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- scroll hero shell ---- */
+.scrollhero {
+  position: relative;
+  width: 100%;
+}
+
+.scrollhero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scrollhero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ---- mana pastel mauve skin ---- */
+.scrollhero.mana {
+  --mana-ink: #0F1419;
+  /* near-black headline */
+  --mana-ink-2: #3A4250;
+  --mana-ink-3: #6A7180;
+  --mana-pink: #2563EB;
+  /* accent → blue (reusing var name) */
+  --mana-magenta: #1D4ED8;
+  --mana-rule: rgba(15, 20, 25, 0.12);
+  --mana-mono: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+  --mana-display: 'Bricolage Grotesque', 'Hanken Grotesk', sans-serif;
+  --c-green: #82c982;
+  --c-blue: #2563EB;
+  --c-orange: #d8924a;
+  --c-pink: #d878a8;
+  background: transparent;
+}
+
+/* ---- intro overlay ---- */
+.sh-intro {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-align: center;
+  max-width: 1000px;
+  padding: 0 24px;
+  will-change: opacity, transform;
+  pointer-events: auto;
+}
+
+.sh-eyebrow {
+  display: inline-block;
+  font-family: var(--mana-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mana-ink);
+  margin-bottom: 26px;
+  padding: 7px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.sh-intro h1 {
+  font-family: var(--mana-display);
+  font-weight: 800;
+  font-size: clamp(48px, 9vw, 150px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  margin: 0;
+  color: var(--mana-ink);
+  text-wrap: balance;
+}
+
+.sh-cue {
+  margin-top: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mana-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mana-ink);
+}
+
+.sh-cue .sh-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(15, 20, 25, 0.45);
+  border-radius: 50%;
+  animation: shBob 1.8s ease-in-out infinite;
+}
+
+@keyframes shBob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* ---- ghost number (first digit outlined blue, second digit filled blue) ---- */
+.sh-ghostnum {
+  position: absolute;
+  left: clamp(12px, 5vw, 80px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mana-display);
+  font-weight: 800;
+  font-size: clamp(90px, 20vw, 280px);
+  line-height: 0.8;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  display: flex;
+  align-items: baseline;
+}
+
+.sh-ghostnum .sh-gn-a {
+  color: transparent;
+  -webkit-text-stroke: 12px #2563EB;
+}
+
+.sh-ghostnum .sh-gn-b {
+  color: #2563EB;
+  -webkit-text-stroke: 3px #2563EB;
+}
+
+/* ---- step panels ---- */
+.sh-steps {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.sh-step {
+  position: absolute;
+  right: clamp(24px, 7vw, 120px);
+  top: 50%;
+  width: min(400px, 40vw);
+  transform: translateY(-50%) translateX(36px);
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  text-align: left;
+}
+
+.sh-step.active {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.sh-k {
+  font-family: var(--mana-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  color: var(--mana-magenta);
+}
+
+.sh-step h3 {
+  font-family: var(--mana-display);
+  font-weight: 800;
+  font-size: clamp(30px, 4vw, 60px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin: 0 0 18px;
+  color: var(--mana-ink);
+}
+
+.sh-step p {
+  font-size: clamp(15px, 1.3vw, 19px);
+  line-height: 1.55;
+  color: color-mix(in oklab, var(--mana-ink) 85%, white);
+  margin: 0;
+}
+
+/* ---- progress rail ---- */
+.sh-rail {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 4;
+}
+
+.sh-rail .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(15, 20, 25, 0.35);
+  transition: all 0.35s;
+}
+
+.sh-rail .dot.on {
+  background: var(--dot-on, var(--mana-ink));
+  transform: scale(1.7);
+}
+
+/* ---- step counter ---- */
+.sh-counter {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  font-family: var(--mana-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--mana-ink);
+  opacity: 0;
+  transition: opacity 0.4s;
+  z-index: 4;
+}
+
+.sh-counter.show {
+  opacity: 1;
+}
+
+/* ---- end CTAs ---- */
+.sh-cta {
+  position: absolute;
+  left: 50%;
+  bottom: 70px;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.sh-cta.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.sh-cta .sh-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--mana-ink);
+  color: #fff;
+  font-family: var(--mana-display);
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.sh-cta .sh-btn-primary:hover {
+  opacity: 0.85;
+}
+
+.sh-cta .sh-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: #fff;
+  color: var(--mana-ink);
+  font-family: var(--mana-display);
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.sh-cta .sh-btn-ghost:hover {
+  opacity: 0.85;
+}
+
+.sh-cta .sh-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid rgba(15, 20, 25, 0.3);
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+/* ---- cartoon backdrop ---- */
+.mb-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  isolation: isolate;
+  transition: opacity 0.2s linear;
+}
+
+.mb-item {
+  position: absolute;
+  will-change: transform;
+}
+
+.mb-bob {
+  width: 100%;
+  animation: mbBob 7s ease-in-out infinite;
+}
+
+.mb-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.mb-item.mb-blob {
+  opacity: 0.5;
+  filter: blur(2px);
+}
+
+@keyframes mbBob {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-bob {
+    animation: none;
+  }
+}
+
+@media (max-width: 860px) {
+  /* backdrop blobs full-width so they don't crop weirdly */
+  .mb-item.mb-blob { width: 92% !important; }
+
+  /* hide the giant outlined ghost numbers — no room next to the key */
+  .sh-ghostnum { display: none; }
+
+  /* intro headline lifts up so the key can sit visibly below it */
+  .sh-intro { top: 28%; padding: 0 18px; }
+  .sh-intro h1 { font-size: clamp(40px, 11vw, 64px); }
+  .sh-cue { margin-top: 22px; }
+
+  /* steps reflow to bottom center, full width */
+  .sh-step {
+    right: 0;
+    left: 0;
+    top: auto;
+    bottom: 140px;
+    width: auto;
+    max-width: 92vw;
+    margin: 0 auto;
+    padding: 0 18px;
+    transform: translateY(20px);
+    text-align: center;
+  }
+  .sh-step.active { transform: translateY(0); }
+  .sh-step h3 { font-size: clamp(24px, 6vw, 36px); }
+  .sh-step p  { font-size: 14px; line-height: 1.5; }
+  .sh-k       { margin-bottom: 10px; }
+
+  /* progress rail across the bottom instead of right edge */
+  .sh-rail {
+    top: auto; right: auto;
+    bottom: 110px; left: 50%;
+    flex-direction: row;
+    transform: translateX(-50%);
+    gap: 10px;
+  }
+
+  /* step counter sits just above the CTA */
+  .sh-counter { bottom: 80px; }
+
+  /* CTAs stack tighter and sit below everything */
+  .sh-cta {
+    bottom: 24px;
+    gap: 10px;
+    width: calc(100vw - 32px);
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sh-cta .sh-btn-primary,
+  .sh-cta .sh-btn-ghost {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* very small phones: extra trimming so nothing overlaps */
+@media (max-width: 480px) {
+  .sh-intro { top: 24%; }
+  .sh-intro h1 { font-size: clamp(36px, 10vw, 52px); }
+  .sh-step { bottom: 150px; }
+  .sh-step h3 { font-size: 22px; }
+  .sh-step p  { font-size: 13px; }
+}

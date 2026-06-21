@@ -361,5 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof emailjs !== "undefined") {
         emailjs.init(EMAILJS_PUBLIC_KEY);
     }
+    if (window.loadAccessibilitySettings) {
+        window.loadAccessibilitySettings();
+    }
 });
    

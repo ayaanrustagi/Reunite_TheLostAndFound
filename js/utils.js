@@ -100,8 +100,17 @@ function resetFormValidation(formEl) {
 window.resetFormValidation = resetFormValidation;
 
 
+/**
+ * Computes the Levenshtein (edit) distance between two strings.
+ * The edit distance is the minimum number of single-character insertions,
+ * deletions, or substitutions required to transform string `a` into string `b`.
+ * Uses a standard dynamic-programming matrix approach.
+ *
+ * @param {string} a - The source string.
+ * @param {string} b - The target string.
+ * @returns {number} The minimum edit distance between `a` and `b`.
+ */
 function levenshteinDistance(a, b) {
-    // check how many typos
     const matrix = [];
     for (let i = 0; i <= b.length; i++) {
         matrix[i] = [i];
@@ -129,8 +138,17 @@ function levenshteinDistance(a, b) {
 }
 window.levenshteinDistance = levenshteinDistance;
 
+/**
+ * Determines whether `searchToken` fuzzy-matches anywhere inside `text`.
+ * First checks for an exact substring match; if none is found, splits the
+ * text into words and allows up to 1 typo for short tokens (≤5 chars) or
+ * 2 typos for longer tokens, measured by Levenshtein distance.
+ *
+ * @param {string} text        - The haystack string to search within.
+ * @param {string} searchToken - The needle token to look for.
+ * @returns {boolean} `true` if a fuzzy match is found, `false` otherwise.
+ */
 function isFuzzyMatch(text, searchToken) {
-    // search with some wiggle room
     if (!text || !searchToken) return false;
     const cleanText = text.toLowerCase();
     const token = searchToken.toLowerCase();
@@ -155,9 +173,29 @@ window.isFuzzyMatch = isFuzzyMatch;
 
 
 
+/**
+ * Computes a perceptual difference-hash (D-hash) of an image.
+ *
+ * The algorithm works in four stages:
+ *   1. **Anti-alias downscale** – the image is first drawn to an intermediate
+ *      canvas (4× the final hash dimension) with high-quality smoothing to
+ *      act as a natural blur / anti-alias filter.
+ *   2. **Final downscale** – the intermediate canvas is redrawn to
+ *      `(size+1) × size` so each row has one extra pixel for comparison.
+ *   3. **Grayscale conversion** – every pixel is converted to luminance
+ *      using the BT.601 weights (0.299 R + 0.587 G + 0.114 B).
+ *   4. **Hash generation** – for each row the algorithm compares each pixel
+ *      with its right neighbour; if left > right the bit is `1`, else `0`.
+ *
+ * The resulting binary string has `size × size` bits (default 64 bits for
+ * an 8×8 hash). Two hashes can be compared with {@link hammingDistance}.
+ *
+ * @param {HTMLImageElement} imgElement - A loaded `<img>` element.
+ * @param {number}           [size=8]  - Hash grid dimension (produces a
+ *                                        `size²`-bit hash).
+ * @returns {Promise<string|null>} A binary string hash, or `null` on failure.
+ */
 function computeDHash(imgElement, size = 8) {
-    // Perceptual image fingerprint using difference hashing
-    // Two-step downscale acts as a natural blur/anti-alias filter
     return new Promise((resolve) => {
         const process = () => {
             try {
@@ -213,8 +251,18 @@ function computeDHash(imgElement, size = 8) {
 }
 window.computeDHash = computeDHash;
 
+/**
+ * Extracts the dominant (average) colour from the centre of an image.
+ *
+ * Samples the inner 70 % of the image onto an 8×8 canvas, then averages
+ * all pixel colours after filtering out extreme darks/brights that tend
+ * to skew results (e.g. black borders or white highlights).
+ *
+ * @param {HTMLImageElement} imgElement - A loaded `<img>` element.
+ * @returns {Promise<{r: number, g: number, b: number}|null>}
+ *   An RGB colour object, or `null` on failure.
+ */
 function getDominantColor(imgElement) {
-    // Sample an 8x8 grid from the center of the image for robust color
     return new Promise((resolve) => {
         setTimeout(() => {
             try {
@@ -279,8 +327,19 @@ function getDominantColor(imgElement) {
 }
 window.getDominantColor = getDominantColor;
 
+/**
+ * Scores the perceptual similarity of two RGB colours on a 0–100 scale.
+ *
+ * Uses a weighted Euclidean distance (green > blue > red) to approximate
+ * human colour perception. Returns 100 for identical colours and 0 for
+ * maximally different colours. If either input is `null`, returns a
+ * neutral score of 50 so missing data doesn't inflate confidence.
+ *
+ * @param {{r: number, g: number, b: number}|null} c1 - First colour.
+ * @param {{r: number, g: number, b: number}|null} c2 - Second colour.
+ * @returns {number} Similarity score from 0 (opposite) to 100 (identical).
+ */
 function colorMatchScore(c1, c2) {
-    // Neutral score if either color is missing — don't inflate confidence
     if (!c1 || !c2) return 50;
 
     // Perceptually-weighted Euclidean distance (green > red > blue)
@@ -296,6 +355,19 @@ function colorMatchScore(c1, c2) {
 }
 window.colorMatchScore = colorMatchScore;
 
+/**
+ * Computes the Hamming distance between two equal-length binary hash strings.
+ *
+ * The Hamming distance counts the number of positions at which the
+ * corresponding bits differ. A distance of 0 means the hashes are
+ * identical; for 64-bit D-hashes, distances ≤ 10 generally indicate
+ * perceptually similar images.
+ *
+ * @param {string|null} h1 - First binary hash string.
+ * @param {string|null} h2 - Second binary hash string.
+ * @returns {number} Number of differing bits (0 = identical). Returns
+ *                   256 if either hash is missing.
+ */
 function hammingDistance(h1, h2) {
     if (!h1 || !h2) return 256;
     let dist = 0;

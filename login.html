@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reunite - Authentication</title>
+    <link rel="icon" type="image/png" href="assets/reunite-logo.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +32,15 @@
 <body class="auth-page">
     <div id="waves-container"></div>
 
+    <!-- Shared Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="logo-area" href="index.html" aria-label="Go to Home Page" title="Go to Home Page">
+                <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
+                <span class="logo-text">REUNITE</span>
+            </a>
+        </div>
+    </header>
 
     <div class="auth-container centered">
         <div class="auth-form-card">
@@ -109,7 +119,7 @@
 
                 <div class="auth-footer-btns">
                     <button id="authSubmitBtn" onclick="handleAuthStep()"
-                        class="btn-primary auth-submit-btn">Continue</button>
+                        class="btn btn-primary full-width">Continue</button>
                     <button id="resendBtn" onclick="sendOTP()" class="btn-text hidden"
                         style="font-size: 0.7rem; margin-top: 0.5rem; text-align: center; background: none; border: none; color: var(--accent-color); cursor: pointer;">Didn't
                         get a code? Resend</button>
@@ -120,6 +130,11 @@
         </div>
     </div>
 
+    <!-- Shared Footer -->
+    <footer class="site-footer" style="text-align: center; padding: 1.5rem 1rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted-text); letter-spacing: 0.05em;">
+        <p>&copy; 2026 REUNITE &mdash; Lost &amp; Found Network</p>
+    </footer>
+
     <!-- EmailJS client -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
@@ -127,6 +142,7 @@
     <script src="js/config.js"></script>
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/email.js"></script>
 
     <!-- API Client -->
@@ -135,4 +151,4 @@
     <script type="module" src="js/waves.js"></script>
 </body>
 
-</html>   
+</html>

@@ -157,8 +157,8 @@ function openAdminDetailModal(type, id) {
                     <div class="detail-section">
                         <h4>ACTIONS</h4>
                         <div class="admin-actions-vertical">
-                            <button onclick="approveItem('${item.id}'); closeAdminDetailModal();" class="btn-primary full-width">APPROVE REPORT</button>
-                            <button onclick="rejectItem('${item.id}'); closeAdminDetailModal();" class="btn-outline full-width" style="border-color:#ff4d4d; color:#ff4d4d;">REJECT</button>
+                            <button onclick="approveItem('${item.id}'); closeAdminDetailModal();" class="btn btn-primary full-width">APPROVE REPORT</button>
+                            <button onclick="rejectItem('${item.id}'); closeAdminDetailModal();" class="btn btn-outline red full-width">REJECT</button>
                         </div>
                     </div>
                 </div>
@@ -193,9 +193,9 @@ function openAdminDetailModal(type, id) {
                     <div class="detail-section">
                         <h4>ACTIONS</h4>
                         <div class="admin-actions-vertical">
-                            <button onclick="approveClaim('${claim.id}'); closeAdminDetailModal();" class="btn-primary full-width">VERIFY CLAIM</button>
-                            <button onclick="requestClaimDetails('${claim.id}'); closeAdminDetailModal();" class="btn-outline full-width" style="border-color:#ff9500; color:#ff9500;">REQUEST MORE INFO</button>
-                            <button onclick="deleteClaim('${claim.id}'); closeAdminDetailModal();" class="btn-outline full-width" style="border-color:#ff4d4d; color:#ff4d4d;">PURGE CLAIM</button>
+                            <button onclick="approveClaim('${claim.id}'); closeAdminDetailModal();" class="btn btn-primary full-width">VERIFY CLAIM</button>
+                            <button onclick="requestClaimDetails('${claim.id}'); closeAdminDetailModal();" class="btn btn-outline orange full-width">REQUEST MORE INFO</button>
+                            <button onclick="deleteClaim('${claim.id}'); closeAdminDetailModal();" class="btn btn-outline red full-width">PURGE CLAIM</button>
                         </div>
                     </div>
                 </div>
@@ -497,6 +497,7 @@ function toggleSettingsModal() {
         // Sync toggles with current state
         document.getElementById('motionToggle').checked = document.body.classList.contains('reduced-motion');
         document.getElementById('contrastToggle').checked = document.body.classList.contains('high-contrast');
+        document.getElementById('ttsToggle').checked = document.body.classList.contains('tts-enabled');
         document.getElementById('fontScaleDisplay').textContent = fontScale + '%';
     }
 }
@@ -523,6 +524,16 @@ function updateAccessibility(type, value) {
         document.getElementById('fontScaleDisplay').textContent = fontScale + '%';
         settings.fontScale = fontScale;
     }
+    else if (type === 'tts') {
+        const enabled = document.getElementById('ttsToggle').checked;
+        document.body.classList.toggle('tts-enabled', enabled);
+        settings.tts = enabled;
+        if (enabled) {
+            initTextToSpeech();
+        } else {
+            disableTextToSpeech();
+        }
+    }
 
     localStorage.setItem('reunite_accessibility', JSON.stringify(settings));
 }
@@ -541,6 +552,58 @@ function loadAccessibilitySettings() {
         fontScale = settings.fontScale;
         document.documentElement.style.fontSize = (fontScale / 100 * 16) + 'px';
     }
+    if (settings.tts) {
+        document.body.classList.add('tts-enabled');
+        initTextToSpeech();
+    }
 }
 window.loadAccessibilitySettings = loadAccessibilitySettings;
-   
+
+/**
+ * Text to Speech Logic
+ */
+let ttsHoverTimeout = null;
+let currentUtterance = null;
+
+function handleTTSHover(e) {
+    if (!document.body.classList.contains('tts-enabled')) return;
+    
+    const target = e.target;
+    if (target.matches('h1, h2, h3, h4, p, a, button, span, label, div.meta-tag, div.stat-label, div.stat-value, option, th, td')) {
+        const text = target.innerText || target.textContent;
+        if (text && text.trim().length > 0) {
+            clearTimeout(ttsHoverTimeout);
+            ttsHoverTimeout = setTimeout(() => {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    currentUtterance = new SpeechSynthesisUtterance(text.trim());
+                    window.speechSynthesis.speak(currentUtterance);
+                }
+            }, 400);
+        }
+    }
+}
+
+function handleTTSLeave(e) {
+    if (!document.body.classList.contains('tts-enabled')) return;
+    clearTimeout(ttsHoverTimeout);
+}
+
+function initTextToSpeech() {
+    if (!('speechSynthesis' in window)) {
+        console.warn("Speech Synthesis NOT supported in this browser.");
+        return;
+    }
+    document.removeEventListener('mouseover', handleTTSHover);
+    document.removeEventListener('mouseout', handleTTSLeave);
+    document.addEventListener('mouseover', handleTTSHover);
+    document.addEventListener('mouseout', handleTTSLeave);
+}
+
+function disableTextToSpeech() {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+    document.removeEventListener('mouseover', handleTTSHover);
+    document.removeEventListener('mouseout', handleTTSLeave);
+}

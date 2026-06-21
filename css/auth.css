@@ -5,11 +5,23 @@ body.auth-page {
     min-height: 100vh;
     width: 100vw;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: transparent;
     font-family: var(--font-main);
     box-sizing: border-box;
+}
+
+body.auth-page .site-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+body.auth-page .site-header {
+    display: none !important;
 }
 
 body.auth-page::before {
@@ -203,47 +215,7 @@ body.auth-page::before {
     gap: 0.75rem;
 }
 
-.auth-submit-btn {
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-    /* CURVED */
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
 
-.btn-primary.auth-submit-btn {
-    background: #000;
-    color: #fff;
-    border: none;
-    font-family: var(--font-mono);
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    padding: 1rem;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-primary.auth-submit-btn:hover {
-    background: var(--accent-color);
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 78, 204, 0.2);
-}
-
-.btn-secondary.auth-submit-btn {
-    background: #f5f5f7;
-    color: #1d1d1f;
-    border: 1px solid #d2d2d7;
-}
-
-.btn-secondary.auth-submit-btn:hover {
-    background: #e8e8ed;
-}
 
 
 .field-hint {
@@ -423,14 +395,7 @@ body.auth-page::before {
     box-shadow: 0 0 0 3px rgba(0, 78, 204, 0.1);
 }
 
-/* Button */
-.pill-btn {
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 1rem;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0, 78, 204, 0.3);
-}
+
 
 /* Admin Toggle */
 .admin-toggle-wrap {
@@ -579,4 +544,4 @@ body.auth-page::before {
     .auth-tabs {
         margin-bottom: 1rem;
     }
-}   
+}

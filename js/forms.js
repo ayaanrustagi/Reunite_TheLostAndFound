@@ -421,7 +421,7 @@ async function simulateAiScan() {
     if (scoredMatches.length > 0) {
         results.innerHTML = '<div class="ai-results-header">TOP D-HASHING MATCHES FOUND:</div>' +
             scoredMatches.map(m => `
-                <button class="list-item start-hidden ai-match-item" onclick="openItemModal('${m.id}')" type="button" aria-label="View details for ${m.title}">
+                <button class="list-item start-hidden ai-match-item" onclick="openItemModal('${m.id}')" type="button" aria-label="View details for ${m.title}" title="View details for ${m.title}">
                     <div class="ai-match-content">
                         ${m.image ? `<img src="${m.image}" class="ai-match-thumb" alt="${m.title}">` : '<div class="ai-match-thumb-placeholder"></div>'}
                         <div class="ai-match-info">

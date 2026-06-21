@@ -107,10 +107,7 @@
     }
 }
 
-.btn-primary.full-width {
-    width: 100%;
-    justify-content: center;
-}
+
 
 .status-msg {
     font-family: var(--font-mono);
@@ -229,4 +226,3 @@
 .search-active .content-wrapper {
     padding-top: 2rem;
 }
-   

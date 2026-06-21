@@ -170,7 +170,7 @@ function renderFound() {
     }
 
     grid.innerHTML = filtered.map(item => `
-        <button class="item-card" onclick="openItemModal('${item.id}')" type="button" aria-label="View details for ${item.title}">
+        <button class="item-card" onclick="openItemModal('${item.id}')" type="button" aria-label="View details for ${item.title}" title="View details for ${item.title}">
             ${item.image ? `<div class="card-image-wrap"><img src="${item.image}" class="card-thumb" alt="${item.title}" loading="lazy"></div>` : ''}
             <div class="card-content">
                 <div class="card-meta">
@@ -223,8 +223,8 @@ function toggleClaimedItems() {
 
     const isHidden = wrapper.classList.toggle('hidden');
     btn.innerHTML = isHidden ?
-        'SHOW PAST CLAIMED ITEMS <span class="btn-icon">v</span>' :
-        'HIDE PAST CLAIMED ITEMS <span class="btn-icon">^</span>';
+        'SHOW PAST CLAIMED ITEMS <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' :
+        'HIDE PAST CLAIMED ITEMS <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
 }
 window.toggleClaimedItems = toggleClaimedItems;
 
@@ -336,9 +336,9 @@ function renderAdmin() {
               </div>
             </div>
             <div class="admin-actions-inline" onclick="event.stopPropagation()">
-                ${!i.image ? `<button onclick="requestItemPhoto('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff9500; color:#ff9500;">REQUEST PHOTO</button>` : ''}
-                <button onclick="approveItem('${i.id}')" class="btn-sm btn-outline">APPROVE</button>
-                <button onclick="rejectItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">REJECT</button>
+                ${!i.image ? `<button onclick="requestItemPhoto('${i.id}')" class="btn btn-sm btn-outline orange">REQUEST PHOTO</button>` : ''}
+                <button onclick="approveItem('${i.id}')" class="btn btn-sm btn-outline blue">APPROVE</button>
+                <button onclick="rejectItem('${i.id}')" class="btn btn-sm btn-outline red">REJECT</button>
             </div>
         </div>
     `).join('') : '<div class="status-msg">NO PENDING REPORTS</div>';
@@ -357,8 +357,8 @@ function renderAdmin() {
                   </div>
                 </div>
                 <div class="admin-actions-inline" onclick="event.stopPropagation()">
-                    <button onclick="requestClaimDetails('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff9500; color:#ff9500;">REQUEST DETAILS</button>
-                    <button onclick="approveClaim('${c.id}')" class="btn-sm btn-outline">VERIFY</button>
+                    <button onclick="requestClaimDetails('${c.id}')" class="btn btn-sm btn-outline orange">REQUEST DETAILS</button>
+                    <button onclick="approveClaim('${c.id}')" class="btn btn-sm btn-outline blue">VERIFY</button>
                 </div>
             </div>
         `;
@@ -371,7 +371,7 @@ function renderAdmin() {
               <div class="ref-code">ID: ${i.id.substring(0, 8)}</div>
               <strong>${i.title}</strong>
             </div>
-            <button onclick="deleteItem('${i.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">DELETE</button>
+            <button onclick="deleteItem('${i.id}')" class="btn btn-sm btn-outline red">DELETE</button>
         </div>
     `).join('') : '<div class="status-msg">EMPTY</div>';
 
@@ -384,7 +384,7 @@ function renderAdmin() {
                   <div class="ref-code">VERIFIED FOR: ${c.claimant_name.toUpperCase()}</div>
                   <strong>${item?.title || 'Unknown Item'}</strong>
                 </div>
-                <button onclick="deleteClaim('${c.id}')" class="btn-sm btn-outline" style="border-color:#ff4d4d; color:#ff4d4d;">PURGE</button>
+                <button onclick="deleteClaim('${c.id}')" class="btn btn-sm btn-outline red">PURGE</button>
             </div>
         `;
     }).join('') : '<div class="status-msg">EMPTY</div>';
@@ -430,4 +430,3 @@ async function renderAdminAudit() {
     }
 }
 window.renderAdminAudit = renderAdminAudit;
-   
