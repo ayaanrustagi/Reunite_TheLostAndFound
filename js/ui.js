@@ -543,3 +543,4 @@ function loadAccessibilitySettings() {
     }
 }
 window.loadAccessibilitySettings = loadAccessibilitySettings;
+ 

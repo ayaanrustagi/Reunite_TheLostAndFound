@@ -5,3 +5,4 @@ const auditController = require('../controllers/auditController');
 router.get('/', auditController.getAuditLogs);
 
 module.exports = router;
+ 

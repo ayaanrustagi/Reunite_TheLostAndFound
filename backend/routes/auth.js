@@ -7,3 +7,4 @@ router.post('/register', authController.register);
 router.get('/profile', authController.getProfile);
 
 module.exports = router;
+ 
