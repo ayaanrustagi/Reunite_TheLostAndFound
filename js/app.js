@@ -105,4 +105,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.attachRealtimeValidation) window.attachRealtimeValidation();
     if (window.renderDashboardTips) window.renderDashboardTips();
 
+    console.log("REUNITE SYSTEM: FINAL READY");
 });
