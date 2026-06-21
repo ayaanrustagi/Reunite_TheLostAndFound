@@ -246,4 +246,4 @@ export function buildPermutationTable(random) {
     for (let i = 256; i < tableSize; i++) p[i] = p[i - 256];
     return p;
 }
- 
+  

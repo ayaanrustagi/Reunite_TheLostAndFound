@@ -29,4 +29,4 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
     }
 }
 window.sendEmailUpdate = sendEmailUpdate;
- 
+  

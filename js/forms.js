@@ -577,4 +577,4 @@ async function requestClaimDetails(id) {
     }
 }
 window.requestClaimDetails = requestClaimDetails;
- 
+  

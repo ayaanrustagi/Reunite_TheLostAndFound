@@ -18,4 +18,4 @@ const claimSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.models.Claim || mongoose.model('Claim', claimSchema);
- 
+  
