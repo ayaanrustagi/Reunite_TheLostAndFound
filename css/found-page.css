@@ -14,7 +14,7 @@
   min-height: 100vh;
   box-sizing: border-box;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
 }
 #page-found .content-wrapper.content-box {
@@ -26,31 +26,12 @@
   /* Match the header — same max-width + same horizontal inset */
   max-width: 1400px;
   width: 100%;
-  height: calc(100vh - 84px - clamp(32px, 4vw, 56px));
-  display: flex;
-  flex-direction: column;
+  /* Grow with content — no fixed height / inner scroll. The page itself
+     scrolls only if the grid genuinely overflows the viewport. */
   margin: 0 auto;
 }
-#page-found .section-head { flex-shrink: 0; margin-bottom: 18px !important; }
-#page-found .browse-grid { flex: 1; min-height: 0; }
-#page-found .browse-grid > div:last-child {
-  height: 100%;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-#page-found .fp-filters { max-height: 100%; overflow-y: auto; }
+#page-found .section-head { margin-bottom: 18px !important; }
 #page-found .grid-layout .status-msg { padding: 28px 20px; }
-@media (max-width: 900px) {
-  #page-found .content-wrapper.content-box {
-    height: auto;
-    max-height: none;
-  }
-  #page-found .browse-grid > div:last-child,
-  #page-found .fp-filters {
-    overflow: visible;
-    max-height: none;
-  }
-}
 
 /* Eyebrow + top search bar */
 #page-found .section-head {
