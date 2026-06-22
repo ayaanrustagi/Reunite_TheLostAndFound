@@ -4,8 +4,13 @@
    Reuses the existing site palette from base.css.
    ============================================================= */
 
-#page-found {
-  padding: clamp(16px, 2vw, 28px) clamp(16px, 3vw, 40px) !important;
+/* Only lay the page out when it's the active view — using the ID alone
+   would override .view-section's display:none and show this page on top
+   of every other section. Keep the flex layout scoped to .active. */
+#page-found.active {
+  /* Side padding matches the header's 1rem inset so the white box
+     lines up edge-to-edge with the floating header above it. */
+  padding: clamp(16px, 2vw, 28px) 1rem !important;
   min-height: 100vh;
   box-sizing: border-box;
   display: flex;
@@ -17,10 +22,10 @@
   border: 1px solid var(--border-color) !important;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft) !important;
-  padding: clamp(20px, 2.5vw, 32px) clamp(20px,3vw,32px) clamp(24px, 3vw, 36px) !important;
-  max-width: 1100px;
+  padding: clamp(20px, 2.5vw, 36px) clamp(24px,3vw,40px) clamp(24px, 3vw, 40px) !important;
+  /* Match the header — same max-width + same horizontal inset */
+  max-width: 1400px;
   width: 100%;
-  /* Fit within viewport minus header (~84px) and outer top/bottom padding */
   height: calc(100vh - 84px - clamp(32px, 4vw, 56px));
   display: flex;
   flex-direction: column;
@@ -47,14 +52,55 @@
   }
 }
 
-/* Eyebrow: · BROWSE INVENTORY · VISUAL SEARCH */
+/* Eyebrow + top search bar */
 #page-found .section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 28px;
+}
+#page-found .fp-head-labels {
   display: flex;
   align-items: baseline;
   gap: 14px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 32px;
+  flex-shrink: 0;
+}
+
+/* the search bar that now lives in the header row */
+#page-found .fp-topsearch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(420px, 48%);
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: var(--muted-text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+#page-found .fp-topsearch:focus-within {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(0,78,204,0.10);
+}
+#page-found .fp-topsearch svg { flex-shrink: 0; opacity: 0.7; }
+#page-found .fp-topsearch input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-main);
+  font-size: 14px;
+  color: var(--text-color);
+}
+#page-found .fp-topsearch input::placeholder { color: var(--muted-text); opacity: 0.7; }
+
+@media (max-width: 680px) {
+  #page-found .section-head { flex-direction: column; align-items: stretch; gap: 14px; }
+  #page-found .fp-topsearch { width: 100%; }
 }
 #page-found .section-head .label-tech,
 #page-found .section-head h2 {
@@ -75,8 +121,8 @@
 /* ---- two-column layout ---- */
 #page-found .browse-grid {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 20px;
+  grid-template-columns: 300px 1fr;
+  gap: 28px;
   align-items: start;
 }
 @media (max-width: 900px) {
@@ -98,7 +144,7 @@
 #page-found .fp-drop {
   position: relative;
   display: block;
-  padding: 22px 16px 18px;
+  padding: 18px 14px 14px;
   border: 1.5px dashed var(--border-color);
   border-radius: 10px;
   text-align: center;
@@ -106,6 +152,18 @@
   cursor: pointer;
   transition: border-color 0.2s;
 }
+/* keep the preview thumbnail compact so it doesn't dominate the rail */
+#page-found .fp-drop .photo-preview {
+  display: block;
+  margin: 8px auto 0;
+  max-height: 110px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+#page-found .fp-drop .photo-preview:not(.hidden) ~ .fp-drop-label,
+#page-found .fp-drop .photo-preview:not(.hidden) ~ .fp-drop-hint,
+#page-found .fp-drop .photo-preview:not(.hidden) ~ .fp-drop-icon { display: none; }
 #page-found .fp-drop:hover { border-color: var(--accent-color); }
 #page-found .fp-drop input[type="file"] {
   position: absolute; inset: 0;
@@ -221,11 +279,12 @@
 /* ---- grid + cards ---- */
 #page-found .grid-layout {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
-@media (max-width: 1100px) { #page-found .grid-layout { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px)  { #page-found .grid-layout { grid-template-columns: 1fr; } }
+@media (max-width: 1200px) { #page-found .grid-layout { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 820px)  { #page-found .grid-layout { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px)  { #page-found .grid-layout { grid-template-columns: 1fr; } }
 
 #page-found .item-card {
   display: block;
@@ -248,7 +307,7 @@
 /* striped pastel photo block (top half of the card) */
 #page-found .fp-photo {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
 }
 #page-found .fp-photo svg {
@@ -299,16 +358,19 @@
 
 /* card body */
 #page-found .fp-body {
-  padding: 14px 16px 18px;
-  display: flex; flex-direction: column; gap: 8px;
+  padding: 11px 13px 13px;
+  display: flex; flex-direction: column; gap: 6px;
 }
 #page-found .fp-title {
   font-family: var(--font-main);
   font-weight: 700;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.2;
   color: var(--text-color);
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #page-found .fp-meta {
   display: flex; justify-content: space-between;
@@ -322,6 +384,45 @@
 #page-found .toggle-claimed-btn {
   margin: 32px auto 0;
   display: block;
+}
+
+/* Fast / Accurate matching mode toggle */
+#page-found .fp-match-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+#page-found .fp-mode {
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+#page-found .fp-mode:hover { border-color: var(--text-color); }
+#page-found .fp-mode.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #ffffff;
+}
+#page-found .fp-mode-title {
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+#page-found .fp-mode-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
 }
 
 /* AI scan overlay (kept functional, tucked under drop zone) */

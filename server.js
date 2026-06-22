@@ -7,6 +7,7 @@ const connectDB = require('./backend/db');
 const itemRoutes = require('./backend/routes/items');
 const claimRoutes = require('./backend/routes/claims');
 const authRoutes = require('./backend/routes/auth');
+const matchRoutes = require('./backend/routes/match');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, '.')));
 app.use('/api/items', itemRoutes);
 app.use('/api/claims', claimRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/match', matchRoutes);
 
 // Fallback for SPA
 app.get('*path', (req, res) => {

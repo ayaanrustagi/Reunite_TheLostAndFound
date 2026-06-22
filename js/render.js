@@ -206,7 +206,6 @@ function renderFpCard(item, idx) {
     const title = fpEscHtml(item.title || 'Untitled');
     const loc   = fpEscHtml(item.location || '');
     const when  = fpRelativeTime(item.date_found || item.created_at);
-    const match = (idx === 0) ? '96%' : (idx === 1 ? '84%' : null);
     const patternId = 'fp-stp-' + fpEscHtml(item.id || idx);
 
     const photoInner = item.image
@@ -228,7 +227,6 @@ function renderFpCard(item, idx) {
             <div class="fp-photo" style="background:${bg}">
                 ${photoInner}
                 <span class="fp-tag">${cat}</span>
-                ${match ? `<span class="fp-match">${match}</span>` : ''}
             </div>
             <div class="fp-body">
                 <h3 class="fp-title">${title}</h3>

@@ -301,7 +301,12 @@ function previewFileFind() {
             preview.src = e.target.result;
             preview.classList.remove('hidden');
             parent.classList.add('has-image');
-            simulateAiScan();
+            // Honor the user's selected matching mode (fast d-hash vs accurate AI)
+            if (window.fpMatchMode === 'ai') {
+                runAiMatch(e.target.result);
+            } else {
+                simulateAiScan();
+            }
         };
         reader.readAsDataURL(file);
     } else {
@@ -310,6 +315,130 @@ function previewFileFind() {
     }
 }
 window.previewFileFind = previewFileFind;
+
+/* ---- Fast / Accurate toggle state ---- */
+window.fpMatchMode = 'fast';
+function setMatchMode(mode) {
+    window.fpMatchMode = (mode === 'ai') ? 'ai' : 'fast';
+    document.querySelectorAll('.fp-mode').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === window.fpMatchMode);
+    });
+    // If a preview is already loaded, immediately re-run matching in the new mode.
+    const preview = document.getElementById('findPhotoPreview');
+    if (preview && !preview.classList.contains('hidden') && preview.src) {
+        if (window.fpMatchMode === 'ai') runAiMatch(preview.src);
+        else simulateAiScan();
+    }
+}
+window.setMatchMode = setMatchMode;
+
+/* ---- AI (Groq + Llama 4 Scout) visual matching ---- */
+async function runAiMatch(dataUrl) {
+    const container = document.getElementById('aiMatchContainer');
+    const label     = document.getElementById('aiMatchLabel');
+    const progress  = document.getElementById('aiScanProgress');
+    const results   = document.getElementById('aiMatchResults');
+    if (!container) return;
+
+    container.classList.add('active');
+    results.innerHTML = '';
+    label.textContent = 'CONTACTING AI MATCHER…';
+    progress.style.width = '15%';
+
+    try {
+        // Down-scale the image client-side so the request stays small + fast.
+        const compact = await downscaleDataUrl(dataUrl, 768, 0.82);
+        label.textContent = 'ANALYZING VISUAL FEATURES…';
+        progress.style.width = '55%';
+
+        const res = await fetch('/api/match/ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ image: compact, topN: 3 })
+        });
+        // Tolerate non-JSON responses (e.g. SPA fallback HTML when the route
+        // isn't deployed) so we don't surface raw parse errors to the user.
+        const ct  = res.headers.get('content-type') || '';
+        const raw = await res.text();
+        let data;
+        if (ct.includes('application/json')) {
+            try { data = JSON.parse(raw); } catch { data = null; }
+        }
+        if (!data) {
+            results.innerHTML = `
+              <div class="ai-no-match">
+                <div class="ai-no-match-title">AI matching unavailable</div>
+                <div class="ai-no-match-hint">The /api/match/ai endpoint isn't deployed yet. Try Fast mode for now.</div>
+              </div>`;
+            return;
+        }
+        progress.style.width = '100%';
+
+        if (!res.ok) {
+            results.innerHTML =
+                `<div class="ai-no-match">
+                   <div class="ai-no-match-title">AI matching unavailable</div>
+                   <div class="ai-no-match-hint">${(data && data.error) || 'Try the Fast mode for now.'}</div>
+                 </div>`;
+            return;
+        }
+
+        const matches = (data.matches || []).filter(m => m.confidence > 30);
+        if (matches.length === 0) {
+            results.innerHTML = `
+              <div class="ai-no-match">
+                <div class="ai-no-match-icon"></div>
+                <div class="ai-no-match-title">No high-confidence AI matches.</div>
+                <div class="ai-no-match-hint">Try a clearer photo, or switch to Fast d-hash.</div>
+              </div>`;
+            return;
+        }
+
+        results.innerHTML = '<div class="ai-results-header">TOP AI MATCHES (LLAMA 4 SCOUT):</div>' +
+            matches.map(m => `
+                <button class="list-item start-hidden ai-match-item" onclick="openItemModal('${m.id}')" type="button"
+                        aria-label="View details for ${m.title}" title="View details for ${m.title}">
+                    <div class="ai-match-content">
+                        ${m.image ? `<img src="${m.image}" class="ai-match-thumb" alt="${m.title}">` : '<div class="ai-match-thumb-placeholder"></div>'}
+                        <div class="ai-match-info">
+                            <div class="ai-match-title">${m.title}</div>
+                            <div class="ai-match-meta">
+                                <span class="ai-confidence-badge">${m.confidence}%</span>
+                                <span class="ai-color-match">${m.location || ''}</span>
+                            </div>
+                            ${m.reason ? `<div class="ai-match-reason">${m.reason}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="ai-match-arrow">-></div>
+                </button>
+            `).join('');
+    } catch (err) {
+        results.innerHTML =
+            `<div class="ai-no-match">
+               <div class="ai-no-match-title">AI matching failed</div>
+               <div class="ai-no-match-hint">${err.message || 'Network error.'}</div>
+             </div>`;
+    }
+}
+window.runAiMatch = runAiMatch;
+
+/* Compress a data URL to keep API payloads small. */
+function downscaleDataUrl(dataUrl, maxSide = 800, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+            const w = Math.round(img.width  * scale);
+            const h = Math.round(img.height * scale);
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = dataUrl;
+    });
+}
 
 function previewFileReport() {
     const fileInput = document.getElementById('reportItemPhoto');
@@ -427,8 +556,8 @@ async function simulateAiScan() {
                         <div class="ai-match-info">
                             <div class="ai-match-title">${m.title}</div>
                             <div class="ai-match-meta">
-                                <span class="ai-confidence-badge">${m.confidence}% MATCH</span>
-                                <span class="ai-color-match">Color Match: ${Math.round(m.colorScore)}%</span>
+                                <span class="ai-confidence-badge">${m.confidence}%</span>
+                                <span class="ai-color-match">color ${Math.round(m.colorScore)}%</span>
                             </div>
                         </div>
                     </div>

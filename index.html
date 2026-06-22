@@ -213,10 +213,21 @@
     <section id="page-found" class="view-section">
       <div class="content-wrapper content-box">
 
-        <!-- Eyebrow: · BROWSE INVENTORY · VISUAL SEARCH -->
+        <!-- Eyebrow + top search bar -->
         <div class="section-head">
-          <span class="label-tech">Browse inventory</span>
-          <h2>Visual search</h2>
+          <div class="fp-head-labels">
+            <span class="label-tech">Browse inventory</span>
+            <h2>Visual search</h2>
+          </div>
+          <div class="fp-topsearch">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input id="fpSearch" type="text" placeholder="Search lost items — hydroflask, keychain…"
+                   oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
+          </div>
         </div>
 
         <!-- Hidden legacy filters so existing JS handlers keep working -->
@@ -257,18 +268,24 @@
               <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
             </label>
 
+            <!-- Accuracy mode toggle (Fast d-hash vs Accurate AI) -->
+            <div class="fp-match-mode" role="radiogroup" aria-label="Matching mode">
+              <button type="button" class="fp-mode active" data-mode="fast" onclick="setMatchMode('fast')">
+                <span class="fp-mode-title">Fast</span>
+                <span class="fp-mode-sub">d-hash · instant</span>
+              </button>
+              <button type="button" class="fp-mode" data-mode="ai" onclick="setMatchMode('ai')">
+                <span class="fp-mode-title">Accurate</span>
+                <span class="fp-mode-sub">AI · slower</span>
+              </button>
+            </div>
+
             <!-- AI scan overlay -->
             <div id="aiMatchContainer" class="ai-scan-container">
               <div class="scanning-line-overlay"></div>
               <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
               <div class="scan-progress-bar" id="aiScanProgress"></div>
               <div id="aiMatchResults"></div>
-            </div>
-
-            <div class="fp-group">
-              <h4>Search</h4>
-              <input id="fpSearch" type="text" placeholder="hydroflask, keychain…"
-                     oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
             </div>
 
             <div class="fp-group">

@@ -1,99 +1,134 @@
-/* D-hashing Match Results */
+/* ============================================================
+   VISUAL-MATCH RESULTS (sidebar) — compact, single-column
+   Used by both Fast (d-hash) and Accurate (AI) modes.
+   ============================================================ */
+
 .ai-results-header {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin: 1.25rem 0 0.75rem;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 0.5rem;
-    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
     letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--muted-text);
 }
 
+/* one match = a tidy row: thumb · info */
 button.ai-match-item {
-    cursor: pointer;
-    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
     font: inherit;
     color: inherit;
     text-align: left;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+button.ai-match-item:hover {
+    border-color: var(--text-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
 }
 
 .ai-match-content {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.6rem;
     flex: 1;
+    min-width: 0;            /* allow children to truncate */
 }
 
-.ai-match-thumb {
-    width: 48px;
-    height: 48px;
+.ai-match-thumb,
+.ai-match-thumb-placeholder {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 7px;
     border: 1px solid var(--border-color);
 }
-
-.ai-match-thumb-placeholder {
-    width: 48px;
-    height: 48px;
-    background: #f0f0f0;
-    border-radius: 4px;
-}
+.ai-match-thumb-placeholder { background: #f0f0f0; }
 
 .ai-match-info {
     display: flex;
     flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
 }
 
 .ai-match-title {
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1.1;
     color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* single compact meta line: "68% · color 88%" or "68% · PE Gym" */
 .ai-match-meta {
     display: flex;
-    gap: 1rem;
-    margin-top: 0.25rem;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
 }
 
 .ai-confidence-badge {
-    font-size: 0.65rem;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.02em;
     padding: 2px 6px;
-    background: rgba(0, 106, 255, 0.1);
+    background: rgba(0, 78, 204, 0.1);
     color: var(--accent-color);
-    border-radius: 3px;
-    font-weight: 600;
+    border-radius: 999px;
+    font-weight: 700;
 }
 
 .ai-color-match {
-    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
     color: var(--muted-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
 }
 
-.ai-match-arrow {
+/* AI reasoning blurb — small, muted, clamped to 2 lines */
+.ai-match-reason {
+    font-size: 0.68rem;
+    line-height: 1.35;
     color: var(--muted-text);
+    margin-top: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
+/* the chunky "->" arrow was causing wraps in the narrow rail — hide it */
+.ai-match-arrow { display: none; }
+
+/* empty state */
 .ai-no-match {
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem 1rem;
     color: var(--muted-text);
     background: rgba(0, 0, 0, 0.02);
-    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     margin-top: 1rem;
 }
-
-.ai-no-match-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.ai-no-match-title {
-    font-weight: 500;
-}
-
-.ai-no-match-hint {
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-}   
+.ai-no-match-icon { font-size: 1.25rem; margin-bottom: 0.4rem; }
+.ai-no-match-title { font-weight: 600; font-size: 0.85rem; color: var(--text-color); }
+.ai-no-match-hint { font-size: 0.72rem; margin-top: 0.3rem; line-height: 1.4; }
