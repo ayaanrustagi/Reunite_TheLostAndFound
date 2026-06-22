@@ -8,10 +8,13 @@
    would override .view-section's display:none and show this page on top
    of every other section. Keep the flex layout scoped to .active. */
 #page-found.active {
-  /* Side padding matches the header's 1rem inset so the white box
-     lines up edge-to-edge with the floating header above it. */
   padding: clamp(16px, 2vw, 28px) 1rem !important;
-  min-height: 100vh;
+  /* Exact remaining viewport height after the 5.5rem header offset.
+     Using height (not min-height) so the flex centering has a fixed
+     container to center within. overflow-y handles tall content. */
+  height: calc(100vh - 5.5rem);
+  min-height: 0 !important;
+  overflow-y: auto;
   box-sizing: border-box;
   display: flex;
   align-items: center;
