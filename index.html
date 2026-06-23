@@ -47,6 +47,11 @@
   <link rel="stylesheet" href="css/homepage.css" />
   <!-- Find items page -->
   <link rel="stylesheet" href="css/found-page.css" />
+  <!-- Report wizard -->
+  <link rel="stylesheet" href="css/report-wizard.css" />
+  <!-- Leaflet (real interactive map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <!-- API Backend -->
 
   <!-- EmailJS client -->
@@ -367,86 +372,329 @@
 
     <!-- SECTION: REPORT -->
     <section id="page-report" class="view-section">
-      <div class="section-centered">
-        <span class="label-tech">NEW ENTRY</span>
-        <h2>FILE A REPORT</h2>
+      <!-- Hidden legacy form — field values are written here by the wizard; forms.js reads them -->
+      <form id="reportForm" class="hidden" aria-hidden="true" novalidate>
+        <input type="text"  id="itemTitle">
+        <select id="itemCategory" onchange="toggleOtherCat()">
+          <option value="">SELECT...</option>
+          <option value="Keys">KEYS</option>
+          <option value="Wallet">WALLET</option>
+          <option value="Phone">PHONE</option>
+          <option value="Bag">BAG</option>
+          <option value="Other">OTHER</option>
+        </select>
+        <input type="text"  id="otherCategory">
+        <input type="text"  id="itemLocation">
+        <input type="hidden" id="itemLat">
+        <input type="hidden" id="itemLng">
+        <input type="hidden" id="itemAddress">
+        <input type="hidden" id="itemPublic" value="true">
+        <input type="date"  id="itemDate">
+        <textarea          id="itemDescription"></textarea>
+        <!-- reportItemPhoto lives in the drop zone; reportPhotoPreview synced by wizard JS -->
+        <img               id="reportPhotoPreview" class="hidden" alt="">
+        <input type="text"  id="contactName"  autocomplete="name">
+        <input type="email" id="contactEmail" autocomplete="email">
+        <input type="tel"   id="contactPhone" autocomplete="tel">
+        <!-- legacy wrappers forms.js touches -->
+        <div id="otherCategoryWrap" class="hidden"></div>
+      </form>
+      <!-- reportStatus lives outside the hidden form so the wizard panel can show it -->
+      <div id="reportStatus" role="status" aria-live="polite" class="hidden"></div>
 
-        <form id="reportForm" class="tech-form" novalidate>
-          <div class="form-row">
-            <div class="input-group required">
-              <label for="itemTitle">ITEM TITLE</label>
-              <input type="text" id="itemTitle" required aria-describedby="itemTitleError">
-              <p class="input-error" id="itemTitleError" role="alert"></p>
+      <!-- ===== REPORT WIZARD ===== -->
+      <div class="rw-outer">
+
+        <!-- Progress bar -->
+        <nav class="rw-progress" aria-label="Form progress">
+          <div class="rw-step active" id="rwStepDot1">
+            <div class="rw-step-circle">
+              <span class="rw-step-num">01</span>
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
             </div>
-            <div class="input-group required">
-              <label for="itemCategory">CATEGORY</label>
-              <select id="itemCategory" required onchange="toggleOtherCat()" aria-describedby="itemCategoryError">
-                <option value="">SELECT...</option>
-                <option value="Keys">KEYS</option>
-                <option value="Wallet">WALLET</option>
-                <option value="Phone">PHONE</option>
-                <option value="Bag">BAG</option>
-                <option value="Other">OTHER</option>
-              </select>
-              <p class="input-error" id="itemCategoryError" role="alert"></p>
+            <span class="rw-step-label">Details</span>
+          </div>
+          <div class="rw-connector" id="rwConn1"></div>
+          <div class="rw-step" id="rwStepDot2">
+            <div class="rw-step-circle">
+              <span class="rw-step-num">02</span>
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="rw-step-label">Location</span>
+          </div>
+          <div class="rw-connector" id="rwConn2"></div>
+          <div class="rw-step" id="rwStepDot3">
+            <div class="rw-step-circle">
+              <span class="rw-step-num">03</span>
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="rw-step-label">Review</span>
+          </div>
+        </nav>
+
+        <div class="rw-viewport">
+        <!-- ===== PANEL 1 — Item Details ===== -->
+        <div class="rw-panel active rw-fwd" id="rwPanel1" role="group" aria-labelledby="rwH1">
+          <div class="rw-card">
+            <div>
+              <span class="rw-eyebrow">Step 1 of 3</span>
+              <h2 class="rw-heading" id="rwH1">What did you find?</h2>
+              <p class="rw-sub">Give us the basics so we can match it with someone looking.</p>
+            </div>
+
+            <div class="rw-row">
+              <div class="rw-field" data-required>
+                <label for="rw_itemTitle">Item name <em class="rw-req" aria-label="required">*</em></label>
+                <input type="text" id="rw_itemTitle" placeholder="e.g. Blue AirPods case"
+                  autocomplete="off" oninput="document.getElementById('itemTitle').value=this.value">
+                <span class="rw-err" role="alert"></span>
+              </div>
+              <div class="rw-field" data-required>
+                <label for="rw_itemCategory">Category <em class="rw-req" aria-label="required">*</em></label>
+                <select id="rw_itemCategory"
+                  onchange="document.getElementById('itemCategory').value=this.value; document.getElementById('otherCategoryWrap').style.display=this.value==='Other'?'':'none'; document.getElementById('rw_otherWrap').style.display=this.value==='Other'?'':'none';">
+                  <option value="">Select…</option>
+                  <option value="Keys">Keys</option>
+                  <option value="Wallet">Wallet</option>
+                  <option value="Phone">Phone</option>
+                  <option value="Bag">Bag</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="rw-err" role="alert"></span>
+              </div>
+            </div>
+
+            <div class="rw-field" id="rw_otherWrap" style="display:none">
+              <label for="rw_otherCategory">Specify type</label>
+              <input type="text" id="rw_otherCategory" placeholder="e.g. Umbrella"
+                oninput="document.getElementById('otherCategory').value=this.value">
+            </div>
+
+            <div class="rw-field">
+              <label for="rw_itemDescription">Description</label>
+              <textarea id="rw_itemDescription" rows="3" placeholder="Color, brand, any identifying features…"
+                oninput="document.getElementById('itemDescription').value=this.value"></textarea>
+              <span class="rw-err" role="alert"></span>
+            </div>
+
+            <div class="rw-field" data-required>
+              <label for="rw_itemDate">Date found <em class="rw-req" aria-label="required">*</em></label>
+              <input type="date" id="rw_itemDate"
+                oninput="document.getElementById('itemDate').value=this.value"
+                onchange="document.getElementById('itemDate').value=this.value">
+              <span class="rw-err" role="alert"></span>
+            </div>
+
+            <div class="rw-nav">
+              <span></span>
+              <button type="button" class="rw-btn-next" onclick="rwNext()">
+                Next &rarr;
+              </button>
             </div>
           </div>
+        </div>
 
-          <div id="otherCategoryWrap" class="input-group hidden">
-            <label for="otherCategory">SPECIFY TYPE</label>
-            <input type="text" id="otherCategory">
-          </div>
-
-          <div class="form-row">
-            <div class="input-group required">
-              <label for="itemLocation">LOCATION FOUND</label>
-              <input type="text" id="itemLocation" required aria-describedby="itemLocationError">
-              <p class="input-error" id="itemLocationError" role="alert"></p>
+        <!-- ===== PANEL 2 — Location & Photos ===== -->
+        <div class="rw-panel" id="rwPanel2" role="group" aria-labelledby="rwH2">
+          <div class="rw-card">
+            <div>
+              <span class="rw-eyebrow">Step 2 of 3</span>
+              <h2 class="rw-heading" id="rwH2">Where &amp; what?</h2>
+              <p class="rw-sub">Tell us where you found it and add a photo if you have one.</p>
             </div>
-            <div class="input-group required">
-              <label for="itemDate">DATE</label>
-              <input type="date" id="itemDate" required aria-describedby="itemDateError">
-              <p class="input-error" id="itemDateError" role="alert"></p>
+
+            <!-- Real interactive map (Leaflet + OpenStreetMap) -->
+            <div class="rw-map-wrap">
+              <div id="rwMap" class="rw-map" role="application"
+                aria-label="Map — click or drag the pin to mark where you found the item"></div>
+              <button type="button" class="rw-map-locate" id="rwLocateBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+                </svg>
+                Use my location
+              </button>
+              <div class="rw-map-loading" id="rwMapLoading" aria-hidden="true">Loading map…</div>
+            </div>
+            <p class="rw-map-readout" id="rwMapReadout">Click the map to drop a pin where you found it (optional).</p>
+
+            <div class="rw-field" data-required>
+              <label for="rw_itemLocation">Location found <em class="rw-req" aria-label="required">*</em></label>
+              <input type="text" id="rw_itemLocation" placeholder="e.g. Library, 2nd floor study room"
+                autocomplete="off" oninput="document.getElementById('itemLocation').value=this.value">
+              <span class="rw-err" role="alert"></span>
+            </div>
+
+            <div class="rw-section-label">Photos (optional)</div>
+
+            <!-- Drop zone — the real file input lives here -->
+            <div class="rw-drop" id="rwDrop" role="button" tabindex="0"
+              aria-label="Upload item photo — click or drag and drop">
+              <input type="file" id="reportItemPhoto" accept="image/*" aria-label="Upload photo">
+              <div id="rwDropContent">
+                <div class="rw-drop-icon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+                <p class="rw-drop-title">Add a photo</p>
+                <p class="rw-drop-hint">JPEG / PNG / HEIC &middot; up to 10 MB</p>
+              </div>
+              <img id="rwPhotoPreview" class="rw-photo-preview" style="display:none" alt="Photo preview">
+            </div>
+
+            <div class="rw-nav">
+              <button type="button" class="rw-btn-ghost" onclick="rwBack()">&larr; Back</button>
+              <button type="button" class="rw-btn-next" onclick="rwNext()">Next &rarr;</button>
             </div>
           </div>
+        </div>
 
-          <div class="input-group">
-            <label for="itemDescription">DESCRIPTION</label>
-            <textarea id="itemDescription" rows="3"></textarea>
-          </div>
+        <!-- ===== PANEL 3 — Review & Contact ===== -->
+        <div class="rw-panel" id="rwPanel3" role="group" aria-labelledby="rwH3">
+          <div class="rw-card">
+            <div>
+              <span class="rw-eyebrow">Step 3 of 3</span>
+              <h2 class="rw-heading" id="rwH3">Almost there.</h2>
+              <p class="rw-sub">Check your report and add contact info so we can reach you.</p>
+            </div>
 
-          <div class="input-group">
-            <label for="reportItemPhoto">ITEM PHOTO (OPTIONAL)</label>
-            <div class="file-upload-ui">
-              <input type="file" id="reportItemPhoto" accept="image/*" onchange="previewFileReport()">
-              <span class="file-label">DRAG or CLICK TO UPLOAD PHOTO</span>
-              <img id="reportPhotoPreview" class="photo-preview hidden" alt="Preview">
+            <!-- Summary card -->
+            <div class="rw-summary-card">
+              <div class="rw-summary-header">
+                <span class="rw-summary-tag">FOUND ITEM</span>
+                <button type="button" class="rw-edit-btn" onclick="rwGoTo(1)">Edit</button>
+              </div>
+              <p class="rw-summary-title" id="rwSumTitle">—</p>
+              <div class="rw-summary-meta">
+                <div class="rw-summary-field">
+                  <span class="rw-summary-label">Category</span>
+                  <span class="rw-summary-value" id="rwSumCategory">—</span>
+                </div>
+                <div class="rw-summary-field">
+                  <span class="rw-summary-label">Date</span>
+                  <span class="rw-summary-value" id="rwSumDate">—</span>
+                </div>
+                <div class="rw-summary-field">
+                  <span class="rw-summary-label">Location</span>
+                  <span class="rw-summary-value" id="rwSumLocation">—</span>
+                </div>
+                <div class="rw-summary-field rw-summary-field--wide">
+                  <span class="rw-summary-label">Description</span>
+                  <span class="rw-summary-value" id="rwSumDesc">—</span>
+                </div>
+              </div>
+              <div class="rw-summary-photos" id="rwSumPhotoWrap" style="display:none">
+                <img id="rwSumPhoto" class="rw-summary-thumb" alt="Item photo">
+              </div>
+            </div>
+
+            <div class="rw-section-label">Your contact info</div>
+
+            <div class="rw-row">
+              <div class="rw-field" data-required>
+                <label for="rw_contactName">Your name <em class="rw-req" aria-label="required">*</em></label>
+                <input type="text" id="rw_contactName" autocomplete="name" placeholder="Full name"
+                  oninput="document.getElementById('contactName').value=this.value">
+                <span class="rw-err" role="alert"></span>
+              </div>
+              <div class="rw-field" data-required>
+                <label for="rw_contactEmail">School email <em class="rw-req" aria-label="required">*</em></label>
+                <input type="email" id="rw_contactEmail" autocomplete="email" placeholder="you@school.edu"
+                  oninput="document.getElementById('contactEmail').value=this.value">
+                <span class="rw-err" role="alert"></span>
+              </div>
+            </div>
+
+            <div class="rw-field">
+              <label for="rw_contactPhone">Phone (optional)</label>
+              <input type="tel" id="rw_contactPhone" autocomplete="tel" placeholder="(555) 000-0000"
+                oninput="document.getElementById('contactPhone').value=this.value">
+              <span class="rw-err" role="alert"></span>
+            </div>
+
+            <!-- Community feed toggle (real accessible switch) -->
+            <button type="button" class="rw-feed-toggle" id="rwFeedToggle"
+              role="switch" aria-checked="true" aria-label="Post to community feed">
+              <span class="rw-feed-toggle-text">
+                <span class="rw-feed-toggle-title">Post to community feed</span>
+                <span class="rw-feed-toggle-sub">Others can see this item and help reconnect it with its owner.</span>
+              </span>
+              <span class="rw-toggle-pill" aria-hidden="true"></span>
+            </button>
+
+            <button type="button" class="rw-btn-submit" id="rwSubmitBtn" onclick="rwSubmit()">
+              Submit Report
+            </button>
+            <p class="rw-submit-error" id="rwSubmitError" role="alert"></p>
+            <p class="rw-legal">By submitting you agree to our&nbsp;<a href="#" onclick="event.preventDefault()">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
+
+            <div class="rw-nav">
+              <button type="button" class="rw-btn-ghost" onclick="rwBack()">&larr; Back</button>
             </div>
           </div>
+        </div>
 
-          <div class="section-divider">CONTACT INFO</div>
-          <div class="form-row">
-            <div class="input-group required">
-              <label for="contactName">YOUR NAME</label>
-              <input type="text" id="contactName" required autocomplete="name" aria-describedby="contactNameError">
-              <p class="input-error" id="contactNameError" role="alert"></p>
+        <!-- ===== PANEL 4 — Success ===== -->
+        <div class="rw-panel" id="rwPanel4" role="region" aria-labelledby="rwH4">
+          <div class="rw-card rw-success-card">
+            <div class="rw-success-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
             </div>
-            <div class="input-group required">
-              <label for="contactEmail">SCHOOL EMAIL</label>
-              <input type="email" id="contactEmail" required autocomplete="email" aria-describedby="contactEmailError">
-              <p class="input-error" id="contactEmailError" role="alert"></p>
+            <div>
+              <span class="rw-eyebrow">Report received</span>
+              <h2 class="rw-heading" id="rwH4">Successfully logged.</h2>
+              <p class="rw-sub">We've got your report. An admin will review it shortly and we'll email you with any matches.</p>
             </div>
-          </div>
-          <div class="input-group">
-            <label for="contactPhone">PHONE (OPTIONAL)</label>
-            <input type="tel" id="contactPhone" autocomplete="tel">
-          </div>
 
-          <button type="submit" class="btn btn-primary full-width">SUBMIT ENTRY</button>
-          <div id="reportStatus" class="status-msg" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-      </div>
+            <div class="rw-success-meta">
+              <div class="rw-success-meta-item">
+                <span class="rw-meta-label">Report ID</span>
+                <span class="rw-meta-value" id="rwSuccessId">#—</span>
+              </div>
+              <div class="rw-success-meta-item">
+                <span class="rw-meta-label">Item</span>
+                <span class="rw-meta-value" id="rwSuccessName">—</span>
+              </div>
+              <div class="rw-success-meta-item">
+                <span class="rw-meta-label">Status</span>
+                <span class="rw-meta-value">Pending Review</span>
+              </div>
+            </div>
+
+            <div class="rw-success-actions">
+              <button type="button" class="rw-btn-next" onclick="navigateToSection('browse')">
+                View Feed
+              </button>
+              <button type="button" class="rw-btn-ghost" onclick="navigateToSection('hero')">
+                Dashboard
+              </button>
+            </div>
+
+            <p class="rw-start-over">
+              Found something else? <a href="#" onclick="event.preventDefault(); rwReset()">File another report</a>
+            </p>
+          </div>
+        </div>
+
+        </div><!-- /.rw-viewport -->
+      </div><!-- /.rw-outer -->
     </section>
 
     <!-- SECTION: CLAIM -->
@@ -777,6 +1025,10 @@
   <script type="module" src="js/waves.js"></script>
   <!-- Micro-interactions -->
   <script src="js/micro-interactions.js"></script>
+  <!-- Leaflet engine (load before the wizard so the map can initialize) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/report-wizard.js"></script>
   <!-- Homepage hero -->
   <script src="js/homepage.js"></script>
 </body>

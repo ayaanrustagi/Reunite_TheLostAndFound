@@ -102,6 +102,16 @@ async function handleReportSubmit(e) {
     const preview = document.getElementById('reportPhotoPreview');
     const photoBase64 = preview.src;
 
+    // Optional map coordinates from the report wizard
+    const latEl = document.getElementById('itemLat');
+    const lngEl = document.getElementById('itemLng');
+    const addrEl = document.getElementById('itemAddress');
+    const lat = latEl && latEl.value ? parseFloat(latEl.value) : null;
+    const lng = lngEl && lngEl.value ? parseFloat(lngEl.value) : null;
+    const address = addrEl && addrEl.value ? addrEl.value : null;
+    const publicEl = document.getElementById('itemPublic');
+    const isPublic = publicEl ? publicEl.value !== 'false' : true;
+
     let dhash = null;
     let avgColor = null;
 
@@ -114,6 +124,7 @@ async function handleReportSubmit(e) {
         id: "item_" + Math.random().toString(36).substr(2, 9),
         title, category, location, date_found: date, description,
         contact_name: name, contact_email: email,
+        lat, lng, address, public: isPublic,
         image: dhash ? photoBase64 : null,
         dhash: dhash,
         color: avgColor,
@@ -132,6 +143,7 @@ async function handleReportSubmit(e) {
         await apiSync();
 
         setStatusMessage('reportStatus', 'PENDING REVIEW', false);
+        if (typeof window._onReportSuccess === 'function') window._onReportSuccess(newItem);
 
 
         document.getElementById('reportPhotoPreview').classList.add('hidden');
