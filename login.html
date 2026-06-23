@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Roboto+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="css/base.css" />
@@ -32,111 +32,144 @@
 <body class="auth-page">
     <div id="waves-container"></div>
 
-    <!-- Shared Header -->
-    <header class="site-header">
-        <div class="header-inner">
-            <a class="logo-area" href="index.html" aria-label="Go to Home Page" title="Go to Home Page">
-                <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
-                <span class="logo-text">REUNITE</span>
-            </a>
-        </div>
+    <!-- Minimal top bar -->
+    <header class="auth-topbar">
+        <a class="auth-brand" href="index.html" aria-label="Go to Home Page">
+            <img src="assets/reunite-logo.png" alt="" class="auth-brand-img">
+            <span class="auth-brand-text">REUNITE</span>
+        </a>
+        <a href="index.html" class="auth-back-pill">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to site
+        </a>
     </header>
 
-    <div class="auth-container centered">
-        <div class="auth-form-card">
-            <!-- Back Button -->
-            <a href="index.html" class="back-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                BACK
-            </a>
+    <main class="auth-container centered">
+        <div class="auth-form-card" id="authCard">
+            <div class="card-serial" aria-hidden="true">SEC-ID&nbsp;884-X921</div>
 
-            <!-- Logo Section -->
-            <div class="auth-logo-section">
+            <!-- Logo orb -->
+            <div class="auth-logo-section" data-reveal>
                 <div class="logo-orb">
+                    <span class="orb-ring" aria-hidden="true"></span>
                     <img src="assets/reunite-logo.png" alt="Reunite" class="auth-logo-img">
                 </div>
             </div>
 
             <div class="auth-header">
-                <span class="label-tech"
-                    style="font-size: 0.7rem; margin-bottom: 0.5rem; justify-content: center;">IDENTITY PROTOCOL</span>
-                <h1 id="authTitle">Sign in with Reunite Account</h1>
-                <div class="card-serial">SEC-ID: 884-X921</div>
+                <span class="auth-eyebrow" data-reveal>Identity &middot; Secure access</span>
+                <h1 id="authTitle" data-reveal>Sign in with Reunite Account</h1>
+                <p class="auth-sub" data-reveal>One account for reports, claims and AI matches.</p>
             </div>
 
             <!-- Login Methods Tabs -->
-            <div id="loginMethods" class="auth-tabs">
-                <button id="tabPassword" class="auth-tab active" onclick="setLoginMethod('password')">Password</button>
-                <button id="tabOTP" class="auth-tab" onclick="setLoginMethod('otp')">Email Code (OTP)</button>
+            <div id="loginMethods" class="auth-tabs" data-reveal>
+                <button id="tabPassword" class="auth-tab active" type="button"
+                    onclick="setLoginMethod('password')">Password</button>
+                <button id="tabOTP" class="auth-tab" type="button"
+                    onclick="setLoginMethod('otp')">Email code</button>
             </div>
 
             <div class="auth-form-container">
-                <div id="nameGroup" class="input-pill-group hidden">
-                    <input type="text" id="authName" class="input-pill" placeholder="First and Last Name">
+                <div id="nameGroup" class="input-pill-group field hidden">
+                    <input type="text" id="authName" class="input-pill" placeholder=" " autocomplete="name">
+                    <label class="float-label" for="authName">First and last name</label>
                 </div>
 
-                <!-- Admin Registration Option (Hidden until signup mode) -->
-                <div id="adminAuthGroup" class="input-pill-group hidden">
+                <!-- Admin Registration Option (signup mode only) -->
+                <div id="adminAuthGroup" class="input-pill-group admin-group hidden">
                     <label class="admin-toggle-label">
                         <input type="checkbox" id="isAdminAuth" onchange="toggleAdminAuth()">
-                        <span>Register as Administrator</span>
+                        <span>Register as administrator</span>
                     </label>
-                    <div id="adminCodeAuthWrap" class="hidden" style="margin-top: 0.75rem;">
-                        <input type="password" id="adminCodeAuth" class="input-pill"
-                            placeholder="Enter Admin Access Code">
+                    <div id="adminCodeAuthWrap" class="admin-code-wrap hidden">
+                        <div class="field">
+                            <input type="password" id="adminCodeAuth" class="input-pill" placeholder=" "
+                                autocomplete="off">
+                            <label class="float-label" for="adminCodeAuth">Admin access code</label>
+                        </div>
                         <p class="field-hint">Contact your organization for the admin code.</p>
                     </div>
                 </div>
-                <div class="input-pill-group">
-                    <input type="email" id="authEmail" class="input-pill" placeholder="Email or Phone Number">
+
+                <div class="input-pill-group field" data-reveal>
+                    <input type="email" id="authEmail" class="input-pill" placeholder=" " autocomplete="email">
+                    <label class="float-label" for="authEmail">Email address</label>
                 </div>
 
-                <div id="passwordGroup" class="input-pill-group">
-                    <input type="password" id="authPassword" class="input-pill" placeholder="Password">
+                <div id="passwordGroup" class="input-pill-group field has-toggle" data-reveal>
+                    <input type="password" id="authPassword" class="input-pill" placeholder=" "
+                        autocomplete="current-password">
+                    <label class="float-label" for="authPassword">Password</label>
+                    <button type="button" class="pw-toggle" id="pwToggle" aria-label="Show password"
+                        aria-pressed="false">
+                        <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94">
+                            </path>
+                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- OTP Verification Group (Hidden initially) -->
-                <div id="otpGroup" class="input-pill-group hidden">
-                    <input type="text" id="authOTP" class="input-pill" placeholder="Verification Code" maxlength="6">
-                    <p class="field-hint">Check your device for the 6-digit code.</p>
+                <!-- OTP Verification Group (hidden initially) -->
+                <div id="otpGroup" class="input-pill-group field otp-field hidden">
+                    <input type="text" id="authOTP" class="input-pill otp-input" placeholder=" " maxlength="6"
+                        inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code">
+                    <label class="float-label" for="authOTP">6-digit code</label>
+                    <p class="field-hint">Check your inbox for the 6-digit code.</p>
                 </div>
 
-                <div class="auth-links-group">
+                <div class="auth-footer-btns" data-reveal>
+                    <button id="authSubmitBtn" type="button" class="auth-submit" onclick="handleAuthStep()">Sign
+                        In</button>
+                    <button id="resendBtn" type="button" class="btn-text resend-btn hidden" onclick="sendOTP()">Didn't
+                        get a code? Resend</button>
+                </div>
+
+                <div id="authStatus" class="status-msg" role="status" aria-live="polite"></div>
+
+                <div class="auth-links-group" data-reveal>
                     <a href="#" class="auth-link" id="authModeLink"
                         onclick="event.preventDefault(); setAuthMode('signup')">Create Your Reunite Account</a>
                 </div>
 
-                <div class="auth-privacy-info">
-                    <img src="https://img.icons8.com/ios-filled/50/000000/conference-call.png" alt="Privacy"
-                        class="privacy-icon">
-                    <p>Your Reunite Account information is used to allow you to sign in securely and access your data.
-                        Reunite records certain data for security, support, and reporting purposes.</p>
+                <div class="auth-privacy-info" data-reveal>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                        class="privacy-icon" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                    <p>Your Reunite Account is used to sign you in securely and access your data. Reunite records
+                        certain data for security, support, and reporting purposes.</p>
                 </div>
-
-                <div class="auth-footer-btns">
-                    <button id="authSubmitBtn" onclick="handleAuthStep()"
-                        class="btn btn-primary full-width">Continue</button>
-                    <button id="resendBtn" onclick="sendOTP()" class="btn-text hidden"
-                        style="font-size: 0.7rem; margin-top: 0.5rem; text-align: center; background: none; border: none; color: var(--accent-color); cursor: pointer;">Didn't
-                        get a code? Resend</button>
-                </div>
-
-                <div id="authStatus" class="status-msg"></div>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- Shared Footer -->
-    <footer class="site-footer" style="text-align: center; padding: 1.5rem 1rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted-text); letter-spacing: 0.05em;">
+    <footer class="site-footer auth-footer">
         <p>&copy; 2026 REUNITE &mdash; Lost &amp; Found Network</p>
     </footer>
 
     <!-- EmailJS client -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- GSAP for micro-interactions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <!-- App Scripts -->
     <script src="js/config.js"></script>
@@ -148,7 +181,10 @@
     <!-- API Client -->
     <script src="js/api-client.js"></script>
     <script src="js/auth-flow.js"></script>
+
+    <!-- Waves background + micro-interactions -->
     <script type="module" src="js/waves.js"></script>
+    <script src="js/micro-interactions.js"></script>
 </body>
 
 </html>

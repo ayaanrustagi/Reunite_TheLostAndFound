@@ -11,19 +11,32 @@
 .section-head h2,
 .section-centered h2,
 .centered-small h2 {
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.5vw, 2.9rem);
     font-weight: 800;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.02em;
     text-transform: uppercase;
     color: var(--text-color);
     margin-bottom: 0.5rem;
     position: relative;
-    line-height: 1.2;
+    line-height: 1.1;
+}
+
+.section-centered > .label-tech {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.section-centered > h2 {
+    margin-bottom: 1rem;
 }
 
 
 .section-centered {
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
 }
 
@@ -117,22 +130,33 @@ select::-ms-expand {
 .input-group select,
 .input-group textarea {
     width: 100%;
-    height: 48px;
-    padding: 0 1rem;
-    border: 1px solid var(--border-color);
+    height: 44px;
+    padding: 0 1.1rem;
+    border: 1.5px solid transparent;
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
+    color: var(--text-color);
     outline: none;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+        border-color 0.25s ease,
+        background-color 0.25s ease,
+        box-shadow 0.3s var(--ease-out-expo);
     border-radius: var(--radius-md);
-    background: var(--bg-color);
+    background: rgba(15, 20, 25, 0.035);
     box-sizing: border-box;
 }
 
 .input-group textarea {
     height: auto;
-    min-height: 120px;
-    padding: 1rem;
+    min-height: 80px;
+    padding: 0.75rem 1.1rem;
+    resize: vertical;
+}
+
+.input-group input:hover:not(:focus),
+.input-group select:hover:not(:focus),
+.input-group textarea:hover:not(:focus) {
+    background: rgba(15, 20, 25, 0.055);
 }
 
 .input-group input:focus,
@@ -140,23 +164,62 @@ select::-ms-expand {
 .input-group textarea:focus {
     border-color: var(--accent-color);
     background: var(--panel-bg);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-shadow:
+        0 0 0 4px rgba(var(--accent-rgb), 0.12),
+        0 10px 28px rgba(var(--accent-rgb), 0.08);
+}
+
+.input-group:focus-within label {
+    color: var(--accent-color);
 }
 
 .input-group.invalid input,
 .input-group.invalid select,
 .input-group.invalid textarea {
     border-color: #c62828;
-    box-shadow: 0 0 0 1px rgba(198, 40, 40, 0.2);
+    background: rgba(198, 40, 40, 0.03);
+    box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.1);
+}
+
+.input-group.invalid {
+    animation: fieldShake 0.4s var(--ease-out-expo);
+}
+
+@keyframes fieldShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .input-group.invalid {
+        animation: none;
+    }
 }
 
 .input-error {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     color: #c62828;
     min-height: 0.8rem;
     letter-spacing: 0.05em;
+}
+
+.input-error:not(:empty) {
+    animation: errorSlideIn 0.3s var(--ease-out-expo);
+}
+
+@keyframes errorSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .results-meta {
@@ -332,39 +395,65 @@ select::-ms-expand {
 
 /* Form Styles Enhancement */
 .tech-form {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    background: var(--panel-bg);
-    padding: 2rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
+    gap: 0.85rem;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    padding: 1.75rem 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 28px;
+    box-shadow:
+        0 40px 90px rgba(15, 20, 25, 0.08),
+        0 12px 30px rgba(var(--accent-rgb), 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
     .tech-form {
-        padding: 1.25rem;
+        padding: 1.5rem 1.25rem;
         gap: 1rem;
+        border-radius: 20px;
     }
 }
 
 
 .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--muted-text);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-    margin: 1rem 0;
-    letter-spacing: 0.2em;
+    font-size: 0.66rem;
+    font-weight: 500;
+    color: var(--ink-3);
+    margin: 1rem 0 0.25rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
+}
+
+.section-divider::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent-color);
+    flex-shrink: 0;
+}
+
+.section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -378,7 +467,7 @@ select::-ms-expand {
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.3rem;
 }
 
 .input-group.required label::after {
@@ -388,17 +477,20 @@ select::-ms-expand {
 
 .input-group label {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.66rem;
     font-weight: 500;
-    color: var(--muted-text);
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    transition: color 0.25s ease;
 }
 
 /* File Upload UI */
 .file-upload-ui {
     position: relative;
     width: 100%;
-    min-height: 100px;
-    border: 2px dashed var(--border-color);
+    min-height: 110px;
+    border: 1.5px dashed rgba(15, 20, 25, 0.18);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -406,13 +498,33 @@ select::-ms-expand {
     gap: 0.75rem;
     padding: 1.5rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(var(--bg-color-rgb), 0.3);
+    transition:
+        border-color 0.3s ease,
+        background-color 0.3s ease,
+        transform 0.3s var(--ease-out-expo),
+        box-shadow 0.3s var(--ease-out-expo);
+    background: rgba(15, 20, 25, 0.02);
 }
 
-.file-upload-ui:hover {
+.file-upload-ui:hover,
+.file-upload-ui:focus-within {
     border-color: var(--accent-color);
-    background: rgba(0, 106, 255, 0.02);
+    background: rgba(var(--accent-rgb), 0.03);
+}
+
+.file-upload-ui:hover::before {
+    transform: translateY(-3px) scale(1.06);
+    color: var(--accent-color);
+    border-color: rgba(var(--accent-rgb), 0.4);
+}
+
+/* drag-over state set by micro-interactions.js */
+.file-upload-ui.dragover {
+    border-color: var(--accent-color);
+    border-style: solid;
+    background: rgba(var(--accent-rgb), 0.06);
+    transform: scale(1.015);
+    box-shadow: 0 12px 32px rgba(var(--accent-rgb), 0.12);
 }
 
 .file-upload-ui input[type="file"] {
@@ -435,9 +547,22 @@ select::-ms-expand {
 
 .file-upload-ui::before {
     content: '+';
-    font-size: 2rem;
-    color: var(--muted-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(15, 20, 25, 0.12);
+    background: #fff;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--ink-3);
     font-weight: 300;
+    transition:
+        transform 0.3s var(--ease-out-expo),
+        color 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .file-upload-ui.has-image::before,
@@ -459,4 +584,41 @@ select::-ms-expand {
 
 .photo-preview.hidden {
     display: none;
+}
+
+/* Submit button inside redesigned forms — gradient brand blue */
+.tech-form .btn-primary {
+    min-height: 54px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-deep) 100%);
+    box-shadow: 0 10px 24px rgba(var(--accent-rgb), 0.28);
+    margin-top: 0.5rem;
+}
+
+.tech-form .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s var(--ease-out-expo);
+    pointer-events: none;
+}
+
+.tech-form .btn-primary:hover {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-deep) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(var(--accent-rgb), 0.38);
+}
+
+.tech-form .btn-primary:hover::before {
+    left: 130%;
+}
+
+.tech-form .btn-primary:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: 3px;
 }   

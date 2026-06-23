@@ -1,17 +1,27 @@
 :root {
-    --bg-color: #f3f3f3;
-    --bg-color-rgb: 243, 243, 243;
-    --text-color: #1a1a1a;
-    --accent-color: #004ecc;
-    --border-color: #e5e5e5;
+    --bg-color: #f4f5f7;
+    --bg-color-rgb: 244, 245, 247;
+    --text-color: #0f1419;
+    --accent-color: #2563eb;
+    --accent-deep: #1d4ed8;
+    --accent-rgb: 37, 99, 235;
+    --border-color: #e5e7eb;
     --panel-bg: #ffffff;
     --panel-bg-rgb: 255, 255, 255;
     --muted-text: #555555;
+    --ink-2: #3a4250;
+    --ink-3: #6a7180;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'Roboto Mono', monospace;
+    --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
+    --font-display: 'Bricolage Grotesque', 'Inter', sans-serif;
     --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
     --glow-opacity: 0.15;
-    --accent-glow: rgba(0, 106, 255, 0.4);
+    --accent-glow: rgba(37, 99, 235, 0.35);
+
+    /* Supporting palette (matches hero) */
+    --c-green: #82c982;
+    --c-orange: #d8924a;
+    --c-pink: #d878a8;
 
     /* New UI Tokens */
     --radius-lg: 24px;
@@ -19,6 +29,7 @@
     --radius-sm: 8px;
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
     --shadow-medium: 0 15px 45px rgba(0, 0, 0, 0.1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Accessibility & Structure Buttons */

@@ -34,7 +34,7 @@
 .view-section {
     display: none;
     min-height: calc(100vh - 5rem);
-    padding: 3rem 2rem;
+    padding: 1rem 2rem 3rem;
 }
 
 @media (max-width: 768px) {

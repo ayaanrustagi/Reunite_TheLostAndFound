@@ -428,18 +428,18 @@
           <div class="form-row">
             <div class="input-group required">
               <label for="contactName">YOUR NAME</label>
-              <input type="text" id="contactName" required aria-describedby="contactNameError">
+              <input type="text" id="contactName" required autocomplete="name" aria-describedby="contactNameError">
               <p class="input-error" id="contactNameError" role="alert"></p>
             </div>
             <div class="input-group required">
               <label for="contactEmail">SCHOOL EMAIL</label>
-              <input type="email" id="contactEmail" required aria-describedby="contactEmailError">
+              <input type="email" id="contactEmail" required autocomplete="email" aria-describedby="contactEmailError">
               <p class="input-error" id="contactEmailError" role="alert"></p>
             </div>
           </div>
           <div class="input-group">
             <label for="contactPhone">PHONE (OPTIONAL)</label>
-            <input type="tel" id="contactPhone">
+            <input type="tel" id="contactPhone" autocomplete="tel">
           </div>
 
           <button type="submit" class="btn btn-primary full-width">SUBMIT ENTRY</button>
@@ -462,12 +462,12 @@
           </div>
           <div class="input-group required">
             <label for="claimName">YOUR NAME</label>
-            <input type="text" id="claimName" required aria-describedby="claimNameError">
+            <input type="text" id="claimName" required autocomplete="name" aria-describedby="claimNameError">
             <p class="input-error" id="claimNameError" role="alert"></p>
           </div>
           <div class="input-group required">
             <label for="claimEmail">SCHOOL EMAIL</label>
-            <input type="email" id="claimEmail" required aria-describedby="claimEmailError">
+            <input type="email" id="claimEmail" required autocomplete="email" aria-describedby="claimEmailError">
             <p class="input-error" id="claimEmailError" role="alert"></p>
           </div>
           <div class="input-group required">
@@ -762,6 +762,8 @@
 
   <!-- Three.js for the 3D key in the hero -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- GSAP for micro-interactions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
   <script src="js/config.js"></script>
   <script src="js/state.js"></script>
@@ -773,6 +775,8 @@
   <script src="js/forms.js"></script>
   <script src="js/app.js"></script>
   <script type="module" src="js/waves.js"></script>
+  <!-- Micro-interactions -->
+  <script src="js/micro-interactions.js"></script>
   <!-- Homepage hero -->
   <script src="js/homepage.js"></script>
 </body>
