@@ -49,7 +49,7 @@
   <link rel="stylesheet" href="css/found-page.css" />
   <!-- Report wizard -->
   <link rel="stylesheet" href="css/report-wizard.css" />
-  <!-- Leaflet (real interactive map) -->
+  <!-- Leaflet (satellite campus map) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <!-- API Backend -->
@@ -512,21 +512,22 @@
               <p class="rw-sub">Tell us where you found it and add a photo if you have one.</p>
             </div>
 
-            <!-- Real interactive map (Leaflet + OpenStreetMap) -->
+            <!-- Rouse HS satellite campus map (Leaflet + Esri imagery) -->
             <div class="rw-map-wrap">
               <div id="rwMap" class="rw-map" role="application"
-                aria-label="Map — click or drag the pin to mark where you found the item"></div>
-              <button type="button" class="rw-map-locate" id="rwLocateBtn">
+                aria-label="Rouse High School satellite map — tap to mark where you found the item"></div>
+              <button type="button" class="rw-map-locate" id="rwResetView" title="Recenter on Rouse High School">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3"></circle>
+                  <circle cx="12" cy="12" r="8"></circle>
                   <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+                  <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"></circle>
                 </svg>
-                Use my location
+                Recenter
               </button>
-              <div class="rw-map-loading" id="rwMapLoading" aria-hidden="true">Loading map…</div>
+              <div class="rw-map-loading" id="rwMapLoading" aria-hidden="true">Loading campus map…</div>
             </div>
-            <p class="rw-map-readout" id="rwMapReadout">Click the map to drop a pin where you found it (optional).</p>
+            <p class="rw-map-readout" id="rwMapReadout">Tap the map to drop a pin where you found it (optional) — or type the room above.</p>
 
             <div class="rw-field" data-required>
               <label for="rw_itemLocation">Location found <em class="rw-req" aria-label="required">*</em></label>

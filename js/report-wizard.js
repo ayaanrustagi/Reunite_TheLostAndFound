@@ -9,12 +9,6 @@
     let currentStep = 1;
     const TOTAL_STEPS = 3;
 
-    /* map state */
-    let rwMap = null;
-    let rwMarker = null;
-    let geocodeTimer = null;
-    const DEFAULT_CENTER = [39.8283, -98.5795]; /* geographic center of US — neutral fallback */
-    const DEFAULT_ZOOM = 4;
 
     /* ---- helpers ---- */
     function qs(sel, root) { return (root || document).querySelector(sel); }
@@ -74,8 +68,7 @@
         }
 
         /* Step 2 holds the Leaflet map — it must be initialised/resized only
-           once its container is actually visible (display:block), or it renders
-           grey/blank. Do it now and again after the slide settles. */
+           once its container is visible, or it renders grey. */
         if (toStep === 2) {
             initMap();
             if (rwMap) {
@@ -93,8 +86,17 @@
     }
 
     /* ====================================================================
-       REAL MAP (Leaflet + OpenStreetMap)
+       SATELLITE CAMPUS MAP — real aerial imagery centred on Rouse HS.
+       Student taps the map to drop a pin on the exact building / lot / field.
+       No floor plan needed; imagery is live from Esri (free, no API key).
        ==================================================================== */
+
+    let rwMap = null;
+    let rwMarker = null;
+    const ROUSE_QUERY = 'Rouse High School, Leander, TX 78641';
+    const ROUSE_FALLBACK = [30.570511, -97.818418]; /* 1222 Raider Way, Leander TX — refined by geocode on load */
+    const ROUSE_ZOOM = 18;
+    let schoolCenter = ROUSE_FALLBACK.slice();
 
     function pinIcon() {
         return L.divIcon({
@@ -105,14 +107,14 @@
                 '<path d="M12 0C6.5 0 2 4.5 2 10c0 7 10 22 10 22s10-15 10-22C22 4.5 17.5 0 12 0z"/>' +
                 '<circle cx="12" cy="10" r="3.4" fill="white"/></svg></div>',
             iconSize: [30, 40],
-            iconAnchor: [15, 40],   /* tip of the pin */
+            iconAnchor: [15, 40],
             popupAnchor: [0, -38]
         });
     }
 
     function initMap() {
-        if (rwMap) return;                 /* already built */
-        if (typeof L === 'undefined') {    /* Leaflet failed to load */
+        if (rwMap) return;
+        if (typeof L === 'undefined') {
             const readout = document.getElementById('rwMapReadout');
             if (readout) readout.textContent = 'Map unavailable — type the location above.';
             const loading = document.getElementById('rwMapLoading');
@@ -123,33 +125,54 @@
         if (!el) return;
 
         rwMap = L.map(el, {
-            center: DEFAULT_CENTER,
-            zoom: DEFAULT_ZOOM,
+            center: schoolCenter,
+            zoom: ROUSE_ZOOM,
             zoomControl: true,
-            scrollWheelZoom: false,        /* avoid hijacking page scroll; user double-clicks/buttons to zoom */
+            scrollWheelZoom: false,   /* don't hijack page scroll until focused */
             attributionControl: true
         });
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        /* Esri World Imagery — real satellite tiles */
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics'
         }).addTo(rwMap);
 
-        /* enable scroll-zoom only after the user clicks into the map */
+        /* transparent labels overlay (streets + place names) for the "hybrid" look */
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            opacity: 0.9
+        }).addTo(rwMap);
+
         rwMap.on('focus', () => rwMap.scrollWheelZoom.enable());
         rwMap.on('blur',  () => rwMap.scrollWheelZoom.disable());
 
-        /* hide the loading shade once the first tiles paint */
         rwMap.whenReady(() => {
             const loading = document.getElementById('rwMapLoading');
             if (loading) loading.classList.add('hidden');
         });
 
-        /* click to drop / move the pin */
         rwMap.on('click', e => placeMarker(e.latlng.lat, e.latlng.lng, true));
+
+        /* refine the centre to the school's real coordinates */
+        geocodeSchool();
     }
 
-    function placeMarker(lat, lng, doGeocode) {
+    function geocodeSchool() {
+        fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=' +
+              encodeURIComponent(ROUSE_QUERY), { headers: { 'Accept': 'application/json' } })
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(arr => {
+                if (arr && arr[0]) {
+                    schoolCenter = [parseFloat(arr[0].lat), parseFloat(arr[0].lon)];
+                    /* only recentre if the user hasn't already dropped a pin */
+                    if (rwMap && !rwMarker) rwMap.setView(schoolCenter, ROUSE_ZOOM);
+                }
+            })
+            .catch(() => { /* keep fallback centre */ });
+    }
+
+    function placeMarker(lat, lng, announce) {
         if (!rwMap) return;
         if (rwMarker) {
             rwMarker.setLatLng([lat, lng]);
@@ -164,11 +187,11 @@
             rwMarker.on('dragend', () => {
                 const p = rwMarker.getLatLng();
                 storeCoords(p.lat, p.lng);
-                reverseGeocode(p.lat, p.lng);
+                announcePin();
             });
         }
         storeCoords(lat, lng);
-        if (doGeocode) reverseGeocode(lat, lng);
+        if (announce) announcePin();
     }
 
     function storeCoords(lat, lng) {
@@ -176,74 +199,35 @@
         const lngEl = document.getElementById('itemLng');
         if (latEl) latEl.value = lat.toFixed(6);
         if (lngEl) lngEl.value = lng.toFixed(6);
+        const addrEl = document.getElementById('itemAddress');
+        if (addrEl) addrEl.value = 'Map pin ' + lat.toFixed(5) + ', ' + lng.toFixed(5);
     }
 
-    function reverseGeocode(lat, lng) {
+    function announcePin() {
         const readout = document.getElementById('rwMapReadout');
         if (readout) {
-            readout.textContent = 'Pin dropped — finding address…';
             readout.classList.add('has-pin');
+            readout.textContent = '📍 Pin placed — drag it to the exact spot, and add the room/area above.';
         }
-        clearTimeout(geocodeTimer);
-        geocodeTimer = setTimeout(() => {
-            fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' +
-                  lat + '&lon=' + lng + '&zoom=18&addressdetails=1', {
-                headers: { 'Accept': 'application/json' }
-            })
-                .then(r => r.ok ? r.json() : Promise.reject(r.status))
-                .then(data => {
-                    const addr = (data && data.display_name) ? data.display_name : null;
-                    const addrEl = document.getElementById('itemAddress');
-                    if (addrEl) addrEl.value = addr || '';
-                    if (readout) {
-                        readout.textContent = addr
-                            ? '📍 ' + addr
-                            : '📍 Pin dropped (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
-                    }
-                    /* prefill the location field only if the user left it empty */
-                    const locInput = document.getElementById('rw_itemLocation');
-                    const locHidden = document.getElementById('itemLocation');
-                    if (addr && locInput && !locInput.value.trim()) {
-                        const short = addr.split(',').slice(0, 2).join(',').trim();
-                        locInput.value = short;
-                        if (locHidden) locHidden.value = short;
-                        markValid(locInput.closest('.rw-field'));
-                    }
-                })
-                .catch(() => {
-                    if (readout) {
-                        readout.textContent = '📍 Pin dropped (' +
-                            lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
-                    }
-                });
-        }, 350); /* be gentle with the free Nominatim endpoint */
     }
 
-    function locateAndPin() {
-        const btn = document.getElementById('rwLocateBtn');
+    function recenterMap() {
+        if (rwMap) rwMap.setView(schoolCenter, ROUSE_ZOOM);
+    }
+
+    function clearPin() {
+        if (rwMarker && rwMap) { rwMap.removeLayer(rwMarker); rwMarker = null; }
+        const latEl = document.getElementById('itemLat');
+        const lngEl = document.getElementById('itemLng');
+        const addrEl = document.getElementById('itemAddress');
+        if (latEl) latEl.value = '';
+        if (lngEl) lngEl.value = '';
+        if (addrEl) addrEl.value = '';
         const readout = document.getElementById('rwMapReadout');
-        if (!navigator.geolocation) {
-            if (readout) readout.textContent = 'Location not supported on this device — click the map instead.';
-            return;
+        if (readout) {
+            readout.classList.remove('has-pin');
+            readout.textContent = 'Tap the map to drop a pin where you found it (optional) — or type the room above.';
         }
-        if (btn) btn.classList.add('loading');
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                if (btn) btn.classList.remove('loading');
-                const lat = pos.coords.latitude, lng = pos.coords.longitude;
-                if (rwMap) rwMap.setView([lat, lng], 17);
-                placeMarker(lat, lng, true);
-            },
-            err => {
-                if (btn) btn.classList.remove('loading');
-                if (readout) {
-                    readout.textContent = (err && err.code === 1)
-                        ? 'Location permission denied — click the map to drop a pin instead.'
-                        : 'Could not get your location — click the map to drop a pin instead.';
-                }
-            },
-            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-        );
     }
 
     /* ---- validation helpers ---- */
@@ -576,12 +560,7 @@
         if (legacyPreview) { legacyPreview.src = ''; legacyPreview.classList.add('hidden'); }
 
         /* Clear the map pin + readout */
-        if (rwMarker && rwMap) { rwMap.removeLayer(rwMarker); rwMarker = null; }
-        const readout = document.getElementById('rwMapReadout');
-        if (readout) {
-            readout.textContent = 'Click the map to drop a pin where you found it (optional).';
-            readout.classList.remove('has-pin');
-        }
+        clearPin();
 
         /* Re-enable submit button + clear submit error */
         const submitBtn = document.getElementById('rwSubmitBtn');
@@ -647,9 +626,9 @@
             });
         }
 
-        /* "Use my location" button */
-        const locateBtn = document.getElementById('rwLocateBtn');
-        if (locateBtn) locateBtn.addEventListener('click', locateAndPin);
+        /* "Recenter on school" button */
+        const recenterBtn = document.getElementById('rwResetView');
+        if (recenterBtn) recenterBtn.addEventListener('click', recenterMap);
 
         /* Community feed switch */
         const feedToggle = document.getElementById('rwFeedToggle');

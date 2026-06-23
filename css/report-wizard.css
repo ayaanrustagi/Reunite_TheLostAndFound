@@ -366,20 +366,19 @@ body.reduced-motion .rw-panel.exit.rw-back { animation: none; }
     background: var(--border-color);
 }
 
-/* --- Real interactive map (step 2) --- */
+/* --- Satellite campus map (step 2) --- */
 .rw-map-wrap {
     position: relative;
     flex-shrink: 0;
 }
 
 .rw-map {
-    height: 200px;
+    height: 260px;
     border-radius: 14px;
     overflow: hidden;
-    background-color: #dde8dc;
+    background-color: #e7ebf0;
     border: 1px solid var(--border-color);
-    /* keep below the fixed site header and wizard controls */
-    z-index: 0;
+    z-index: 0; /* keep tiles + controls below the fixed site header */
 }
 
 /* Leaflet overrides — match the wizard look */
@@ -394,13 +393,18 @@ body.reduced-motion .rw-panel.exit.rw-back { animation: none; }
 
 .rw-map .leaflet-bar {
     border: none;
-    box-shadow: 0 4px 12px rgba(15, 20, 25, 0.15);
+    box-shadow: 0 4px 12px rgba(15, 20, 25, 0.2);
+}
+
+.rw-map .leaflet-control-attribution {
+    font-size: 9px;
+    background: rgba(255, 255, 255, 0.7);
 }
 
 /* Custom pin marker (divIcon) */
 .rw-pin-marker {
     color: var(--accent-color);
-    filter: drop-shadow(0 3px 6px rgba(var(--accent-rgb), 0.45));
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
     animation: rwPinDrop 0.4s var(--ease-out-expo);
 }
 
@@ -415,29 +419,52 @@ body.reduced-motion .rw-panel.exit.rw-back { animation: none; }
 
 body.reduced-motion .rw-pin-marker { animation: none; }
 
-/* "Use my location" button */
+/* Loading shade shown until tiles arrive */
+.rw-map-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #e7ebf0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: opacity 0.4s ease;
+}
+
+.rw-map-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* "Recenter" button (top-right of the map) */
 .rw-map-locate {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 500; /* above tiles, below site header (which is higher) */
+    z-index: 5;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.45rem 0.75rem;
-    min-height: 36px;
+    padding: 0.4rem 0.7rem;
+    min-height: 32px;
     border: 1px solid var(--border-color);
     border-radius: 9px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     font-family: var(--font-mono);
-    font-size: 0.66rem;
+    font-size: 0.64rem;
     font-weight: 500;
     letter-spacing: 0.04em;
-    color: var(--text-color);
+    color: var(--ink-2);
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(15, 20, 25, 0.12);
+    box-shadow: 0 4px 12px rgba(15, 20, 25, 0.1);
     transition: transform 0.2s var(--ease-out-expo), color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -452,34 +479,6 @@ body.reduced-motion .rw-pin-marker { animation: none; }
 .rw-map-locate:focus-visible {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
-}
-
-.rw-map-locate.loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-/* Loading shade shown until tiles arrive */
-.rw-map-loading {
-    position: absolute;
-    inset: 0;
-    z-index: 400;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    background: #dde8dc;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    transition: opacity 0.4s ease;
-}
-
-.rw-map-loading.hidden {
-    opacity: 0;
-    pointer-events: none;
 }
 
 /* Readout under the map */
