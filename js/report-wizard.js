@@ -98,22 +98,20 @@
     const ROUSE_ZOOM = 18;
     let schoolCenter = ROUSE_FALLBACK.slice();
 
-    /* Campus locations extracted from satellite screenshot.
-       Pixel positions measured relative to the Google Maps "Rouse High School"
-       pin at ~(432,432)px in the 2000×1686 displayed image → (30.5705, -97.8184).
-       Scale ≈ 1.34 m/px  ⟹  0.0000121°/px lat, 0.0000140°/px lon. */
+    /* Campus locations hand-calibrated by dragging each label onto its real
+       building in the satellite view (#mapedit mode). */
     const CAMPUS_LOCATIONS = [
-        { name: 'Main Building',    lat: 30.5711, lng: -97.8167 },
-        { name: 'Cafeteria',        lat: 30.5735, lng: -97.8168 },
-        { name: 'Gymnasium',        lat: 30.5739, lng: -97.8134 },
-        { name: 'Auditorium',       lat: 30.5730, lng: -97.8157 },
-        { name: 'Band Hall',        lat: 30.5724, lng: -97.8178 },
-        { name: 'Band Pad',         lat: 30.5743, lng: -97.8208 },
-        { name: 'Science Building', lat: 30.5717, lng: -97.8139 },
-        { name: 'Baseball Field',   lat: 30.5689, lng: -97.8124, field: true },
-        { name: 'Soccer Field',     lat: 30.5666, lng: -97.8145, field: true },
-        { name: 'Tennis Courts',    lat: 30.5660, lng: -97.8194, field: true },
-        { name: 'Football Field',   lat: 30.5652, lng: -97.8155, field: true },
+        { name: 'Main Building',    lat: 30.571434, lng: -97.819927 },
+        { name: 'Cafeteria',        lat: 30.572487, lng: -97.819895 },
+        { name: 'Gymnasium',        lat: 30.572663, lng: -97.818725 },
+        { name: 'Auditorium',       lat: 30.572182, lng: -97.819777 },
+        { name: 'Band Hall',        lat: 30.571961, lng: -97.820656 },
+        { name: 'Band Pad',         lat: 30.572681, lng: -97.822030 },
+        { name: 'Science Building', lat: 30.571776, lng: -97.818639 },
+        { name: 'Baseball Field',   lat: 30.570243, lng: -97.817180, field: true },
+        { name: 'Soccer Field',     lat: 30.568136, lng: -97.816579, field: true },
+        { name: 'Tennis Courts',    lat: 30.569171, lng: -97.820849, field: true },
+        { name: 'Football Field',   lat: 30.569023, lng: -97.819412, field: true },
     ];
 
     let campusMarkersAdded = false;
