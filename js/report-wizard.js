@@ -98,6 +98,76 @@
     const ROUSE_ZOOM = 18;
     let schoolCenter = ROUSE_FALLBACK.slice();
 
+    /* Campus locations extracted from satellite screenshot.
+       Pixel positions measured relative to the Google Maps "Rouse High School"
+       pin at ~(432,432)px in the 2000×1686 displayed image → (30.5705, -97.8184).
+       Scale ≈ 1.34 m/px  ⟹  0.0000121°/px lat, 0.0000140°/px lon. */
+    const CAMPUS_LOCATIONS = [
+        { name: 'Main Building',    lat: 30.5711, lng: -97.8167 },
+        { name: 'Cafeteria',        lat: 30.5735, lng: -97.8168 },
+        { name: 'Gymnasium',        lat: 30.5739, lng: -97.8134 },
+        { name: 'Auditorium',       lat: 30.5730, lng: -97.8157 },
+        { name: 'Band Hall',        lat: 30.5724, lng: -97.8178 },
+        { name: 'Band Pad',         lat: 30.5743, lng: -97.8208 },
+        { name: 'Science Building', lat: 30.5717, lng: -97.8139 },
+        { name: 'Baseball Field',   lat: 30.5689, lng: -97.8124, field: true },
+        { name: 'Soccer Field',     lat: 30.5666, lng: -97.8145, field: true },
+        { name: 'Tennis Courts',    lat: 30.5660, lng: -97.8194, field: true },
+        { name: 'Football Field',   lat: 30.5652, lng: -97.8155, field: true },
+    ];
+
+    let campusMarkersAdded = false;
+    let campusBounds = null;
+
+    function campusIcon(name, isField) {
+        return L.divIcon({
+            className: 'rw-campus-marker',
+            html: '<span class="rw-ci-dot' + (isField ? ' field' : '') + '"></span>' +
+                  '<span class="rw-ci-lbl">' + name + '</span>',
+            iconSize:   [10, 10],
+            iconAnchor: [5, 5]
+        });
+    }
+
+    function addCampusMarkers() {
+        if (campusMarkersAdded || !rwMap) return;
+        campusMarkersAdded = true;
+
+        campusBounds = L.latLngBounds(CAMPUS_LOCATIONS.map(l => [l.lat, l.lng]));
+
+        CAMPUS_LOCATIONS.forEach(loc => {
+            const m = L.marker([loc.lat, loc.lng], {
+                icon: campusIcon(loc.name, !!loc.field),
+                title: loc.name + ' — tap to pin this location',
+                keyboard: true,
+                zIndexOffset: -100
+            }).addTo(rwMap);
+
+            m.on('click', e => {
+                L.DomEvent.stopPropagation(e);
+                rwMap.flyTo([loc.lat, loc.lng], ROUSE_ZOOM, { animate: !reduced(), duration: 0.5 });
+                placeMarker(loc.lat, loc.lng, false);
+
+                const locInput = document.getElementById('rw_itemLocation');
+                if (locInput) {
+                    locInput.value = loc.name;
+                    const hidden = document.getElementById('itemLocation');
+                    if (hidden) hidden.value = loc.name;
+                }
+                const addrEl = document.getElementById('itemAddress');
+                if (addrEl) addrEl.value = 'Rouse HS — ' + loc.name;
+
+                const readout = document.getElementById('rwMapReadout');
+                if (readout) {
+                    readout.classList.add('has-pin');
+                    readout.textContent = '📍 ' + loc.name + ' — drag the pin to fine-tune, or add a room number above.';
+                }
+            });
+        });
+
+        rwMap.fitBounds(campusBounds.pad(0.08), { animate: false });
+    }
+
     function pinIcon() {
         return L.divIcon({
             className: '',
@@ -125,10 +195,10 @@
         if (!el) return;
 
         rwMap = L.map(el, {
-            center: schoolCenter,
-            zoom: ROUSE_ZOOM,
+            center: ROUSE_FALLBACK,
+            zoom: 16,                  /* overview zoom — fitBounds in addCampusMarkers refines this */
             zoomControl: true,
-            scrollWheelZoom: false,   /* don't hijack page scroll until focused */
+            scrollWheelZoom: false,    /* don't hijack page scroll until focused */
             attributionControl: true
         });
 
@@ -154,7 +224,10 @@
 
         rwMap.on('click', e => placeMarker(e.latlng.lat, e.latlng.lng, true));
 
-        /* refine the centre to the school's real coordinates */
+        /* Add named building markers and fit the view to show the whole campus */
+        addCampusMarkers();
+
+        /* refine schoolCenter for the Recenter button (does not reposition the map) */
         geocodeSchool();
     }
 
@@ -165,8 +238,7 @@
             .then(arr => {
                 if (arr && arr[0]) {
                     schoolCenter = [parseFloat(arr[0].lat), parseFloat(arr[0].lon)];
-                    /* only recentre if the user hasn't already dropped a pin */
-                    if (rwMap && !rwMarker) rwMap.setView(schoolCenter, ROUSE_ZOOM);
+                    /* campus markers already set the view via fitBounds — no reposition */
                 }
             })
             .catch(() => { /* keep fallback centre */ });
@@ -212,7 +284,12 @@
     }
 
     function recenterMap() {
-        if (rwMap) rwMap.setView(schoolCenter, ROUSE_ZOOM);
+        if (!rwMap) return;
+        if (campusBounds) {
+            rwMap.flyToBounds(campusBounds.pad(0.08), { animate: !reduced(), duration: 0.6 });
+        } else {
+            rwMap.setView(schoolCenter, ROUSE_ZOOM);
+        }
     }
 
     function clearPin() {
