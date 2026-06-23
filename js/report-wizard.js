@@ -119,14 +119,38 @@
     let campusMarkersAdded = false;
     let campusBounds = null;
 
+    /* Hidden calibration mode — add #mapedit to the URL to drag markers onto
+       their real buildings; the panel live-prints coordinates to hardcode. */
+    const EDIT_MODE = /mapedit/i.test(location.hash) || /mapedit/i.test(location.search);
+
     function campusIcon(name, isField) {
         return L.divIcon({
-            className: 'rw-campus-marker',
+            className: 'rw-campus-marker' + (EDIT_MODE ? ' rw-editing' : ''),
             html: '<span class="rw-ci-dot' + (isField ? ' field' : '') + '"></span>' +
                   '<span class="rw-ci-lbl">' + name + '</span>',
             iconSize:   [10, 10],
             iconAnchor: [5, 5]
         });
+    }
+
+    function pinAtLocation(loc) {
+        rwMap.flyTo([loc.lat, loc.lng], ROUSE_ZOOM, { animate: !reduced(), duration: 0.5 });
+        placeMarker(loc.lat, loc.lng, false);
+
+        const locInput = document.getElementById('rw_itemLocation');
+        if (locInput) {
+            locInput.value = loc.name;
+            const hidden = document.getElementById('itemLocation');
+            if (hidden) hidden.value = loc.name;
+        }
+        const addrEl = document.getElementById('itemAddress');
+        if (addrEl) addrEl.value = 'Rouse HS — ' + loc.name;
+
+        const readout = document.getElementById('rwMapReadout');
+        if (readout) {
+            readout.classList.add('has-pin');
+            readout.textContent = '📍 ' + loc.name + ' — drag the pin to fine-tune, or add a room number above.';
+        }
     }
 
     function addCampusMarkers() {
@@ -138,34 +162,71 @@
         CAMPUS_LOCATIONS.forEach(loc => {
             const m = L.marker([loc.lat, loc.lng], {
                 icon: campusIcon(loc.name, !!loc.field),
-                title: loc.name + ' — tap to pin this location',
+                title: EDIT_MODE ? loc.name + ' — drag onto the real building' : loc.name + ' — tap to pin this location',
                 keyboard: true,
+                draggable: EDIT_MODE,
                 zIndexOffset: -100
             }).addTo(rwMap);
 
-            m.on('click', e => {
-                L.DomEvent.stopPropagation(e);
-                rwMap.flyTo([loc.lat, loc.lng], ROUSE_ZOOM, { animate: !reduced(), duration: 0.5 });
-                placeMarker(loc.lat, loc.lng, false);
-
-                const locInput = document.getElementById('rw_itemLocation');
-                if (locInput) {
-                    locInput.value = loc.name;
-                    const hidden = document.getElementById('itemLocation');
-                    if (hidden) hidden.value = loc.name;
-                }
-                const addrEl = document.getElementById('itemAddress');
-                if (addrEl) addrEl.value = 'Rouse HS — ' + loc.name;
-
-                const readout = document.getElementById('rwMapReadout');
-                if (readout) {
-                    readout.classList.add('has-pin');
-                    readout.textContent = '📍 ' + loc.name + ' — drag the pin to fine-tune, or add a room number above.';
-                }
-            });
+            if (EDIT_MODE) {
+                m.on('dragend', () => {
+                    const p = m.getLatLng();
+                    loc.lat = +p.lat.toFixed(6);
+                    loc.lng = +p.lng.toFixed(6);
+                    refreshEditPanel();
+                });
+            } else {
+                m.on('click', e => {
+                    L.DomEvent.stopPropagation(e);
+                    pinAtLocation(loc);
+                });
+            }
         });
 
-        rwMap.fitBounds(campusBounds.pad(0.08), { animate: false });
+        if (EDIT_MODE) {
+            rwMap.setView(ROUSE_FALLBACK, 17);
+            buildEditPanel();
+        } else {
+            rwMap.fitBounds(campusBounds.pad(0.08), { animate: false });
+        }
+    }
+
+    /* ---- calibration panel (edit mode only) ---- */
+    function editPanelText() {
+        const rows = CAMPUS_LOCATIONS.map(l => {
+            const pad = (l.name + "',").padEnd(18, ' ');
+            return "        { name: '" + pad +
+                   ' lat: ' + l.lat.toFixed(6) + ', lng: ' + l.lng.toFixed(6) +
+                   (l.field ? ', field: true' : '') + ' },';
+        });
+        return 'const CAMPUS_LOCATIONS = [\n' + rows.join('\n') + '\n    ];';
+    }
+
+    function refreshEditPanel() {
+        const ta = document.getElementById('rwEditOut');
+        if (ta) ta.value = editPanelText();
+    }
+
+    function buildEditPanel() {
+        if (document.getElementById('rwEditPanel')) return;
+        const panel = document.createElement('div');
+        panel.id = 'rwEditPanel';
+        panel.innerHTML =
+            '<div class="rw-edit-head">🛠 Map calibration — drag each label onto its building</div>' +
+            '<textarea id="rwEditOut" readonly spellcheck="false"></textarea>' +
+            '<button type="button" id="rwEditCopy">Copy coordinates</button>';
+        document.body.appendChild(panel);
+        refreshEditPanel();
+        const copyBtn = document.getElementById('rwEditCopy');
+        copyBtn.addEventListener('click', () => {
+            const ta = document.getElementById('rwEditOut');
+            ta.select();
+            try {
+                navigator.clipboard.writeText(ta.value);
+            } catch (_) { document.execCommand('copy'); }
+            copyBtn.textContent = 'Copied ✓';
+            setTimeout(() => { copyBtn.textContent = 'Copy coordinates'; }, 1500);
+        });
     }
 
     function pinIcon() {

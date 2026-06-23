@@ -537,6 +537,69 @@ body.reduced-motion .rw-pin-marker { animation: none; }
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
+/* Calibration mode — bigger, grabbable markers */
+.rw-campus-marker.rw-editing { cursor: grab; }
+.rw-campus-marker.rw-editing:active { cursor: grabbing; }
+.rw-campus-marker.rw-editing .rw-ci-dot {
+    width: 14px;
+    height: 14px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Calibration output panel (only present with #mapedit) */
+#rwEditPanel {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 9999;
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    background: #0d1117;
+    color: #e6edf3;
+    border-radius: 12px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+    padding: 12px;
+    font-family: var(--font-mono, monospace);
+}
+
+#rwEditPanel .rw-edit-head {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ffd166;
+}
+
+#rwEditPanel textarea {
+    width: 100%;
+    height: 200px;
+    background: #010409;
+    color: #7ee787;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 8px;
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    line-height: 1.4;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+#rwEditPanel button {
+    margin-top: 8px;
+    width: 100%;
+    padding: 8px;
+    background: #238636;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-mono, monospace);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#rwEditPanel button:hover { background: #2ea043; }
+
 /* --- Photo drop zone (step 2) --- */
 .rw-drop {
     position: relative;
