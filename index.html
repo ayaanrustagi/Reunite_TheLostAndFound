@@ -49,6 +49,8 @@
   <link rel="stylesheet" href="css/found-page.css" />
   <!-- Report wizard -->
   <link rel="stylesheet" href="css/report-wizard.css" />
+  <!-- Claim wizard -->
+  <link rel="stylesheet" href="css/claim-wizard.css" />
   <!-- Leaflet (satellite campus map) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -696,48 +698,254 @@
 
     <!-- SECTION: CLAIM -->
     <section id="page-claim" class="view-section">
-      <div class="section-centered">
-        <span class="label-tech">VERIFICATION</span>
-        <h2>CLAIM ITEM</h2>
-        <form id="claimForm" class="tech-form" novalidate>
-          <div class="input-group required">
-            <label for="claimItemId">ITEM SELECTION</label>
-            <select id="claimItemId" required aria-describedby="claimItemIdError"></select>
-            <p class="input-error" id="claimItemIdError" role="alert"></p>
+
+      <!-- Hidden legacy form — existing JS (handleClaimSubmit, validateClaimForm) reads these IDs -->
+      <form id="claimForm" class="hidden" aria-hidden="true" novalidate>
+        <select id="claimItemId"></select>
+        <input type="text"  id="claimName"  autocomplete="name">
+        <input type="email" id="claimEmail" autocomplete="email">
+        <textarea          id="claimMessage"></textarea>
+        <input type="file" id="claimItemPhoto" accept="image/*">
+        <img               id="claimPhotoPreview" class="hidden" alt="">
+        <div               id="claimStatus" role="status" aria-live="polite"></div>
+      </form>
+
+      <!-- ===== CLAIM WIZARD ===== -->
+      <div class="cw-outer">
+
+        <!-- Progress bar -->
+        <nav class="rw-progress" aria-label="Claim form progress">
+          <div class="rw-step active" id="cwStepDot1">
+            <div class="rw-step-circle">
+              <span class="rw-step-num">01</span>
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="rw-step-label">Select</span>
           </div>
-          <div class="input-group required">
-            <label for="claimName">YOUR NAME</label>
-            <input type="text" id="claimName" required autocomplete="name" aria-describedby="claimNameError">
-            <p class="input-error" id="claimNameError" role="alert"></p>
+          <div class="rw-connector" id="cwConn1"></div>
+          <div class="rw-step" id="cwStepDot2">
+            <div class="rw-step-circle">
+              <span class="rw-step-num">02</span>
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="rw-step-label">Prove</span>
           </div>
-          <div class="input-group required">
-            <label for="claimEmail">SCHOOL EMAIL</label>
-            <input type="email" id="claimEmail" required autocomplete="email" aria-describedby="claimEmailError">
-            <p class="input-error" id="claimEmailError" role="alert"></p>
+          <div class="rw-connector" id="cwConn2"></div>
+          <div class="rw-step" id="cwStepDot3">
+            <div class="rw-step-circle">
+              <span class="rw-step-num">03</span>
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="rw-step-label">Review</span>
           </div>
-          <div class="input-group required">
-            <label for="claimMessage">PROOF OF OWNERSHIP</label>
-            <textarea id="claimMessage" rows="4"
-              placeholder="Describe unique details (e.g. color, shape, size, passwords, ID numbers, etc.)" required
-              aria-describedby="claimMessageError"></textarea>
-            <p class="input-error" id="claimMessageError" role="alert"></p>
+        </nav>
+
+        <div class="rw-viewport">
+
+          <!-- ===== PANEL 1 — Pick Your Item ===== -->
+          <div class="rw-panel active rw-fwd" id="cwPanel1" role="group" aria-labelledby="cwH1">
+            <div class="rw-card">
+              <div>
+                <span class="rw-eyebrow">Step 1 of 3</span>
+                <h2 class="rw-heading" id="cwH1">Which item is yours?</h2>
+                <p class="rw-sub">Select the item from the current inventory that belongs to you.</p>
+              </div>
+
+              <div id="cwItemList" class="cw-item-list" role="radiogroup" aria-label="Select item to claim">
+                <!-- 3 loading skeletons until items arrive -->
+                <div class="cw-skeleton"></div>
+                <div class="cw-skeleton"></div>
+                <div class="cw-skeleton"></div>
+              </div>
+              <p class="cw-item-err" id="cwItemErr" role="alert"></p>
+
+              <div class="rw-nav">
+                <span></span>
+                <button type="button" class="rw-btn-next" onclick="cwNext()">Next &rarr;</button>
+              </div>
+            </div>
           </div>
 
-          <!-- Photo Upload for proof -->
-          <div class="input-group">
-            <label for="claimItemPhoto">IMAGE PROOF (OPTIONAL)</label>
-            <div class="file-upload-ui">
-              <input type="file" id="claimItemPhoto" accept="image/*" onchange="previewFileClaim()">
-              <span class="file-label">DRAG or CLICK TO UPLOAD PROOF</span>
-              <img id="claimPhotoPreview" class="photo-preview hidden" alt="Proof Preview">
+          <!-- ===== PANEL 2 — Prove It's Yours ===== -->
+          <div class="rw-panel" id="cwPanel2" role="group" aria-labelledby="cwH2">
+            <div class="rw-card">
+              <div>
+                <span class="rw-eyebrow">Step 2 of 3</span>
+                <h2 class="rw-heading" id="cwH2">Prove it's yours.</h2>
+                <p class="rw-sub">Tell us who you are and describe something only the real owner would know.</p>
+              </div>
+
+              <div class="rw-row">
+                <div class="rw-field" data-required>
+                  <label for="cw_name">Your name <em class="rw-req" aria-label="required">*</em></label>
+                  <input type="text" id="cw_name" autocomplete="name" placeholder="Full name"
+                    oninput="document.getElementById('claimName').value=this.value">
+                  <span class="rw-err" role="alert"></span>
+                </div>
+                <div class="rw-field" data-required>
+                  <label for="cw_email">School email <em class="rw-req" aria-label="required">*</em></label>
+                  <input type="email" id="cw_email" autocomplete="email" placeholder="you@school.edu"
+                    oninput="document.getElementById('claimEmail').value=this.value">
+                  <span class="rw-err" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="rw-field" data-required>
+                <label for="cw_message">Proof of ownership <em class="rw-req" aria-label="required">*</em></label>
+                <textarea id="cw_message" rows="4"
+                  placeholder="Describe details only you'd know — color inside, lock combination, purchase date, serial number, unique marks…"
+                  oninput="document.getElementById('claimMessage').value=this.value"></textarea>
+                <span class="rw-err" role="alert"></span>
+              </div>
+
+              <div class="rw-section-label">Photo proof (optional)</div>
+
+              <div class="rw-drop" id="cwDrop" role="button" tabindex="0"
+                aria-label="Upload proof photo — click or drag and drop">
+                <input type="file" id="cw_photo" accept="image/*" aria-label="Upload proof photo">
+                <div id="cwDropContent">
+                  <div class="rw-drop-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <p class="rw-drop-title">Add a photo</p>
+                  <p class="rw-drop-hint">Receipt, photo of item, or any other visual proof</p>
+                </div>
+                <img id="cwPhotoPreview" class="rw-photo-preview" style="display:none" alt="Proof preview">
+              </div>
+
+              <div class="rw-nav">
+                <button type="button" class="rw-btn-ghost" onclick="cwBack()">&larr; Back</button>
+                <button type="button" class="rw-btn-next"  onclick="cwNext()">Next &rarr;</button>
+              </div>
             </div>
-            <p class="field-hint">Upload a photo of the item, a receipt, or similar proof.</p>
           </div>
-          <button type="submit" class="btn btn-primary full-width">SUBMIT CLAIM</button>
-          <div id="claimStatus" class="status-msg" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-      </div>
+
+          <!-- ===== PANEL 3 — Review & Submit ===== -->
+          <div class="rw-panel" id="cwPanel3" role="group" aria-labelledby="cwH3">
+            <div class="rw-card">
+              <div>
+                <span class="rw-eyebrow">Step 3 of 3</span>
+                <h2 class="rw-heading" id="cwH3">Ready to submit.</h2>
+                <p class="rw-sub">Review your claim below, then hit submit.</p>
+              </div>
+
+              <!-- Item being claimed -->
+              <div class="rw-summary-card">
+                <div class="rw-summary-header">
+                  <span class="rw-summary-tag">CLAIMING ITEM</span>
+                  <button type="button" class="rw-edit-btn" onclick="cwGoTo(1)">Change</button>
+                </div>
+                <p class="rw-summary-title" id="cwRevItem">—</p>
+                <div class="rw-summary-meta">
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Location</span>
+                    <span class="rw-summary-value" id="cwRevLocation">—</span>
+                  </div>
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Date found</span>
+                    <span class="rw-summary-value" id="cwRevDate">—</span>
+                  </div>
+                </div>
+                <div id="cwRevThumbWrap" class="rw-summary-photos" style="display:none">
+                  <img id="cwRevThumb" class="rw-summary-thumb" alt="Item photo">
+                </div>
+              </div>
+
+              <!-- Claimant info -->
+              <div class="rw-summary-card">
+                <div class="rw-summary-header">
+                  <span class="rw-summary-tag">YOUR INFO</span>
+                  <button type="button" class="rw-edit-btn" onclick="cwGoTo(2)">Edit</button>
+                </div>
+                <div class="rw-summary-meta">
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Name</span>
+                    <span class="rw-summary-value" id="cwRevName">—</span>
+                  </div>
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Email</span>
+                    <span class="rw-summary-value" id="cwRevEmail">—</span>
+                  </div>
+                  <div class="rw-summary-field rw-summary-field--wide">
+                    <span class="rw-summary-label">Your proof</span>
+                    <span class="rw-summary-value" id="cwRevMessage">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="rw-btn-submit" id="cwSubmitBtn" onclick="cwSubmit()">
+                Submit Claim
+              </button>
+              <p class="rw-submit-error" id="cwSubmitErr" role="alert"></p>
+              <p class="rw-legal">By submitting you agree to our <a href="#" onclick="event.preventDefault()">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
+
+              <div class="rw-nav">
+                <button type="button" class="rw-btn-ghost" onclick="cwBack()">&larr; Back</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL 4 — Success ===== -->
+          <div class="rw-panel" id="cwPanel4" role="region" aria-labelledby="cwH4">
+            <div class="rw-card rw-success-card">
+              <div class="rw-success-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div>
+                <span class="rw-eyebrow">Claim received</span>
+                <h2 class="rw-heading" id="cwH4">Submitted successfully.</h2>
+                <p class="rw-sub">An admin will review your claim and reach out to your school email within 1–2 school days.</p>
+              </div>
+
+              <div class="rw-success-meta">
+                <div class="rw-success-meta-item">
+                  <span class="rw-meta-label">Claim ID</span>
+                  <span class="rw-meta-value" id="cwSuccessId">#—</span>
+                </div>
+                <div class="rw-success-meta-item">
+                  <span class="rw-meta-label">Item</span>
+                  <span class="rw-meta-value" id="cwSuccessItem">—</span>
+                </div>
+                <div class="rw-success-meta-item">
+                  <span class="rw-meta-label">Status</span>
+                  <span class="rw-meta-value">Pending Review</span>
+                </div>
+              </div>
+
+              <div class="rw-success-actions">
+                <button type="button" class="rw-btn-next"  onclick="navigateToSection('found')">Browse Items</button>
+                <button type="button" class="rw-btn-ghost" onclick="navigateToSection('dashboard')">My Dashboard</button>
+              </div>
+
+              <p class="rw-start-over">
+                Claiming something else?
+                <a href="#" onclick="event.preventDefault(); cwReset()">Start a new claim</a>
+              </p>
+            </div>
+          </div>
+
+        </div><!-- /.rw-viewport -->
+      </div><!-- /.cw-outer -->
     </section>
 
     <!-- SECTION: DASHBOARD -->
@@ -1026,6 +1234,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/report-wizard.js"></script>
+  <script src="js/claim-wizard.js"></script>
   <!-- Homepage hero -->
   <script src="js/homepage.js"></script>
 </body>
