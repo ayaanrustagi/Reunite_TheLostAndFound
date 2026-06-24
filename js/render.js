@@ -72,7 +72,7 @@ function updateResultsStatus(totalApproved, shownCount, { searchTokens = [], cat
     }
 
     if (!searchTokens.length && !category && !location) {
-        statusEl.textContent = "Showing most recent approved records.";
+        statusEl.textContent = "Most recent first.";
         return;
     }
 

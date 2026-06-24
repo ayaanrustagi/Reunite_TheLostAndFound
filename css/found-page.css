@@ -42,13 +42,6 @@
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 28px;
 }
-#page-found .fp-head-labels {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  flex-shrink: 0;
-}
-
 /* the search bar that now lives in the header row */
 #page-found .fp-topsearch {
   display: flex;
@@ -124,7 +117,7 @@
 #page-found .fp-drop {
   position: relative;
   display: block;
-  padding: 18px 14px 14px;
+  padding: 12px 14px 10px;
   border: 1.5px dashed var(--border-color);
   border-radius: 10px;
   text-align: center;
@@ -172,7 +165,7 @@
 }
 
 /* groups */
-#page-found .fp-group { margin-top: 22px; }
+#page-found .fp-group { margin-top: 16px; }
 #page-found .fp-group h4,
 #page-found .fp-group label.fp-label {
   display: block;
@@ -405,13 +398,17 @@
   opacity: 0.75;
 }
 
-/* AI scan overlay (kept functional, tucked under drop zone) */
+/* AI scan overlay — hidden until a photo triggers it */
 #page-found #aiMatchContainer {
+  display: none;
   margin-top: 12px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   background: #ffffff;
   padding: 10px;
+}
+#page-found #aiMatchContainer.active {
+  display: block;
 }
 
 /* "no items found" status */
