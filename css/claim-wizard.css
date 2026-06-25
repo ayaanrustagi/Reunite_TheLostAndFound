@@ -157,9 +157,11 @@
     font-size: 0.63rem;
     letter-spacing: 0.06em;
     color: #c62828;
-    margin-top: 4px;
+    margin: 0;
     min-height: 0.9rem;
 }
+
+.cw-item-err:empty { display: none; }
 
 /* ── Drop zone content wrapper (separate ID from report wizard) ───────────── */
 #cwDropContent {
@@ -175,7 +177,7 @@
 
 /* ── Page-level centering + compact sizing (mirrors report wizard overrides) ─ */
 #page-claim.active {
-    padding: clamp(16px, 2vw, 24px) 1rem clamp(60px, 8vw, 120px);
+    padding: clamp(16px, 2vw, 24px) 1rem clamp(32px, 5vw, 64px);
     min-height: calc(100vh - 5.5rem);
     box-sizing: border-box;
     display: flex !important;
@@ -240,7 +242,8 @@
 }
 
 #page-claim .rw-nav {
-    padding-top: 0.1rem;
+    padding-top: 0;
+    margin-top: 0.25rem;
 }
 
 #page-claim .rw-btn-next,
