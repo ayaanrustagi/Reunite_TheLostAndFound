@@ -10,6 +10,7 @@
 
     let cwStep = 1;
     let cwSelectedItem = null;   // full item object from window.items
+    let cwItemsReady = false;    // true once apiSync has populated window.items
 
     /* ---- helpers ---- */
     function reduced() {
@@ -83,6 +84,9 @@
     function renderItemGrid() {
         const list = document.getElementById('cwItemList');
         if (!list) return;
+
+        // Keep skeletons until apiSync has fired at least once
+        if (!cwItemsReady) return;
 
         const items = (window.items || []).filter(i =>
             (i.status || '').toLowerCase().trim() === 'approved'
@@ -440,8 +444,11 @@
         renderItemGrid(); // initial render (may show empty if items not loaded yet)
     }
 
-    // Called by apiSync after items load — refresh the grid immediately
-    window.renderClaimSelect = renderItemGrid;
+    // Called by apiSync after items load — set ready flag then refresh
+    window.renderClaimSelect = function () {
+        cwItemsReady = true;
+        renderItemGrid();
+    };
 
     // Re-render item list each time the claim page becomes visible
     // (items may have loaded after initial boot)
