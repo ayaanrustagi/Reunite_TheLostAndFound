@@ -1111,7 +1111,7 @@ body.reduced-motion .rw-pin-marker { animation: none; }
    Scoped to #page-report so no other sections are affected.
    ========================================================================== */
 #page-report.active {
-    padding: clamp(16px, 2vw, 24px) 1rem;
+    padding: clamp(16px, 2vw, 24px) 1rem clamp(60px, 8vw, 120px);
     min-height: calc(100vh - 5.5rem);
     box-sizing: border-box;
     display: flex !important;
