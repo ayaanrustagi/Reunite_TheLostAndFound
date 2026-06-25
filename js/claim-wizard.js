@@ -440,6 +440,9 @@
         renderItemGrid(); // initial render (may show empty if items not loaded yet)
     }
 
+    // Called by apiSync after items load — refresh the grid immediately
+    window.renderClaimSelect = renderItemGrid;
+
     // Re-render item list each time the claim page becomes visible
     // (items may have loaded after initial boot)
     const claimSection = document.getElementById('page-claim');
