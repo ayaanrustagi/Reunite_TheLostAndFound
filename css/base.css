@@ -275,6 +275,11 @@ body::before {
     box-sizing: border-box;
 }
 
+html {
+    /* Matches page bg so the zoomed body never shows a dark band at the edges */
+    background-color: var(--bg-color);
+}
+
 body {
     font-family: var(--font-main);
     background-color: transparent;
@@ -282,6 +287,29 @@ body {
     line-height: 1.5;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-    zoom: 0.9; /* whole site renders as if at 90% browser zoom */
+}
+
+/* Desktop renders as if at 90% browser zoom. Mobile layouts already fit,
+   so they stay at 100%. */
+@media (min-width: 1025px) {
+    body {
+        zoom: 0.9;
+    }
+
+    /* Fixed full-viewport layers inherit the body zoom and would only cover
+       90% of the screen — counter-zoom them back to true viewport size */
+    #waves-container,
+    body::before,
+    body.auth-page::before,
+    .modal-overlay,
+    .loading-overlay {
+        zoom: calc(1 / 0.9);
+    }
+
+    /* …but keep the content inside overlays at the site-wide 90% scale */
+    .modal-overlay > *,
+    .loading-overlay > * {
+        zoom: 0.9;
+    }
 }
    
