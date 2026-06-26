@@ -73,11 +73,11 @@
 
 /* Claimed Items Section */
 .claimed-items-section {
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .toggle-claimed-btn {
