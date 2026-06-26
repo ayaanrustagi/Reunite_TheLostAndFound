@@ -249,41 +249,32 @@ function renderClaimedItems(claimedItems) {
         return;
     }
 
-    grid.innerHTML = claimedItems.map((item, idx) => {
+    // Compact archive rows — claimed items are history, not browsable inventory
+    grid.innerHTML = claimedItems.map(item => {
         const hue = fpCategoryHue(item.category);
         const bg  = `oklch(0.88 0.06 ${hue})`;
         const fg  = `oklch(0.40 0.14 ${hue})`;
-        const cat = (item.category || 'other').toString().toUpperCase();
+        const cat = (item.category || 'other').toString().slice(0, 4).toUpperCase();
         const title = fpEscHtml(item.title || 'Untitled');
-        const loc   = fpEscHtml(item.location || '');
+        const loc   = fpEscHtml(item.location || '—');
         const when  = fpRelativeTime(item.date_found || item.created_at);
-        const patternId = 'fp-stp-cl-' + fpEscHtml(item.id || idx);
-        const photoInner = item.image
-            ? `<img src="${fpEscHtml(item.image)}" alt="${title}" style="filter:grayscale(1);opacity:0.7" loading="lazy">`
-            : `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                 <defs>
-                   <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
-                     <rect width="5" height="5" fill="${bg}"/>
-                     <line x1="0" y1="0" x2="0" y2="5" stroke="${fg}" stroke-opacity="0.22" stroke-width="1"/>
-                   </pattern>
-                 </defs>
-                 <rect width="100" height="100" fill="url(#${patternId})"/>
-               </svg>
-               <div class="fp-photo-label" style="color:${fg};opacity:0.6">${cat}</div>`;
+        const thumb = item.image
+            ? `<img class="cl-thumb" src="${fpEscHtml(item.image)}" alt="" loading="lazy">`
+            : `<div class="cl-thumb cl-thumb-ph" style="background:${bg};color:${fg}">${cat}</div>`;
         return `
-            <div class="item-card claimed-card" style="opacity:0.75">
-                <div class="fp-photo" style="background:${bg}">
-                    ${photoInner}
-                    <span class="fp-tag">${cat}</span>
-                    <span class="fp-match" style="background:#777">CLAIMED</span>
+            <div class="cl-row">
+                ${thumb}
+                <div class="cl-info">
+                    <div class="cl-title">${title}</div>
+                    <div class="cl-meta">${loc} &middot; ${when}</div>
                 </div>
-                <div class="fp-body">
-                    <h3 class="fp-title">${title}</h3>
-                    <div class="fp-meta">
-                        <span>${loc}</span>
-                        <span>${when}</span>
-                    </div>
-                </div>
+                <span class="cl-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Retrieved
+                </span>
             </div>
         `;
     }).join('');
