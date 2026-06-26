@@ -444,7 +444,14 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 2px;
 }
+
+#page-found .claimed-grid::-webkit-scrollbar { width: 4px; }
+#page-found .claimed-grid::-webkit-scrollbar-track { background: transparent; }
+#page-found .claimed-grid::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
 #page-found .claimed-grid .status-msg {
   padding: 24px 20px;
