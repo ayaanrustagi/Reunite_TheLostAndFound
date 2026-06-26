@@ -8,13 +8,13 @@
    would override .view-section's display:none and show this page on top
    of every other section. Keep the flex layout scoped to .active. */
 #page-found.active {
-  padding: clamp(16px, 2vw, 28px) 1rem !important;
+  padding: clamp(16px, 2vw, 28px) 1rem clamp(32px, 4vw, 60px) !important;
   min-height: calc(100vh - 5.5rem) !important;
   box-sizing: border-box;
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 #page-found .content-wrapper.content-box {
   background: #ffffff !important;
