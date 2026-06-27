@@ -118,55 +118,74 @@
   top: 96px;
 }
 
-/* drag-photo zone */
-#page-found .fp-drop {
+/* ── Horizontal visual search bar ─────────────────────────────────────────── */
+#page-found .fp-visual-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* drag-photo zone — horizontal pill */
+#page-found .fp-drop.fp-drop-h {
   position: relative;
-  display: block;
-  padding: 12px 14px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  padding: 10px 16px;
   border: 1.5px dashed var(--border-color);
   border-radius: 10px;
-  text-align: center;
   background: rgba(0,0,0,0.02);
   cursor: pointer;
   transition: border-color 0.2s;
+  text-align: left;
 }
-/* keep the preview thumbnail compact so it doesn't dominate the rail */
-#page-found .fp-drop .photo-preview {
-  display: block;
-  margin: 8px auto 0;
-  max-height: 110px;
-  max-width: 100%;
-  object-fit: contain;
-  border-radius: 6px;
-}
-#page-found .fp-drop .photo-preview:not(.hidden) ~ .fp-drop-label,
-#page-found .fp-drop .photo-preview:not(.hidden) ~ .fp-drop-hint,
-#page-found .fp-drop .photo-preview:not(.hidden) ~ .fp-drop-icon { display: none; }
-#page-found .fp-drop:hover { border-color: var(--accent-color); }
-#page-found .fp-drop input[type="file"] {
+#page-found .fp-drop.fp-drop-h:hover { border-color: var(--accent-color); }
+#page-found .fp-drop.fp-drop-h input[type="file"] {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   opacity: 0; cursor: pointer;
 }
-#page-found .fp-drop-icon {
-  display: block;
-  margin: 0 auto 10px;
+#page-found .fp-drop.fp-drop-h .fp-drop-icon {
+  flex-shrink: 0;
   color: var(--muted-text);
 }
-#page-found .fp-drop-label {
+#page-found .fp-drop.fp-drop-h .fp-drop-label {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.10em;
   color: var(--muted-text);
   text-transform: uppercase;
-  margin-bottom: 6px;
+  white-space: nowrap;
 }
-#page-found .fp-drop-hint {
+#page-found .fp-drop.fp-drop-h .fp-drop-hint {
   font-family: var(--font-main);
   font-style: italic;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-color);
+  white-space: nowrap;
+}
+#page-found .fp-drop.fp-drop-h .photo-preview {
+  height: 32px;
+  width: auto;
+  max-width: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-left: auto;
+}
+#page-found .fp-drop.fp-drop-h .photo-preview:not(.hidden) ~ .fp-drop-label,
+#page-found .fp-drop.fp-drop-h .photo-preview:not(.hidden) ~ .fp-drop-hint { display: none; }
+
+/* mode toggle sits right in the bar */
+#page-found .fp-visual-bar .fp-match-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  flex-shrink: 0;
+  width: 200px;
+  margin-top: 0;
 }
 
 /* groups */
@@ -369,7 +388,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-  margin-top: 10px;
 }
 #page-found .fp-mode {
   text-align: left;
