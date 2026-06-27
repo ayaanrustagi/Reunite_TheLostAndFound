@@ -21,7 +21,8 @@
   border: 1px solid var(--border-color) !important;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft) !important;
-  padding: clamp(16px, 2vw, 24px) clamp(20px, 2.5vw, 32px) clamp(16px, 2vw, 24px) !important;
+  /* No top padding — section-head carries it so sticky starts flush at top edge */
+  padding: 0 clamp(20px, 2.5vw, 32px) clamp(16px, 2vw, 24px) !important;
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
@@ -37,9 +38,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 12px 0 14px;
+  /* Top padding absorbed from card so sticky flush at top edge; bleed left/right to cover card sides */
+  padding: clamp(16px, 2vw, 24px) clamp(20px, 2.5vw, 32px) 14px;
+  margin: 0 -clamp(20px, 2.5vw, 32px) 28px;
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 28px;
   position: sticky;
   top: 0;
   background: #ffffff;
