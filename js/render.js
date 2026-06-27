@@ -290,6 +290,16 @@ function toggleClaimedItems() {
     btn.innerHTML = isHidden ?
         'SHOW PAST CLAIMED ITEMS <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' :
         'HIDE PAST CLAIMED ITEMS <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+
+    if (!isHidden) {
+        // Scroll the content card so the claimed section comes into view
+        const scrollContainer = document.querySelector('#page-found .content-wrapper');
+        if (scrollContainer) {
+            requestAnimationFrame(() => {
+                scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
+            });
+        }
+    }
 }
 window.toggleClaimedItems = toggleClaimedItems;
 
