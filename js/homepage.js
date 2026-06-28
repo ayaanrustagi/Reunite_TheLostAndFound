@@ -87,24 +87,53 @@
     var pWhite = new THREE.PointLight(0xffffff, 0.55, 40); pWhite.position.set( 4, -2,  2); scene.add(pWhite);
     var pSteel = new THREE.PointLight(0x9aa7b8, 0.50, 40); pSteel.position.set( 2,  3, -3); scene.add(pSteel);
 
-    /* ---- resize ---- */
+    /* ---- resize ----
+       Size to the canvas's own box (not the stage). On desktop the canvas is
+       inset:0 over the 100vh stage so this is identical; on mobile the canvas
+       gets its own fixed height (see homepage.css) and must not inherit the
+       tall stacked stage height, which would distort the aspect ratio. */
     function resize() {
-      var w = stage.clientWidth, h = stage.clientHeight;
+      var w = canvas.clientWidth || stage.clientWidth;
+      var h = canvas.clientHeight || stage.clientHeight;
+      if (!w || !h) return;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
     }
     resize();
     window.addEventListener('resize', resize);
+    // Re-measure shortly after layout settles (fonts / mobile address bar).
+    setTimeout(resize, 200);
 
     /* ---- scroll tick ---- */
     var clock   = new THREE.Clock();
     var curX    = 0, lastIdx = -2;
+    var raf;   // animation-frame handle (was an undeclared global → strict-mode ReferenceError)
     var stepEls = stepsEl ? Array.from(stepsEl.children) : [];
     var dotEls  = railEl  ? Array.from(railEl.children)  : [];
 
     function tick() {
       var t = clock.getElapsedTime();
+
+      /* On mobile the hero is a static stacked layout (homepage.css un-pins it
+         and forces all copy visible). Don't drive the scroll-scrubbed intro /
+         step / CTA reveals here — that would fade the headline out as the user
+         scrolls the page. Just idle-spin the key and bail. */
+      if (window.innerWidth <= 1024) {
+        if (introEl && introEl.style.opacity !== '') {
+          introEl.style.opacity = '';
+          introEl.style.transform = '';
+          introEl.style.pointerEvents = '';
+        }
+        key.rotation.y += 0.004;
+        key.rotation.z = Math.sin(t * 1.2) * 0.04;
+        key.rotation.x = -0.12;
+        key.position.x = 0;
+        key.position.y = Math.sin(t * 1.0) * 0.05;
+        renderer.render(scene, camera);
+        raf = requestAnimationFrame(tick);
+        return;
+      }
 
       /* scroll progress 0→1 through the wrapper */
       var rect     = wrap.getBoundingClientRect();

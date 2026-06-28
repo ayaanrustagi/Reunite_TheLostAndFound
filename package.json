@@ -2,17 +2,25 @@
   "name": "reunite",
   "version": "1.0.0",
   "description": "A modern, responsive web application for managing lost and found items. Built for FBLA Website Coding & Development competition.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "node test/mobile-smoke.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ayaanrustagi/Reunite_TheLostAndFound.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "lost-and-found",
+    "fbla",
+    "express",
+    "mongodb",
+    "visual-search",
+    "accessibility"
+  ],
+  "author": "Ayaan Rustagi, Sree Kondapali, Tushaar Singh",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/ayaanrustagi/Reunite_TheLostAndFound/issues"
@@ -26,6 +34,8 @@
     "mongoose": "^9.2.0",
     "multer": "^2.0.2",
     "nedb-promises": "^6.2.3"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
   }
 }
-   

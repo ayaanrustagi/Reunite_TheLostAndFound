@@ -1102,3 +1102,73 @@
         width: auto;
     }
 }
+
+/* =============================================================
+   MOBILE FIXES — Find Items, wizards, visual search
+   Recent desktop-only layouts (Find Items content box, the
+   horizontal visual-search bar, and the vertically-centred
+   wizards) never got mobile rules. These additive overrides
+   undo the desktop-only traps on small screens. Nothing here
+   touches the desktop layout.
+   ============================================================= */
+@media (max-width: 768px) {
+
+    /* --- Find Items: let the page scroll instead of a cramped
+       inner scroll-box (100vh math is unreliable on phones). --- */
+    #page-found.active {
+        padding: 1rem 0.75rem 2.5rem !important;
+        min-height: auto !important;
+        justify-content: flex-start;
+    }
+
+    #page-found .content-wrapper.content-box {
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 0 1rem 1.25rem !important;
+        border-radius: var(--radius-md);
+    }
+
+    /* Header row: stop it sticking (would collide with the floating
+       header) and drop the edge-bleed negative margins. */
+    #page-found .section-head {
+        position: static !important;
+        margin: 0 0 1.25rem !important;
+        padding: 1rem 0 0.75rem !important;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    #page-found .fp-topsearch { width: 100% !important; }
+
+    /* Visual search bar: stack vertically so nothing overflows. */
+    #page-found .fp-visual-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    #page-found .fp-upload-btn { justify-content: center; }
+    #page-found .fp-drag-hint { text-align: center; }
+    #page-found .fp-visual-bar .fp-match-mode {
+        width: 100% !important;
+    }
+
+    /* Scan results: photo on top, matches below; single-column cards. */
+    #page-found .fp-scan-grid { flex-direction: column; }
+    #page-found #aiMatchResults { grid-template-columns: 1fr; }
+    #page-found #aiMatchContainer { padding: 14px; }
+
+    /* Claimed archive: single column, taller scroll budget. */
+    #page-found .claimed-grid {
+        grid-template-columns: 1fr;
+        max-height: 320px;
+    }
+
+    /* --- Report / Claim wizards: align to top so tall forms never
+       get clipped above the fold by justify-content:center. --- */
+    #page-report.active,
+    #page-claim.active {
+        justify-content: flex-start !important;
+        min-height: auto !important;
+        padding-top: 1.25rem !important;
+    }
+}

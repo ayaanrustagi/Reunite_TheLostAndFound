@@ -15,7 +15,7 @@ function navigateToSection(sectionId) {
 
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(sectionId));
+        btn.classList.toggle('active', btn.getAttribute('data-action')?.includes(sectionId));
     });
 
 
@@ -565,26 +565,31 @@ window.loadAccessibilitySettings = loadAccessibilitySettings;
 let ttsHoverTimeout = null;
 let currentUtterance = null;
 
-function handleTTSHover(e) {
+const TTS_SELECTOR = 'h1, h2, h3, h4, p, a, button, span, label, div.meta-tag, div.stat-label, div.stat-value, option, th, td';
+
+// Shared speak routine for both pointer hover and keyboard focus, so the
+// feature is usable without a mouse (screen-reader / keyboard users).
+function speakTarget(target) {
     if (!document.body.classList.contains('tts-enabled')) return;
-    
-    const target = e.target;
-    if (target.matches('h1, h2, h3, h4, p, a, button, span, label, div.meta-tag, div.stat-label, div.stat-value, option, th, td')) {
-        const text = target.innerText || target.textContent;
-        if (text && text.trim().length > 0) {
-            clearTimeout(ttsHoverTimeout);
-            ttsHoverTimeout = setTimeout(() => {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    currentUtterance = new SpeechSynthesisUtterance(text.trim());
-                    window.speechSynthesis.speak(currentUtterance);
-                }
-            }, 400);
+    if (!target || typeof target.matches !== 'function' || !target.matches(TTS_SELECTOR)) return;
+
+    const text = target.innerText || target.textContent;
+    if (!text || text.trim().length === 0) return;
+
+    clearTimeout(ttsHoverTimeout);
+    ttsHoverTimeout = setTimeout(() => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            currentUtterance = new SpeechSynthesisUtterance(text.trim());
+            window.speechSynthesis.speak(currentUtterance);
         }
-    }
+    }, 400);
 }
 
-function handleTTSLeave(e) {
+function handleTTSHover(e) { speakTarget(e.target); }
+function handleTTSFocus(e) { speakTarget(e.target); }
+
+function handleTTSLeave() {
     if (!document.body.classList.contains('tts-enabled')) return;
     clearTimeout(ttsHoverTimeout);
 }
@@ -596,8 +601,12 @@ function initTextToSpeech() {
     }
     document.removeEventListener('mouseover', handleTTSHover);
     document.removeEventListener('mouseout', handleTTSLeave);
+    document.removeEventListener('focusin', handleTTSFocus);
+    document.removeEventListener('focusout', handleTTSLeave);
     document.addEventListener('mouseover', handleTTSHover);
     document.addEventListener('mouseout', handleTTSLeave);
+    document.addEventListener('focusin', handleTTSFocus);
+    document.addEventListener('focusout', handleTTSLeave);
 }
 
 function disableTextToSpeech() {
@@ -606,4 +615,6 @@ function disableTextToSpeech() {
     }
     document.removeEventListener('mouseover', handleTTSHover);
     document.removeEventListener('mouseout', handleTTSLeave);
+    document.removeEventListener('focusin', handleTTSFocus);
+    document.removeEventListener('focusout', handleTTSLeave);
 }
