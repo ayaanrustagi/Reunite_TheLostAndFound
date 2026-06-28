@@ -301,32 +301,38 @@ window.handleClaimSubmit = handleClaimSubmit;
 
 
 
+function handleFindFile(file) {
+    if (!file) return;
+    const preview = document.getElementById('findPhotoPreview');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        preview.src = e.target.result;
+        preview.classList.remove('hidden');
+        if (window.fpMatchMode === 'ai') runAiMatch(e.target.result);
+        else simulateAiScan();
+    };
+    reader.readAsDataURL(file);
+}
+
 function previewFileFind() {
     const fileInput = document.getElementById('findItemPhoto');
-    const file = fileInput.files[0];
-    const preview = document.getElementById('findPhotoPreview');
-    const parent = fileInput.parentElement;
-
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            preview.src = e.target.result;
-            preview.classList.remove('hidden');
-            parent.classList.add('has-image');
-            // Honor the user's selected matching mode (fast d-hash vs accurate AI)
-            if (window.fpMatchMode === 'ai') {
-                runAiMatch(e.target.result);
-            } else {
-                simulateAiScan();
-            }
-        };
-        reader.readAsDataURL(file);
-    } else {
-        preview.classList.add('hidden');
-        parent.classList.remove('has-image');
-    }
+    handleFindFile(fileInput.files[0]);
 }
 window.previewFileFind = previewFileFind;
+
+// Wire up drag-and-drop on the visual bar
+document.addEventListener('DOMContentLoaded', function () {
+    const bar = document.getElementById('fpVisualBar');
+    if (!bar) return;
+    bar.addEventListener('dragover', e => { e.preventDefault(); bar.classList.add('dragover'); });
+    bar.addEventListener('dragleave', () => bar.classList.remove('dragover'));
+    bar.addEventListener('drop', e => {
+        e.preventDefault();
+        bar.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) handleFindFile(file);
+    });
+});
 
 /* ---- Fast / Accurate toggle state ---- */
 window.fpMatchMode = 'fast';

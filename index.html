@@ -253,20 +253,20 @@
           </select>
         </div>
 
-        <!-- Visual search bar — horizontal, full width, above the grid -->
-        <div class="fp-visual-bar">
-          <label class="fp-drop fp-drop-h" for="findItemPhoto">
-            <svg class="fp-drop-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- Visual search bar — horizontal toolbar above the grid -->
+        <div class="fp-visual-bar" id="fpVisualBar">
+          <label class="fp-upload-btn" for="findItemPhoto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <span class="fp-drop-label">↑ Drag photo of what you lost</span>
-            <span class="fp-drop-hint">Visual search · D-hashing</span>
+            Upload photo
             <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
-            <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
           </label>
+          <span class="fp-drag-hint">or drag &amp; drop — visual search · D-hashing</span>
+          <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
           <div class="fp-match-mode" role="radiogroup" aria-label="Matching mode">
             <button type="button" class="fp-mode active" data-mode="fast" onclick="setMatchMode('fast')">
               <span class="fp-mode-title">Fast</span>
