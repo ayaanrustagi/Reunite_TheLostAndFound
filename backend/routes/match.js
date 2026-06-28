@@ -15,7 +15,9 @@ const Item = require('../models/Item');
 
 const GROQ_URL   = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
-const MAX_CANDIDATES = 4;  // keeps a single Groq call snappy
+// How many inventory photos to send the model in one call. Higher = fewer
+// silent misses but a slower/pricier request. Override with MATCH_MAX_CANDIDATES.
+const MAX_CANDIDATES = Math.max(1, parseInt(process.env.MATCH_MAX_CANDIDATES, 10) || 8);
 
 router.post('/ai', async (req, res) => {
   try {
@@ -31,7 +33,11 @@ router.post('/ai', async (req, res) => {
 
     // Pull approved candidates that have a photo attached.
     await connectDB();
-    const inventory = await Item.find({ status: 'approved' }).lean();
+    // Newest finds first — most likely to still be unclaimed — so when the
+    // inventory exceeds MAX_CANDIDATES we drop the stalest items, not arbitrary ones.
+    const inventory = await Item.find({ status: 'approved' })
+      .sort({ createdAt: -1, created_at: -1 })
+      .lean();
     const candidates = inventory
       .filter(it => it.image && it.image.startsWith('data:image/'))
       .slice(0, MAX_CANDIDATES);

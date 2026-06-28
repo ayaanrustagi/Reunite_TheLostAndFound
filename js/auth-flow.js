@@ -225,7 +225,6 @@ async function sendOTP() {
         subject: "Security Verification Code"
     };
 
-    console.log("Attempting to send OTP to:", email, "with params:", templateParams);
 
     try {
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_OTP_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
@@ -290,7 +289,6 @@ async function verifyOTP() {
 
     const status = document.getElementById('authStatus');
 
-    console.log("Verifying OTP:", { entered: enteredOTP, expected: generatedOTP });
 
 
     if (enteredOTP !== generatedOTP && enteredOTP !== "000000") {

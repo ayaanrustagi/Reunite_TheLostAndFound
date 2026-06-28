@@ -129,7 +129,6 @@ function renderFound() {
     const loc = document.getElementById('locationFilter')?.value.toLowerCase() || "";
     const sort = document.getElementById('sortFilter')?.value || "newest";
 
-    console.log("renderFound called with:", { totalItems: window.items.length, search, cat, loc, sort });
 
     let filtered = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'approved');
 
@@ -159,7 +158,6 @@ function renderFound() {
     if (sort === 'newest') filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     else filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-    console.log("Final filtered items to display:", filtered.length);
 
     const countEl = document.getElementById('itemsCount');
     if (countEl) countEl.textContent = filtered.length;

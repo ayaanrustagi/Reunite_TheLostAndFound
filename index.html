@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REUNITE - Lost & Found Network</title>
   <meta name="description"
-    content="REUNITE is a premium, custom-coded lost & found network featuring D-hashing powered visual matching and a robust Node.js backend to reconnect communities." />
+    content="REUNITE is a custom-coded lost & found network with two-tier visual search — on-device d-hash matching plus AI image matching (Llama 4 Scout) — on a Node.js/Express backend to reconnect communities." />
   <meta name="author" content="Ayaan Rustagi, Sree Kondapali, Tushaar Singh" />
   <link rel="icon" type="image/png" href="assets/reunite-logo.png" />
 
@@ -74,7 +74,7 @@
   <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
-      <button class="logo-area" onclick="navigateToSection('hero')" type="button" aria-label="Go to Hero Section" title="Go to Hero Section">
+      <button class="logo-area" data-action="navigateToSection('hero')" type="button" aria-label="Go to Hero Section" title="Go to Hero Section">
         <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
       </button>
@@ -85,18 +85,18 @@
       </button>
 
       <nav class="main-nav">
-        <button class="nav-btn" onclick="navigateToSection('found')">FIND ITEMS</button>
-        <button class="nav-btn" onclick="navigateToSection('report')">REPORT FIND</button>
-        <button class="nav-btn" onclick="navigateToSection('claim')">CLAIM ITEM</button>
+        <button class="nav-btn" data-action="navigateToSection('found')">FIND ITEMS</button>
+        <button class="nav-btn" data-action="navigateToSection('report')">REPORT FIND</button>
+        <button class="nav-btn" data-action="navigateToSection('claim')">CLAIM ITEM</button>
 
         <!-- Mobile-only action buttons (shown in hamburger menu) -->
         <div class="mobile-nav-actions">
-          <button class="nav-btn" onclick="toggleSettingsModal()">ACCESSIBILITY</button>
-          <button id="mobileLoginBtn" class="nav-btn" onclick="window.location.href='login.html'">SIGN IN</button>
+          <button class="nav-btn" data-action="toggleSettingsModal()">ACCESSIBILITY</button>
+          <button id="mobileLoginBtn" class="nav-btn" data-action="goLogin()">SIGN IN</button>
           <button id="mobileDashboardBtn" class="nav-btn hidden"
-            onclick="navigateToSection('dashboard')">DASHBOARD</button>
-          <button id="mobileAdminBtn" class="nav-btn hidden" onclick="navigateToSection('admin')">ADMIN</button>
-          <button id="mobileLogoutBtn" class="nav-btn hidden" onclick="handleLogout()">LOGOUT</button>
+            data-action="navigateToSection('dashboard')">DASHBOARD</button>
+          <button id="mobileAdminBtn" class="nav-btn hidden" data-action="navigateToSection('admin')">ADMIN</button>
+          <button id="mobileLogoutBtn" class="nav-btn hidden" data-action="handleLogout()">LOGOUT</button>
         </div>
       </nav>
 
@@ -115,7 +115,7 @@
 
       <div class="header-actions">
         <!-- Accessibility Trigger -->
-        <button id="settingsBtn" class="btn-icon-alt header-settings-btn" onclick="toggleSettingsModal()"
+        <button id="settingsBtn" class="btn-icon-alt header-settings-btn" data-action="toggleSettingsModal()"
           aria-label="Accessibility Settings" title="Accessibility Settings">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -127,15 +127,15 @@
         </button>
         <a id="loginBtn" href="login.html" class="btn btn-sm btn-outline">SIGN IN</a>
         <button id="dashboardBtn" class="btn btn-sm btn-outline hidden"
-          onclick="navigateToSection('dashboard')">DASHBOARD</button>
-        <button id="adminBtn" class="btn btn-sm btn-outline hidden" onclick="navigateToSection('admin')">ADMIN</button>
-        <button id="logoutBtn" class="btn btn-sm btn-outline hidden" onclick="handleLogout()">LOGOUT</button>
+          data-action="navigateToSection('dashboard')">DASHBOARD</button>
+        <button id="adminBtn" class="btn btn-sm btn-outline hidden" data-action="navigateToSection('admin')">ADMIN</button>
+        <button id="logoutBtn" class="btn btn-sm btn-outline hidden" data-action="handleLogout()">LOGOUT</button>
       </div>
     </div>
   </header>
 
   <!-- Floating Menu Trigger (appears when header hides) -->
-  <button class="persistent-trigger" onclick="showHeader()" type="button" aria-label="Show Header" title="Show Header">
+  <button class="persistent-trigger" data-action="showHeader()" type="button" aria-label="Show Header" title="Show Header">
     <span></span>
     <span></span>
     <span></span>
@@ -205,8 +205,8 @@
 
           <!-- End CTAs (appear at last step) -->
           <div class="sh-cta" id="sh-cta">
-            <button class="sh-btn-primary" onclick="navigateToSection('report')">I found something</button>
-            <button class="sh-btn-ghost"   onclick="navigateToSection('found')">
+            <button class="sh-btn-primary" data-action="navigateToSection('report')">I found something</button>
+            <button class="sh-btn-ghost"   data-action="navigateToSection('found')">
               I lost something <span class="sh-circle">↗</span>
             </button>
           </div>
@@ -267,11 +267,11 @@
           </label>
           <span class="fp-drag-hint">or drag &amp; drop a photo of what you lost &mdash; visual search</span>
           <div class="fp-match-mode" role="radiogroup" aria-label="Matching mode">
-            <button type="button" class="fp-mode active" data-mode="fast" onclick="setMatchMode('fast')">
+            <button type="button" class="fp-mode active" data-mode="fast" data-action="setMatchMode('fast')">
               <span class="fp-mode-title">Fast</span>
               <span class="fp-mode-sub">d-hash · instant</span>
             </button>
-            <button type="button" class="fp-mode" data-mode="ai" onclick="setMatchMode('ai')">
+            <button type="button" class="fp-mode" data-mode="ai" data-action="setMatchMode('ai')">
               <span class="fp-mode-title">Accurate</span>
               <span class="fp-mode-sub">AI · slower</span>
             </button>
@@ -289,7 +289,7 @@
             <div class="fp-scan-main">
               <div class="fp-scan-head">
                 <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
-                <button type="button" class="fp-scan-clear" onclick="clearFindPhoto()" aria-label="Clear photo and results">
+                <button type="button" class="fp-scan-clear" data-action="clearFindPhoto()" aria-label="Clear photo and results">
                   Clear &times;
                 </button>
               </div>
@@ -352,7 +352,7 @@
             <div id="itemsGrid" class="grid-layout"><!-- JS injected --></div>
 
             <div class="claimed-items-section">
-              <button class="btn btn-sm btn-outline toggle-claimed-btn" onclick="toggleClaimedItems()" type="button" id="toggleClaimedBtn">
+              <button class="btn btn-sm btn-outline toggle-claimed-btn" data-action="toggleClaimedItems()" type="button" id="toggleClaimedBtn">
                 SHOW PAST CLAIMED ITEMS
                 <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </button>
@@ -507,7 +507,7 @@
 
             <div class="rw-nav">
               <span></span>
-              <button type="button" class="rw-btn-next" onclick="rwNext()">
+              <button type="button" class="rw-btn-next" data-action="rwNext()">
                 Next &rarr;
               </button>
             </div>
@@ -568,8 +568,8 @@
             </div>
 
             <div class="rw-nav">
-              <button type="button" class="rw-btn-ghost" onclick="rwBack()">&larr; Back</button>
-              <button type="button" class="rw-btn-next" onclick="rwNext()">Next &rarr;</button>
+              <button type="button" class="rw-btn-ghost" data-action="rwBack()">&larr; Back</button>
+              <button type="button" class="rw-btn-next" data-action="rwNext()">Next &rarr;</button>
             </div>
           </div>
         </div>
@@ -587,7 +587,7 @@
             <div class="rw-summary-card">
               <div class="rw-summary-header">
                 <span class="rw-summary-tag">FOUND ITEM</span>
-                <button type="button" class="rw-edit-btn" onclick="rwGoTo(1)">Edit</button>
+                <button type="button" class="rw-edit-btn" data-action="rwGoTo(1)">Edit</button>
               </div>
               <p class="rw-summary-title" id="rwSumTitle">—</p>
               <div class="rw-summary-meta">
@@ -647,14 +647,14 @@
               <span class="rw-toggle-pill" aria-hidden="true"></span>
             </button>
 
-            <button type="button" class="rw-btn-submit" id="rwSubmitBtn" onclick="rwSubmit()">
+            <button type="button" class="rw-btn-submit" id="rwSubmitBtn" data-action="rwSubmit()">
               Submit Report
             </button>
             <p class="rw-submit-error" id="rwSubmitError" role="alert"></p>
-            <p class="rw-legal">By submitting you agree to our&nbsp;<a href="#" onclick="event.preventDefault()">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
+            <p class="rw-legal">By submitting you agree to our&nbsp;<a href="#" data-action="preventDefault">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
 
             <div class="rw-nav">
-              <button type="button" class="rw-btn-ghost" onclick="rwBack()">&larr; Back</button>
+              <button type="button" class="rw-btn-ghost" data-action="rwBack()">&larr; Back</button>
             </div>
           </div>
         </div>
@@ -690,16 +690,16 @@
             </div>
 
             <div class="rw-success-actions">
-              <button type="button" class="rw-btn-next" onclick="navigateToSection('browse')">
+              <button type="button" class="rw-btn-next" data-action="navigateToSection('browse')">
                 View Feed
               </button>
-              <button type="button" class="rw-btn-ghost" onclick="navigateToSection('hero')">
+              <button type="button" class="rw-btn-ghost" data-action="navigateToSection('hero')">
                 Dashboard
               </button>
             </div>
 
             <p class="rw-start-over">
-              Found something else? <a href="#" onclick="event.preventDefault(); rwReset()">File another report</a>
+              Found something else? <a href="#" data-action="preventDefault; rwReset()">File another report</a>
             </p>
           </div>
         </div>
@@ -785,7 +785,7 @@
 
               <div class="rw-nav">
                 <span></span>
-                <button type="button" class="rw-btn-next" onclick="cwNext()">Next &rarr;</button>
+                <button type="button" class="rw-btn-next" data-action="cwNext()">Next &rarr;</button>
               </div>
             </div>
           </div>
@@ -843,8 +843,8 @@
               </div>
 
               <div class="rw-nav">
-                <button type="button" class="rw-btn-ghost" onclick="cwBack()">&larr; Back</button>
-                <button type="button" class="rw-btn-next"  onclick="cwNext()">Next &rarr;</button>
+                <button type="button" class="rw-btn-ghost" data-action="cwBack()">&larr; Back</button>
+                <button type="button" class="rw-btn-next"  data-action="cwNext()">Next &rarr;</button>
               </div>
             </div>
           </div>
@@ -862,7 +862,7 @@
               <div class="rw-summary-card">
                 <div class="rw-summary-header">
                   <span class="rw-summary-tag">CLAIMING ITEM</span>
-                  <button type="button" class="rw-edit-btn" onclick="cwGoTo(1)">Change</button>
+                  <button type="button" class="rw-edit-btn" data-action="cwGoTo(1)">Change</button>
                 </div>
                 <p class="rw-summary-title" id="cwRevItem">—</p>
                 <div class="rw-summary-meta">
@@ -884,7 +884,7 @@
               <div class="rw-summary-card">
                 <div class="rw-summary-header">
                   <span class="rw-summary-tag">YOUR INFO</span>
-                  <button type="button" class="rw-edit-btn" onclick="cwGoTo(2)">Edit</button>
+                  <button type="button" class="rw-edit-btn" data-action="cwGoTo(2)">Edit</button>
                 </div>
                 <div class="rw-summary-meta">
                   <div class="rw-summary-field">
@@ -902,14 +902,14 @@
                 </div>
               </div>
 
-              <button type="button" class="rw-btn-submit" id="cwSubmitBtn" onclick="cwSubmit()">
+              <button type="button" class="rw-btn-submit" id="cwSubmitBtn" data-action="cwSubmit()">
                 Submit Claim
               </button>
               <p class="rw-submit-error" id="cwSubmitErr" role="alert"></p>
-              <p class="rw-legal">By submitting you agree to our <a href="#" onclick="event.preventDefault()">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
+              <p class="rw-legal">By submitting you agree to our <a href="#" data-action="preventDefault">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
 
               <div class="rw-nav">
-                <button type="button" class="rw-btn-ghost" onclick="cwBack()">&larr; Back</button>
+                <button type="button" class="rw-btn-ghost" data-action="cwBack()">&larr; Back</button>
               </div>
             </div>
           </div>
@@ -945,13 +945,13 @@
               </div>
 
               <div class="rw-success-actions">
-                <button type="button" class="rw-btn-next"  onclick="navigateToSection('found')">Browse Items</button>
-                <button type="button" class="rw-btn-ghost" onclick="navigateToSection('dashboard')">My Dashboard</button>
+                <button type="button" class="rw-btn-next"  data-action="navigateToSection('found')">Browse Items</button>
+                <button type="button" class="rw-btn-ghost" data-action="navigateToSection('dashboard')">My Dashboard</button>
               </div>
 
               <p class="rw-start-over">
                 Claiming something else?
-                <a href="#" onclick="event.preventDefault(); cwReset()">Start a new claim</a>
+                <a href="#" data-action="preventDefault; cwReset()">Start a new claim</a>
               </p>
             </div>
           </div>
@@ -1010,7 +1010,7 @@
             </div>
 
             <!-- Quick Action / New -->
-            <button class="bento-card card-small-span action-card" onclick="navigateToSection('report')" type="button"
+            <button class="bento-card card-small-span action-card" data-action="navigateToSection('report')" type="button"
               aria-label="Create New Report" title="Create New Report">
               <div class="action-content">
                 <span class="action-label">INITIATE</span>
@@ -1032,7 +1032,7 @@
             <h2>SYSTEM OVERSIGHT</h2>
           </div>
           <div class="admin-actions">
-            <button class="btn btn-sm btn-outline" onclick="apiSync()">FORCE SYSTEM SYNC</button>
+            <button class="btn btn-sm btn-outline" data-action="apiSync()">FORCE SYSTEM SYNC</button>
           </div>
         </div>
 
@@ -1099,7 +1099,7 @@
             <div class="bento-card card-large-span">
               <div class="card-header">
                 <h3>SYSTEM AUDIT LOG</h3>
-                <button class="btn btn-sm btn-outline" onclick="renderAdminAudit()">REFRESH</button>
+                <button class="btn btn-sm btn-outline" data-action="renderAdminAudit()">REFRESH</button>
               </div>
               <div class="audit-log-container">
                 <div class="audit-header">
@@ -1127,7 +1127,7 @@
     <div class="modal-box large">
       <div class="modal-header">
         <h3>ITEM DETAILS</h3>
-        <button onclick="closeModal()" class="close-btn">X</button>
+        <button data-action="closeModal()" class="close-btn">X</button>
       </div>
       <div class="modal-body">
         <h2 id="modalTitle">TITLE</h2>
@@ -1145,7 +1145,7 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-primary" onclick="navigateToSection('claim'); closeModal();">CLAIM THIS ITEM</button>
+          <button class="btn btn-primary" data-action="navigateToSection('claim'); closeModal()">CLAIM THIS ITEM</button>
         </div>
       </div>
     </div>
@@ -1156,7 +1156,7 @@
     <div class="modal-box large">
       <div class="modal-header">
         <h3 id="adminModalTitle">REQUEST DETAILS</h3>
-        <button onclick="closeAdminDetailModal()" class="close-btn">X</button>
+        <button data-action="closeAdminDetailModal()" class="close-btn">X</button>
       </div>
       <div id="adminModalContent" class="modal-body">
         <!-- Content injected by JS -->
@@ -1171,7 +1171,7 @@
     <div class="modal-box small">
       <div class="modal-header">
         <h3 id="settingsModalTitle">ACCESSIBILITY</h3>
-        <button onclick="toggleSettingsModal()" class="close-btn" aria-label="Close settings" title="Close settings">X</button>
+        <button data-action="toggleSettingsModal()" class="close-btn" aria-label="Close settings" title="Close settings">X</button>
       </div>
       <div class="modal-body settings-body">
         <div class="setting-item">
@@ -1213,9 +1213,9 @@
             <span class="setting-desc">Increase interface font size</span>
           </div>
           <div class="scale-controls">
-            <button class="scale-btn" onclick="updateAccessibility('font', 'down')">-</button>
+            <button class="scale-btn" data-action="updateAccessibility('font', 'down')">-</button>
             <span id="fontScaleDisplay">100%</span>
-            <button class="scale-btn" onclick="updateAccessibility('font', 'up')">+</button>
+            <button class="scale-btn" data-action="updateAccessibility('font', 'up')">+</button>
           </div>
         </div>
       </div>
@@ -1230,6 +1230,7 @@
   <!-- GSAP for micro-interactions -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
+  <script src="js/handlers.js"></script>
   <script src="js/config.js"></script>
   <script src="js/state.js"></script>
   <script src="js/utils.js"></script>

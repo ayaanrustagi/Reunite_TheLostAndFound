@@ -309,7 +309,7 @@ function handleFindFile(file) {
         preview.src = e.target.result;
         preview.classList.remove('hidden');
         if (window.fpMatchMode === 'ai') runAiMatch(e.target.result);
-        else simulateAiScan();
+        else runDHashScan();
     };
     reader.readAsDataURL(file);
 }
@@ -355,7 +355,7 @@ function setMatchMode(mode) {
     const preview = document.getElementById('findPhotoPreview');
     if (preview && !preview.classList.contains('hidden') && preview.src) {
         if (window.fpMatchMode === 'ai') runAiMatch(preview.src);
-        else simulateAiScan();
+        else runDHashScan();
     }
 }
 window.setMatchMode = setMatchMode;
@@ -510,8 +510,9 @@ function previewFileClaim() {
 }
 window.previewFileClaim = previewFileClaim;
 
-async function simulateAiScan() {
-    // pretend to be smart with images
+// Fast mode: on-device perceptual d-hash + dominant-color matching.
+// No network required — runs entirely in the browser.
+async function runDHashScan() {
     const fileInput = document.getElementById('findItemPhoto');
     const preview = document.getElementById('findPhotoPreview');
     const container = document.getElementById('aiMatchContainer');
@@ -603,7 +604,7 @@ async function simulateAiScan() {
             </div>`;
     }
 }
-window.simulateAiScan = simulateAiScan;
+window.runDHashScan = runDHashScan;
 
 
 async function approveItem(id) {

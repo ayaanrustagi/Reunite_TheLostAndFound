@@ -20,9 +20,7 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
     };
 
     try {
-        console.log("SENDING EMAIL TO:", finalEmail);
         await client.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, templateParams, window.EMAILJS_PUBLIC_KEY);
-        console.log(`EMAIL SENT SUCCESSFULLY`);
     } catch (err) {
         console.error("EMAIL FAILED:", err);
         alert(`EMAIL ERROR: ${err.text || "Recipient missing"}\n\nFIX: Go to EmailJS Dashboard -> Settings Tab -> Set "To Email" to {{to_email}}`);
