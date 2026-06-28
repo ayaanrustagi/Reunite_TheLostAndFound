@@ -320,6 +320,16 @@ function previewFileFind() {
 }
 window.previewFileFind = previewFileFind;
 
+function clearFindPhoto() {
+    const fileInput = document.getElementById('findItemPhoto');
+    const preview = document.getElementById('findPhotoPreview');
+    const container = document.getElementById('aiMatchContainer');
+    if (fileInput) fileInput.value = '';
+    if (preview) { preview.src = ''; preview.classList.add('hidden'); }
+    if (container) container.classList.remove('active');
+}
+window.clearFindPhoto = clearFindPhoto;
+
 // Wire up drag-and-drop on the visual bar
 document.addEventListener('DOMContentLoaded', function () {
     const bar = document.getElementById('fpVisualBar');
@@ -566,6 +576,7 @@ async function simulateAiScan() {
 
 
     if (scoredMatches.length > 0) {
+        label.textContent = `SCAN COMPLETE — ${scoredMatches.length} MATCH${scoredMatches.length > 1 ? 'ES' : ''} FOUND`;
         results.innerHTML = '<div class="ai-results-header">TOP D-HASHING MATCHES FOUND:</div>' +
             scoredMatches.map(m => `
                 <button class="list-item start-hidden ai-match-item" onclick="openItemModal('${m.id}')" type="button" aria-label="View details for ${m.title}" title="View details for ${m.title}">
@@ -583,6 +594,7 @@ async function simulateAiScan() {
                 </button>
             `).join('');
     } else {
+        label.textContent = 'SCAN COMPLETE — NO MATCHES';
         results.innerHTML = `
             <div class="ai-no-match">
                 <div class="ai-no-match-icon"></div>

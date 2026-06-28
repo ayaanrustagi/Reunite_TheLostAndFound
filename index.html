@@ -256,7 +256,7 @@
         <!-- Visual search bar — horizontal toolbar above the grid -->
         <div class="fp-visual-bar" id="fpVisualBar">
           <label class="fp-upload-btn" for="findItemPhoto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
@@ -265,8 +265,7 @@
             Upload photo
             <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
           </label>
-          <span class="fp-drag-hint">or drag &amp; drop — visual search · D-hashing</span>
-          <img id="findPhotoPreview" class="photo-preview hidden" alt="Preview">
+          <span class="fp-drag-hint">or drag &amp; drop a photo of what you lost &mdash; visual search</span>
           <div class="fp-match-mode" role="radiogroup" aria-label="Matching mode">
             <button type="button" class="fp-mode active" data-mode="fast" onclick="setMatchMode('fast')">
               <span class="fp-mode-title">Fast</span>
@@ -279,12 +278,25 @@
           </div>
         </div>
 
-        <!-- AI scan results (shown when active) -->
+        <!-- AI scan results (shown when a photo is uploaded) -->
         <div id="aiMatchContainer" class="ai-scan-container">
           <div class="scanning-line-overlay"></div>
-          <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
-          <div class="scan-progress-bar" id="aiScanProgress"></div>
-          <div id="aiMatchResults"></div>
+          <div class="fp-scan-grid">
+            <figure class="fp-scan-query">
+              <img id="findPhotoPreview" class="photo-preview hidden" alt="Your uploaded photo">
+              <figcaption>Your photo</figcaption>
+            </figure>
+            <div class="fp-scan-main">
+              <div class="fp-scan-head">
+                <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
+                <button type="button" class="fp-scan-clear" onclick="clearFindPhoto()" aria-label="Clear photo and results">
+                  Clear &times;
+                </button>
+              </div>
+              <div class="scan-progress-bar" id="aiScanProgress"></div>
+              <div id="aiMatchResults"></div>
+            </div>
+          </div>
         </div>
 
         <div class="browse-grid">

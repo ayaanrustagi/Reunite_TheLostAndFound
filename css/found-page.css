@@ -122,12 +122,13 @@
 #page-found .fp-visual-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  border: 1.5px dashed var(--border-color);
+  border-radius: 14px;
   background: rgba(0,0,0,0.015);
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 /* Upload button */
@@ -135,19 +136,21 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
+  gap: 8px;
+  padding: 11px 18px;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 10px;
   background: #ffffff;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-color);
   cursor: pointer;
   flex-shrink: 0;
-  transition: border-color 0.15s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s, color 0.15s;
 }
 #page-found .fp-upload-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
 #page-found .fp-upload-btn input[type="file"] {
@@ -159,36 +162,115 @@
 /* Drag hint text */
 #page-found .fp-drag-hint {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.08em;
   color: var(--muted-text);
   text-transform: uppercase;
   flex: 1;
 }
 
-/* Preview thumbnail once loaded */
-#page-found .fp-visual-bar .photo-preview {
-  height: 30px;
-  width: auto;
-  max-width: 60px;
-  object-fit: contain;
-  border-radius: 5px;
-  border: 1px solid var(--border-color);
-}
-
 /* Drag-over highlight on the whole bar */
 #page-found .fp-visual-bar.dragover {
   border-color: var(--accent-color);
-  background: rgba(var(--accent-rgb), 0.04);
+  background: rgba(var(--accent-rgb), 0.05);
 }
 
 /* Mode toggle inline */
 #page-found .fp-visual-bar .fp-match-mode {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 5px;
+  gap: 8px;
   flex-shrink: 0;
-  width: 190px;
+  width: 230px;
+}
+#page-found .fp-visual-bar .fp-mode {
+  padding: 8px 12px;
+}
+
+/* ── Scan results panel ───────────────────────────────────────────────────── */
+#page-found .fp-scan-grid {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Your uploaded photo — shown big on the left */
+#page-found .fp-scan-query {
+  margin: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+#page-found .fp-scan-query .photo-preview {
+  width: 132px;
+  height: 132px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  display: block;
+}
+#page-found .fp-scan-query .photo-preview.hidden { display: none; }
+#page-found .fp-scan-query figcaption {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+}
+
+#page-found .fp-scan-main {
+  flex: 1;
+  min-width: 0;
+}
+
+#page-found .fp-scan-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+#page-found #aiMatchLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--text-color);
+}
+#page-found .fp-scan-clear {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+#page-found .fp-scan-clear:hover { color: #c62828; border-color: #c62828; }
+
+/* Matches lay out as a grid of cards, not full-width rows */
+#page-found #aiMatchResults {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+#page-found #aiMatchResults .ai-results-header {
+  grid-column: 1 / -1;
+  margin: 14px 0 2px;
+}
+#page-found #aiMatchResults .ai-match-item { margin-bottom: 0; }
+#page-found #aiMatchResults .ai-no-match { grid-column: 1 / -1; }
+
+@media (max-width: 700px) {
+  #page-found .fp-scan-grid { flex-direction: column; }
+  #page-found .fp-scan-query { flex-direction: row; }
 }
 
 /* groups */
@@ -427,11 +509,12 @@
 /* AI scan overlay — hidden until a photo triggers it */
 #page-found #aiMatchContainer {
   display: none;
-  margin-top: 12px;
+  margin: 0 0 18px;
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 14px;
   background: #ffffff;
-  padding: 10px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow-soft);
 }
 #page-found #aiMatchContainer.active {
   display: block;
