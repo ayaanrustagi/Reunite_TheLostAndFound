@@ -239,8 +239,7 @@
 
     window.cwNext = function () {
         if (cwStep === 1) {
-            const itemId = document.getElementById('claimItemId').value;
-            if (!itemId) {
+            if (!cwSelectedItem) {
                 const err = document.getElementById('cwItemErr');
                 if (err) err.textContent = 'Please select an item first.';
                 return;
