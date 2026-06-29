@@ -185,7 +185,7 @@
 
 /* ── Page-level centering (sizing handled by global body zoom in base.css) ── */
 #page-claim.active {
-    padding: clamp(16px, 2vw, 24px) 1rem clamp(32px, 5vw, 64px);
+    padding: clamp(32px, 5vw, 64px) 1rem;
     min-height: calc(100vh - 5.5rem);
     box-sizing: border-box;
     display: flex !important;
