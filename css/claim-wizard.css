@@ -12,6 +12,14 @@
     scroll-margin-top: 6rem;
 }
 
+@media (max-width: 1024px) {
+    .cw-outer {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        padding-top: 1.25rem;
+    }
+}
+
 /* ── Item picker grid (step 1) ────────────────────────────────────────────── */
 .cw-item-list {
     display: flex;

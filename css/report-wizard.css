@@ -10,6 +10,14 @@
     scroll-margin-top: 6rem; /* clear the fixed header on programmatic scroll */
 }
 
+@media (max-width: 1024px) {
+    .rw-outer {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        padding-top: 1.25rem;
+    }
+}
+
 /* --- Progress indicator --- */
 .rw-progress {
     display: flex;
