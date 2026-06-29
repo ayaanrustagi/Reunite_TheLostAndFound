@@ -299,10 +299,18 @@
           </div>
         </div>
 
+        <!-- mobile-only filter toggle -->
+        <button class="fp-mobile-toggle" id="fpToggle" type="button" aria-expanded="false" aria-controls="fpFiltersPanel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          Filters
+          <span class="fp-toggle-count" id="fpActiveCount"></span>
+          <svg class="fp-toggle-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+
         <div class="browse-grid">
 
           <!-- LEFT: filter rail -->
-          <aside class="fp-filters">
+          <aside class="fp-filters" id="fpFiltersPanel">
 
             <div class="fp-group">
               <label class="fp-label">Category</label>
@@ -366,7 +374,7 @@
         </div>
       </div>
 
-      <!-- wire up the chips -->
+      <!-- wire up the chips + mobile filter toggle -->
       <script>
         (function(){
           document.querySelectorAll('#fpChips .fp-chip').forEach(function(chip){
@@ -375,8 +383,34 @@
               chip.classList.add('active');
               var sel = document.getElementById('categoryFilter');
               if (sel) { sel.value = chip.dataset.cat; window.renderFound && window.renderFound(); }
+              updateFilterCount();
             });
           });
+
+          var toggle = document.getElementById('fpToggle');
+          var panel  = document.getElementById('fpFiltersPanel');
+          if (toggle && panel) {
+            toggle.addEventListener('click', function() {
+              var open = panel.classList.toggle('open');
+              toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+          }
+
+          function updateFilterCount() {
+            var badge = document.getElementById('fpActiveCount');
+            if (!badge) return;
+            var count = 0;
+            var activeChip = document.querySelector('#fpChips .fp-chip.active');
+            if (activeChip && activeChip.dataset.cat !== '') count++;
+            var loc = document.getElementById('fpLocation');
+            if (loc && loc.value) count++;
+            var date = document.getElementById('fpDate');
+            if (date && date.value !== '7') count++;
+            badge.textContent = count > 0 ? count : '';
+          }
+
+          document.getElementById('fpLocation') && document.getElementById('fpLocation').addEventListener('change', updateFilterCount);
+          document.getElementById('fpDate') && document.getElementById('fpDate').addEventListener('change', updateFilterCount);
         })();
       </script>
     </section>

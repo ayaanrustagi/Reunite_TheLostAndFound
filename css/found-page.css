@@ -107,6 +107,68 @@
   #page-found .browse-grid { grid-template-columns: 1fr; }
 }
 
+/* ---- mobile filter toggle button (hidden on desktop) ---- */
+.fp-mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .fp-mobile-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 16px;
+    margin-bottom: 12px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: var(--font-main);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .fp-mobile-toggle .fp-toggle-chevron {
+    margin-left: auto;
+    transition: transform 0.25s;
+  }
+
+  .fp-mobile-toggle[aria-expanded="true"] .fp-toggle-chevron {
+    transform: rotate(180deg);
+  }
+
+  .fp-toggle-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--accent-color, #2563EB);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 999px;
+  }
+
+  .fp-toggle-count:empty {
+    display: none;
+  }
+
+  /* filters collapsed by default on mobile */
+  #page-found .fp-filters {
+    display: none;
+    margin-bottom: 16px;
+  }
+
+  #page-found .fp-filters.open {
+    display: block;
+  }
+}
+
 /* ---- sidebar (filters) ---- */
 #page-found .fp-filters {
   background: var(--panel-bg);
