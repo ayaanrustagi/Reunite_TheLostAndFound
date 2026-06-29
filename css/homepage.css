@@ -29,6 +29,15 @@
   justify-content: center;
 }
 
+/* body zoom:0.9 shrinks 100vh to 90% of the actual screen height on desktop —
+   compensate so the stage truly fills the viewport and bottom-anchored CTAs
+   land at the real bottom edge. */
+@media (min-width: 1025px) {
+  .scrollhero-stage {
+    height: calc(100vh / 0.9);
+  }
+}
+
 .scrollhero-canvas {
   position: absolute;
   inset: 0;
@@ -240,7 +249,7 @@
 .sh-counter {
   position: absolute;
   left: 50%;
-  bottom: 34px;
+  bottom: 74px;
   transform: translateX(-50%);
   font-family: var(--mana-mono);
   font-size: 12px;
@@ -259,7 +268,7 @@
 .sh-cta {
   position: absolute;
   left: 50%;
-  bottom: 10px;
+  bottom: 18px;
   transform: translateX(-50%) translateY(20px);
   display: flex;
   gap: 14px;
