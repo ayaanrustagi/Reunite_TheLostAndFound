@@ -17,9 +17,9 @@ to found inventory.
 
 We moved away from generic templates to build a custom Liquid Glass design system.
 
-- **Glassmorphism**: Layered transparency with `backdrop-filter: blur()` for depth.
-- **Bento Logic**: Dashboards use a proportional "Bento Grid" for high information density without clutter.
-- **Micro-interactions**: Hardware-accelerated animations using CSS `transform` and `opacity` to keep performance smooth on low-end devices.
+- **Liquid Glass**: Layered transparency with `backdrop-filter: blur()` for depth.
+- **Bento Grid**: Dashboards use a proportional **Bento Grid** for high information density without clutter.
+- **Micro-interactions**: Custom, lag-free animations using CSS `transform` and `opacity` to keep performance smooth on low-end devices.
 
 ## Technical Architecture (MVC)
 
