@@ -240,7 +240,7 @@
 .sh-counter {
   position: absolute;
   left: 50%;
-  bottom: 96px;
+  bottom: 34px;
   transform: translateX(-50%);
   font-family: var(--mana-mono);
   font-size: 12px;
@@ -259,7 +259,7 @@
 .sh-cta {
   position: absolute;
   left: 50%;
-  bottom: 34px;
+  bottom: 10px;
   transform: translateX(-50%) translateY(20px);
   display: flex;
   gap: 14px;
@@ -389,9 +389,15 @@
    so every phone AND tablet-portrait gets this static hero.
    ============================================================= */
 @media (max-width: 1024px) {
+
   /* Kill the 440vh height (set inline on #sh-wrapper) and the pinning. */
-  #page-hero { min-height: auto !important; }
-  .scrollhero { height: auto !important; }
+  #page-hero {
+    min-height: auto !important;
+  }
+
+  .scrollhero {
+    height: auto !important;
+  }
 
   .scrollhero-stage {
     position: relative;
@@ -403,23 +409,39 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 5.5rem 1.1rem 3rem;   /* clear the floating header */
+    padding: 5.5rem 1.1rem 3rem;
+    /* clear the floating header */
     gap: 1.5rem;
   }
 
   /* backdrop blobs full-width so they don't crop weirdly */
-  .mb-item.mb-blob { width: 92% !important; }
+  .mb-item.mb-blob {
+    width: 92% !important;
+  }
 
   /* hide chrome that only makes sense in the pinned scroll version */
   .sh-ghostnum,
   .sh-rail,
-  .sh-counter { display: none !important; }
+  .sh-counter {
+    display: none !important;
+  }
 
   /* stack order: headline → key → steps → CTAs (DOM has canvas first) */
-  .sh-intro            { order: 1; }
-  .scrollhero-canvas   { order: 2; }
-  .sh-steps            { order: 3; }
-  .sh-cta              { order: 4; }
+  .sh-intro {
+    order: 1;
+  }
+
+  .scrollhero-canvas {
+    order: 2;
+  }
+
+  .sh-steps {
+    order: 3;
+  }
+
+  .sh-cta {
+    order: 4;
+  }
 
   /* intro headline — static, always visible (override JS inline styles) */
   .sh-intro {
@@ -431,8 +453,16 @@
     padding: 0 6px;
     margin: 0;
   }
-  .sh-intro h1 { font-size: clamp(40px, 11vw, 60px); }
-  .sh-cue { display: none; }   /* "scroll to explore" no longer applies */
+
+  .sh-intro h1 {
+    font-size: clamp(40px, 11vw, 60px);
+  }
+
+  .sh-cue {
+    display: none;
+  }
+
+  /* "scroll to explore" no longer applies */
 
   /* the 3D key gets its own fixed-height box instead of a full-screen layer */
   .scrollhero-canvas {
@@ -454,9 +484,13 @@
     width: 100%;
     pointer-events: auto;
   }
+
   .sh-step {
     position: static;
-    right: auto; left: auto; top: auto; bottom: auto;
+    right: auto;
+    left: auto;
+    top: auto;
+    bottom: auto;
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -470,9 +504,19 @@
     border: 1px solid var(--mana-rule);
     border-radius: 18px;
   }
-  .sh-step h3 { font-size: clamp(22px, 6vw, 32px); }
-  .sh-step p  { font-size: 14px; line-height: 1.55; }
-  .sh-k       { margin-bottom: 10px; }
+
+  .sh-step h3 {
+    font-size: clamp(22px, 6vw, 32px);
+  }
+
+  .sh-step p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .sh-k {
+    margin-bottom: 10px;
+  }
 
   /* CTAs — static, always visible, full-width stacked */
   .sh-cta {
@@ -486,6 +530,7 @@
     align-items: stretch;
     margin-top: 0.5rem;
   }
+
   .sh-cta .sh-btn-primary,
   .sh-cta .sh-btn-ghost {
     width: 100%;
@@ -497,8 +542,19 @@
 
 /* very small phones: trim the key + type a touch more */
 @media (max-width: 480px) {
-  .sh-intro h1 { font-size: clamp(34px, 10vw, 48px); }
-  .scrollhero-canvas { height: 240px; }
-  .sh-step h3 { font-size: 22px; }
-  .sh-step p  { font-size: 13px; }
+  .sh-intro h1 {
+    font-size: clamp(34px, 10vw, 48px);
+  }
+
+  .scrollhero-canvas {
+    height: 240px;
+  }
+
+  .sh-step h3 {
+    font-size: 22px;
+  }
+
+  .sh-step p {
+    font-size: 13px;
+  }
 }
