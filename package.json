@@ -27,9 +27,12 @@
   },
   "homepage": "https://github.com/ayaanrustagi/Reunite_TheLostAndFound#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
     "mongodb-memory-server": "^11.0.1",
     "mongoose": "^9.2.0",
     "multer": "^2.0.2",
