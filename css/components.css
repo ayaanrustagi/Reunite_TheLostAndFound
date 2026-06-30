@@ -427,10 +427,12 @@
     flex-wrap: wrap;
     gap: 8px;
     padding: 14px clamp(1rem, 4vw, 3rem);
-    background: var(--panel-bg);
+    background: var(--bg-color, #f8f9fb);
     border-top: 1px solid var(--border-color);
     font-size: 12px;
     color: var(--muted-text, #6A7180);
+    position: relative;
+    z-index: 2;
 }
 
 .sfb-copy { font-family: var(--font-mono, monospace); }
