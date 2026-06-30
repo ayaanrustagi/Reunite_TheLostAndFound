@@ -239,6 +239,22 @@ button.persistent-trigger {
     top: 1rem;
 }
 
+/* Keyboard focus ring — visible on Tab, hidden on mouse click.
+   Uses !important to restore visibility where other rules suppress outline. */
+:focus-visible {
+    outline: 3px solid var(--accent-color, #2563EB) !important;
+    outline-offset: 3px !important;
+    border-radius: 4px !important;
+}
+
+/* Chips, round buttons — keep ring tight to the shape */
+.fp-chip:focus-visible,
+.sh-btn-primary:focus-visible,
+.sh-btn-ghost:focus-visible,
+.btn:focus-visible {
+    border-radius: 999px !important;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

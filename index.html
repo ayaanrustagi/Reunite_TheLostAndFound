@@ -1154,6 +1154,74 @@
 
   </main>
 
+  <!-- ── Site footer ───────────────────────────────────────────────────────── -->
+  <footer class="site-footer-bar" aria-label="Site footer">
+    <span class="sfb-copy">&copy; 2026 REUNITE &mdash; Rouse High School FBLA</span>
+    <button class="sfb-link" type="button" data-action="openSourcesModal()">Sources &amp; Attribution</button>
+  </footer>
+
+  <!-- ── Sources modal ─────────────────────────────────────────────────────── -->
+  <div id="sourcesModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="sourcesModalTitle">
+    <div class="modal-box large sources-modal-box">
+      <div class="modal-header">
+        <h3 id="sourcesModalTitle">Sources &amp; Attribution</h3>
+        <button data-action="closeSourcesModal()" class="close-btn" aria-label="Close sources">&#10005;</button>
+      </div>
+      <div class="modal-body sources-body">
+
+        <p class="sources-note">All application code, UI, branding, and the on-device d-hash / Levenshtein matching logic are original work by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh). Third-party libraries and the Groq / Llama&nbsp;4 Scout AI service used by the Accurate match mode are credited below.</p>
+
+        <h4>Fonts</h4>
+        <table class="sources-table">
+          <thead><tr><th>Asset</th><th>License</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://fonts.google.com/specimen/Inter" target="_blank" rel="noopener">Inter</a> (Google Fonts)</td><td>SIL Open Font License</td></tr>
+            <tr><td><a href="https://fonts.google.com/specimen/Roboto+Mono" target="_blank" rel="noopener">Roboto Mono</a> (Google Fonts)</td><td>Apache 2.0</td></tr>
+            <tr><td><a href="https://fonts.google.com/specimen/Bricolage+Grotesque" target="_blank" rel="noopener">Bricolage Grotesque</a> (Google Fonts)</td><td>SIL Open Font License</td></tr>
+            <tr><td><a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener">JetBrains Mono</a> (Google Fonts)</td><td>SIL Open Font License</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Backend Libraries</h4>
+        <table class="sources-table">
+          <thead><tr><th>Library</th><th>Purpose</th><th>License</th></tr></thead>
+          <tbody>
+            <tr><td>Node.js / Express</td><td>Server runtime &amp; REST API</td><td>MIT</td></tr>
+            <tr><td>Mongoose</td><td>MongoDB object modelling</td><td>MIT</td></tr>
+            <tr><td>mongodb-memory-server</td><td>In-memory DB fallback for evaluation</td><td>MIT</td></tr>
+            <tr><td>bcryptjs</td><td>Password hashing (salted, 12 rounds)</td><td>MIT</td></tr>
+            <tr><td>helmet</td><td>HTTP security headers</td><td>MIT</td></tr>
+            <tr><td>express-rate-limit</td><td>Brute-force &amp; DoS protection</td><td>MIT</td></tr>
+            <tr><td>Multer</td><td>Multipart file-upload handling</td><td>MIT</td></tr>
+            <tr><td>CORS / dotenv / nedb-promises</td><td>Cross-origin, env config, embedded DB</td><td>MIT / BSD-2</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Frontend Libraries</h4>
+        <table class="sources-table">
+          <thead><tr><th>Library</th><th>Purpose</th><th>License</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://threejs.org/" target="_blank" rel="noopener">Three.js</a></td><td>WebGL 3D hero animation</td><td>MIT</td></tr>
+            <tr><td><a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a></td><td>Interactive campus map</td><td>BSD-2-Clause</td></tr>
+            <tr><td><a href="https://gsap.com/" target="_blank" rel="noopener">GSAP</a></td><td>Scroll &amp; UI animations</td><td>GreenSock No-Charge</td></tr>
+            <tr><td><a href="https://www.emailjs.com/" target="_blank" rel="noopener">EmailJS SDK</a></td><td>OTP email delivery (client-side)</td><td>Terms of Service</td></tr>
+            <tr><td><a href="https://feathericons.com/" target="_blank" rel="noopener">Feather Icons</a></td><td>UI icon set</td><td>MIT</td></tr>
+          </tbody>
+        </table>
+
+        <h4>AI / Machine Learning</h4>
+        <table class="sources-table">
+          <thead><tr><th>Service</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://groq.com/" target="_blank" rel="noopener">Groq API</a></td><td>Low-latency inference for Accurate match mode</td></tr>
+            <tr><td>Llama&nbsp;4 Scout (Meta AI)</td><td>Multimodal model comparing lost-item photos against inventory; Llama&nbsp;4 Community License</td></tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
 
 
   <!-- ITEM MODAL -->

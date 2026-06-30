@@ -13,6 +13,16 @@
     // Convenience used by a couple of links that previously inlined assignments.
     window.goLogin = function () { window.location.href = 'login.html'; };
 
+    // Sources & Attribution modal
+    window.openSourcesModal = function () {
+        const m = document.getElementById('sourcesModal');
+        if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    };
+    window.closeSourcesModal = function () {
+        const m = document.getElementById('sourcesModal');
+        if (m) { m.classList.add('hidden'); document.body.style.overflow = ''; }
+    };
+
     function parseArgs(raw) {
         const inner = raw.trim();
         if (inner === '') return [];
