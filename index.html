@@ -389,10 +389,27 @@
 
           var toggle = document.getElementById('fpToggle');
           var panel  = document.getElementById('fpFiltersPanel');
+          var grid   = document.querySelector('#page-found .browse-grid');
+
+          function setFiltersOpen(open) {
+            panel.classList.toggle('open', open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (grid) grid.classList.toggle('filters-collapsed', !open);
+          }
+
           if (toggle && panel) {
+            // Default open on desktop, closed on mobile
+            setFiltersOpen(window.innerWidth > 1024);
+
             toggle.addEventListener('click', function() {
-              var open = panel.classList.toggle('open');
-              toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+              setFiltersOpen(!panel.classList.contains('open'));
+            });
+
+            window.addEventListener('resize', function() {
+              // Auto-open on resize to desktop if currently collapsed
+              if (window.innerWidth > 1024 && !panel.classList.contains('open')) {
+                setFiltersOpen(true);
+              }
             });
           }
 
