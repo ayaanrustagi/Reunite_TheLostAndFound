@@ -425,11 +425,11 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 14px clamp(1rem, 4vw, 3rem);
+    gap: 6px;
+    padding: 7px clamp(1rem, 4vw, 3rem);
     background: var(--bg-color, #f8f9fb);
     border-top: 1px solid var(--border-color);
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted-text, #6A7180);
     position: relative;
     z-index: 2;
