@@ -338,7 +338,8 @@ body {
     body::before,
     body.auth-page::before,
     .modal-overlay,
-    .loading-overlay {
+    .loading-overlay,
+    .main-nav.mobile-open {
         zoom: calc(1 / 0.85);
     }
 

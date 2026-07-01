@@ -1172,3 +1172,100 @@
         padding-top: 1.25rem !important;
     }
 }
+
+/* =============================================================
+   MOBILE FULLSCREEN NAV — dark, centered, borderless.
+   Authoritative override (source-order wins over the earlier
+   1024/768 drawer rules). Coverage bug (drawer only filling 85%
+   of screen under body zoom:0.85) is fixed by the counter-zoom on
+   .main-nav.mobile-open in base.css.
+   ============================================================= */
+@media (max-width: 1024px) {
+    .main-nav {
+        background: #0e1726 !important;          /* deep ink overlay */
+        gap: 0.15rem !important;
+        padding: 5.5rem 1.5rem 2.5rem !important;
+        justify-content: center !important;
+        overflow-y: auto !important;
+    }
+
+    /* Primary nav links: large white text, no boxes */
+    .main-nav > .nav-btn {
+        font-family: var(--font-display, 'Bricolage Grotesque', sans-serif);
+        font-size: 1.65rem !important;
+        font-weight: 700 !important;
+        text-transform: none !important;
+        letter-spacing: -0.01em !important;
+        color: rgba(255, 255, 255, 0.92) !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 0.65rem 1rem !important;
+    }
+
+    .main-nav > .nav-btn::after { display: none !important; }
+
+    .main-nav > .nav-btn:hover,
+    .main-nav > .nav-btn:active,
+    .main-nav > .nav-btn.active {
+        color: #fff !important;
+        background: transparent !important;
+        opacity: 0.75;
+    }
+
+    /* Secondary actions: pill buttons */
+    .mobile-nav-actions {
+        border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        margin-top: 2.25rem !important;
+        padding-top: 1.75rem !important;
+        gap: 0.7rem !important;
+        width: 100% !important;
+        max-width: 340px !important;
+    }
+
+    .mobile-nav-actions .nav-btn {
+        font-family: var(--font-mono) !important;
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.12em !important;
+        background: transparent !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 999px !important;
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0.85rem 1.5rem !important;
+    }
+
+    .mobile-nav-actions .nav-btn::after { display: none !important; }
+
+    .mobile-nav-actions .nav-btn:hover,
+    .mobile-nav-actions .nav-btn:active {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #fff !important;
+        border-color: rgba(255, 255, 255, 0.35) !important;
+    }
+
+    /* Primary CTA — Sign in / Dashboard get a filled accent pill */
+    #mobileLoginBtn:not(.hidden),
+    #mobileDashboardBtn:not(.hidden) {
+        background: var(--accent-color) !important;
+        color: #fff !important;
+        border-color: var(--accent-color) !important;
+    }
+    #mobileLoginBtn:hover,
+    #mobileDashboardBtn:hover {
+        background: var(--accent-deep) !important;
+        border-color: var(--accent-deep) !important;
+    }
+
+    /* Close (X) button — solid white chip, floats above the dark overlay */
+    .menu-toggle.active {
+        background: #fff !important;
+        border-color: transparent !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+        z-index: 1100;
+    }
+}
