@@ -388,182 +388,167 @@
 }
 
 /* =============================================================
-   MOBILE HERO (≤860px) — un-pin the 440vh WebGL scroll experience.
-   On phones the sticky 100vh stage fights the browser address bar
-   and the scroll-scrubbed step reveals leave the page looking blank.
-   Here we collapse it into a normal, always-visible stacked screen:
-   headline → 3D key → step cards → CTAs. JS skips the scroll logic
-   on mobile (see homepage.js) so nothing fades out as you scroll.
-   Breakpoint matches the desktop-zoom boundary (min-width:1025px),
-   so every phone AND tablet-portrait gets this static hero.
+   MOBILE HERO (≤1024px) — single fullscreen stage that auto-cycles
+   through the four steps. The 3D key lerps to a new pose on each
+   step change; ghost number and progress dots are re-enabled.
+   JS drives the cycling (see homepage.js mobile branch).
    ============================================================= */
 @media (max-width: 1024px) {
+  #page-hero     { min-height: auto !important; }
+  .scrollhero    { height: auto !important; }
 
-  /* Kill the 440vh height (set inline on #sh-wrapper) and the pinning. */
-  #page-hero {
-    min-height: auto !important;
-  }
-
-  .scrollhero {
-    height: auto !important;
-  }
-
+  /* Full-viewport stage; absolute layout so every child can be
+     positioned precisely rather than fighting flex ordering. */
   .scrollhero-stage {
     position: relative;
     top: auto;
-    height: auto;
-    min-height: 0;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 5.5rem 1.1rem 3rem;
-    /* clear the floating header */
-    gap: 1.5rem;
+    height: 100vh;
+    height: 100svh; /* svh trims mobile browser chrome */
+    min-height: 580px;
+    overflow: hidden;
+    display: block;
+    padding: 0;
   }
 
-  /* backdrop blobs full-width so they don't crop weirdly */
-  .mb-item.mb-blob {
-    width: 92% !important;
+  /* ── Ghost number: re-enable, small + faint (opacity set by JS) ── */
+  .sh-ghostnum {
+    display: flex !important;
+    position: absolute;
+    left: -6px;
+    top: 42%;
+    transform: translateY(-50%);
+    font-size: clamp(80px, 26vw, 148px);
+    line-height: 0.8;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 1;
+    pointer-events: none;
   }
+  .sh-ghostnum .sh-gn-a { -webkit-text-stroke: 5px  #2563EB; }
+  .sh-ghostnum .sh-gn-b { -webkit-text-stroke: 1.5px #2563EB; }
 
-  /* hide chrome that only makes sense in the pinned scroll version */
-  .sh-ghostnum,
-  .sh-rail,
+  /* ── Progress rail: re-enable, horizontal row ── */
+  .sh-rail {
+    display: flex !important;
+    position: absolute;
+    bottom: 6.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 12px;
+    z-index: 4;
+  }
+  .sh-rail .dot { width: 7px; height: 7px; }
+
+  /* ── Step counter ── */
   .sh-counter {
-    display: none !important;
+    position: absolute;
+    left: 50%;
+    bottom: 5.9rem;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 4;
   }
 
-  /* stack order: headline → key → steps → CTAs (DOM has canvas first) */
+  /* ── Intro headline: top-center, always visible ── */
   .sh-intro {
-    order: 1;
-  }
-
-  .scrollhero-canvas {
-    order: 2;
-  }
-
-  .sh-steps {
-    order: 3;
-  }
-
-  .sh-cta {
-    order: 4;
-  }
-
-  /* intro headline — static, always visible (override JS inline styles) */
-  .sh-intro {
-    position: static;
+    position: absolute;
+    top: 4.75rem;
+    left: 0;
+    right: 0;
     transform: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
+    text-align: center;
+    padding: 0 1.25rem;
     max-width: 100%;
-    padding: 0 6px;
-    margin: 0;
+    z-index: 3;
   }
+  .sh-intro h1 { font-size: clamp(34px, 9.5vw, 52px); }
+  .sh-cue { display: none; }
 
-  .sh-intro h1 {
-    font-size: clamp(40px, 11vw, 60px);
-  }
-
-  .sh-cue {
-    display: none;
-  }
-
-  /* "scroll to explore" no longer applies */
-
-  /* the 3D key gets its own fixed-height box instead of a full-screen layer */
+  /* ── 3D canvas: center-stage ── */
   .scrollhero-canvas {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    max-width: 460px;
-    height: 300px;
-    margin: 0 auto;
+    position: absolute;
+    top: 39%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(360px, 88vw);
+    height: clamp(200px, 35vw, 270px);
+    z-index: 2;
   }
 
-  /* steps become a static, centred vertical stack of cards */
+  /* ── Step cards: overlaid, one visible at a time ── */
   .sh-steps {
-    position: static;
-    inset: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
+    position: absolute;
+    bottom: 7.75rem;
+    left: 1rem;
+    right: 1rem;
+    height: 148px;
+    display: block;
     pointer-events: auto;
   }
-
   .sh-step {
-    position: static;
-    right: auto;
-    left: auto;
-    top: auto;
-    bottom: auto;
+    position: absolute;
+    inset: 0;
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 1.4rem 1.5rem;
-    transform: none !important;
-    opacity: 1 !important;
+    padding: 1.1rem 1.4rem;
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     text-align: center;
-    background: rgba(255, 255, 255, 0.72);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--mana-rule);
+    background: rgba(255, 255, 255, 0.84);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(15, 20, 25, 0.08);
     border-radius: 18px;
   }
-
-  .sh-step h3 {
-    font-size: clamp(22px, 6vw, 32px);
+  .sh-step.active {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
   }
+  .sh-step h3 { font-size: clamp(18px, 5vw, 26px); margin: 0 0 0.4rem; }
+  .sh-step p  { font-size: 13px; line-height: 1.5; }
+  .sh-k       { margin-bottom: 8px; font-size: 11px; }
 
-  .sh-step p {
-    font-size: 14px;
-    line-height: 1.55;
-  }
-
-  .sh-k {
-    margin-bottom: 10px;
-  }
-
-  /* CTAs — static, always visible, full-width stacked */
+  /* ── CTAs: pinned to bottom, always visible ── */
   .sh-cta {
-    position: static;
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1rem;
+    right: 1rem;
     transform: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    width: 100%;
+    display: flex;
+    flex-direction: row;
     gap: 10px;
-    flex-direction: column;
-    align-items: stretch;
-    margin-top: 0.5rem;
+    z-index: 4;
   }
-
   .sh-cta .sh-btn-primary,
   .sh-cta .sh-btn-ghost {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     justify-content: center;
-    padding: 13px 20px;
-    font-size: 14px;
-  }
-}
-
-/* very small phones: trim the key + type a touch more */
-@media (max-width: 480px) {
-  .sh-intro h1 {
-    font-size: clamp(34px, 10vw, 48px);
-  }
-
-  .scrollhero-canvas {
-    height: 240px;
-  }
-
-  .sh-step h3 {
-    font-size: 22px;
-  }
-
-  .sh-step p {
+    padding: 12px 14px;
     font-size: 13px;
   }
+  .sh-cta .sh-circle { display: none; }
+
+  .mb-item.mb-blob { width: 92% !important; }
+}
+
+/* Very small phones: tighten further */
+@media (max-width: 480px) {
+  .sh-intro h1   { font-size: clamp(28px, 9vw, 40px); }
+  .scrollhero-canvas { height: 200px; top: 36%; }
+  .sh-steps      { height: 135px; bottom: 7.25rem; }
+  .sh-step h3    { font-size: 17px; }
+  .sh-step p     { font-size: 12px; }
+  .sh-rail       { bottom: 6.25rem; }
+  .sh-counter    { bottom: 5.4rem; }
+  .sh-cta        { bottom: 1rem; }
 }

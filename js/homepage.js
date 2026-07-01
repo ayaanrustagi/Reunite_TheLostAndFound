@@ -108,28 +108,68 @@
     /* ---- scroll tick ---- */
     var clock   = new THREE.Clock();
     var curX    = 0, lastIdx = -2, facingTarget = 0;
+    var mobileStep = 0, mobileStepStart = -1, mobileKeyTarget = 0;
     var raf;   // animation-frame handle (was an undeclared global → strict-mode ReferenceError)
     var stepEls = stepsEl ? Array.from(stepsEl.children) : [];
     var dotEls  = railEl  ? Array.from(railEl.children)  : [];
 
+    // Mobile: prime step 0 as active before the first rAF fires
+    if (window.innerWidth <= 1024) {
+      stepEls.forEach(function (el, i) { el.classList.toggle('active', i === 0); });
+      dotEls.forEach(function (el, i)  { el.classList.toggle('on',     i === 0); });
+      if (ghostEl) {
+        ghostEl.innerHTML = '<span class="sh-gn-a">0</span><span class="sh-gn-b">1</span>';
+        ghostEl.style.opacity = '0.12';
+      }
+      if (counterEl) {
+        counterEl.textContent = '01 / 0' + SH_STEPS.length;
+        counterEl.classList.add('show');
+      }
+      if (ctaEl) ctaEl.classList.add('show');
+    }
+
     function tick() {
       var t = clock.getElapsedTime();
 
-      /* On mobile the hero is a static stacked layout (homepage.css un-pins it
-         and forces all copy visible). Don't drive the scroll-scrubbed intro /
-         step / CTA reveals here — that would fade the headline out as the user
-         scrolls the page. Just idle-spin the key and bail. */
+      /* Mobile hero: full-screen auto-cycling slideshow.
+         CSS pins the stage to 100svh; JS cycles step cards every 3 s,
+         lerps the key to a new pose each time, and drives the ghost
+         number + progress dots exactly like the desktop scroll does. */
       if (window.innerWidth <= 1024) {
         if (introEl && introEl.style.opacity !== '') {
           introEl.style.opacity = '';
           introEl.style.transform = '';
           introEl.style.pointerEvents = '';
         }
-        key.rotation.y += 0.004;
-        key.rotation.z = Math.sin(t * 1.2) * 0.04;
-        key.rotation.x = -0.12;
-        key.position.x = 0;
-        key.position.y = Math.sin(t * 1.0) * 0.05;
+
+        // Seed the timer on the first mobile frame
+        if (mobileStepStart < 0) mobileStepStart = t;
+
+        // Advance step every 3 seconds
+        if (t - mobileStepStart >= 3.0) {
+          mobileStepStart = t;
+          mobileStep = (mobileStep + 1) % SH_STEPS.length;
+          mobileKeyTarget += Math.PI * 0.65; // partial spin to a fresh pose
+
+          stepEls.forEach(function (el, i) { el.classList.toggle('active', i === mobileStep); });
+          dotEls.forEach(function (el, i)  { el.classList.toggle('on',     i === mobileStep); });
+          if (ghostEl) {
+            var mpair = String(mobileStep + 1).padStart(2, '0');
+            ghostEl.innerHTML =
+              '<span class="sh-gn-a">' + mpair.charAt(0) + '</span>' +
+              '<span class="sh-gn-b">' + mpair.charAt(1) + '</span>';
+          }
+          if (counterEl) {
+            counterEl.textContent =
+              String(mobileStep + 1).padStart(2, '0') + ' / 0' + SH_STEPS.length;
+          }
+        }
+
+        key.rotation.y += (mobileKeyTarget - key.rotation.y) * 0.04;
+        key.rotation.z  = Math.sin(t * 1.2) * 0.04;
+        key.rotation.x  = -0.12;
+        key.position.x  = 0;
+        key.position.y  = Math.sin(t * 1.0) * 0.05;
         renderer.render(scene, camera);
         raf = requestAnimationFrame(tick);
         return;
