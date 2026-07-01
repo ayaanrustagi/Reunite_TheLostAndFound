@@ -415,24 +415,8 @@
     gap: 0;
   }
 
-  /* ── Ghost number: decorative, absolute, behind everything ── */
-  .sh-ghostnum {
-    display: flex !important;
-    position: absolute;
-    left: -4px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: clamp(96px, 30vw, 160px);
-    line-height: 0.8;
-    opacity: 0;
-    transition: opacity 0.5s;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .sh-ghostnum .sh-gn-a { -webkit-text-stroke: 5px  #2563EB; }
-  .sh-ghostnum .sh-gn-b { -webkit-text-stroke: 1.5px #2563EB; }
-
-  /* counter is redundant with the dots on mobile — hide it */
+  /* ghost number + counter are hidden on mobile — the dots carry progress */
+  .sh-ghostnum,
   .sh-counter { display: none !important; }
 
   /* ── 1. Headline ── */
