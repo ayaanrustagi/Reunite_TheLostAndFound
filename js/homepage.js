@@ -107,7 +107,7 @@
 
     /* ---- scroll tick ---- */
     var clock   = new THREE.Clock();
-    var curX    = 0, lastIdx = -2;
+    var curX    = 0, lastIdx = -2, facingTarget = 0;
     var raf;   // animation-frame handle (was an undeclared global → strict-mode ReferenceError)
     var stepEls = stepsEl ? Array.from(stepsEl.children) : [];
     var dotEls  = railEl  ? Array.from(railEl.children)  : [];
@@ -162,9 +162,19 @@
       /* slight left-of-center drift — pulled in from -1.7 so the key
          doesn't crash into the giant ghost step numbers on the left edge */
       var targetX    = (isMobile || idx < 0) ? 0 : -0.7;
-      
-      // Hard-tie rotation for that exact "clean" reference site feel
-      key.rotation.y = targetSpin;
+
+      // On the final step, lerp the key to face straight toward the camera.
+      // Entering step 4 at ~79% scroll puts rotation.y at ~207° off-axis;
+      // snap facingTarget to the nearest full rotation (multiple of 2π) so
+      // the key smoothly swings to face-forward rather than staying edge-on.
+      if (idx === SH_STEPS.length - 1 && lastIdx !== SH_STEPS.length - 1) {
+        facingTarget = Math.round(key.rotation.y / (Math.PI * 2)) * Math.PI * 2;
+      }
+      if (idx === SH_STEPS.length - 1) {
+        key.rotation.y += (facingTarget - key.rotation.y) * 0.055;
+      } else {
+        key.rotation.y = targetSpin;
+      }
 
       // Scroll-driven diagonal lean — kicks in as we pass the intro,
       // tilts the spin axis so the key reads diagonally on screen.
