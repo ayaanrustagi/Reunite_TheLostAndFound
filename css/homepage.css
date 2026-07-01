@@ -389,104 +389,106 @@
 
 /* =============================================================
    MOBILE HERO (≤1024px) — single fullscreen stage that auto-cycles
-   through the four steps. The 3D key lerps to a new pose on each
-   step change; ghost number and progress dots are re-enabled.
+   through the four steps. Built as a FLEX COLUMN (not absolute) so
+   elements stack in a guaranteed order and can never overlap:
+     headline → 3D key → dots → step card → CTAs
+   Only the ghost number is absolute (decoration behind everything).
    JS drives the cycling (see homepage.js mobile branch).
    ============================================================= */
 @media (max-width: 1024px) {
   #page-hero     { min-height: auto !important; }
   .scrollhero    { height: auto !important; }
 
-  /* Full-viewport stage; absolute layout so every child can be
-     positioned precisely rather than fighting flex ordering. */
   .scrollhero-stage {
     position: relative;
     top: auto;
     height: 100vh;
     height: 100svh; /* svh trims mobile browser chrome */
-    min-height: 580px;
+    min-height: 600px;
     overflow: hidden;
-    display: block;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* top clears the floating header; bottom keeps CTAs off the OS bar */
+    padding: 5rem 1.1rem 1.5rem;
+    gap: 0;
   }
 
-  /* ── Ghost number: re-enable, small + faint (opacity set by JS) ── */
+  /* ── Ghost number: decorative, absolute, behind everything ── */
   .sh-ghostnum {
     display: flex !important;
     position: absolute;
-    left: -6px;
-    top: 42%;
+    left: -4px;
+    top: 50%;
     transform: translateY(-50%);
-    font-size: clamp(80px, 26vw, 148px);
+    font-size: clamp(96px, 30vw, 160px);
     line-height: 0.8;
     opacity: 0;
     transition: opacity 0.5s;
-    z-index: 1;
+    z-index: 0;
     pointer-events: none;
   }
   .sh-ghostnum .sh-gn-a { -webkit-text-stroke: 5px  #2563EB; }
   .sh-ghostnum .sh-gn-b { -webkit-text-stroke: 1.5px #2563EB; }
 
-  /* ── Progress rail: re-enable, horizontal row ── */
-  .sh-rail {
-    display: flex !important;
-    position: absolute;
-    bottom: 6.75rem;
-    left: 50%;
-    transform: translateX(-50%);
-    flex-direction: row;
-    gap: 12px;
-    z-index: 4;
-  }
-  .sh-rail .dot { width: 7px; height: 7px; }
+  /* counter is redundant with the dots on mobile — hide it */
+  .sh-counter { display: none !important; }
 
-  /* ── Step counter ── */
-  .sh-counter {
-    position: absolute;
-    left: 50%;
-    bottom: 5.9rem;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    z-index: 4;
-  }
-
-  /* ── Intro headline: top-center, always visible ── */
+  /* ── 1. Headline ── */
   .sh-intro {
-    position: absolute;
-    top: 4.75rem;
-    left: 0;
-    right: 0;
+    order: 1;
+    position: static;
     transform: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
     text-align: center;
-    padding: 0 1.25rem;
+    padding: 0 0.25rem;
     max-width: 100%;
-    z-index: 3;
-  }
-  .sh-intro h1 { font-size: clamp(34px, 9.5vw, 52px); }
-  .sh-cue { display: none; }
-
-  /* ── 3D canvas: center-stage ── */
-  .scrollhero-canvas {
-    position: absolute;
-    top: 39%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(360px, 88vw);
-    height: clamp(200px, 35vw, 270px);
+    flex-shrink: 0;
     z-index: 2;
   }
+  .sh-intro h1 { font-size: clamp(34px, 9.5vw, 50px); }
+  .sh-cue { display: none; }
 
-  /* ── Step cards: overlaid, one visible at a time ── */
+  /* ── 2. 3D key — flexible middle that soaks up free space ── */
+  .scrollhero-canvas {
+    order: 2;
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    width: min(360px, 86vw);
+    min-height: 170px;
+    max-height: 320px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  /* ── 3. Progress dots ── */
+  .sh-rail {
+    display: flex !important;
+    order: 3;
+    position: static;
+    transform: none;
+    flex-direction: row;
+    gap: 12px;
+    margin: 0 0 0.9rem;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+  .sh-rail .dot { width: 7px; height: 7px; }
+
+  /* ── 4. Step card — fixed-height stage, one card cross-fades in ── */
   .sh-steps {
-    position: absolute;
-    bottom: 7.75rem;
-    left: 1rem;
-    right: 1rem;
-    height: 148px;
+    order: 4;
+    position: relative;
+    inset: auto;
     display: block;
+    width: 100%;
+    height: 150px;
+    flex-shrink: 0;
     pointer-events: auto;
+    z-index: 2;
   }
   .sh-step {
     position: absolute;
@@ -494,46 +496,50 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 1.1rem 1.4rem;
+    padding: 1.1rem 1.3rem;
     opacity: 0 !important;
     transform: translateY(10px) !important;
     transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
                 transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     text-align: center;
-    background: rgba(255, 255, 255, 0.84);
+    background: rgba(255, 255, 255, 0.86);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(15, 20, 25, 0.08);
     border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .sh-step.active {
     opacity: 1 !important;
     transform: translateY(0) !important;
   }
-  .sh-step h3 { font-size: clamp(18px, 5vw, 26px); margin: 0 0 0.4rem; }
-  .sh-step p  { font-size: 13px; line-height: 1.5; }
+  .sh-step h3 { font-size: clamp(18px, 5vw, 25px); margin: 0 0 0.4rem; }
+  .sh-step p  { font-size: 13px; line-height: 1.5; margin: 0 auto; max-width: 92%; }
   .sh-k       { margin-bottom: 8px; font-size: 11px; }
 
-  /* ── CTAs: pinned to bottom, always visible ── */
+  /* ── 5. CTAs — bottom row, always visible ── */
   .sh-cta {
-    position: absolute;
-    bottom: 1.25rem;
-    left: 1rem;
-    right: 1rem;
+    order: 5;
+    position: static;
     transform: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
     display: flex;
     flex-direction: row;
     gap: 10px;
-    z-index: 4;
+    width: 100%;
+    margin-top: 0.9rem;
+    flex-shrink: 0;
+    z-index: 2;
   }
   .sh-cta .sh-btn-primary,
   .sh-cta .sh-btn-ghost {
     flex: 1;
     min-width: 0;
     justify-content: center;
-    padding: 12px 14px;
+    padding: 13px 14px;
     font-size: 13px;
   }
   .sh-cta .sh-circle { display: none; }
@@ -543,12 +549,9 @@
 
 /* Very small phones: tighten further */
 @media (max-width: 480px) {
-  .sh-intro h1   { font-size: clamp(28px, 9vw, 40px); }
-  .scrollhero-canvas { height: 200px; top: 36%; }
-  .sh-steps      { height: 135px; bottom: 7.25rem; }
-  .sh-step h3    { font-size: 17px; }
-  .sh-step p     { font-size: 12px; }
-  .sh-rail       { bottom: 6.25rem; }
-  .sh-counter    { bottom: 5.4rem; }
-  .sh-cta        { bottom: 1rem; }
+  .sh-intro h1       { font-size: clamp(28px, 9vw, 40px); }
+  .scrollhero-canvas { min-height: 150px; }
+  .sh-steps          { height: 138px; }
+  .sh-step h3        { font-size: 17px; }
+  .sh-step p         { font-size: 12px; }
 }
