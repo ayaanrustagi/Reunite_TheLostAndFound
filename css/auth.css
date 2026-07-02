@@ -5,12 +5,9 @@
    ========================================================================== */
 
 body.auth-page {
-    zoom: 0.9;
     margin: 0;
     padding: 6.5rem 1rem;
-    /* Counter the 0.9 zoom so the body still fills the full screen height,
-       keeping the card vertically centered on the viewport. */
-    min-height: calc(100dvh / 0.9);
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -114,6 +111,7 @@ body.auth-page .site-header {
 }
 
 .auth-form-card {
+    zoom: 0.9;
     position: relative;
     width: 100%;
     max-width: 480px;
