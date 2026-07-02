@@ -664,11 +664,6 @@ body.reduced-motion .orb-ring {
 }
 
 @media (max-height: 700px) {
-    body.auth-page {
-        padding-top: 5rem;
-        justify-content: flex-start;
-    }
-
     .auth-logo-section {
         margin-bottom: 1rem;
     }
