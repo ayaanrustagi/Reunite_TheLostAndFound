@@ -7,8 +7,10 @@
 body.auth-page {
     zoom: 0.9;
     margin: 0;
-    padding: 6.5rem 1rem 4.5rem;
-    min-height: 100dvh;
+    padding: 6.5rem 1rem;
+    /* Counter the 0.9 zoom so the body still fills the full screen height,
+       keeping the card vertically centered on the viewport. */
+    min-height: calc(100dvh / 0.9);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -645,7 +647,7 @@ body.reduced-motion .orb-ring {
 /* --- Responsive --- */
 @media (max-width: 520px) {
     body.auth-page {
-        padding: 5.5rem 1rem 4rem;
+        padding: 5.5rem 1rem;
     }
 
     .auth-form-card {
