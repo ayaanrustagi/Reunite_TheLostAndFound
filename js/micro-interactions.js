@@ -109,49 +109,8 @@
             });
         }
 
-        watchStatus(document.getElementById('authStatus'));
-        makeMagnetic(document.getElementById('authSubmitBtn'), 0.12, 0.25);
-
-        if (!hasGSAP || reduced()) return;
-
-        // Entrance choreography
-        gsap.from(card, {
-            y: 26, opacity: 0, scale: 0.985,
-            duration: 0.8, ease: 'power3.out'
-        });
-        gsap.from(card.querySelectorAll('[data-reveal]'), {
-            y: 16, opacity: 0,
-            duration: 0.65, ease: 'power3.out',
-            stagger: 0.07, delay: 0.2,
-            clearProps: 'all'
-        });
-
-        // Gentle float on the logo orb
-        var orb = card.querySelector('.logo-orb');
-        if (orb) {
-            gsap.to(orb, { y: -4, duration: 2.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-        }
-
-        // Subtle 3D tilt following the pointer
-        if (finePointer) {
-            var STRENGTH = 2.2;
-            card.addEventListener('pointermove', function (e) {
-                if (reduced()) return;
-                var r = card.getBoundingClientRect();
-                var px = (e.clientX - r.left) / r.width - 0.5;
-                var py = (e.clientY - r.top) / r.height - 0.5;
-                gsap.to(card, {
-                    rotationY: px * STRENGTH,
-                    rotationX: -py * STRENGTH,
-                    transformPerspective: 1200,
-                    duration: 0.5,
-                    ease: 'power2.out'
-                });
-            });
-            card.addEventListener('pointerleave', function () {
-                gsap.to(card, { rotationX: 0, rotationY: 0, duration: 0.7, ease: 'power3.out' });
-            });
-        }
+        // Animations intentionally disabled on the auth page — functional
+        // handlers above (password toggle, OTP filtering) are all that runs.
     }
 
     /* ---------- index: staggered reveal when a section becomes active ---------- */
@@ -195,7 +154,7 @@
 
     onReady(function () {
         initDropzones();
-        initPressFeedback();
+        if (!document.body.classList.contains('auth-page')) initPressFeedback();
 
         var authCard = document.getElementById('authCard');
         if (authCard) initAuth(authCard);
