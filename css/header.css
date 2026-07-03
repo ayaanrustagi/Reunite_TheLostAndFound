@@ -23,8 +23,14 @@
         inset 0 2px 8px rgba(255, 255, 255, 0.4),
         inset 0 -1px 1px rgba(255, 255, 255, 0.2);
 
-    border-radius: 16px;
+    border-radius: 999px;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .site-header.scrolled {

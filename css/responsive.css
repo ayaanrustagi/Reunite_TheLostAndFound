@@ -91,6 +91,15 @@
         gap: 0.5rem;
     }
 
+    .header-action-btn .btn-text {
+        display: none;
+    }
+    
+    .header-action-btn {
+        padding: 8px !important;
+        border-radius: 50% !important;
+    }
+
     /* Adjust Search for Tablet space */
     .header-search-wrap {
         width: 200px;
