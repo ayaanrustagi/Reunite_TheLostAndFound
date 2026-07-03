@@ -11,8 +11,11 @@
 }
 
 #page-dashboard .section-head h2 {
-    font-size: 1.8rem;
-    letter-spacing: 0.05em;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-color);
 }
 
 /* 1. Stats Row */
@@ -24,9 +27,19 @@
 
 .stat-card {
     background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    padding: 1rem;
-    border-radius: var(--radius-lg);
+    border: none;
+    padding: 1.5rem;
+    border-radius: 32px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
 }
 
 .stat-label {
@@ -40,10 +53,12 @@
 }
 
 .stat-value {
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-size: 2rem;
     font-weight: 800;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     color: var(--text-color);
+    line-height: 1;
 }
 
 /* 2. Bento Grid */
@@ -55,12 +70,19 @@
 }
 
 .bento-card {
-    background: var(--panel-bg);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 1rem;
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    border: none;
+    padding: 1.5rem;
+    border-radius: 32px;
+    box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.bento-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
 }
 
 .card-large-span {
@@ -140,25 +162,27 @@
 }
 
 .card-header h3 {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: 0.2em;
+    letter-spacing: -0.01em;
     color: var(--text-color);
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .head-count {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: var(--accent-color);
-    background: rgba(0, 106, 255, 0.05);
-    padding: 0.2rem 0.6rem;
+    font-weight: 700;
+    color: var(--text-color);
+    background: #f4f5f7;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
 }
 
 /* Action Card - Specially styled */
 button.action-card {
-    background: var(--text-color);
+    background: linear-gradient(135deg, var(--text-color) 0%, #2a2a2a 100%);
     color: #ffffff;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -168,9 +192,10 @@ button.action-card {
     padding: 2rem;
     text-align: left;
     border: none;
-    border-radius: var(--radius-lg);
+    border-radius: 32px;
     min-height: 220px;
     width: 100%;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
 .action-card:hover {
@@ -195,10 +220,16 @@ button.action-card {
 }
 
 .action-icon {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 300;
     margin-top: auto;
-    opacity: 0.9;
+    background: rgba(255,255,255,0.1);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .action-card h3 {
@@ -219,20 +250,20 @@ button.action-card {
 }
 
 .list-item {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 0.6rem 1rem;
+    background: #f8fafc;
+    border: none;
+    padding: 0.8rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    border-radius: var(--radius-md);
+    border-radius: 16px;
 }
 
 .list-item:hover {
-    border-color: var(--text-color);
+    background: #ffffff;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    transform: translateY(-4px);
+    transform: translateY(-2px);
 }
 
 .list-item strong {
@@ -258,12 +289,13 @@ button.action-card {
 .list-item .status-badge {
     font-family: var(--font-mono);
     font-size: 0.55rem;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid var(--border-color);
-    font-weight: 600;
+    padding: 0.35rem 0.8rem;
+    border: none;
+    font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    border-radius: var(--radius-sm);
+    border-radius: 999px;
+    background: #e2e8f0;
 }
 
 .status-badge.approved {
@@ -460,4 +492,21 @@ button.action-card {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+}
+
+/* Pastel Utility Backgrounds for Stats Cards */
+.bg-pastel-blue {
+    background: #e0f2fe;
+}
+
+.bg-pastel-green {
+    background: #dcfce7;
+}
+
+.bg-pastel-orange {
+    background: #ffedd5;
+}
+
+.bg-pastel-yellow {
+    background: #fef9c3;
 }
