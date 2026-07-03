@@ -1268,4 +1268,234 @@
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
         z-index: 1100;
     }
+
+    /* =========================================================
+       NATIVE MOBILE DASHBOARD (Replaces desktop scrollhero)
+       ========================================================= */
+    .mobile-native-dashboard {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        padding: 1.5rem 1.25rem 6.5rem; /* Room for floating nav */
+        box-sizing: border-box;
+        background: #fafafa;
+        min-height: 100vh;
+        min-height: 100dvh;
+        zoom: calc(1 / 0.85); /* Override body zoom to look native */
+    }
+
+    /* Hide desktop hero elements */
+    .scrollhero {
+        display: none !important;
+    }
+
+    /* Dashboard Header */
+    .mb-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 1rem;
+        padding-top: env(safe-area-inset-top, 0.5rem);
+    }
+
+    .mb-icon-btn {
+        background: rgba(0, 0, 0, 0.04);
+        border: none;
+        color: #000;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+        position: relative;
+    }
+
+    .mb-icon-btn:active {
+        background: rgba(0, 0, 0, 0.08);
+        transform: scale(0.95);
+    }
+
+    .mb-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid #fafafa;
+        font-family: var(--font-mono);
+    }
+
+    /* Greeting */
+    .mb-greeting {
+        margin: 1.5rem 0 2rem;
+        text-align: left;
+    }
+
+    .mb-greeting h1 {
+        font-family: var(--font-display);
+        font-size: clamp(32px, 8.5vw, 42px);
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    /* Action Grid */
+    .mb-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .mb-grid-card {
+        border-radius: 24px;
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        aspect-ratio: 1 / 1;
+        height: auto;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .mb-grid-card:active {
+        transform: scale(0.96);
+    }
+
+    .card-icon-wrap {
+        background: #fff;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+    }
+
+    .mb-grid-card span {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #0f172a;
+    }
+
+    /* Search Pill */
+    .mb-search-bar {
+        margin-top: 2rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .mb-search-bar input {
+        width: 100%;
+        padding: 1.1rem 1.5rem;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: #fff;
+        font-family: var(--font-main);
+        font-size: 0.95rem;
+        color: #0f172a;
+        box-sizing: border-box;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .mb-search-bar input::placeholder {
+        color: #94a3b8;
+    }
+
+    /* Floating Navigation */
+    .mobile-floating-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100vw - 3rem);
+        max-width: 360px;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        pointer-events: none;
+        zoom: calc(1 / 0.85); /* Override body zoom */
+    }
+
+    .mobile-floating-nav > * {
+        pointer-events: auto;
+    }
+
+    .nav-pill-left {
+        display: flex;
+        align-items: center;
+        background: #000;
+        border-radius: 999px;
+        padding: 6px;
+        gap: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-tab {
+        background: transparent;
+        border: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-tab.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    .nav-circle-right {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #000;
+        color: #fff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease;
+    }
+
+    .nav-circle-right:active {
+        transform: scale(0.92);
+    }
+}
+
+/* Hide mobile dashboard on desktop */
+@media (min-width: 1025px) {
+    .mobile-native-dashboard { display: none !important; }
+    .mobile-floating-nav { display: none !important; }
 }

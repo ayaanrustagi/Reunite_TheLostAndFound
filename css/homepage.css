@@ -396,8 +396,8 @@
    JS drives the cycling (see homepage.js mobile branch).
    ============================================================= */
 @media (max-width: 1024px) {
-  #page-hero     { min-height: auto !important; }
-  .scrollhero    { height: auto !important; }
+  #page-hero     { min-height: 100vh !important; min-height: 100dvh !important; background: #fafafa !important; padding: 0 !important; }
+  .scrollhero    { display: none !important; }
 
   .scrollhero-stage {
     position: relative;
