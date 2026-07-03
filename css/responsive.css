@@ -30,6 +30,10 @@
 /* TABLET BREAKPOINT (768px - 1024px) */
 @media (max-width: 1024px) {
 
+    .site-header {
+        border-radius: 999px !important;
+    }
+
     /* Header adjustments */
     /* Header adjustments - Activate Mobile Menu for Tablet/iPad */
     .menu-toggle {
@@ -38,9 +42,10 @@
     }
 
     .header-inner {
-        padding: 1rem 1.5rem;
+        padding: 0.75rem 1.25rem;
         flex-wrap: nowrap;
         gap: 1rem;
+        border-radius: 999px;
     }
 
     .logo-area {
