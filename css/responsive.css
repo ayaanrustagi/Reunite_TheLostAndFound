@@ -1286,11 +1286,15 @@
     /* =========================================================
        NATIVE MOBILE DASHBOARD (Replaces desktop scrollhero)
        ========================================================= */
+    #main-container {
+        padding-top: 0 !important;
+    }
+
     .mobile-native-dashboard {
         display: flex !important;
         flex-direction: column;
         width: 100%;
-        padding: 1.5rem 1.25rem 6.5rem; /* Room for floating nav */
+        padding: 5.5rem 1.25rem 6.5rem; /* Room for floating nav and site header */
         box-sizing: border-box;
         background: #fafafa;
         min-height: 100vh;
