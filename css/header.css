@@ -103,6 +103,10 @@
     pointer-events: none;
 }
 
+.mobile-nav-icons {
+    display: none;
+}
+
 /* Menu toggle stays above overlay */
 .menu-toggle.active {
     position: fixed;
