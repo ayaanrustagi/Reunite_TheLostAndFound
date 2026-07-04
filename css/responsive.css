@@ -45,37 +45,42 @@
     }
 
     .header-inner {
-        padding: 0.75rem 1.25rem;
+        padding: 0.5rem 1rem;
         flex-wrap: nowrap;
         gap: 0.5rem;
         border-radius: 999px;
-        justify-content: space-between;
+        justify-content: center;
+        width: 100%;
     }
 
     .logo-area {
-        order: 1;
-        margin-right: auto;
+        display: none !important;
     }
 
     .mobile-nav-icons {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        order: 2;
+        justify-content: space-around;
+        width: 100%;
     }
 
     .mb-nav-btn {
         background: transparent;
         border: none;
         color: #000;
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         transition: background 0.2s ease, transform 0.15s ease;
+    }
+    
+    .mb-nav-btn svg {
+        width: 24px;
+        height: 24px;
     }
 
     .mb-nav-btn:active {
@@ -1257,15 +1262,13 @@
     /* =========================================================
        NATIVE MOBILE DASHBOARD (Replaces desktop scrollhero)
        ========================================================= */
-    #main-container {
-        padding-top: 0 !important;
-    }
 
     .mobile-native-dashboard {
         display: flex !important;
         flex-direction: column;
         width: 100%;
-        padding: 5.5rem 1.25rem 6.5rem; /* Room for floating nav and site header */
+        margin-top: -6rem; /* Pull up over the waves */
+        padding: 7rem 1.25rem 6.5rem; /* Offset the negative margin and sit below header */
         box-sizing: border-box;
         background: #fafafa;
         min-height: 100vh;
@@ -1329,7 +1332,15 @@
     /* Greeting */
     .mb-greeting {
         margin: 1.5rem 0 2rem;
-        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .mb-greeting-logo {
+        height: 44px;
+        width: auto;
+        opacity: 0.9;
     }
 
     .mb-greeting h1 {
