@@ -50,7 +50,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.85rem 2rem;
+    padding: 0.4rem 2rem;
 }
 
 .logo-area {
@@ -234,6 +234,17 @@
 .persistent-trigger {
     display: none;
     /* Header is always visible, trigger no longer needed */
+}
+
+.header-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.header-action-btn svg {
+    display: none; /* Hide icon on desktop to match screenshot */
 }
 
 .nav-btn {
