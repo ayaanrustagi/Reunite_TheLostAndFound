@@ -71,60 +71,18 @@
     <span id="loadingMessage">Processing request...</span>
   </div>
 
-  <!-- Header -->
-  <header class="site-header">
+  <!-- Desktop Header (hidden on mobile) -->
+  <header class="site-header desktop-header">
     <div class="header-inner">
       <button class="logo-area" data-action="navigateToSection('hero')" type="button" aria-label="Go to Hero Section" title="Go to Hero Section">
         <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
       </button>
-      <!-- Mobile Header Nav Icons (Visible only on mobile) -->
-      <nav class="mobile-nav-icons">
-        <button class="mb-nav-btn" data-action="navigateToSection('found')" aria-label="Find Items">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <span class="mb-nav-label">Find</span>
-        </button>
-        <button class="mb-nav-btn" data-action="navigateToSection('report')" aria-label="Report Item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-            <polyline points="21 15 16 10 5 21"></polyline>
-          </svg>
-          <span class="mb-nav-label">Report</span>
-        </button>
-        <button class="mb-nav-btn" data-action="navigateToSection('claim')" aria-label="Claim Item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-            <line x1="7" y1="7" x2="7.01" y2="7"></line>
-          </svg>
-          <span class="mb-nav-label">Claim</span>
-        </button>
-        <button id="mbProfileBtn" class="mb-nav-btn" data-action="goLogin()" aria-label="Profile/Login">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span class="mb-nav-label">Login</span>
-        </button>
-      </nav>
 
       <nav class="main-nav">
         <button class="nav-btn" data-action="navigateToSection('found')">FIND ITEMS</button>
         <button class="nav-btn" data-action="navigateToSection('report')">REPORT FIND</button>
         <button class="nav-btn" data-action="navigateToSection('claim')">CLAIM ITEM</button>
-
-        <!-- Mobile-only action buttons (shown in hamburger menu) -->
-        <div class="mobile-nav-actions">
-          <button class="nav-btn" data-action="toggleSettingsModal()">ACCESSIBILITY</button>
-          <button id="mobileLoginBtn" class="nav-btn" data-action="goLogin()">SIGN IN</button>
-          <button id="mobileDashboardBtn" class="nav-btn hidden"
-            data-action="navigateToSection('dashboard')">DASHBOARD</button>
-          <button id="mobileAdminBtn" class="nav-btn hidden" data-action="navigateToSection('admin')">ADMIN</button>
-          <button id="mobileLogoutBtn" class="nav-btn hidden" data-action="handleLogout()">LOGOUT</button>
-        </div>
       </nav>
 
       <div class="header-search-wrap">
@@ -153,10 +111,6 @@
           </svg>
         </button>
         <a id="loginBtn" href="login.html" class="btn btn-sm btn-outline header-action-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
           <span class="btn-text">SIGN IN</span>
         </a>
         <button id="dashboardBtn" class="nav-btn hidden" data-action="navigateToSection('dashboard')">
@@ -170,6 +124,41 @@
         </button>
       </div>
     </div>
+  </header>
+
+  <!-- Mobile Header (hidden on desktop) -->
+  <header class="mobile-header">
+    <nav class="mobile-nav-icons">
+      <button class="mb-nav-btn" data-action="navigateToSection('found')" aria-label="Find Items">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="mb-nav-label">Find</span>
+      </button>
+      <button class="mb-nav-btn" data-action="navigateToSection('report')" aria-label="Report Item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+        <span class="mb-nav-label">Report</span>
+      </button>
+      <button class="mb-nav-btn" data-action="navigateToSection('claim')" aria-label="Claim Item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        <span class="mb-nav-label">Claim</span>
+      </button>
+      <button id="mbProfileBtn" class="mb-nav-btn" data-action="goLogin()" aria-label="Profile/Login">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="mb-nav-label">Login</span>
+      </button>
+    </nav>
   </header>
 
   <!-- Floating Menu Trigger (appears when header hides) -->

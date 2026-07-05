@@ -107,6 +107,11 @@
     display: none;
 }
 
+/* Mobile header is a separate element, hidden by default, shown via media query */
+.mobile-header {
+    display: none;
+}
+
 /* Menu toggle stays above overlay */
 .menu-toggle.active {
     position: fixed;
@@ -240,7 +245,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted-text);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.25s ease;
     gap: 6px;
+}
+
+.header-action-btn:hover {
+    color: var(--text-color);
 }
 
 .header-action-btn svg {

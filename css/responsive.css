@@ -30,34 +30,31 @@
 /* TABLET BREAKPOINT (768px - 1024px) */
 @media (max-width: 1024px) {
 
-    .site-header {
-        border-radius: 999px !important;
-    }
-
-    /* Header adjustments - Completely Redesigned Mobile Nav */
-    .menu-toggle {
+    /* Hide desktop header on mobile */
+    .desktop-header {
         display: none !important;
     }
 
-    .header-actions,
-    .header-search-wrap {
-        display: none !important;
-    }
-
-    .header-inner {
-        padding: 0.35rem 0.75rem;
-        flex-wrap: nowrap;
-        gap: 0.5rem;
+    /* Show & style mobile header */
+    .mobile-header {
+        display: block;
+        position: fixed;
+        top: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 2rem);
+        max-width: 400px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(30px) saturate(200%);
+        -webkit-backdrop-filter: blur(30px) saturate(200%);
+        border: 1px solid rgba(255, 255, 255, 0.6);
         border-radius: 999px;
-        justify-content: center;
-        width: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 0.3rem 0.5rem;
     }
 
-    .logo-area {
-        display: none !important;
-    }
-
-    .mobile-nav-icons {
+    .mobile-header .mobile-nav-icons {
         display: flex;
         align-items: center;
         justify-content: space-around;
@@ -1555,8 +1552,9 @@
     }
 }
 
-/* Hide mobile dashboard on desktop */
+/* Hide mobile elements on desktop */
 @media (min-width: 1025px) {
     .mobile-native-dashboard { display: none !important; }
     .mobile-floating-nav { display: none !important; }
+    .mobile-header { display: none !important; }
 }
