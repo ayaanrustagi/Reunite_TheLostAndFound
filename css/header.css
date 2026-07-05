@@ -131,6 +131,7 @@
 /* Main Navigation */
 .main-nav {
     display: flex;
+    align-items: center;
     gap: 0.6rem;
     /* Consistently compact */
     margin-right: auto;
@@ -181,14 +182,19 @@
 .header-settings-btn {
     flex-shrink: 0;
     margin-left: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 50%;
+    padding: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid transparent;
+    transition: all 0.25s ease;
+    background: transparent;
+    border: none;
+    color: var(--muted-text);
+    cursor: pointer;
+}
+
+.header-settings-btn:hover {
+    color: var(--text-color);
 }
 
 .header-search-wrap:focus-within {
