@@ -123,7 +123,14 @@ window.apiGetAuditLogs = apiGetAuditLogs;
 
 async function apiGetMessages(email) {
     try {
-        const res = await fetch(`${API_BASE}/messages?email=${encodeURIComponent(email)}`);
+        const session = JSON.parse(localStorage.getItem("reunite_session") || "null");
+        const headers = {};
+        if (session && session.id) {
+            headers['X-User-Id'] = session.id;
+        }
+        const res = await fetch(`${API_BASE}/messages?email=${encodeURIComponent(email)}`, {
+            headers: headers
+        });
         if (!res.ok) throw new Error("Failed to fetch messages");
         return await res.json();
     } catch (err) {

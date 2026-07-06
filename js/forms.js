@@ -730,6 +730,12 @@ async function requestClaimDetails(id) {
             `Our team is reviewing your claim for "${item?.title || 'the reported item'}". To help us verify your ownership, please reply with additional proof such as: a photo of the item, a receipt, serial numbers, or any unique identifying details. Thank you for your patience!`,
             item?.title || "Claimed Item"
         );
+        
+        // Update claim status to 'under_review'
+        const updatedClaim = { ...claim, status: 'under_review' };
+        await apiUpsert('claims', updatedClaim);
+        await apiSync();
+
         showSuccess('DETAILS REQUEST SENT');
     } catch (err) {
         hideLoading();
@@ -737,4 +743,22 @@ async function requestClaimDetails(id) {
     }
 }
 window.requestClaimDetails = requestClaimDetails;
+
+// User: Withdraw/cancel a claim from the dashboard
+async function withdrawClaim(id) {
+    if (!confirm("Are you sure you want to withdraw this claim? This action cannot be undone.")) return;
+    
+    if (window.showLoading) window.showLoading('Withdrawing claim...');
+    
+    try {
+        await apiDelete('claims', id);
+        await apiSync();
+        if (window.showSuccess) window.showSuccess('CLAIM SUCCESSFULLY WITHDRAWN');
+    } catch (err) {
+        if (window.hideLoading) window.hideLoading();
+        alert('Failed to withdraw claim.');
+    }
+}
+window.withdrawClaim = withdrawClaim;
+
    

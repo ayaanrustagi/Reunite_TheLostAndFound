@@ -237,6 +237,9 @@ function renderFpCard(item, idx) {
     `;
 }
 window.renderFpCard = renderFpCard;
+window.fpCategoryHue = fpCategoryHue;
+window.FP_CAT_HUE = FP_CAT_HUE;
+
 
 function renderClaimedItems(claimedItems) {
     const grid = document.getElementById('claimedItemsGrid');
@@ -351,21 +354,155 @@ async function renderDashboard() {
         `;
     }).join('') : '<div class="status-msg">NO REPORTS LOGGED</div>';
 
-    if (claimsEl) claimsEl.innerHTML = myClaims.length ? myClaims.map(c => {
-        const item = window.items.find(i => i.id === c.item_id);
-        const isAppr = (c.status || "").toLowerCase().trim() === 'approved';
-        return `
-            <div class="list-item">
-                <div class="item-info">
-                  <div class="ref-code">CLAIM ID: ${c.id.substring(6, 14).toUpperCase()}</div>
-                  <strong>${item?.title || 'Unknown Item'}</strong>
+    if (claimsEl) {
+        window.expandedClaims = window.expandedClaims || new Set();
+        claimsEl.innerHTML = myClaims.length ? myClaims.map(c => {
+            const item = window.items.find(i => i.id === c.item_id);
+            const status = (c.status || 'pending').toLowerCase().trim();
+            
+            let step1Class = 'awaiting';
+            let step2Class = 'awaiting';
+            let step3Class = 'awaiting';
+            let progressWidth = '0%';
+            
+            if (status === 'approved' || status === 'claimed') {
+                step1Class = 'completed';
+                step2Class = 'completed';
+                step3Class = 'completed';
+                progressWidth = '100%';
+            } else if (status === 'under_review') {
+                step1Class = 'completed';
+                step2Class = 'active';
+                step3Class = 'awaiting';
+                progressWidth = '50%';
+            } else {
+                step1Class = 'active';
+                step2Class = 'awaiting';
+                step3Class = 'awaiting';
+                progressWidth = '0%';
+            }
+
+            const claimIdUpper = c.id.substring(6, 14).toUpperCase();
+            const itemTitle = item ? item.title : 'Unknown Item';
+            const formattedDate = c.created_at ? new Date(c.created_at).toLocaleDateString() : 'Recent';
+            const itemLocation = item ? item.location : 'N/A';
+            const itemCategory = item ? item.category : 'N/A';
+            const itemDate = item && item.date_found ? new Date(item.date_found).toLocaleDateString() : 'N/A';
+            const isExpanded = window.expandedClaims.has(c.id) ? 'expanded' : '';
+
+            return `
+                <div class="claim-container-card ${isExpanded}" id="claim-card-${c.id}">
+                    <!-- Simulation Badge -->
+                    <button class="claim-simulation-badge" onclick="event.stopPropagation(); window.toggleSimulationMenu(event, '${c.id}')" title="Simulate Status Change">
+                        Simulate
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                    </button>
+                    
+                    <!-- Floating Simulation Menu -->
+                    <div class="claim-simulation-menu hidden" id="sim-menu-${c.id}" onclick="event.stopPropagation();">
+                        <button onclick="window.simulateClaimStatus('${c.id}', 'pending')">Pending (Submitted)</button>
+                        <button onclick="window.simulateClaimStatus('${c.id}', 'under_review')">Under Review</button>
+                        <button onclick="window.simulateClaimStatus('${c.id}', 'approved')">Approved & Ready</button>
+                    </div>
+
+                    <div class="claim-card-header" onclick="window.toggleClaimDetails('${c.id}')">
+                        <div class="title-group">
+                            <span class="ref-code">CLAIM ID: ${claimIdUpper}</span>
+                            <h4>${itemTitle}</h4>
+                        </div>
+                        <button class="toggle-arrow" aria-label="Toggle Details">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                    </div>
+
+                    <!-- Stepper component -->
+                    <div class="claim-stepper-container">
+                        <div class="claim-stepper-track"></div>
+                        <div class="claim-stepper-progress" style="width: ${progressWidth}"></div>
+                        
+                        <!-- Step 1 -->
+                        <div class="claim-stepper-step ${step1Class}">
+                            <div class="step-dot">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="step-label">Submitted</span>
+                            <div class="step-tooltip">Claim successfully received. Awaiting review by administrators.</div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="claim-stepper-step ${step2Class}">
+                            <div class="step-dot">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="step-label">Under Review</span>
+                            <div class="step-tooltip">Administrators are reviewing proof of ownership details.</div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="claim-stepper-step ${step3Class}">
+                            <div class="step-dot">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="step-label">Ready for Pickup</span>
+                            <div class="step-tooltip">Claim approved! Please visit the office to collect your item.</div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded Drawer -->
+                    <div class="claim-details-expanded">
+                        <div class="expanded-grid">
+                            <div class="details-block">
+                                <h5>Claim Information</h5>
+                                <p><strong>Claimed On:</strong> ${formattedDate}</p>
+                                <p><strong>Proof Description:</strong> ${c.description || 'No description provided.'}</p>
+                                
+                                <h5 style="margin-top: 0.75rem;">Item Details</h5>
+                                <p><strong>Found On:</strong> ${itemDate}</p>
+                                <p><strong>Found At:</strong> ${itemLocation}</p>
+                                <p><strong>Category:</strong> ${itemCategory}</p>
+                            </div>
+                            <div class="details-block">
+                                <h5>Proof Attachment</h5>
+                                ${c.image || c.proof_image ? `
+                                    <div class="proof-img-container" onclick="window.openClaimLightbox('${c.image || c.proof_image}', '${itemTitle}')">
+                                        <img src="${c.image || c.proof_image}" alt="Proof of ownership for ${itemTitle}">
+                                    </div>
+                                ` : '<p style="color: var(--muted-text); font-style: italic;">No proof image attached.</p>'}
+                                
+                                <h5 style="margin-top: 0.75rem;">Activity History</h5>
+                                <div class="claim-activity-logs">
+                                    <div class="log-entry">
+                                        <div class="log-dot"></div>
+                                        <div class="log-text">Claim initialized & submitted</div>
+                                        <div class="log-time">${formattedDate}</div>
+                                    </div>
+                                    ${status === 'under_review' || status === 'approved' || status === 'claimed' ? `
+                                        <div class="log-entry">
+                                            <div class="log-dot"></div>
+                                            <div class="log-text">Claim marked under review by admin</div>
+                                            <div class="log-time">${formattedDate}</div>
+                                        </div>
+                                    ` : ''}
+                                    ${status === 'approved' || status === 'claimed' ? `
+                                        <div class="log-entry">
+                                            <div class="log-dot"></div>
+                                            <div class="log-text">Claim verified & item marked as claimed</div>
+                                            <div class="log-time">${formattedDate}</div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="claim-card-actions">
+                            <button class="btn-claim-action withdraw" onclick="window.withdrawClaim('${c.id}')">Withdraw Claim</button>
+                            ${item ? `<button class="btn-claim-action message" onclick="window.messageAdminAboutItem('${item.id}')">Message Admin</button>` : ''}
+                        </div>
+                    </div>
                 </div>
-                <div class="status-badge ${isAppr ? 'approved' : 'pending'}">
-                  ${(c.status || "PENDING").toUpperCase()}
-                </div>
-            </div>
-        `;
-    }).join('') : '<div class="status-msg">NO CLAIMS IN PROGRESS</div>';
+            `;
+        }).join('') : '<div class="status-msg">NO CLAIMS IN PROGRESS</div>';
+    }
 
     // Fetch and render messages
     if (messagesEl) {
@@ -532,3 +669,135 @@ async function renderAdminAudit() {
     }
 }
 window.renderAdminAudit = renderAdminAudit;
+
+// =========================================================================
+// Interactive Claims Stepper & Simulation Helper Handlers
+// =========================================================================
+
+// Toggle expanded claim card details
+window.toggleClaimDetails = function(claimId) {
+    const card = document.getElementById(`claim-card-${claimId}`);
+    if (!card) return;
+    
+    window.expandedClaims = window.expandedClaims || new Set();
+    if (window.expandedClaims.has(claimId)) {
+        window.expandedClaims.delete(claimId);
+        card.classList.remove('expanded');
+    } else {
+        window.expandedClaims.add(claimId);
+        card.classList.add('expanded');
+    }
+};
+
+// Toggle claim status simulator dropdown menu
+window.toggleSimulationMenu = function(event, claimId) {
+    event.stopPropagation();
+    
+    // Close other open simulation menus first
+    document.querySelectorAll('.claim-simulation-menu').forEach(menu => {
+        if (menu.id !== `sim-menu-${claimId}`) {
+            menu.classList.add('hidden');
+        }
+    });
+
+    const menu = document.getElementById(`sim-menu-${claimId}`);
+    if (menu) {
+        menu.classList.toggle('hidden');
+    }
+};
+
+// Close simulation menus when clicking elsewhere
+document.addEventListener('click', () => {
+    document.querySelectorAll('.claim-simulation-menu').forEach(menu => {
+        menu.classList.add('hidden');
+    });
+});
+
+// Update claim status on the database and re-render dashboard
+window.simulateClaimStatus = async function(claimId, newStatus) {
+    const claim = window.claims.find(c => c.id === claimId);
+    if (!claim) return;
+    
+    const updatedClaim = { ...claim, status: newStatus };
+    
+    if (window.showLoading) window.showLoading(`Simulating status update to ${newStatus.replace('_', ' ')}...`);
+    
+    // Update local claims state immediately for smoother transition
+    claim.status = newStatus;
+    
+    // Auto-update parent item status for logical flow
+    if (newStatus === 'approved') {
+        const item = window.items.find(i => i.id === claim.item_id);
+        if (item) {
+            item.status = 'claimed';
+            await window.apiUpsert('items', item);
+        }
+    } else {
+        const item = window.items.find(i => i.id === claim.item_id);
+        if (item && item.status === 'claimed') {
+            item.status = 'approved'; // Re-approve item for inventory
+            await window.apiUpsert('items', item);
+        }
+    }
+    
+    const success = await window.apiUpsert('claims', updatedClaim);
+    if (success) {
+        await window.apiSync();
+        if (window.showSuccess) window.showSuccess(`STATUS SET TO ${newStatus.toUpperCase()}`);
+    } else {
+        if (window.hideLoading) window.hideLoading();
+    }
+};
+
+// Message admin/finder helper
+window.messageAdminAboutItem = function(itemId) {
+    sessionStorage.setItem('reunite_selected_id', itemId);
+    if (window.openSendMessageModal) {
+        window.openSendMessageModal();
+    }
+};
+
+// Full-screen image lightbox modal
+window.openClaimLightbox = function(imgSrc, itemTitle) {
+    let lightbox = document.getElementById('claim-lightbox');
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.id = 'claim-lightbox';
+        lightbox.style.position = 'fixed';
+        lightbox.style.top = '0';
+        lightbox.style.left = '0';
+        lightbox.style.width = '100vw';
+        lightbox.style.height = '100vh';
+        lightbox.style.background = 'rgba(15, 20, 25, 0.9)';
+        lightbox.style.backdropFilter = 'blur(10px)';
+        lightbox.style.webkitBackdropFilter = 'blur(10px)';
+        lightbox.style.zIndex = '99999';
+        lightbox.style.display = 'flex';
+        lightbox.style.flexDirection = 'column';
+        lightbox.style.alignItems = 'center';
+        lightbox.style.justifyContent = 'center';
+        lightbox.style.cursor = 'zoom-out';
+        lightbox.style.opacity = '0';
+        lightbox.style.transition = 'opacity 0.3s ease';
+        
+        lightbox.innerHTML = `
+            <img id="claim-lightbox-img" src="" style="max-width: 90%; max-height: 85%; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); object-fit: contain;">
+            <p id="claim-lightbox-title" style="color: #ffffff; font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-top: 1.5rem;"></p>
+        `;
+        
+        lightbox.addEventListener('click', () => {
+            lightbox.style.opacity = '0';
+            setTimeout(() => lightbox.style.display = 'none', 300);
+        });
+        
+        document.body.appendChild(lightbox);
+    }
+    
+    document.getElementById('claim-lightbox-img').src = imgSrc;
+    document.getElementById('claim-lightbox-title').textContent = `Proof Image — ${itemTitle}`;
+    lightbox.style.display = 'flex';
+    requestAnimationFrame(() => {
+        lightbox.style.opacity = '1';
+    });
+};
+

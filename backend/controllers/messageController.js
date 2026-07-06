@@ -1,12 +1,22 @@
 const connectDB = require('../db');
 const Message = require('../models/Message');
+const User = require('../models/User');
 const { logAudit } = require('../utils/auditLogger');
 
 exports.getMyMessages = async (req, res) => {
     try {
         await connectDB();
         const { email } = req.query;
+        const requester_id = req.headers['x-user-id'] || req.query.requester_id;
+
         if (!email) return res.status(400).json({ error: "Email parameter is required" });
+        if (!requester_id) return res.status(401).json({ error: "Authentication required" });
+
+        // Verify that the requester ID matches the email being queried
+        const user = await User.findOne({ _id: requester_id }).lean();
+        if (!user || user.email !== email) {
+            return res.status(403).json({ error: "Unauthorized access to messages" });
+        }
 
         const messages = await Message.find({ recipient_email: email }).sort({ created_at: -1 }).lean();
         const mappedMessages = messages.map(m => ({ ...m, id: m._id }));
