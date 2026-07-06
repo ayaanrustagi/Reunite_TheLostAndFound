@@ -633,6 +633,12 @@
               <label for="rw_itemDescription">Description</label>
               <textarea id="rw_itemDescription" rows="3" placeholder="Color, brand, any identifying features…"
                 oninput="document.getElementById('itemDescription').value=this.value"></textarea>
+              <div class="rw-ai-desc-container">
+                <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc">
+                  <span class="ai-sparkle">✨</span> Generate description from photo
+                </button>
+                <span id="rwAiDescStatus" class="rw-ai-desc-status hidden"></span>
+              </div>
               <span class="rw-err" role="alert"></span>
             </div>
 
@@ -1330,31 +1336,47 @@
 
 
 
-  <!-- ITEM MODAL -->
   <div id="itemModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-box large">
-      <div class="modal-header">
-        <h3>ITEM DETAILS</h3>
-        <button data-action="closeModal()" class="close-btn">X</button>
-      </div>
-      <div class="modal-body">
-        <h2 id="modalTitle">TITLE</h2>
-        <img id="modalImage" class="modal-photo hidden" alt="Item">
-        <div id="modalLocation" class="meta-tag">LOCATION</div>
-        <p id="modalDescription" class="desc-text"></p>
-        <div class="meta-grid">
-          <div class="meta-item">
-            <label>CONTACT</label>
-            <span id="modalContactName"></span>
-          </div>
-          <div class="meta-item">
-            <label>DATE</label>
-            <span id="modalDate"></span>
-          </div>
+    <div class="modal-box large item-detail-modal">
+      <button data-action="closeModal()" class="close-btn modal-close-pill" aria-label="Close details">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        Close
+      </button>
+      <div class="item-modal-content">
+        <div class="item-modal-media">
+          <img id="modalImage" class="hidden" alt="Item">
+          <div id="modalPlaceholder" class="hidden"></div>
         </div>
-        <div class="modal-actions">
-          <button class="btn btn-primary" data-action="navigateToSection('claim'); closeModal()">CLAIM THIS ITEM</button>
-          <button class="btn btn-secondary" id="openMessageBtn" data-action="openSendMessageModal()">SEND MESSAGE</button>
+        <div class="item-modal-details">
+          <span id="modalCategory" class="item-modal-category">CATEGORY</span>
+          <h2 id="modalTitle">TITLE</h2>
+          <hr class="item-modal-divider">
+          
+          <div class="item-modal-section">
+            <span class="section-label">LOCATION</span>
+            <div id="modalLocation" class="item-modal-val">LOCATION</div>
+          </div>
+          
+          <div class="item-modal-section">
+            <span class="section-label">DESCRIPTION</span>
+            <p id="modalDescription" class="item-modal-val desc-text"></p>
+          </div>
+
+          <div class="item-modal-grid">
+            <div class="item-modal-section">
+              <span class="section-label">CONTACT</span>
+              <span id="modalContactName" class="item-modal-val"></span>
+            </div>
+            <div class="item-modal-section">
+              <span class="section-label">DATE</span>
+              <span id="modalDate" class="item-modal-val"></span>
+            </div>
+          </div>
+
+          <div class="item-modal-actions">
+            <button class="btn btn-primary" data-action="navigateToSection('claim'); closeModal()">CLAIM THIS ITEM</button>
+            <button class="btn btn-secondary" id="openMessageBtn" data-action="openSendMessageModal()">SEND MESSAGE</button>
+          </div>
         </div>
       </div>
     </div>

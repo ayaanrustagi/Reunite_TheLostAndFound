@@ -761,4 +761,6 @@ async function withdrawClaim(id) {
 }
 window.withdrawClaim = withdrawClaim;
 
+window.downscaleDataUrl = downscaleDataUrl;
+
    

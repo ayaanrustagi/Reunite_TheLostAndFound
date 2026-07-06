@@ -85,23 +85,62 @@ function openItemModal(id) {
     // Store element that opened modal
     lastFocusedElement = document.activeElement;
 
+    // Calculate category hue and dynamic colors
+    const hue = window.fpCategoryHue ? window.fpCategoryHue(item.category) : 220;
+    const bg = `oklch(0.88 0.06 ${hue})`;
+    const fg = `oklch(0.40 0.14 ${hue})`;
+
+    const modal = document.getElementById('itemModal');
+    const modalBox = modal.querySelector('.modal-box');
+    if (modalBox) {
+        modalBox.style.setProperty('--modal-bg', bg);
+        modalBox.style.setProperty('--modal-fg', fg);
+    }
+
+    // Set textual details
+    const catText = (item.category || 'other').toString().toUpperCase();
+    const catEl = document.getElementById('modalCategory');
+    if (catEl) catEl.textContent = catText;
+
     document.getElementById('modalTitle').textContent = item.title;
     document.getElementById('modalLocation').textContent = item.location;
     document.getElementById('modalDescription').textContent = item.description;
     document.getElementById('modalContactName').textContent = item.contact_name;
     document.getElementById('modalDate').textContent = item.date_found;
 
+    // Manage image vs placeholder
     const modalImg = document.getElementById('modalImage');
+    const placeholderEl = document.getElementById('modalPlaceholder');
+
     if (item.image) {
         modalImg.src = item.image;
         modalImg.classList.remove('hidden');
+        if (placeholderEl) {
+            placeholderEl.classList.add('hidden');
+            placeholderEl.innerHTML = "";
+        }
     } else {
         modalImg.src = "";
         modalImg.classList.add('hidden');
+        if (placeholderEl) {
+            placeholderEl.classList.remove('hidden');
+            const patternId = 'modal-stp-' + item.id;
+            placeholderEl.innerHTML = `
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" style="width: 100%; height: 100%;">
+                  <defs>
+                    <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                      <rect width="5" height="5" fill="${bg}"/>
+                      <line x1="0" y1="0" x2="0" y2="5" stroke="${fg}" stroke-opacity="0.22" stroke-width="1"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100" height="100" fill="url(#${patternId})"/>
+                </svg>
+                <div class="fp-photo-label" style="color:${fg}">${catText}</div>
+            `;
+        }
     }
 
     sessionStorage.setItem('reunite_selected_id', id);
-    const modal = document.getElementById('itemModal');
     modal.classList.remove('hidden');
 
     // Move focus into the modal

@@ -132,4 +132,57 @@ router.post('/ai', async (req, res) => {
   }
 });
 
+router.post('/describe', async (req, res) => {
+  try {
+    if (!process.env.GROQ_API_KEY) {
+      return res.status(503).json({
+        error: 'AI description unavailable: set GROQ_API_KEY in .env to enable.'
+      });
+    }
+    const { image } = req.body || {};
+    if (!image || typeof image !== 'string' || !image.startsWith('data:image/')) {
+      return res.status(400).json({ error: 'image (data: URL) is required' });
+    }
+
+    const content = [
+      {
+        type: 'text',
+        text: 'You are an assistant that describes items found on a school campus. ' +
+              'Describe the item in the image in detail, but concisely (around 2 to 3 sentences). ' +
+              'Highlight its color, brand, any key identifying features (like stickers, cracks, logos), and its condition. ' +
+              'Do not include any greeting, meta-commentary, introductory phrases (like "This image shows"), or formatting. ' +
+              'Just output the plain text description directly.'
+      },
+      { type: 'image_url', image_url: { url: image } }
+    ];
+
+    const groqRes = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: [{ role: 'user', content }],
+        max_tokens: 300,
+        temperature: 0.3
+      })
+    });
+
+    if (!groqRes.ok) {
+      const errText = await groqRes.text().catch(() => '');
+      return res.status(502).json({ error: 'Groq error', detail: errText.slice(0, 500) });
+    }
+
+    const data = await groqRes.json();
+    const description = data?.choices?.[0]?.message?.content?.trim() || '';
+
+    res.json({ description });
+  } catch (err) {
+    console.error('match/describe error', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

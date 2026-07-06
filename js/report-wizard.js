@@ -788,6 +788,110 @@
                 }
             });
         }
+
+        /* AI Description Generator */
+        const aiDescBtn = document.getElementById('rwAiDescBtn');
+        const aiDescStatus = document.getElementById('rwAiDescStatus');
+        const descTextarea = document.getElementById('rw_itemDescription');
+        const hiddenDesc = document.getElementById('itemDescription');
+        const previewImg = document.getElementById('rwPhotoPreview');
+
+        let autoGeneratePending = false;
+
+        async function generateAiDescription(imageSrc) {
+            if (!aiDescBtn || !aiDescStatus) return;
+            aiDescStatus.textContent = 'Analyzing photo...';
+            aiDescStatus.className = 'rw-ai-desc-status loading';
+            aiDescStatus.classList.remove('hidden');
+            aiDescBtn.disabled = true;
+
+            try {
+                let compact = imageSrc;
+                if (window.downscaleDataUrl) {
+                    try {
+                        compact = await window.downscaleDataUrl(imageSrc, 768, 0.82);
+                    } catch (e) {
+                        console.error('Failed to downscale image:', e);
+                    }
+                }
+
+                const res = await fetch('/api/match/describe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ image: compact })
+                });
+
+                const ct = res.headers.get('content-type') || '';
+                let data = null;
+                if (ct.includes('application/json')) {
+                    data = await res.json();
+                } else {
+                    await res.text();
+                }
+
+                if (!res.ok || !data || !data.description) {
+                    throw new Error((data && data.error) || 'Failed to generate description.');
+                }
+
+                if (descTextarea) {
+                    descTextarea.value = data.description;
+                    descTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                if (hiddenDesc) {
+                    hiddenDesc.value = data.description;
+                }
+
+                aiDescStatus.textContent = 'Generated!';
+                aiDescStatus.className = 'rw-ai-desc-status success';
+                setTimeout(() => {
+                    aiDescStatus.classList.add('hidden');
+                }, 3000);
+            } catch (err) {
+                console.error(err);
+                aiDescStatus.textContent = err.message || 'Error occurred.';
+                aiDescStatus.className = 'rw-ai-desc-status error';
+            } finally {
+                aiDescBtn.disabled = false;
+            }
+        }
+
+        if (aiDescBtn && fileInput && previewImg) {
+            aiDescBtn.addEventListener('click', () => {
+                const hasPhoto = previewImg.src && previewImg.style.display !== 'none';
+                if (hasPhoto) {
+                    generateAiDescription(previewImg.src);
+                } else {
+                    autoGeneratePending = true;
+                    aiDescStatus.textContent = 'Please choose a photo...';
+                    aiDescStatus.className = 'rw-ai-desc-status loading';
+                    aiDescStatus.classList.remove('hidden');
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (autoGeneratePending && fileInput.files && fileInput.files[0]) {
+                    autoGeneratePending = false;
+                    const file = fileInput.files[0];
+                    if (!file.type.startsWith('image/')) {
+                        aiDescStatus.textContent = 'Invalid image file.';
+                        aiDescStatus.className = 'rw-ai-desc-status error';
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        generateAiDescription(e.target.result);
+                    };
+                    reader.onerror = () => {
+                        aiDescStatus.textContent = 'Failed to read photo.';
+                        aiDescStatus.className = 'rw-ai-desc-status error';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    autoGeneratePending = false;
+                }
+            });
+        }
     }
 
     if (document.readyState === 'loading') {
