@@ -320,3 +320,266 @@
     font-size: 0.65rem;
     border-radius: 6px;
 }
+
+/* ==========================================================================
+   DESKTOP HEADER LAYOUT AND COMPACTNESS FIX
+   Specifically targets screen widths > 1024px
+   ========================================================================== */
+@media (min-width: 1025px) {
+    /* Enforce thin pill style for desktop header container */
+    .desktop-header {
+        top: 0.75rem !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(40px) saturate(220%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(220%) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 999px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    /* Force the height and spacing inside the pill */
+    .desktop-header .header-inner {
+        height: 38px !important; /* Extremely thin, compact height! */
+        padding: 0 1.25rem !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Logo Area Sizing */
+    .desktop-header .logo-area {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        height: auto !important;
+        cursor: pointer !important;
+    }
+
+    .desktop-header .logo-img {
+        width: 1.25rem !important;
+        height: 1.25rem !important;
+        object-fit: contain !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .desktop-header .logo-text {
+        font-family: var(--font-mono) !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.1em !important;
+        font-size: 0.85rem !important;
+        text-transform: uppercase !important;
+        color: var(--text-color) !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+    }
+
+    /* Navigation Menu */
+    .desktop-header .main-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        margin-right: auto !important;
+        margin-left: 1.25rem !important;
+        padding: 0 !important;
+    }
+
+    /* Simple, thin text navigation buttons */
+    .desktop-header .nav-btn {
+        background: none !important;
+        border: none !important;
+        font-family: var(--font-mono) !important;
+        font-weight: 600 !important;
+        font-size: 0.7rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: var(--muted-text) !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+        position: relative !important;
+        padding: 0.25rem 0.6rem !important;
+        border-radius: 4px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: auto !important;
+    }
+
+    .desktop-header .nav-btn::after {
+        content: '' !important;
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0.4rem !important;
+        right: 0.4rem !important;
+        height: 2px !important;
+        background: var(--accent-color) !important;
+        transform: scaleX(0) !important;
+        transform-origin: center !important;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .desktop-header .nav-btn:hover::after,
+    .desktop-header .nav-btn.active::after {
+        transform: scaleX(1) !important;
+    }
+
+    .desktop-header .nav-btn:hover,
+    .desktop-header .nav-btn.active {
+        color: var(--text-color) !important;
+    }
+
+    .desktop-header .nav-btn.active {
+        background: rgba(0, 78, 204, 0.04) !important;
+        color: var(--accent-color) !important;
+        font-weight: 700 !important;
+        box-shadow: none !important;
+    }
+
+    /* Search Bar Wrap */
+    .desktop-header .header-search-wrap {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        background: rgba(0, 0, 0, 0.03) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 999px !important; /* Pill style search input */
+        padding: 0 0.6rem !important;
+        height: 26px !important; /* Centered, thin height */
+        width: 180px !important;
+        margin-right: 0.75rem !important;
+        margin-left: 0 !important;
+        transition: all 0.3s ease !important;
+        box-sizing: border-box !important;
+    }
+
+    .desktop-header .header-search-wrap:focus-within {
+        background: #fff !important;
+        border-color: var(--accent-color) !important;
+        width: 220px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .desktop-header .header-search-wrap .search-icon {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: var(--muted-text) !important;
+        margin-right: 0.4rem !important;
+        opacity: 0.7 !important;
+        height: auto !important;
+        width: auto !important;
+    }
+
+    .desktop-header .header-search-wrap .search-icon svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .desktop-header #headerSearchInput {
+        border: none !important;
+        background: transparent !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.7rem !important;
+        width: 100% !important;
+        outline: none !important;
+        color: var(--text-color) !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+    }
+
+    .desktop-header #headerSearchInput::placeholder {
+        color: var(--muted-text) !important;
+        font-size: 0.7rem !important;
+        opacity: 0.7 !important;
+    }
+
+    /* Actions container */
+    .desktop-header .header-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        height: 100% !important;
+    }
+
+    /* Accessibility settings gear */
+    .desktop-header .header-settings-btn {
+        padding: 0.25rem !important;
+        margin: 0 !important;
+        background: none !important;
+        border: none !important;
+        color: var(--muted-text) !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: auto !important;
+        width: auto !important;
+        transition: color 0.25s ease !important;
+    }
+
+    .desktop-header .header-settings-btn:hover {
+        color: var(--text-color) !important;
+        background: none !important;
+    }
+
+    .desktop-header .header-settings-btn svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    /* SIGN IN (loginBtn) outline button styling */
+    .desktop-header #loginBtn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 0.75rem !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.7rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: var(--text-color) !important;
+        background: transparent !important;
+        border: 1px solid var(--text-color) !important;
+        border-radius: 6px !important;
+        text-decoration: none !important;
+        height: 26px !important;
+        box-sizing: border-box !important;
+        transition: all 0.2s ease !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
+    .desktop-header #loginBtn:hover {
+        background: var(--text-color) !important;
+        color: #fff !important;
+    }
+
+    /* Strip padding/margin from .btn-text inside the header buttons to prevent stretching */
+    .desktop-header .btn-text {
+        padding: 0 !important;
+        margin: 0 !important;
+        font: inherit !important;
+        color: inherit !important;
+        background: none !important;
+        border: none !important;
+        letter-spacing: inherit !important;
+        text-transform: inherit !important;
+        display: inline !important;
+        width: auto !important;
+        height: auto !important;
+        transition: none !important;
+    }
+
+    .desktop-header .btn-text:hover {
+        transform: none !important;
+        letter-spacing: inherit !important;
+    }
+}
