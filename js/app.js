@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('reportForm')?.addEventListener('submit', window.handleReportSubmit);
     document.getElementById('claimForm')?.addEventListener('submit', window.handleClaimSubmit);
+    document.getElementById('sendMessageForm')?.addEventListener('submit', window.handleSendMessageSubmit);
 
     const header = document.querySelector('.site-header');
     const trigger = document.querySelector('.persistent-trigger');

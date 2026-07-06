@@ -1156,6 +1156,15 @@
                 <div class="action-icon">+</div>
               </div>
             </button>
+
+            <!-- Messages Panel -->
+            <div class="bento-card card-full-span messages-panel">
+              <div class="card-header">
+                <h3>INBOX / MESSAGES</h3>
+                <span class="head-count" id="messageCount">0</span>
+              </div>
+              <div id="myMessages" class="list-view"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1345,6 +1354,7 @@
         </div>
         <div class="modal-actions">
           <button class="btn btn-primary" data-action="navigateToSection('claim'); closeModal()">CLAIM THIS ITEM</button>
+          <button class="btn btn-secondary" id="openMessageBtn" data-action="openSendMessageModal()">SEND MESSAGE</button>
         </div>
       </div>
     </div>
@@ -1363,6 +1373,35 @@
     </div>
   </div>
 
+  <!-- SEND MESSAGE MODAL -->
+  <div id="sendMessageModal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+    aria-labelledby="sendMessageModalTitle">
+    <div class="modal-box small">
+      <div class="modal-header">
+        <h3 id="sendMessageModalTitle">SEND MESSAGE</h3>
+        <button data-action="closeSendMessageModal()" class="close-btn">X</button>
+      </div>
+      <div class="modal-body">
+        <form id="sendMessageForm">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="smSenderName" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your Name</label>
+            <input type="text" id="smSenderName" required placeholder="Enter your name" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="smSenderEmail" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your Email</label>
+            <input type="email" id="smSenderEmail" required placeholder="Enter your email" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="smText" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Message</label>
+            <textarea id="smText" required placeholder="Type your message here..." rows="4" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box; resize: vertical;"></textarea>
+          </div>
+          <div class="modal-actions" style="margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-primary" style="width: 100%;">SEND MESSAGE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- ACCESSIBILITY SETTINGS MODAL -->
   <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true"

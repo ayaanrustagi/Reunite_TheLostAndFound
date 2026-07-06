@@ -121,6 +121,18 @@ async function apiGetAuditLogs() {
 }
 window.apiGetAuditLogs = apiGetAuditLogs;
 
+async function apiGetMessages(email) {
+    try {
+        const res = await fetch(`${API_BASE}/messages?email=${encodeURIComponent(email)}`);
+        if (!res.ok) throw new Error("Failed to fetch messages");
+        return await res.json();
+    } catch (err) {
+        console.error("GET MESSAGES FAILED:", err);
+        return [];
+    }
+}
+window.apiGetMessages = apiGetMessages;
+
 // Initial sync is handled by app.js
 // but we expect window.items and window.claims to be available globally
 window.items = window.items || [];

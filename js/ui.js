@@ -122,6 +122,96 @@ function closeModal() {
 }
 window.closeModal = closeModal;
 
+function openSendMessageModal() {
+    const id = sessionStorage.getItem('reunite_selected_id');
+    const item = window.items.find(i => i.id === id);
+    if (!item) return;
+
+    // Prefill user details if logged in
+    const nameInput = document.getElementById('smSenderName');
+    const emailInput = document.getElementById('smSenderEmail');
+    const textInput = document.getElementById('smText');
+
+    if (window.currentUser) {
+        nameInput.value = window.currentUser.full_name || window.currentUser.name || "";
+        emailInput.value = window.currentUser.email || "";
+    } else {
+        nameInput.value = "";
+        emailInput.value = "";
+    }
+    textInput.value = "";
+
+    document.getElementById('sendMessageModal').classList.remove('hidden');
+}
+window.openSendMessageModal = openSendMessageModal;
+
+function closeSendMessageModal() {
+    document.getElementById('sendMessageModal').classList.add('hidden');
+}
+window.closeSendMessageModal = closeSendMessageModal;
+
+async function handleSendMessageSubmit(event) {
+    if (event) event.preventDefault();
+    const id = sessionStorage.getItem('reunite_selected_id');
+    const item = window.items.find(i => i.id === id);
+    if (!item) return;
+
+    const senderName = document.getElementById('smSenderName').value.trim();
+    const senderEmail = document.getElementById('smSenderEmail').value.trim();
+    const messageText = document.getElementById('smText').value.trim();
+
+    if (!senderName || !senderEmail || !messageText) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    const msgRecord = {
+        id: "msg_" + Math.random().toString(36).substr(2, 9),
+        item_id: item.id,
+        item_title: item.title || item.item_name,
+        sender_name: senderName,
+        sender_email: senderEmail,
+        recipient_email: item.contact_email || item.finder_email || "ayaanrustagi2010@gmail.com",
+        message: messageText,
+        created_at: new Date().toISOString()
+    };
+
+    if (window.showLoading) window.showLoading("Sending message...");
+    const success = await window.apiUpsert('messages', msgRecord);
+    
+    if (success) {
+        if (window.showSuccess) {
+            window.showSuccess("Message Sent!");
+        } else {
+            alert("Message sent successfully!");
+        }
+        
+        closeSendMessageModal();
+
+        // Also trigger email notification via EmailJS if enabled
+        if (window.sendEmailUpdate) {
+            try {
+                await window.sendEmailUpdate(
+                    msgRecord.recipient_email,
+                    item.finder_name || "REUNITE User",
+                    `Inquiry about: ${msgRecord.item_title}`,
+                    `Hey ${item.finder_name || "there"},\n\n` +
+                    `${msgRecord.sender_name} (${msgRecord.sender_email}) sent you a message about your item "${msgRecord.item_title}":\n\n` +
+                    `"${msgRecord.message}"\n\n` +
+                    `Log in to the dashboard to view and reply to this message.`,
+                    msgRecord.item_title
+                );
+            } catch (emailErr) {
+                console.error("EmailJS Error:", emailErr);
+            }
+        }
+    } else {
+        if (window.hideLoading) window.hideLoading();
+        alert("Failed to send message. Please try again.");
+    }
+}
+window.handleSendMessageSubmit = handleSendMessageSubmit;
+
 function openAdminDetailModal(type, id) {
     let content = '';
     const modal = document.getElementById('adminDetailModal');
@@ -227,6 +317,11 @@ window.closeAdminDetailModal = closeAdminDetailModal;
 // Keyboard "Escape" to Close
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+        const smModal = document.getElementById('sendMessageModal');
+        if (smModal && !smModal.classList.contains('hidden')) {
+            closeSendMessageModal();
+            return;
+        }
         const modal = document.getElementById('itemModal');
         if (modal && !modal.classList.contains('hidden')) {
             closeModal();

@@ -312,7 +312,7 @@ function renderClaimSelect() {
 }
 window.renderClaimSelect = renderClaimSelect;
 
-function renderDashboard() {
+async function renderDashboard() {
     // show user their history
     if (!window.currentUser) return;
     const reportsEl = document.getElementById('myReports');
@@ -322,9 +322,13 @@ function renderDashboard() {
     const repCountEl = document.getElementById('repCount');
     const claimCountEl = document.getElementById('claimCount');
     const userNameEl = document.getElementById('dashboardUserName');
+    
+    // Message inbox DOM elements
+    const messagesEl = document.getElementById('myMessages');
+    const messageCountEl = document.getElementById('messageCount');
 
-    const myReports = window.items.filter(i => i.contact_email === window.currentUser.email);
-    const myClaims = window.claims.filter(c => c.claimant_email === window.currentUser.email);
+    const myReports = window.items.filter(i => i.contact_email === window.currentUser.email || i.finder_email === window.currentUser.email);
+    const myClaims = window.claims.filter(c => c.claimant_email === window.currentUser.email || c.claimer_email === window.currentUser.email);
 
     if (userNameEl) userNameEl.textContent = window.currentUser.full_name || window.currentUser.name || "User";
     if (countActiveReportsEl) countActiveReportsEl.textContent = myReports.length;
@@ -362,6 +366,31 @@ function renderDashboard() {
             </div>
         `;
     }).join('') : '<div class="status-msg">NO CLAIMS IN PROGRESS</div>';
+
+    // Fetch and render messages
+    if (messagesEl) {
+        messagesEl.innerHTML = '<div class="status-msg">LOADING MESSAGES...</div>';
+        if (window.apiGetMessages) {
+            const myMessages = await window.apiGetMessages(window.currentUser.email);
+            if (messageCountEl) messageCountEl.textContent = myMessages.length;
+            
+            messagesEl.innerHTML = myMessages.length ? myMessages.map(m => {
+                const dateStr = m.created_at ? new Date(m.created_at).toLocaleDateString() : 'Unknown Date';
+                return `
+                    <div class="list-item">
+                        <div class="item-info" style="flex-grow: 1; margin-right: 1rem;">
+                            <strong>From: ${m.sender_name} (<a href="mailto:${m.sender_email}" style="color: var(--accent-color); text-decoration: underline;">${m.sender_email}</a>)</strong>
+                            <p style="font-size: 0.8rem; margin: 0.2rem 0; color: var(--muted-text);">Regarding item: ${m.item_title}</p>
+                            <p style="font-size: 0.85rem; margin: 0.4rem 0 0 0; white-space: pre-wrap; line-height: 1.4; color: var(--text-color);">${m.message}</p>
+                        </div>
+                        <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted-text); white-space: nowrap;">${dateStr}</span>
+                    </div>
+                `;
+            }).join('') : '<div class="status-msg">NO MESSAGES INBOX</div>';
+        } else {
+            messagesEl.innerHTML = '<div class="status-msg">MESSAGING CLIENT NOT LOADED</div>';
+        }
+    }
 
     renderDashboardTips();
 }
