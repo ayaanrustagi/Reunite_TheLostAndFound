@@ -813,12 +813,12 @@ body.reduced-motion .orb-ring {
         top: 0;
         left: 0;
         right: 0;
-        height: 3.75rem;
+        height: calc(3.75rem + env(safe-area-inset-top, 0px));
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(15, 20, 25, 0.06);
-        padding: 0 1rem !important;
+        padding: env(safe-area-inset-top, 0px) 1rem 0 !important;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -889,7 +889,7 @@ body.reduced-motion .orb-ring {
         max-width: 100% !important;
         min-height: 100vh;
         margin: 0 !important;
-        padding: 5.5rem 1.25rem 3rem !important; /* Spacing for topbar and mobile footers */
+        padding: calc(5.5rem + env(safe-area-inset-top, 0px)) 1.25rem 3rem !important; /* Spacing for topbar and mobile footers */
         border-radius: 0 !important;
         border: none !important;
         box-shadow: none !important;

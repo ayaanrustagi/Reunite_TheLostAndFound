@@ -65,6 +65,50 @@
         cwStep = toStep;
         updateCwProgress(toStep);
 
+        /* Update mobile header & footer sticky nav on step transitions */
+        const mobileHeader = document.getElementById('cw-mobile-header');
+        const mobileFooter = document.getElementById('cw-mobile-footer');
+        if (mobileHeader && mobileFooter) {
+            if (toStep >= 4) {
+                mobileHeader.style.display = 'none';
+                mobileFooter.style.display = 'none';
+            } else {
+                mobileHeader.style.display = '';
+                mobileFooter.style.display = '';
+                
+                const stepTitle = document.getElementById('cwMobileStepTitle');
+                const progressFill = document.getElementById('cwMobileProgressFill');
+                
+                const titles = {
+                    1: 'Step 1: Select Item',
+                    2: 'Step 2: Prove Ownership',
+                    3: 'Step 3: Review & Submit'
+                };
+                const widths = {
+                    1: '33.3%',
+                    2: '66.6%',
+                    3: '100%'
+                };
+                
+                if (stepTitle) stepTitle.textContent = titles[toStep] || '';
+                if (progressFill) progressFill.style.width = widths[toStep] || '0%';
+                
+                const backBtn = document.getElementById('cwMobileBackBtn');
+                if (backBtn) {
+                    backBtn.style.visibility = toStep === 1 ? 'hidden' : 'visible';
+                }
+                
+                const nextBtn = document.getElementById('cwMobileNextBtn');
+                if (nextBtn) {
+                    if (toStep === 3) {
+                        nextBtn.innerHTML = 'Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    } else {
+                        nextBtn.innerHTML = 'Next <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+                    }
+                }
+            }
+        }
+
         const heading = document.getElementById('cwH' + toStep);
         if (heading) {
             heading.setAttribute('tabindex', '-1');
@@ -254,6 +298,8 @@
             document.getElementById('claimMessage').value = document.getElementById('cw_message').value.trim();
             populateReview();
             showCwPanel(3, 'fwd');
+        } else if (cwStep === 3) {
+            cwSubmit();
         }
     };
 
@@ -271,11 +317,16 @@
 
     window.cwSubmit = async function () {
         const btn    = document.getElementById('cwSubmitBtn');
+        const mBtn   = document.getElementById('cwMobileNextBtn');
         const errEl  = document.getElementById('cwSubmitErr');
         if (!btn) return;
 
         btn.disabled    = true;
         btn.textContent = 'Submitting…';
+        if (mBtn) {
+            mBtn.disabled = true;
+            mBtn.textContent = 'Submitting…';
+        }
         errEl.textContent = '';
 
         try {
@@ -341,12 +392,20 @@
                 errEl.textContent    = 'Submission failed — please try again.';
                 btn.disabled         = false;
                 btn.textContent      = 'Submit Claim';
+                if (mBtn) {
+                    mBtn.disabled = false;
+                    mBtn.textContent = 'Submit';
+                }
             }
 
         } catch (err) {
             errEl.textContent = 'An error occurred: ' + (err.message || err);
             btn.disabled      = false;
             btn.textContent   = 'Submit Claim';
+            if (mBtn) {
+                mBtn.disabled = false;
+                mBtn.textContent = 'Submit';
+            }
         }
     };
 
@@ -381,6 +440,8 @@
         if (subErr) subErr.textContent = '';
         const btn = document.getElementById('cwSubmitBtn');
         if (btn) { btn.disabled = false; btn.textContent = 'Submit Claim'; }
+        const mBtn = document.getElementById('cwMobileNextBtn');
+        if (mBtn) { mBtn.disabled = false; mBtn.innerHTML = 'Next <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>'; }
 
         renderItemGrid();
         showCwPanel(1, 'back');

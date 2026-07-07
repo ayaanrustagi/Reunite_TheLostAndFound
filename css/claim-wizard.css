@@ -203,3 +203,156 @@
     padding-top: 0;
     margin-top: 0.25rem;
 }
+
+@media (max-width: 767px) {
+    /* Full-screen claim form on mobile */
+    #page-claim.active {
+        padding-top: 0 !important;
+        background-color: #f8f9fa !important;
+        min-height: 100vh;
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    #page-claim .cw-outer {
+        padding: 0 !important;
+        margin: 0;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 100vh;
+    }
+
+    #page-claim .rw-viewport {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #page-claim .rw-panel {
+        flex-grow: 1;
+        display: none;
+    }
+    
+    #page-claim .rw-panel.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #page-claim .rw-progress {
+        display: none !important; /* Hide circular steps navigation on mobile */
+    }
+
+    #page-claim .rw-card {
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: calc(4.75rem + env(safe-area-inset-top, 0px)) 1.25rem calc(6rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for header and sticky bottom bar */
+        gap: 1.25rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Hide default form action buttons on mobile */
+    #page-claim .rw-nav {
+        display: none !important;
+    }
+
+    /* Form Fields styled as mobile card rows */
+    #page-claim .rw-field {
+        background: #fff;
+        padding: 0.85rem 1.1rem !important;
+        border-radius: 16px;
+        border: 1px solid rgba(15, 20, 25, 0.08) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015) !important;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    #page-claim .rw-field:focus-within {
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.04) !important;
+    }
+
+    #page-claim .rw-field label {
+        font-size: 0.72rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-3);
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #page-claim .rw-field input,
+    #page-claim .rw-field select,
+    #page-claim .rw-field textarea {
+        border: none !important;
+        padding: 0.35rem 0 !important;
+        font-size: 0.98rem !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        color: var(--text-color);
+        width: 100%;
+        margin: 0 !important;
+    }
+
+    #page-claim .rw-field input:focus,
+    #page-claim .rw-field select:focus,
+    #page-claim .rw-field textarea:focus {
+        outline: none !important;
+    }
+
+    /* Row split fields stack cleanly */
+    #page-claim .rw-row {
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    #page-claim .rw-section-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        color: var(--ink-3);
+        margin: 0.5rem 0 0.25rem;
+    }
+
+    /* Item picker card overrides for mobile */
+    #page-claim .cw-item-card {
+        background: #fff;
+        border: 1px solid rgba(15, 20, 25, 0.08);
+        border-radius: 16px;
+        padding: 12px 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015);
+    }
+    #page-claim .cw-item-card:hover {
+        background: #fff;
+    }
+    #page-claim .cw-item-card.selected {
+        border-color: var(--accent-color);
+        background: rgba(var(--accent-rgb), 0.04);
+        box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.04);
+    }
+
+    #page-claim .cw-item-list {
+        max-height: none;
+        overflow-y: visible;
+    }
+}

@@ -397,7 +397,17 @@
    ============================================================= */
 @media (max-width: 1024px) {
   #page-hero     { min-height: 100vh !important; min-height: 100dvh !important; background: #fafafa !important; padding: 0 !important; }
-  .scrollhero    { display: block !important; height: auto !important; }
+  .scrollhero    {
+    display: block !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 100px !important;
+    height: 100px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 
   .scrollhero-stage {
     position: relative;

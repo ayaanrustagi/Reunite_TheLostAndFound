@@ -902,6 +902,38 @@
 
     <!-- SECTION: CLAIM -->
     <section id="page-claim" class="view-section">
+      <!-- Mobile-app Header (visible only on mobile) -->
+      <div id="cw-mobile-header" class="rw-mobile-header">
+        <button type="button" class="rw-mobile-close-btn" data-action="navigateToSection('hero')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="rw-mobile-title-container">
+          <span class="rw-mobile-eyebrow">Claim Item</span>
+          <h1 class="rw-mobile-title" id="cwMobileStepTitle">Step 1: Select Item</h1>
+        </div>
+        <div class="rw-mobile-progress-bar">
+          <div class="rw-mobile-progress-fill" id="cwMobileProgressFill" style="width: 33.3%;"></div>
+        </div>
+      </div>
+
+      <!-- Mobile-app Sticky Bottom Navigation (visible only on mobile) -->
+      <div id="cw-mobile-footer" class="rw-mobile-footer">
+        <button type="button" class="rw-m-btn-back" id="cwMobileBackBtn" data-action="cwBack()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back
+        </button>
+        <button type="button" class="rw-m-btn-next" id="cwMobileNextBtn" data-action="cwNext()">
+          Next
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
 
       <!-- Hidden legacy form — existing JS (handleClaimSubmit, validateClaimForm) reads these IDs -->
       <form id="claimForm" class="hidden" aria-hidden="true" novalidate>
