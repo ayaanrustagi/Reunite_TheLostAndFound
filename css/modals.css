@@ -381,11 +381,9 @@
     position: absolute;
     top: 15px;
     left: 15px;
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: inherit !important;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: #ff5a5f;
+    color: white !important;
+    border: none;
     padding: 8px 16px;
     border-radius: 99px;
     font-family: var(--font-mono);
@@ -396,13 +394,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+    box-shadow: 0 4px 12px rgba(255, 90, 95, 0.35);
+    transition: transform 0.2s, background-color 0.2s;
 }
 
 .modal-close-pill:hover {
-    background: rgba(255, 255, 255, 0.55);
-    border-color: rgba(255, 255, 255, 0.65);
+    background: #e0484d;
     transform: scale(1.05);
 }
 
