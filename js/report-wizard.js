@@ -59,6 +59,50 @@
         currentStep = toStep;
         updateProgress(toStep);
 
+        /* Update mobile header & footer sticky nav on step transitions */
+        const mobileHeader = document.getElementById('rw-mobile-header');
+        const mobileFooter = document.getElementById('rw-mobile-footer');
+        if (mobileHeader && mobileFooter) {
+            if (toStep >= 4) {
+                mobileHeader.style.display = 'none';
+                mobileFooter.style.display = 'none';
+            } else {
+                mobileHeader.style.display = '';
+                mobileFooter.style.display = '';
+                
+                const stepTitle = document.getElementById('rwMobileStepTitle');
+                const progressFill = document.getElementById('rwMobileProgressFill');
+                
+                const titles = {
+                    1: 'Step 1: Details',
+                    2: 'Step 2: Location & Photo',
+                    3: 'Step 3: Review & Submit'
+                };
+                const widths = {
+                    1: '33.3%',
+                    2: '66.6%',
+                    3: '100%'
+                };
+                
+                if (stepTitle) stepTitle.textContent = titles[toStep] || '';
+                if (progressFill) progressFill.style.width = widths[toStep] || '0%';
+                
+                const backBtn = document.getElementById('rwMobileBackBtn');
+                if (backBtn) {
+                    backBtn.style.visibility = toStep === 1 ? 'hidden' : 'visible';
+                }
+                
+                const nextBtn = document.getElementById('rwMobileNextBtn');
+                if (nextBtn) {
+                    if (toStep === 3) {
+                        nextBtn.innerHTML = 'Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    } else {
+                        nextBtn.innerHTML = 'Next <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+                    }
+                }
+            }
+        }
+
         /* Move focus to the new panel's heading for screen-reader users.
            preventScroll keeps the motion horizontal (no vertical jump). */
         const heading = document.getElementById('rwH' + toStep);
@@ -737,11 +781,227 @@
     window.rwReset  = rwReset;
     window.rwSubmit = rwSubmit;
 
+    let activeStream = null;
+    let currentFacingMode = 'environment';
+    let capturedDataUrl = null;
+
+    function initCustomCamera() {
+        const trigger = document.getElementById('rwCameraTriggerBtn');
+        const overlay = document.getElementById('custom-camera-overlay');
+        const video = document.getElementById('camera-video');
+        const previewImg = document.getElementById('camera-preview-img');
+        const flash = document.getElementById('camera-flash');
+        
+        const closeBtn = document.getElementById('camera-close-btn');
+        const switchBtn = document.getElementById('camera-switch-btn');
+        const shutterBtn = document.getElementById('camera-shutter-btn');
+        const galleryBtn = document.getElementById('camera-gallery-btn');
+        
+        const controlsShoot = document.getElementById('camera-controls-shoot');
+        const controlsPreview = document.getElementById('camera-controls-preview');
+        const retakeBtn = document.getElementById('camera-retake-btn');
+        const useBtn = document.getElementById('camera-use-btn');
+        
+        const errorContainer = document.getElementById('camera-error-container');
+        const errorUploadBtn = document.getElementById('camera-error-upload-btn');
+        const errorCloseBtn = document.getElementById('camera-error-close-btn');
+        const fileInput = document.getElementById('reportItemPhoto');
+
+        if (!trigger || !overlay || !video || !fileInput) return;
+
+        // Open Camera overlay
+        trigger.addEventListener('click', async () => {
+            overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // prevent scrolling page background
+            
+            // Default to rear camera if possible
+            currentFacingMode = 'environment';
+            await startCamera();
+        });
+
+        // Close Camera
+        function closeCameraOverlay() {
+            stopCamera();
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            resetCameraOverlayUI();
+        }
+
+        closeBtn.addEventListener('click', closeCameraOverlay);
+        errorCloseBtn.addEventListener('click', closeCameraOverlay);
+
+        // Switch Camera
+        switchBtn.addEventListener('click', async () => {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            await startCamera();
+        });
+
+        // Trigger Shutter click
+        shutterBtn.addEventListener('click', () => {
+            capturePhoto();
+        });
+
+        // Gallery triggers
+        galleryBtn.addEventListener('click', () => {
+            fileInput.click();
+            closeCameraOverlay();
+        });
+        errorUploadBtn.addEventListener('click', () => {
+            fileInput.click();
+            closeCameraOverlay();
+        });
+
+        // Retake
+        retakeBtn.addEventListener('click', async () => {
+            resetCameraOverlayUI();
+            await startCamera();
+        });
+
+        // Use Photo
+        useBtn.addEventListener('click', () => {
+            if (capturedDataUrl) {
+                // Apply photo to drop zone & forms
+                const photoPreview = document.getElementById('rwPhotoPreview');
+                const dropContent = document.getElementById('rwDropContent');
+                
+                if (photoPreview) {
+                    photoPreview.src = capturedDataUrl;
+                    photoPreview.style.display = 'block';
+                }
+                if (dropContent) {
+                    dropContent.style.display = 'none';
+                }
+                
+                // Sync to hidden input/image for forms.js
+                const legacyPreview = document.getElementById('reportPhotoPreview');
+                if (legacyPreview) {
+                    legacyPreview.src = capturedDataUrl;
+                    legacyPreview.classList.remove('hidden');
+                }
+                
+                // Create a File object from dataurl and assign to fileInput
+                try {
+                    const blob = dataURLtoBlob(capturedDataUrl);
+                    const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+                    
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    fileInput.files = dt.files;
+                    
+                    // Trigger change event to fire any listeners
+                    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+                } catch(e) {
+                    console.error("Failed to set file input files:", e);
+                }
+
+                closeCameraOverlay();
+            }
+        });
+
+        async function startCamera() {
+            stopCamera();
+            resetCameraOverlayUI();
+            
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: currentFacingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                };
+                
+                activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = activeStream;
+                video.style.display = 'block';
+            } catch (err) {
+                console.error("Camera getUserMedia error:", err);
+                showCameraError();
+            }
+        }
+
+        function stopCamera() {
+            if (activeStream) {
+                activeStream.getTracks().forEach(track => track.stop());
+                activeStream = null;
+            }
+            video.srcObject = null;
+        }
+
+        function capturePhoto() {
+            if (!video.srcObject) return;
+            
+            // Shutter flash effect
+            flash.classList.add('flash-active');
+            flash.addEventListener('animationend', () => {
+                flash.classList.remove('flash-active');
+            }, { once: true });
+
+            // Draw to canvas
+            const canvas = document.createElement('canvas');
+            const videoWidth = video.videoWidth || 640;
+            const videoHeight = video.videoHeight || 480;
+            canvas.width = videoWidth;
+            canvas.height = videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Handle mirror image for front camera
+            if (currentFacingMode === 'user') {
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+            }
+            
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Get JPEG data URL
+            capturedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            
+            // Stop video stream and display captured image
+            stopCamera();
+            video.style.display = 'none';
+            previewImg.src = capturedDataUrl;
+            previewImg.classList.remove('hidden');
+            
+            // Toggle controls
+            controlsShoot.classList.add('hidden');
+            controlsPreview.classList.remove('hidden');
+        }
+
+        function showCameraError() {
+            errorContainer.classList.remove('hidden');
+            controlsShoot.classList.add('hidden');
+            controlsPreview.classList.add('hidden');
+        }
+
+        function resetCameraOverlayUI() {
+            video.style.display = 'block';
+            previewImg.src = '';
+            previewImg.classList.add('hidden');
+            controlsShoot.classList.remove('hidden');
+            controlsPreview.classList.add('hidden');
+            errorContainer.classList.add('hidden');
+            capturedDataUrl = null;
+        }
+
+        // Helper: Convert Data URL to Blob
+        function dataURLtoBlob(dataurl) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {type:mime});
+        }
+    }
+
     /* ---- init on DOM ready ---- */
     function init() {
         updateProgress(1);
         initPhotoDropZone();
         initInlineValidation();
+        initCustomCamera();
 
         /* Items can't be found in the future — cap the date picker at today */
         const dateInput = document.getElementById('rw_itemDate');

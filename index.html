@@ -522,6 +522,39 @@
 
     <!-- SECTION: REPORT -->
     <section id="page-report" class="view-section">
+      <!-- Mobile-app Header (visible only on mobile) -->
+      <div id="rw-mobile-header" class="rw-mobile-header">
+        <button type="button" class="rw-mobile-close-btn" data-action="navigateToSection('hero')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="rw-mobile-title-container">
+          <span class="rw-mobile-eyebrow">Report Found Item</span>
+          <h1 class="rw-mobile-title" id="rwMobileStepTitle">Step 1: Details</h1>
+        </div>
+        <div class="rw-mobile-progress-bar">
+          <div class="rw-mobile-progress-fill" id="rwMobileProgressFill" style="width: 33.3%;"></div>
+        </div>
+      </div>
+
+      <!-- Mobile-app Sticky Bottom Navigation (visible only on mobile) -->
+      <div id="rw-mobile-footer" class="rw-mobile-footer">
+        <button type="button" class="rw-m-btn-back" id="rwMobileBackBtn" data-action="rwBack()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back
+        </button>
+        <button type="button" class="rw-m-btn-next" id="rwMobileNextBtn" data-action="rwNext()">
+          Next
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
       <!-- Hidden legacy form — field values are written here by the wizard; forms.js reads them -->
       <form id="reportForm" class="hidden" aria-hidden="true" novalidate>
         <input type="text"  id="itemTitle">
@@ -693,23 +726,37 @@
 
             <div class="rw-section-label">Photos (optional)</div>
 
-            <!-- Drop zone — the real file input lives here -->
-            <div class="rw-drop" id="rwDrop" role="button" tabindex="0"
-              aria-label="Upload item photo — click or drag and drop">
-              <input type="file" id="reportItemPhoto" accept="image/*" aria-label="Upload photo">
-              <div id="rwDropContent">
-                <div class="rw-drop-icon" aria-hidden="true">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
+            <div class="rw-photo-upload-container">
+              <!-- Drop zone — the real file input lives here -->
+              <div class="rw-drop" id="rwDrop" role="button" tabindex="0"
+                aria-label="Upload item photo — click or drag and drop">
+                <input type="file" id="reportItemPhoto" accept="image/*" aria-label="Upload photo">
+                <div id="rwDropContent">
+                  <div class="rw-drop-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <p class="rw-drop-title">Add a photo</p>
+                  <p class="rw-drop-hint">Drag here or tap to upload &middot; up to 10 MB</p>
                 </div>
-                <p class="rw-drop-title">Add a photo</p>
-                <p class="rw-drop-hint">JPEG / PNG / HEIC &middot; up to 10 MB</p>
+                <img id="rwPhotoPreview" class="rw-photo-preview" style="display:none" alt="Photo preview">
               </div>
-              <img id="rwPhotoPreview" class="rw-photo-preview" style="display:none" alt="Photo preview">
+
+              <div class="rw-photo-divider" id="rwPhotoDivider">
+                <span class="rw-photo-divider-text">OR</span>
+              </div>
+
+              <button type="button" id="rwCameraTriggerBtn" class="rw-btn-camera">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                Take Photo
+              </button>
             </div>
 
             <div class="rw-nav">
@@ -1511,6 +1558,82 @@
   <script src="js/claim-wizard.js"></script>
   <!-- Homepage hero -->
   <script src="js/homepage.js"></script>
+
+  <!-- Fullscreen Snapchat/Instagram Style Camera Overlay -->
+  <div id="custom-camera-overlay" class="camera-overlay hidden">
+    <!-- Camera stream video -->
+    <video id="camera-video" autoplay playsinline muted class="camera-video"></video>
+    
+    <!-- Snapshot preview (for review) -->
+    <img id="camera-preview-img" class="camera-preview-img hidden" alt="Captured preview">
+    
+    <!-- Visual shutter flash overlay -->
+    <div id="camera-flash" class="camera-flash"></div>
+    
+    <!-- Camera Top Toolbar -->
+    <div class="camera-top-bar">
+      <button type="button" id="camera-close-btn" class="camera-icon-btn" aria-label="Close Camera">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h2 class="camera-title-indicator">Camera</h2>
+      <button type="button" id="camera-switch-btn" class="camera-icon-btn" aria-label="Switch Camera">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.73-.73"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Camera Bottom Shooting Toolbar -->
+    <div id="camera-controls-shoot" class="camera-bottom-bar">
+      <!-- Gallery upload trigger shortcut -->
+      <button type="button" id="camera-gallery-btn" class="camera-icon-btn" aria-label="Choose Photo from Gallery">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+      </button>
+      
+      <!-- Big circular Shutter button -->
+      <button type="button" id="camera-shutter-btn" class="camera-shutter-btn" aria-label="Capture Photo">
+        <span class="camera-shutter-inner"></span>
+      </button>
+      
+      <!-- Placeholder to balance flex layout -->
+      <div style="width: 44px;"></div>
+    </div>
+    
+    <!-- Camera Bottom Preview Toolbar -->
+    <div id="camera-controls-preview" class="camera-bottom-bar hidden">
+      <button type="button" id="camera-retake-btn" class="camera-btn-text">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4.8px;">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <polyline points="3 3 3 8 8 8"></polyline>
+        </svg>
+        Retake
+      </button>
+      <button type="button" id="camera-use-btn" class="camera-btn-primary">
+        Use Photo
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4.8px;">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Camera Error / No Permission view -->
+    <div id="camera-error-container" class="camera-error-container hidden">
+      <div class="camera-error-content">
+        <div class="camera-error-icon">⚠️</div>
+        <h3>Camera Access Needed</h3>
+        <p>Reunite needs camera permission to capture photos of found items. Please allow camera access or choose a photo from your gallery instead.</p>
+        <button type="button" id="camera-error-upload-btn" class="camera-btn-primary">Choose from Gallery</button>
+        <button type="button" id="camera-error-close-btn" class="camera-btn-text">Cancel</button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

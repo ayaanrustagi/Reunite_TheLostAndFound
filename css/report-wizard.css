@@ -1216,3 +1216,629 @@ body.reduced-motion .rw-pin-marker { animation: none; }
     display: none;
 }
 
+/* ==========================================================================
+   MOBILE APP FORM LAYOUT & STICKY NAV (Step Form)
+   ========================================================================== */
+
+/* Hide mobile nav bar when report section is active */
+body:has(#page-report.active) .mobile-header {
+    display: none !important;
+}
+
+/* Styling for Photo choices container */
+.rw-photo-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.rw-photo-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 0.68rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    margin: 0.25rem 0;
+}
+
+.rw-photo-divider::before,
+.rw-photo-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.rw-photo-divider::before {
+    margin-right: .75em;
+}
+
+.rw-photo-divider::after {
+    margin-left: .75em;
+}
+
+.rw-btn-camera {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #fff;
+    border: 1.5px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.rw-btn-camera:hover {
+    background: rgba(var(--accent-rgb), 0.04);
+}
+
+.rw-btn-camera:active {
+    transform: scale(0.98);
+}
+
+.rw-mobile-header {
+    display: none;
+}
+
+.rw-mobile-footer {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    /* Full-screen report form on mobile */
+    #page-report {
+        padding-top: 0 !important;
+        background-color: #f8f9fa !important;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #page-report .rw-outer {
+        padding: 0 !important;
+        margin: 0;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 100vh;
+    }
+
+    #page-report .rw-viewport {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #page-report .rw-panel {
+        flex-grow: 1;
+        display: none;
+    }
+    
+    #page-report .rw-panel.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #page-report .rw-progress {
+        display: none !important; /* Hide circular steps navigation on mobile */
+    }
+
+    #page-report .rw-card {
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 5rem 1.25rem 6.5rem !important; /* Spaced for header and sticky bottom bar */
+        gap: 1.25rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Hide default form action buttons on mobile */
+    #page-report .rw-nav {
+        display: none !important;
+    }
+
+    /* Form Fields styled as mobile card rows */
+    #page-report .rw-field {
+        background: #fff;
+        padding: 0.85rem 1.1rem !important;
+        border-radius: 16px;
+        border: 1px solid rgba(15, 20, 25, 0.08) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015) !important;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    #page-report .rw-field:focus-within {
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.04) !important;
+    }
+
+    #page-report .rw-field label {
+        font-size: 0.72rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-3);
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #page-report .rw-field input,
+    #page-report .rw-field select,
+    #page-report .rw-field textarea {
+        border: none !important;
+        padding: 0.35rem 0 !important;
+        font-size: 0.98rem !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        color: var(--text-color);
+        width: 100%;
+        margin: 0 !important;
+    }
+
+    #page-report .rw-field input:focus,
+    #page-report .rw-field select:focus,
+    #page-report .rw-field textarea:focus {
+        outline: none !important;
+    }
+
+    /* Row split fields stack cleanly */
+    #page-report .rw-row {
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    #page-report .rw-section-label {
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        color: var(--ink-3);
+        margin: 0.5rem 0 0.25rem;
+    }
+
+    /* Leaflet Map on mobile app */
+    #page-report .rw-map-wrap {
+        border-radius: 18px;
+        height: 200px;
+        overflow: hidden;
+        margin-bottom: 0.25rem;
+    }
+
+    /* Accessible feed switch card on mobile */
+    #page-report .rw-feed-toggle {
+        background: #fff;
+        padding: 1rem 1.1rem !important;
+        border-radius: 16px;
+        border: 1px solid rgba(15, 20, 25, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015);
+        margin: 0.25rem 0;
+    }
+
+    /* Sticky Mobile Header */
+    .rw-mobile-header {
+        display: flex;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4.25rem;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(15, 20, 25, 0.06);
+        padding: 0 1.25rem;
+        z-index: 100;
+        gap: 1rem;
+    }
+
+    .rw-mobile-close-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 0.25rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .rw-mobile-close-btn:active {
+        opacity: 0.6;
+        transform: scale(0.92);
+    }
+
+    .rw-mobile-title-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .rw-mobile-eyebrow {
+        font-size: 0.64rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-3);
+        font-family: var(--font-mono);
+        font-weight: 600;
+    }
+
+    .rw-mobile-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin: 0;
+    }
+
+    .rw-mobile-progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: rgba(15, 20, 25, 0.06);
+    }
+
+    .rw-mobile-progress-fill {
+        height: 100%;
+        background: var(--accent-color);
+        transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Sticky Mobile Footer Action Bar */
+    .rw-mobile-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 5.5rem;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(15, 20, 25, 0.06);
+        padding: 0 1.25rem env(safe-area-inset-bottom);
+        z-index: 100;
+        gap: 0.75rem;
+    }
+
+    .rw-m-btn-back {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        background: rgba(15, 20, 25, 0.04);
+        border: none;
+        color: var(--text-color);
+        height: 3rem;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .rw-m-btn-back:active {
+        background: rgba(15, 20, 25, 0.08);
+        transform: scale(0.97);
+    }
+
+    .rw-m-btn-next {
+        flex: 2.2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        background: var(--accent-color);
+        border: none;
+        color: #fff;
+        height: 3rem;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+        box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.25);
+    }
+
+    .rw-m-btn-next:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 6px rgba(var(--accent-rgb), 0.15);
+    }
+}
+
+/* ==========================================================================
+   FULLSCREEN SNAPCHAT/INSTAGRAM CAMERA OVERLAY
+   ========================================================================== */
+.camera-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 2500;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    color: #fff;
+    font-family: var(--font-main);
+}
+
+.camera-overlay.hidden {
+    display: none !important;
+}
+
+.camera-video,
+.camera-preview-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.camera-preview-img.hidden {
+    display: none !important;
+}
+
+/* Shutter flash effect */
+.camera-flash {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.camera-flash.flash-active {
+    animation: flash-animation 0.3s ease-out;
+}
+
+@keyframes flash-animation {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Top Navigation Bar */
+.camera-top-bar {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1.25rem 2rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+    pointer-events: auto;
+}
+
+.camera-title-indicator {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    font-family: var(--font-mono);
+}
+
+.camera-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.camera-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.camera-icon-btn:active {
+    transform: scale(0.92);
+}
+
+/* Bottom Bar */
+.camera-bottom-bar {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 2.5rem 3rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+    pointer-events: auto;
+}
+
+.camera-bottom-bar.hidden {
+    display: none !important;
+}
+
+/* Shutter Button (Instagram/Snapchat design) */
+.camera-shutter-btn {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: transparent;
+    border: 6px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease-out-expo), border-color 0.2s;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    padding: 0;
+    margin: 0 auto;
+}
+
+.camera-shutter-inner {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: #fff;
+    display: block;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.camera-shutter-btn:hover {
+    transform: scale(1.05);
+}
+
+.camera-shutter-btn:active {
+    transform: scale(0.9);
+}
+
+.camera-shutter-btn:active .camera-shutter-inner {
+    transform: scale(0.85);
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* Preview Actions */
+.camera-btn-text {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.85rem 1.6rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.camera-btn-text:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.camera-btn-primary {
+    background: var(--accent-color);
+    border: none;
+    color: #fff;
+    padding: 0.85rem 1.8rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.4);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.camera-btn-primary:hover {
+    background: var(--accent-deep);
+    box-shadow: 0 6px 18px rgba(var(--accent-rgb), 0.5);
+}
+
+.camera-btn-primary:active,
+.camera-btn-text:active {
+    transform: scale(0.95);
+}
+
+/* Permission / Error Message Panel */
+.camera-error-container {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 20, 25, 0.98);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    text-align: center;
+}
+
+.camera-error-container.hidden {
+    display: none !important;
+}
+
+.camera-error-content {
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    animation: rwInFromRight 0.35s var(--ease-out-expo) both;
+}
+
+.camera-error-icon {
+    font-size: 3.5rem;
+}
+
+.camera-error-content h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.camera-error-content p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.camera-error-content .camera-btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem;
+    border-radius: 14px;
+}
+
+.camera-error-content .camera-btn-text {
+    width: 100%;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.55);
+}
+.camera-error-content .camera-btn-text:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
