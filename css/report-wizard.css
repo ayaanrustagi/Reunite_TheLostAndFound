@@ -1294,11 +1294,11 @@ body:has(#page-report.active) .mobile-header {
 
 @media (max-width: 767px) {
     /* Full-screen report form on mobile */
-    #page-report {
+    #page-report.active {
         padding-top: 0 !important;
         background-color: #f8f9fa !important;
         min-height: 100vh;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
     }
 
