@@ -823,6 +823,7 @@ body.reduced-motion .orb-ring {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-direction: row-reverse;
         z-index: 1000;
         box-sizing: border-box;
     }
@@ -853,12 +854,10 @@ body.reduced-motion .orb-ring {
         box-shadow: none !important;
     }
 
-    /* Absolute center the brand name/logo */
+    /* Brand name/logo positioning */
     .auth-brand {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        position: static;
+        transform: none;
         margin: 0;
         pointer-events: auto;
         display: inline-flex;
@@ -899,7 +898,7 @@ body.reduced-motion .orb-ring {
         -webkit-backdrop-filter: none !important;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         box-sizing: border-box;
     }
 
