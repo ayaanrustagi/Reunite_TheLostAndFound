@@ -13,6 +13,10 @@ function navigateToSection(sectionId) {
         window.scrollTo(0, 0);
     }
 
+    // Toggle wizard-active on body to hide/show mobile navigation bar reliably
+    const isWizard = (sectionId === 'report' || sectionId === 'claim');
+    document.body.classList.toggle('wizard-active', isWizard);
+
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-action')?.includes(sectionId));

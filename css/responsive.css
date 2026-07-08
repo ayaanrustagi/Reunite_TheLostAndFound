@@ -54,6 +54,12 @@
         padding: 0.3rem 0.5rem;
     }
 
+    body.wizard-active .mobile-header,
+    body:has(#page-report.active) .mobile-header,
+    body:has(#page-claim.active) .mobile-header {
+        display: none !important;
+    }
+
     .mobile-header .mobile-nav-icons {
         display: flex;
         align-items: center;
