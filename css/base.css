@@ -340,7 +340,8 @@ body {
     .modal-overlay,
     .loading-overlay,
     .main-nav.mobile-open,
-    .camera-overlay {
+    .camera-overlay,
+    .mobile-header {
         zoom: calc(1 / 0.85);
     }
 
