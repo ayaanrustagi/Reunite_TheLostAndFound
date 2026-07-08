@@ -810,14 +810,16 @@
         if (!trigger || !overlay || !video || !fileInput) return;
 
         // Open Camera overlay
-        trigger.addEventListener('click', async () => {
+        window.openReportCamera = async () => {
             overlay.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // prevent scrolling page background
             
             // Default to rear camera if possible
             currentFacingMode = 'environment';
             await startCamera();
-        });
+        };
+
+        trigger.addEventListener('click', window.openReportCamera);
 
         // Close Camera
         function closeCameraOverlay() {

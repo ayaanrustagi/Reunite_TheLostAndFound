@@ -3,6 +3,14 @@
 
 
 function navigateToSection(sectionId) {
+    // Mobile Snapchat-style camera trigger for report
+    if (sectionId === 'report' && window.innerWidth <= 1024) {
+        const fileInput = document.getElementById('reportItemPhoto');
+        if ((!fileInput || fileInput.files.length === 0) && window.openReportCamera) {
+            window.openReportCamera();
+        }
+    }
+
     // jump between pages
     const sections = document.querySelectorAll('.view-section');
     sections.forEach(s => s.classList.remove('active'));
