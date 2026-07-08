@@ -1297,11 +1297,12 @@ body.wizard-active .mobile-header {
 @media (max-width: 767px) {
     /* Full-screen report form on mobile */
     #page-report.active {
-        padding-top: 0 !important;
+        padding: 0 !important;
         background-color: #f8f9fa !important;
         min-height: 100vh;
         display: flex !important;
         flex-direction: column;
+        zoom: calc(1 / 0.85) !important;
     }
 
     #page-report .rw-outer {
@@ -1389,7 +1390,7 @@ body.wizard-active .mobile-header {
     #page-report .rw-field textarea {
         border: none !important;
         padding: 0.35rem 0 !important;
-        font-size: 0.98rem !important;
+        font-size: 1rem !important;
         background: transparent !important;
         box-shadow: none !important;
         border-radius: 0 !important;

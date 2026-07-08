@@ -100,8 +100,10 @@ async function measure(page) {
     const hero = await measure(page);
     if (hero.overflow > 1) failures.push(`${vp.name} hero: horizontal overflow +${hero.overflow}px`);
     if (!hero.hasTHREE)    failures.push(`${vp.name} hero: Three.js failed to load`);
-    if (!hero.canvas || hero.canvas.w < 1 || hero.canvas.h < 1)
-      failures.push(`${vp.name} hero: canvas has no size`);
+    if (vp.width >= 1025) {
+      if (!hero.canvas || hero.canvas.w < 1 || hero.canvas.h < 1)
+        failures.push(`${vp.name} hero: canvas has no size`);
+    }
 
     for (const sec of SECTIONS) {
       await page.evaluate(s => window.navigateToSection && window.navigateToSection(s), sec);

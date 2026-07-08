@@ -795,6 +795,7 @@ body.reduced-motion .orb-ring {
         flex-direction: column;
         justify-content: flex-start;
         align-items: stretch;
+        zoom: calc(1 / 0.85) !important;
     }
 
     /* Hide background waves on mobile */
@@ -913,6 +914,7 @@ body.reduced-motion .orb-ring {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01) !important;
         border-radius: 16px !important;
         height: 56px !important;
+        font-size: 1rem !important;
     }
 
     .field .input-pill:focus {

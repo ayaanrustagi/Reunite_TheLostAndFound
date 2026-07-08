@@ -207,16 +207,14 @@
 @media (max-width: 767px) {
     /* Full-screen claim form on mobile */
     #page-claim.active {
-        padding-top: 0 !important;
+        padding: 0 !important;
         background-color: #f8f9fa !important;
         min-height: 100vh;
         display: flex !important;
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        padding-bottom: 0 !important;
+        zoom: calc(1 / 0.85) !important;
     }
 
     #page-claim .cw-outer {
@@ -304,7 +302,7 @@
     #page-claim .rw-field textarea {
         border: none !important;
         padding: 0.35rem 0 !important;
-        font-size: 0.98rem !important;
+        font-size: 1rem !important;
         background: transparent !important;
         box-shadow: none !important;
         border-radius: 0 !important;
