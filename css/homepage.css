@@ -439,15 +439,7 @@
 
   /* ── 2. 3D key — flexible middle that soaks up free space ── */
   .scrollhero-canvas {
-    order: 2;
-    position: relative;
-    inset: auto;
-    flex: 1 1 auto;
-    width: min(360px, 86vw);
-    min-height: 170px;
-    max-height: 320px;
-    margin: 0 auto;
-    z-index: 1;
+    display: none !important;
   }
 
   /* ── 3. Progress dots ── */

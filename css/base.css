@@ -328,26 +328,7 @@ body {
     }
 }
 
-/* Mobile/tablet renders at 85% — keeps the layout compact without shrinking text below legibility. */
+/* Mobile/tablet renders without zoom to fix iOS sizing bugs. */
 @media (max-width: 1024px) {
-    body {
-        zoom: 0.85;
-    }
-
-    #waves-container,
-    body::before,
-    body.auth-page::before,
-    .modal-overlay,
-    .loading-overlay,
-    .main-nav.mobile-open,
-    .camera-overlay,
-    .mobile-header {
-        zoom: calc(1 / 0.85);
-    }
-
-    .modal-overlay > *,
-    .loading-overlay > * {
-        zoom: 0.85;
-    }
+    /* Zoom removed to allow native responsive design to work correctly. */
 }
-   
