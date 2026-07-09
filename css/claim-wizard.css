@@ -243,7 +243,10 @@
     }
 
     #page-claim .rw-progress {
-        display: none !important; /* Hide circular steps navigation on mobile */
+        display: flex !important; /* Show horizontal steps navigation on mobile */
+        padding-top: calc(4.75rem + env(safe-area-inset-top, 0px));
+        margin-bottom: 0;
+        padding-bottom: 1rem;
     }
 
     #page-claim .rw-card {
@@ -253,7 +256,7 @@
         border: none !important;
         box-shadow: none !important;
         border-radius: 0 !important;
-        padding: calc(4.75rem + env(safe-area-inset-top, 0px)) 1.25rem calc(6rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for header and sticky bottom bar */
+        padding: 0 1.25rem calc(6rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
         gap: 1.25rem;
         flex-grow: 1;
         display: flex;

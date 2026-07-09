@@ -28,7 +28,7 @@
 
 .rw-step {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     gap: 0.45rem;
     flex-shrink: 0;
@@ -38,8 +38,8 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 2px solid var(--border-color);
-    background: #fff;
+    border: none;
+    background: var(--ink-4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,15 +55,12 @@
 .rw-step-check { display: none; }
 
 .rw-step.active .rw-step-circle {
-    border-color: var(--accent-color);
     background: var(--accent-color);
     color: #fff;
-    box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.14);
 }
 
 .rw-step.completed .rw-step-circle {
-    border-color: var(--accent-color);
-    background: var(--accent-color);
+    background: #238636; /* Success green */
     color: #fff;
 }
 
@@ -81,20 +78,20 @@
     transition: color 0.3s ease;
 }
 
-.rw-step.active .rw-step-label   { color: var(--accent-color); }
+.rw-step.active .rw-step-label   { color: var(--text-color); font-weight: 700; }
 .rw-step.completed .rw-step-label { color: var(--text-color); }
 
 .rw-connector {
     flex: 1;
-    height: 2px;
-    background: var(--border-color);
-    margin: 17px 6px 0; /* vertically center with circle */
-    border-radius: 2px;
-    transition: background 0.4s ease;
-    min-width: 32px;
+    height: 1px;
+    background: transparent;
+    border-top: 1px dashed var(--border-color);
+    margin: 0 8px;
+    transition: border-color 0.4s ease;
+    min-width: 24px;
 }
 
-.rw-connector.done { background: var(--accent-color); }
+.rw-connector.done { border-top-color: #238636; border-top-style: solid; background: transparent; }
 
 /* --- Viewport (clips horizontal slides) --- */
 .rw-viewport {
@@ -1331,7 +1328,10 @@ body.wizard-active .mobile-header {
     }
 
     #page-report .rw-progress {
-        display: none !important; /* Hide circular steps navigation on mobile */
+        display: flex !important; /* Show horizontal steps navigation on mobile */
+        padding-top: calc(4.75rem + env(safe-area-inset-top, 0px));
+        margin-bottom: 0;
+        padding-bottom: 1rem;
     }
 
     #page-report .rw-card {
@@ -1341,7 +1341,7 @@ body.wizard-active .mobile-header {
         border: none !important;
         box-shadow: none !important;
         border-radius: 0 !important;
-        padding: calc(4.75rem + env(safe-area-inset-top, 0px)) 1.25rem calc(6rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for header and sticky bottom bar */
+        padding: 0 1.25rem calc(6rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
         gap: 1.25rem;
         flex-grow: 1;
         display: flex;
