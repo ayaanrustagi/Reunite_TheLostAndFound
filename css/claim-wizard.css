@@ -214,7 +214,6 @@
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
-        zoom: calc(1 / 0.85) !important;
     }
 
     #page-claim .cw-outer {

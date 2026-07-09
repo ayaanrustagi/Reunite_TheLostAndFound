@@ -60,6 +60,12 @@
         display: none !important;
     }
 
+    body.wizard-active #main-container,
+    body:has(#page-report.active) #main-container,
+    body:has(#page-claim.active) #main-container {
+        padding-top: 0 !important;
+    }
+
     .mobile-header .mobile-nav-icons {
         display: flex;
         align-items: center;
@@ -1337,7 +1343,6 @@
         background: #fafafa;
         min-height: 100vh;
         min-height: 100dvh;
-        zoom: calc(1 / 0.85); /* Override body zoom to look native */
     }
 
     /* Hide desktop hero elements */
@@ -1502,7 +1507,6 @@
         align-items: center;
         z-index: 1000;
         pointer-events: none;
-        zoom: calc(1 / 0.85); /* Override body zoom */
     }
 
     .mobile-floating-nav > * {

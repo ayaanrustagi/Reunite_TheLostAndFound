@@ -795,7 +795,6 @@ body.reduced-motion .orb-ring {
         flex-direction: column;
         justify-content: flex-start;
         align-items: stretch;
-        zoom: calc(1 / 0.85) !important;
     }
 
     /* Hide background waves on mobile */

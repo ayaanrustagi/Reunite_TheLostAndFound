@@ -1302,7 +1302,6 @@ body.wizard-active .mobile-header {
         min-height: 100vh;
         display: flex !important;
         flex-direction: column;
-        zoom: calc(1 / 0.85) !important;
     }
 
     #page-report .rw-outer {
