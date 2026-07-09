@@ -1448,12 +1448,12 @@ body.wizard-active .mobile-header {
         top: 0;
         left: 0;
         right: 0;
-        height: calc(4.5rem + env(safe-area-inset-top, 0px));
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.96) 60%, rgba(255, 255, 255, 0)) !important;
+        height: auto !important;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98) 70%, rgba(255, 255, 255, 0)) !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         border-bottom: none !important;
-        padding: env(safe-area-inset-top, 0px) 1.25rem 0;
+        padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 1.25rem 1rem !important;
         z-index: 100;
         gap: 1rem;
         box-sizing: border-box;
@@ -1523,12 +1523,12 @@ body.wizard-active .mobile-header {
         bottom: 0;
         left: 0;
         right: 0;
-        height: 6rem;
-        background: linear-gradient(to top, rgba(255, 255, 255, 0.96) 60%, rgba(255, 255, 255, 0)) !important;
+        height: auto !important;
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 70%, rgba(255, 255, 255, 0)) !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         border-top: none !important;
-        padding: 0 1.25rem env(safe-area-inset-bottom);
+        padding: 0.75rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px)) !important;
         z-index: 100;
         gap: 0.75rem;
     }
@@ -1588,7 +1588,9 @@ body.wizard-active .mobile-header {
     width: 100vw;
     height: 100vh;
     background-color: #000;
-    z-index: 2500;
+    z-index: 99999 !important; /* Forces camera overlay to render on top of iOS Safari stacking contexts */
+    transform: translate3d(0, 0, 0); /* Force GPU acceleration and dedicated composition layer in Safari */
+    -webkit-transform: translate3d(0, 0, 0);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
