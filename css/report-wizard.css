@@ -1129,6 +1129,7 @@ body.reduced-motion .rw-pin-marker { animation: none; }
 #page-report .rw-outer {
     padding-top: 0;
     width: 100%;
+    margin-top: -3.5rem; /* Shift container up on desktop */
 }
 
 /* AI description generator styling */
