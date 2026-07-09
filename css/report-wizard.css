@@ -1295,7 +1295,7 @@ body.wizard-active .mobile-header {
     /* Full-screen report form on mobile */
     #page-report.active {
         padding: 0 !important;
-        background-color: #f8f9fa !important;
+        background-color: transparent !important; /* Let waves show through */
         min-height: 100vh;
         display: flex !important;
         flex-direction: column;
@@ -1335,13 +1335,14 @@ body.wizard-active .mobile-header {
     }
 
     #page-report .rw-card {
-        background: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0 1.25rem calc(6rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(20px) saturate(1.3) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(1.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.9) !important;
+        box-shadow: 0 32px 80px rgba(15, 20, 25, 0.09) !important;
+        border-radius: 18px !important;
+        padding: 1.5rem 1.25rem calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
+        margin: 0.75rem;
         gap: 1.25rem;
         flex-grow: 1;
         display: flex;
@@ -1353,55 +1354,56 @@ body.wizard-active .mobile-header {
         display: none !important;
     }
 
-    /* Form Fields styled as mobile card rows */
+    /* Form Fields inherit desktop styling (glassmorphism/gray inputs) */
     #page-report .rw-field {
-        background: #fff;
-        padding: 0.85rem 1.1rem !important;
-        border-radius: 16px;
-        border: 1px solid rgba(15, 20, 25, 0.08) !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015) !important;
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 0.25rem;
-        transition: border-color 0.25s, box-shadow 0.25s;
-    }
-
-    #page-report .rw-field:focus-within {
-        border-color: var(--accent-color) !important;
-        box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.04) !important;
+        gap: 0.3rem;
     }
 
     #page-report .rw-field label {
-        font-size: 0.72rem !important;
+        font-family: var(--font-mono);
+        font-size: 0.63rem !important;
+        font-weight: 500;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
         color: var(--ink-3);
-        font-weight: 700;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        margin-bottom: 0.2rem;
     }
 
     #page-report .rw-field input,
     #page-report .rw-field select,
     #page-report .rw-field textarea {
-        border: none !important;
-        padding: 0.35rem 0 !important;
-        font-size: 1rem !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        color: var(--text-color);
         width: 100%;
-        margin: 0 !important;
+        height: 44px;
+        padding: 0 1rem;
+        background: rgba(15, 20, 25, 0.035) !important;
+        border: 1.5px solid transparent !important;
+        border-radius: 12px !important;
+        font-family: var(--font-main);
+        font-size: 0.875rem !important;
+        color: var(--text-color);
+        outline: none;
+        box-shadow: none !important;
+    }
+
+    #page-report .rw-field textarea {
+        height: auto !important;
+        min-height: 76px !important;
+        padding: 0.7rem 1rem !important;
     }
 
     #page-report .rw-field input:focus,
     #page-report .rw-field select:focus,
     #page-report .rw-field textarea:focus {
-        outline: none !important;
+        border-color: var(--accent-color) !important;
+        background: #fff !important;
+        box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12) !important;
     }
 
     /* Row split fields stack cleanly */
@@ -1427,13 +1429,13 @@ body.wizard-active .mobile-header {
         margin-bottom: 0.25rem;
     }
 
-    /* Accessible feed switch card on mobile */
+    /* Accessible feed switch card on mobile inherits from desktop */
     #page-report .rw-feed-toggle {
-        background: #fff;
-        padding: 1rem 1.1rem !important;
-        border-radius: 16px;
-        border: 1px solid rgba(15, 20, 25, 0.08);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015);
+        background: rgba(15, 20, 25, 0.03) !important;
+        padding: 0.85rem 1rem !important;
+        border-radius: 14px !important;
+        border: 1px solid transparent !important;
+        box-shadow: none !important;
         margin: 0.25rem 0;
     }
 
