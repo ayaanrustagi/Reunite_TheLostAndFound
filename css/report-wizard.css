@@ -21,7 +21,7 @@
 /* --- Progress indicator --- */
 .rw-progress {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     margin-bottom: 1.75rem;
 }
@@ -1292,10 +1292,11 @@ body.wizard-active .mobile-header {
 }
 
 @media (max-width: 767px) {
-    /* Full-screen report form on mobile */
     #page-report.active {
         padding: 0 !important;
-        background-color: transparent !important; /* Let waves show through */
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(20px) saturate(1.3) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(1.3) !important;
         min-height: 100vh;
         display: flex !important;
         flex-direction: column;
@@ -1335,14 +1336,14 @@ body.wizard-active .mobile-header {
     }
 
     #page-report .rw-card {
-        background: rgba(255, 255, 255, 0.92) !important;
-        backdrop-filter: blur(20px) saturate(1.3) !important;
-        -webkit-backdrop-filter: blur(20px) saturate(1.3) !important;
-        border: 1px solid rgba(255, 255, 255, 0.9) !important;
-        box-shadow: 0 32px 80px rgba(15, 20, 25, 0.09) !important;
-        border-radius: 18px !important;
-        padding: 1.5rem 1.25rem calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
-        margin: 0.75rem;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 1.25rem calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
+        margin: 0 !important;
         gap: 1.25rem;
         flex-grow: 1;
         display: flex;
@@ -1439,7 +1440,7 @@ body.wizard-active .mobile-header {
         margin: 0.25rem 0;
     }
 
-    /* Sticky Mobile Header */
+    /* Sticky Mobile Header with fade gradient */
     .rw-mobile-header {
         display: flex;
         align-items: center;
@@ -1447,11 +1448,11 @@ body.wizard-active .mobile-header {
         top: 0;
         left: 0;
         right: 0;
-        height: calc(4.25rem + env(safe-area-inset-top, 0px));
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(15, 20, 25, 0.06);
+        height: calc(4.5rem + env(safe-area-inset-top, 0px));
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.96) 60%, rgba(255, 255, 255, 0)) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
         padding: env(safe-area-inset-top, 0px) 1.25rem 0;
         z-index: 100;
         gap: 1rem;
@@ -1513,7 +1514,7 @@ body.wizard-active .mobile-header {
         transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Sticky Mobile Footer Action Bar */
+    /* Sticky Mobile Footer Action Bar with fade gradient */
     .rw-mobile-footer {
         display: flex;
         align-items: center;
@@ -1522,11 +1523,11 @@ body.wizard-active .mobile-header {
         bottom: 0;
         left: 0;
         right: 0;
-        height: 5.5rem;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid rgba(15, 20, 25, 0.06);
+        height: 6rem;
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.96) 60%, rgba(255, 255, 255, 0)) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-top: none !important;
         padding: 0 1.25rem env(safe-area-inset-bottom);
         z-index: 100;
         gap: 0.75rem;
