@@ -310,6 +310,13 @@ button.action-card {
     background: rgba(0, 106, 255, 0.02);
 }
 
+.admin-actions-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
 /* Audit Log Styles */
 .audit-log-container {
     display: flex;

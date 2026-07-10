@@ -587,7 +587,7 @@ function renderAdmin() {
         const item = window.items.find(it => it.id === c.item_id);
         return `
             <div class="list-item clickable" onclick="openAdminDetailModal('claim', '${c.id}')">
-                <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0;">
                   ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>`}
                   <div class="item-info">
                     <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
