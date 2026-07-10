@@ -248,6 +248,12 @@
         padding-top: calc(4.75rem + env(safe-area-inset-top, 0px));
         margin-bottom: 0;
         padding-bottom: 1rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    #page-claim .rw-step-label {
+        display: none !important;
     }
 
     #page-claim .rw-card {
