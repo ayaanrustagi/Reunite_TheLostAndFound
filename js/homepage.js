@@ -110,6 +110,46 @@
     var curX    = 0, lastIdx = -2, facingTarget = 0;
     var mobileStep = 0, mobileStepStart = -1, mobileKeyTarget = 0;
     var raf;   // animation-frame handle (was an undeclared global → strict-mode ReferenceError)
+
+    function checkReducedMotion() {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.classList.contains('reduced-motion');
+    }
+
+    var isPaused = checkReducedMotion();
+
+    function updateLoopState() {
+      var shouldPause = checkReducedMotion();
+      if (shouldPause) {
+        if (!isPaused) {
+          isPaused = true;
+          if (raf) {
+            cancelAnimationFrame(raf);
+            raf = null;
+          }
+        }
+      } else {
+        if (isPaused) {
+          isPaused = false;
+          raf = requestAnimationFrame(tick);
+        }
+      }
+    }
+
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    try {
+      motionQuery.addEventListener('change', updateLoopState);
+    } catch (e) {
+      motionQuery.addListener(updateLoopState);
+    }
+
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.attributeName === 'class') {
+          updateLoopState();
+        }
+      });
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     var stepEls = stepsEl ? Array.from(stepsEl.children) : [];
     var dotEls  = railEl  ? Array.from(railEl.children)  : [];
 
@@ -129,6 +169,8 @@
     }
 
     function tick() {
+      if (isPaused) return;
+      if (window.__trackTick) { window.__trackTick(); }
       var t = clock.getElapsedTime();
 
       /* Mobile hero: full-screen auto-cycling slideshow.
@@ -257,7 +299,9 @@
       raf = requestAnimationFrame(tick);
     }
 
-    raf = requestAnimationFrame(tick);
+    if (!isPaused) {
+      raf = requestAnimationFrame(tick);
+    }
   }
 
   /* wait for Three.js to load */

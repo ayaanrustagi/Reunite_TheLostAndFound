@@ -48,6 +48,15 @@
   pointer-events: none;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .scrollhero-canvas {
+    display: none !important;
+  }
+}
+body.reduced-motion .scrollhero-canvas {
+  display: none !important;
+}
+
 /* ---- mana pastel mauve skin ---- */
 .scrollhero.mana {
   --mana-ink: #0F1419;
