@@ -140,10 +140,12 @@ function renderFound() {
     if (search) {
         const searchTokens = search.split(/\s+/);
         filtered = filtered.filter(item => {
-            const titleMatch = searchTokens.every(token => window.isFuzzyMatch(item.title, token));
-            const descMatch = searchTokens.every(token => window.isFuzzyMatch(item.description, token));
-            const catMatch = searchTokens.every(token => window.isFuzzyMatch(item.category, token));
-            return titleMatch || descMatch || catMatch;
+            return searchTokens.every(token => 
+                window.isFuzzyMatch(item.title, token) ||
+                window.isFuzzyMatch(item.description, token) ||
+                window.isFuzzyMatch(item.category, token) ||
+                window.isFuzzyMatch(item.location, token)
+            );
         });
         updateActiveFilters({ searchTokens, category: cat, location: loc });
         updateResultsStatus(window.items.filter(it => it.status === 'approved').length, filtered.length, { searchTokens, category: cat, location: loc });
@@ -197,9 +199,10 @@ function fpEscHtml(s) {
     return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function renderFpCard(item, idx) {
-    const hue = fpCategoryHue(item.category);
-    const bg  = `oklch(0.88 0.06 ${hue})`;
-    const fg  = `oklch(0.40 0.14 ${hue})`;
+    // Use consistent clean color for all item cards
+    const hue = 220; // fixed neutral blue
+    const bg  = `oklch(0.96 0.02 ${hue})`; // premium light background
+    const fg  = `oklch(0.40 0.10 ${hue})`;
     const cat = (item.category || 'other').toString().toUpperCase();
     const title = fpEscHtml(item.title || 'Untitled');
     const loc   = fpEscHtml(item.location || '');
@@ -533,7 +536,7 @@ async function renderDashboard() {
 }
 window.renderDashboard = renderDashboard;
 
-function renderAdmin() {
+async function renderAdmin() {
     // the master view
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
 
@@ -626,7 +629,39 @@ function renderAdmin() {
                 <button onclick="deleteClaim('${c.id}')" class="btn btn-sm btn-outline red">PURGE</button>
             </div>
         `;
-    }).join('') : '<div class="status-msg">EMPTY</div>';
+    }).join('') : '<div class="status-msg">EMPTY</div>';    const adminMessagesEl = document.getElementById('adminMessages');
+    const adminMessageCountEl = document.getElementById('adminMessageCount');
+
+    if (adminMessagesEl) {
+        adminMessagesEl.innerHTML = '<div class="status-msg">LOADING SYSTEM MESSAGES...</div>';
+        if (window.apiGetMessages) {
+            try {
+                // Admin messages are sent to "admin@reunite.com"
+                const adminMsgs = await window.apiGetMessages("admin@reunite.com");
+                if (adminMessageCountEl) adminMessageCountEl.textContent = adminMsgs.length;
+                
+                adminMessagesEl.innerHTML = adminMsgs.length ? adminMsgs.map(m => {
+                    const dateStr = new Date(m.created_at).toLocaleDateString();
+                    return `
+                        <div class="list-item">
+                            <div class="item-info">
+                                <strong>From: ${m.sender_name} (${m.sender_email})</strong>
+                                <div style="font-size: 0.85rem; color: var(--muted-text); margin-top: 0.25rem;">Re: ${m.item_title}</div>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem; white-space: pre-wrap;">${m.message}</div>
+                            </div>
+                            <div class="status-badge" style="background: transparent; color: var(--muted-text);">
+                                ${dateStr}
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<div class="status-msg">NO SYSTEM MESSAGES</div>';
+            } catch (err) {
+                adminMessagesEl.innerHTML = '<div class="status-msg">FAILED TO LOAD MESSAGES</div>';
+            }
+        } else {
+            adminMessagesEl.innerHTML = '<div class="status-msg">MESSAGING CLIENT NOT LOADED</div>';
+        }
+    }
 }
 window.renderAdmin = renderAdmin;
 async function renderAdminAudit() {

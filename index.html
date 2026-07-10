@@ -114,7 +114,7 @@
           <span class="btn-text">SIGN IN</span>
         </a>
         <button id="dashboardBtn" class="nav-btn hidden" data-action="navigateToSection('dashboard')">
-          <span class="btn-text">DASHBOARD</span>
+          <span class="btn-text">ACCOUNT</span>
         </button>
         <button id="adminBtn" class="nav-btn admin hidden" data-action="navigateToSection('admin')">
           <span class="btn-text">ADMIN</span>
@@ -317,7 +317,7 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input id="fpSearch" type="text" placeholder="Search lost items — hydroflask, keychain…"
+            <input id="fpSearch" type="text" placeholder="Search lost items..."
                    oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
           </div>
         </div>
@@ -1218,20 +1218,11 @@
               <div id="myClaims" class="list-view"></div>
             </div>
 
-            <!-- Tips / Get Started -->
-            <div class="bento-card card-mid-span tips-panel">
-              <div class="card-header">
-                <h3>GET STARTED</h3>
-              </div>
-              <div id="dashboardTips" class="list-view tips-list"></div>
-            </div>
-
             <!-- Quick Action / New -->
-            <button class="bento-card card-small-span action-card" data-action="navigateToSection('report')" type="button"
+            <button class="bento-card card-full-span action-card" data-action="navigateToSection('report')" type="button"
               aria-label="Create New Report" title="Create New Report">
               <div class="action-content">
-                <span class="action-label">INITIATE</span>
-                <h3>NEW<br>REPORT</h3>
+                <h3>CREATE NEW REPORT</h3>
                 <div class="action-icon">+</div>
               </div>
             </button>
@@ -1240,7 +1231,10 @@
             <div class="bento-card card-full-span messages-panel">
               <div class="card-header">
                 <h3>INBOX / MESSAGES</h3>
-                <span class="head-count" id="messageCount">0</span>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button class="btn btn-sm btn-outline" data-action="openGeneralMessageModal()">NEW MESSAGE</button>
+                  <span class="head-count" id="messageCount">0</span>
+                </div>
               </div>
               <div id="myMessages" class="list-view"></div>
             </div>
@@ -1318,6 +1312,18 @@
                 <span class="head-count" id="adminVerifiedCount">0</span>
               </div>
               <div id="adminVerifiedClaims" class="list-view"></div>
+            </div>
+
+            <!-- Admin Messages Panel -->
+            <div class="bento-card card-full-span messages-panel">
+              <div class="card-header">
+                <h3>SYSTEM MESSAGES</h3>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button class="btn btn-sm btn-outline" data-action="openGeneralMessageModal()">NEW MESSAGE</button>
+                  <span class="head-count" id="adminMessageCount">0</span>
+                </div>
+              </div>
+              <div id="adminMessages" class="list-view"></div>
             </div>
 
             <!-- Audit Log Panel -->
@@ -1478,6 +1484,13 @@
       </div>
       <div class="modal-body">
         <form id="sendMessageForm">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="smRecipient" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">To (User)</label>
+            <select id="smRecipient" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
+              <!-- Options populated dynamically -->
+              <option value="admin">System Admins</option>
+            </select>
+          </div>
           <div class="form-group" style="margin-bottom: 1rem;">
             <label for="smSenderName" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your Name</label>
             <input type="text" id="smSenderName" required placeholder="Enter your name" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">

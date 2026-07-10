@@ -362,5 +362,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.loadAccessibilitySettings) {
         window.loadAccessibilitySettings();
     }
+
+    const sessionStr = localStorage.getItem("reunite_session");
+    if (sessionStr) {
+        try {
+            const user = JSON.parse(sessionStr);
+            if (user && user.email) {
+                const target = user.role === 'admin' ? 'admin' : 'dashboard';
+                window.location.href = `index.html#${target}`;
+            }
+        } catch (e) {}
+    }
 });
    

@@ -1342,6 +1342,10 @@ body.wizard-active .mobile-header {
         display: none !important;
     }
 
+    #page-report .rw-sub {
+        display: none !important;
+    }
+
     #page-report .rw-card {
         background: transparent !important;
         backdrop-filter: none !important;

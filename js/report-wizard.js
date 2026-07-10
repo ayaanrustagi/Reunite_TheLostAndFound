@@ -846,11 +846,18 @@
         // Gallery triggers
         galleryBtn.addEventListener('click', () => {
             fileInput.click();
-            closeCameraOverlay();
         });
         errorUploadBtn.addEventListener('click', () => {
             fileInput.click();
-            closeCameraOverlay();
+        });
+
+        // Close overlay if a file is successfully selected from the gallery
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files && fileInput.files.length > 0) {
+                if (!overlay.classList.contains('hidden')) {
+                    closeCameraOverlay();
+                }
+            }
         });
 
         // Retake

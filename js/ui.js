@@ -190,11 +190,47 @@ function openSendMessageModal() {
         nameInput.value = "";
         emailInput.value = "";
     }
-    textInput.value = "";
+    if (item) {
+        // Pre-fill recipient based on item
+        const recip = document.getElementById('smRecipient');
+        if (recip) {
+            recip.innerHTML = `
+                <option value="${item.contact_email || item.finder_email || 'admin'}">${item.finder_name || 'Item Reporter'}</option>
+                <option value="admin">System Admins</option>
+            `;
+        }
+    }
 
     document.getElementById('sendMessageModal').classList.remove('hidden');
 }
 window.openSendMessageModal = openSendMessageModal;
+
+function openGeneralMessageModal() {
+    // Clear item context
+    sessionStorage.removeItem('reunite_selected_id');
+    
+    // Prefill user details if logged in
+    const nameInput = document.getElementById('smSenderName');
+    const emailInput = document.getElementById('smSenderEmail');
+    const textInput = document.getElementById('smText');
+    const recip = document.getElementById('smRecipient');
+
+    if (window.currentUser) {
+        nameInput.value = window.currentUser.full_name || window.currentUser.name || "";
+        emailInput.value = window.currentUser.email || "";
+    } else {
+        nameInput.value = "";
+        emailInput.value = "";
+    }
+    textInput.value = "";
+
+    if (recip) {
+        recip.innerHTML = `<option value="admin">System Admins</option>`;
+    }
+
+    document.getElementById('sendMessageModal').classList.remove('hidden');
+}
+window.openGeneralMessageModal = openGeneralMessageModal;
 
 function closeSendMessageModal() {
     document.getElementById('sendMessageModal').classList.add('hidden');
@@ -205,8 +241,6 @@ async function handleSendMessageSubmit(event) {
     if (event) event.preventDefault();
     const id = sessionStorage.getItem('reunite_selected_id');
     const item = window.items.find(i => i.id === id);
-    if (!item) return;
-
     const senderName = document.getElementById('smSenderName').value.trim();
     const senderEmail = document.getElementById('smSenderEmail').value.trim();
     const messageText = document.getElementById('smText').value.trim();
@@ -216,13 +250,16 @@ async function handleSendMessageSubmit(event) {
         return;
     }
 
+    const recipientVal = document.getElementById('smRecipient') ? document.getElementById('smRecipient').value : "admin";
+    const recipientEmail = recipientVal === "admin" ? "admin@reunite.com" : recipientVal;
+
     const msgRecord = {
         id: "msg_" + Math.random().toString(36).substr(2, 9),
-        item_id: item.id,
-        item_title: item.title || item.item_name,
+        item_id: item ? item.id : null,
+        item_title: item ? (item.title || item.item_name) : 'General Inquiry',
         sender_name: senderName,
         sender_email: senderEmail,
-        recipient_email: item.contact_email || item.finder_email || "ayaanrustagi2010@gmail.com",
+        recipient_email: recipientEmail,
         message: messageText,
         created_at: new Date().toISOString()
     };
@@ -573,39 +610,29 @@ function updateAuthUI() {
     const adminBtn = document.getElementById('adminBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    const mobileLoginBtn = document.getElementById('mobileLoginBtn');
-    const mobileDashboardBtn = document.getElementById('mobileDashboardBtn');
-    const mobileAdminBtn = document.getElementById('mobileAdminBtn');
-    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+    const mobileLoginBtn = document.getElementById('mbProfileBtn'); // The mobile bottom nav button
 
     if (!loginBtn || !dashboardBtn || !adminBtn || !logoutBtn) return;
 
     if (window.currentUser) {
         loginBtn.classList.add('hidden');
         logoutBtn.classList.remove('hidden');
-        if (mobileLoginBtn) mobileLoginBtn.classList.add('hidden');
-        if (mobileLogoutBtn) mobileLogoutBtn.classList.remove('hidden');
-
-        if (window.currentUser.role === 'admin') {
-            adminBtn.classList.remove('hidden');
-            dashboardBtn.classList.add('hidden');
-            if (mobileAdminBtn) mobileAdminBtn.classList.remove('hidden');
-            if (mobileDashboardBtn) mobileDashboardBtn.classList.add('hidden');
-        } else {
-            dashboardBtn.classList.remove('hidden');
-            adminBtn.classList.add('hidden');
-            if (mobileDashboardBtn) mobileDashboardBtn.classList.remove('hidden');
-            if (mobileAdminBtn) mobileAdminBtn.classList.add('hidden');
+        if (mobileLoginBtn) {
+            const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
+            if (lbl) lbl.textContent = 'Account';
+            mobileLoginBtn.setAttribute('data-action', window.currentUser.role === 'admin' ? "navigateToSection('admin')" : "navigateToSection('dashboard')");
         }
     } else {
         loginBtn.classList.remove('hidden');
         dashboardBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
         logoutBtn.classList.add('hidden');
-        if (mobileLoginBtn) mobileLoginBtn.classList.remove('hidden');
-        if (mobileDashboardBtn) mobileDashboardBtn.classList.add('hidden');
-        if (mobileAdminBtn) mobileAdminBtn.classList.add('hidden');
-        if (mobileLogoutBtn) mobileLogoutBtn.classList.add('hidden');
+        
+        if (mobileLoginBtn) {
+            const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
+            if (lbl) lbl.textContent = 'Login';
+            mobileLoginBtn.setAttribute('data-action', "goLogin()");
+        }
     }
 }
 window.updateAuthUI = updateAuthUI;
