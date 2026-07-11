@@ -97,10 +97,9 @@ function openItemModal(id) {
     // Store element that opened modal
     lastFocusedElement = document.activeElement;
 
-    // Calculate category hue and dynamic colors
-    const hue = window.fpCategoryHue ? window.fpCategoryHue(item.category) : 220;
-    const bg = `oklch(0.88 0.06 ${hue})`;
-    const fg = `oklch(0.40 0.14 ${hue})`;
+    // Use consistent clean color for modal
+    const bg = `oklch(0.96 0.02 220)`; // premium light background
+    const fg = `oklch(0.20 0.05 220)`; // dark slate for text
 
     const modal = document.getElementById('itemModal');
     const modalBox = modal.querySelector('.modal-box');
