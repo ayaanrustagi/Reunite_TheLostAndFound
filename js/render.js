@@ -542,7 +542,10 @@ async function renderAdmin() {
 
 
     const pending = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');
-    const pendingClaims = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'pending');
+    const pendingClaims = window.claims.filter(c => {
+        const s = (c.status || "").toLowerCase().trim();
+        return s === 'pending' || s === 'under_review';
+    });
     const approved = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
     const verified = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
 
@@ -599,7 +602,9 @@ async function renderAdmin() {
                   </div>
                 </div>
                 <div class="admin-actions-inline" onclick="event.stopPropagation()">
-                    <button onclick="requestClaimDetails('${c.id}')" class="btn btn-sm btn-outline orange">REQUEST DETAILS</button>
+                    ${(c.status || '').toLowerCase() === 'under_review' 
+                        ? `<span style="font-size: 0.7rem; font-weight: bold; color: #ff9500; margin-right: 10px; border: 1px solid #ff9500; padding: 4px 8px; border-radius: 4px;">AWAITING DETAILS</span>` 
+                        : `<button onclick="requestClaimDetails('${c.id}')" class="btn btn-sm btn-outline orange">REQUEST DETAILS</button>`}
                     <button onclick="approveClaim('${c.id}')" class="btn btn-sm btn-outline blue">VERIFY</button>
                 </div>
             </div>
