@@ -612,11 +612,20 @@ function updateAuthUI() {
 
     const mobileLoginBtn = document.getElementById('mbProfileBtn'); // The mobile bottom nav button
 
-    if (!loginBtn || !dashboardBtn || !adminBtn || !logoutBtn) return;
+    if (!loginBtn || !dashboardBtn || !adminBtn) return;
 
     if (window.currentUser) {
         loginBtn.classList.add('hidden');
-        logoutBtn.classList.remove('hidden');
+        if (logoutBtn) logoutBtn.classList.add('hidden'); // We are removing it from top bar, but keep this just in case
+
+        if (window.currentUser.role === 'admin') {
+            adminBtn.classList.remove('hidden');
+            dashboardBtn.classList.add('hidden');
+        } else {
+            dashboardBtn.classList.remove('hidden');
+            adminBtn.classList.add('hidden');
+        }
+
         if (mobileLoginBtn) {
             const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
             if (lbl) lbl.textContent = 'Account';
@@ -626,7 +635,7 @@ function updateAuthUI() {
         loginBtn.classList.remove('hidden');
         dashboardBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
-        logoutBtn.classList.add('hidden');
+        if (logoutBtn) logoutBtn.classList.add('hidden');
         
         if (mobileLoginBtn) {
             const lbl = mobileLoginBtn.querySelector('.mb-nav-label');

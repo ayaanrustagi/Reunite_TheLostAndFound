@@ -119,9 +119,6 @@
         <button id="adminBtn" class="nav-btn admin hidden" data-action="navigateToSection('admin')">
           <span class="btn-text">ADMIN</span>
         </button>
-        <button id="logoutBtn" class="nav-btn hidden" data-action="handleLogout()">
-          <span class="btn-text">LOGOUT</span>
-        </button>
       </div>
     </div>
   </header>
@@ -1181,8 +1178,9 @@
     <!-- SECTION: DASHBOARD -->
     <section id="page-dashboard" class="view-section">
       <div class="content-wrapper content-box">
-        <div class="section-head">
+        <div class="section-head" style="display: flex; justify-content: space-between; align-items: center;">
           <h2>HI, <span id="dashboardUserName">User</span></h2>
+          <button class="btn btn-sm btn-outline" data-action="handleLogout()">LOGOUT</button>
         </div>
 
         <div class="dashboard-grid-container">
@@ -1250,8 +1248,9 @@
           <div class="admin-title-group">
             <h2>SYSTEM OVERSIGHT</h2>
           </div>
-          <div class="admin-actions">
+          <div class="admin-actions" style="display: flex; gap: 0.5rem; align-items: center;">
             <button class="btn btn-sm btn-outline" style="border-radius: 999px; font-weight: 700;" data-action="apiSync()">FORCE SYSTEM SYNC</button>
+            <button class="btn btn-sm btn-outline" data-action="handleLogout()">LOGOUT</button>
           </div>
         </div>
 
