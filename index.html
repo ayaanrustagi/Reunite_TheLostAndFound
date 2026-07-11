@@ -74,7 +74,8 @@
   <!-- Desktop Header (hidden on mobile) -->
   <header class="site-header desktop-header">
     <div class="header-inner">
-      <button class="logo-area" data-action="navigateToSection('hero')" type="button" aria-label="Go to Hero Section" title="Go to Hero Section">
+      <button class="logo-area" data-action="navigateToSection('hero')" type="button" aria-label="Go to Hero Section"
+        title="Go to Hero Section">
         <img src="assets/reunite-logo.png" alt="REUNITE" class="logo-img">
         <span class="logo-text">REUNITE</span>
       </button>
@@ -159,7 +160,8 @@
   </header>
 
   <!-- Floating Menu Trigger (appears when header hides) -->
-  <button class="persistent-trigger" data-action="showHeader()" type="button" aria-label="Show Header" title="Show Header">
+  <button class="persistent-trigger" data-action="showHeader()" type="button" aria-label="Show Header"
+    title="Show Header">
     <span></span>
     <span></span>
     <span></span>
@@ -207,7 +209,8 @@
             <div class="sh-step">
               <div class="sh-k" style="color:var(--c-orange)">03 · MATCH</div>
               <h3>The owner gets a nudge</h3>
-              <p>When something lines up, you both get a quiet tap on the shoulder. Contact details stay hidden until you agree.</p>
+              <p>When something lines up, you both get a quiet tap on the shoulder. Contact details stay hidden until
+                you agree.</p>
             </div>
             <div class="sh-step">
               <div class="sh-k" style="color:var(--c-pink)">04 · UNLOCK</div>
@@ -230,7 +233,7 @@
           <!-- End CTAs (appear at last step) -->
           <div class="sh-cta" id="sh-cta">
             <button class="sh-btn-primary" data-action="navigateToSection('report')">I found something</button>
-            <button class="sh-btn-ghost"   data-action="navigateToSection('found')">
+            <button class="sh-btn-ghost" data-action="navigateToSection('found')">
               I lost something <span class="sh-circle">↗</span>
             </button>
           </div>
@@ -252,23 +255,25 @@
           <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('report')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 7V4h3 M20 7V4h-3 M4 17v3h3 M20 17v3h-3 M9 10h1 M14 10h1 M9 14h1 M14 14h1 M11 10h2 M11 14h2"></path>
+                <path d="M4 7V4h3 M20 7V4h-3 M4 17v3h3 M20 17v3h-3 M9 10h1 M14 10h1 M9 14h1 M14 14h1 M11 10h2 M11 14h2">
+                </path>
               </svg>
             </div>
             <span>Scan</span>
           </button>
-          
+
           <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('report')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                </path>
                 <line x1="12" y1="9" x2="12" y2="13"></line>
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
               </svg>
             </div>
             <span>Report</span>
           </button>
-          
+
           <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('found')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -278,7 +283,7 @@
             </div>
             <span>Claim</span>
           </button>
-          
+
           <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('dashboard')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -309,13 +314,13 @@
         <div class="section-head">
           <span class="label-tech">Browse inventory</span>
           <div class="fp-topsearch">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <input id="fpSearch" type="text" placeholder="Search lost items..."
-                   oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
+              oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
           </div>
         </div>
 
@@ -341,8 +346,8 @@
         <!-- Visual search bar — horizontal toolbar above the grid -->
         <div class="fp-visual-bar" id="fpVisualBar">
           <label class="fp-upload-btn" for="findItemPhoto">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -350,7 +355,7 @@
             Upload photo
             <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
           </label>
-          <span class="fp-drag-hint">or drag &amp; drop a photo of what you lost &mdash; visual search</span>
+          <span class="fp-drag-hint">or drag &amp; drop a photo</span>
           <div class="fp-match-mode" role="radiogroup" aria-label="Matching mode">
             <button type="button" class="fp-mode active" data-mode="fast" data-action="setMatchMode('fast')">
               <span class="fp-mode-title">Fast</span>
@@ -374,7 +379,8 @@
             <div class="fp-scan-main">
               <div class="fp-scan-head">
                 <div id="aiMatchLabel">INITIALIZING D-HASH SCAN...</div>
-                <button type="button" class="fp-scan-clear" data-action="clearFindPhoto()" aria-label="Clear photo and results">
+                <button type="button" class="fp-scan-clear" data-action="clearFindPhoto()"
+                  aria-label="Clear photo and results">
                   Clear &times;
                 </button>
               </div>
@@ -385,11 +391,20 @@
         </div>
 
         <!-- mobile-only filter toggle -->
-        <button class="fp-mobile-toggle" id="fpToggle" type="button" aria-expanded="false" aria-controls="fpFiltersPanel">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        <button class="fp-mobile-toggle" id="fpToggle" type="button" aria-expanded="false"
+          aria-controls="fpFiltersPanel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+            <line x1="11" y1="18" x2="13" y2="18" />
+          </svg>
           Filters
           <span class="fp-toggle-count" id="fpActiveCount"></span>
-          <svg class="fp-toggle-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="fp-toggle-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </button>
 
         <div class="browse-grid">
@@ -413,7 +428,7 @@
             <div class="fp-group">
               <label class="fp-label" for="fpLocation">Location</label>
               <select id="fpLocation"
-                      onchange="document.getElementById('locationFilter').value=this.value; renderFound()">
+                onchange="document.getElementById('locationFilter').value=this.value; renderFound()">
                 <option value="">All buildings</option>
                 <option value="Engineering">Engineering Quad</option>
                 <option value="Library">Main Library</option>
@@ -425,7 +440,7 @@
             <div class="fp-group">
               <label class="fp-label" for="fpDate">Date</label>
               <select id="fpDate"
-                      onchange="document.getElementById('sortFilter').value=(this.value==='all'?'oldest':'newest'); renderFound()">
+                onchange="document.getElementById('sortFilter').value=(this.value==='all'?'oldest':'newest'); renderFound()">
                 <option value="1">Last 24h</option>
                 <option value="7" selected>Last 7 days</option>
                 <option value="30">Last 30 days</option>
@@ -445,9 +460,14 @@
             <div id="itemsGrid" class="grid-layout"><!-- JS injected --></div>
 
             <div class="claimed-items-section">
-              <button class="btn btn-sm btn-outline toggle-claimed-btn" data-action="toggleClaimedItems()" type="button" id="toggleClaimedBtn">
+              <button class="btn btn-sm btn-outline toggle-claimed-btn" data-action="toggleClaimedItems()" type="button"
+                id="toggleClaimedBtn">
                 SHOW PAST CLAIMED ITEMS
-                <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <svg class="btn-icon" style="margin-left: 0.5rem;" xmlns="http://www.w3.org/2000/svg" width="16"
+                  height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
               </button>
               <div id="claimedItemsWrapper" class="hidden">
                 <div class="section-divider">REMATCHED &amp; RETRIEVED</div>
@@ -461,10 +481,10 @@
 
       <!-- wire up the chips + mobile filter toggle -->
       <script>
-        (function(){
-          document.querySelectorAll('#fpChips .fp-chip').forEach(function(chip){
-            chip.addEventListener('click', function(){
-              document.querySelectorAll('#fpChips .fp-chip').forEach(function(c){c.classList.remove('active');});
+        (function () {
+          document.querySelectorAll('#fpChips .fp-chip').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+              document.querySelectorAll('#fpChips .fp-chip').forEach(function (c) { c.classList.remove('active'); });
               chip.classList.add('active');
               var sel = document.getElementById('categoryFilter');
               if (sel) { sel.value = chip.dataset.cat; window.renderFound && window.renderFound(); }
@@ -473,8 +493,8 @@
           });
 
           var toggle = document.getElementById('fpToggle');
-          var panel  = document.getElementById('fpFiltersPanel');
-          var grid   = document.querySelector('#page-found .browse-grid');
+          var panel = document.getElementById('fpFiltersPanel');
+          var grid = document.querySelector('#page-found .browse-grid');
 
           function setFiltersOpen(open) {
             panel.classList.toggle('open', open);
@@ -486,11 +506,11 @@
             // Default open on desktop, closed on mobile
             setFiltersOpen(window.innerWidth > 1024);
 
-            toggle.addEventListener('click', function() {
+            toggle.addEventListener('click', function () {
               setFiltersOpen(!panel.classList.contains('open'));
             });
 
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
               // Auto-open on resize to desktop if currently collapsed
               if (window.innerWidth > 1024 && !panel.classList.contains('open')) {
                 setFiltersOpen(true);
@@ -522,7 +542,8 @@
       <!-- Mobile-app Header (visible only on mobile) -->
       <div id="rw-mobile-header" class="rw-mobile-header">
         <button type="button" class="rw-mobile-close-btn" data-action="navigateToSection('hero')">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -536,14 +557,16 @@
       <!-- Mobile-app Sticky Bottom Navigation (visible only on mobile) -->
       <div id="rw-mobile-footer" class="rw-mobile-footer">
         <button type="button" class="rw-m-btn-back" id="rwMobileBackBtn" data-action="rwBack()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
           Back
         </button>
         <button type="button" class="rw-m-btn-next" id="rwMobileNextBtn" data-action="rwNext()">
           Next
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </button>
@@ -551,7 +574,7 @@
 
       <!-- Hidden legacy form — field values are written here by the wizard; forms.js reads them -->
       <form id="reportForm" class="hidden" aria-hidden="true" novalidate>
-        <input type="text"  id="itemTitle">
+        <input type="text" id="itemTitle">
         <select id="itemCategory" onchange="toggleOtherCat()">
           <option value="">SELECT...</option>
           <option value="Keys">KEYS</option>
@@ -560,19 +583,19 @@
           <option value="Bag">BAG</option>
           <option value="Other">OTHER</option>
         </select>
-        <input type="text"  id="otherCategory">
-        <input type="text"  id="itemLocation">
+        <input type="text" id="otherCategory">
+        <input type="text" id="itemLocation">
         <input type="hidden" id="itemLat">
         <input type="hidden" id="itemLng">
         <input type="hidden" id="itemAddress">
         <input type="hidden" id="itemPublic" value="true">
-        <input type="date"  id="itemDate">
-        <textarea          id="itemDescription"></textarea>
+        <input type="date" id="itemDate">
+        <textarea id="itemDescription"></textarea>
         <!-- reportItemPhoto lives in the drop zone; reportPhotoPreview synced by wizard JS -->
-        <img               id="reportPhotoPreview" class="hidden" alt="">
-        <input type="text"  id="contactName"  autocomplete="name">
+        <img id="reportPhotoPreview" class="hidden" alt="">
+        <input type="text" id="contactName" autocomplete="name">
         <input type="email" id="contactEmail" autocomplete="email">
-        <input type="tel"   id="contactPhone" autocomplete="tel">
+        <input type="tel" id="contactPhone" autocomplete="tel">
         <!-- legacy wrappers forms.js touches -->
         <div id="otherCategoryWrap" class="hidden"></div>
       </form>
@@ -588,7 +611,8 @@
             <div class="rw-step-circle">
               <span class="rw-step-num">01</span>
               <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -599,7 +623,8 @@
             <div class="rw-step-circle">
               <span class="rw-step-num">02</span>
               <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -610,7 +635,8 @@
             <div class="rw-step-circle">
               <span class="rw-step-num">03</span>
               <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -619,276 +645,279 @@
         </nav>
 
         <div class="rw-viewport">
-        <!-- ===== PANEL 1 — Item Details ===== -->
-        <div class="rw-panel active rw-fwd" id="rwPanel1" role="group" aria-labelledby="rwH1">
-          <div class="rw-card">
-            <div>
-              <span class="rw-eyebrow">Step 1 of 3</span>
-              <h2 class="rw-heading" id="rwH1">What did you find?</h2>
-              <p class="rw-sub">Give us the basics so we can match it with someone looking.</p>
-            </div>
+          <!-- ===== PANEL 1 — Item Details ===== -->
+          <div class="rw-panel active rw-fwd" id="rwPanel1" role="group" aria-labelledby="rwH1">
+            <div class="rw-card">
+              <div>
+                <span class="rw-eyebrow">Step 1 of 3</span>
+                <h2 class="rw-heading" id="rwH1">What did you find?</h2>
+                <p class="rw-sub">Give us the basics so we can match it with someone looking.</p>
+              </div>
 
-            <div class="rw-row">
-              <div class="rw-field" data-required>
-                <label for="rw_itemTitle">Item name <em class="rw-req" aria-label="required">*</em></label>
-                <input type="text" id="rw_itemTitle" placeholder="e.g. Blue AirPods case"
-                  autocomplete="off" oninput="document.getElementById('itemTitle').value=this.value">
+              <div class="rw-row">
+                <div class="rw-field" data-required>
+                  <label for="rw_itemTitle">Item name <em class="rw-req" aria-label="required">*</em></label>
+                  <input type="text" id="rw_itemTitle" placeholder="e.g. Blue AirPods case" autocomplete="off"
+                    oninput="document.getElementById('itemTitle').value=this.value">
+                  <span class="rw-err" role="alert"></span>
+                </div>
+                <div class="rw-field" data-required>
+                  <label for="rw_itemCategory">Category <em class="rw-req" aria-label="required">*</em></label>
+                  <select id="rw_itemCategory"
+                    onchange="document.getElementById('itemCategory').value=this.value; document.getElementById('otherCategoryWrap').style.display=this.value==='Other'?'':'none'; document.getElementById('rw_otherWrap').style.display=this.value==='Other'?'':'none';">
+                    <option value="">Select…</option>
+                    <option value="Keys">Keys</option>
+                    <option value="Wallet">Wallet</option>
+                    <option value="Phone">Phone</option>
+                    <option value="Bag">Bag</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <span class="rw-err" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="rw-field" id="rw_otherWrap" style="display:none">
+                <label for="rw_otherCategory">Specify type</label>
+                <input type="text" id="rw_otherCategory" placeholder="e.g. Umbrella"
+                  oninput="document.getElementById('otherCategory').value=this.value">
+              </div>
+
+              <div class="rw-field">
+                <label for="rw_itemDescription">Description</label>
+                <textarea id="rw_itemDescription" rows="3" placeholder="Color, brand, any identifying features…"
+                  oninput="document.getElementById('itemDescription').value=this.value"></textarea>
+                <div class="rw-ai-desc-container">
+                  <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc">
+                    <span class="ai-sparkle">✨</span> Generate description from photo
+                  </button>
+                  <span id="rwAiDescStatus" class="rw-ai-desc-status hidden"></span>
+                </div>
                 <span class="rw-err" role="alert"></span>
               </div>
+
               <div class="rw-field" data-required>
-                <label for="rw_itemCategory">Category <em class="rw-req" aria-label="required">*</em></label>
-                <select id="rw_itemCategory"
-                  onchange="document.getElementById('itemCategory').value=this.value; document.getElementById('otherCategoryWrap').style.display=this.value==='Other'?'':'none'; document.getElementById('rw_otherWrap').style.display=this.value==='Other'?'':'none';">
-                  <option value="">Select…</option>
-                  <option value="Keys">Keys</option>
-                  <option value="Wallet">Wallet</option>
-                  <option value="Phone">Phone</option>
-                  <option value="Bag">Bag</option>
-                  <option value="Other">Other</option>
-                </select>
+                <label for="rw_itemDate">Date found <em class="rw-req" aria-label="required">*</em></label>
+                <input type="date" id="rw_itemDate" oninput="document.getElementById('itemDate').value=this.value"
+                  onchange="document.getElementById('itemDate').value=this.value">
                 <span class="rw-err" role="alert"></span>
               </div>
-            </div>
 
-            <div class="rw-field" id="rw_otherWrap" style="display:none">
-              <label for="rw_otherCategory">Specify type</label>
-              <input type="text" id="rw_otherCategory" placeholder="e.g. Umbrella"
-                oninput="document.getElementById('otherCategory').value=this.value">
-            </div>
-
-            <div class="rw-field">
-              <label for="rw_itemDescription">Description</label>
-              <textarea id="rw_itemDescription" rows="3" placeholder="Color, brand, any identifying features…"
-                oninput="document.getElementById('itemDescription').value=this.value"></textarea>
-              <div class="rw-ai-desc-container">
-                <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc">
-                  <span class="ai-sparkle">✨</span> Generate description from photo
+              <div class="rw-nav">
+                <span></span>
+                <button type="button" class="rw-btn-next" data-action="rwNext()">
+                  Next &rarr;
                 </button>
-                <span id="rwAiDescStatus" class="rw-ai-desc-status hidden"></span>
               </div>
-              <span class="rw-err" role="alert"></span>
-            </div>
-
-            <div class="rw-field" data-required>
-              <label for="rw_itemDate">Date found <em class="rw-req" aria-label="required">*</em></label>
-              <input type="date" id="rw_itemDate"
-                oninput="document.getElementById('itemDate').value=this.value"
-                onchange="document.getElementById('itemDate').value=this.value">
-              <span class="rw-err" role="alert"></span>
-            </div>
-
-            <div class="rw-nav">
-              <span></span>
-              <button type="button" class="rw-btn-next" data-action="rwNext()">
-                Next &rarr;
-              </button>
             </div>
           </div>
-        </div>
 
-        <!-- ===== PANEL 2 — Location & Photos ===== -->
-        <div class="rw-panel" id="rwPanel2" role="group" aria-labelledby="rwH2">
-          <div class="rw-card">
-            <div>
-              <span class="rw-eyebrow">Step 2 of 3</span>
-              <h2 class="rw-heading" id="rwH2">Where &amp; what?</h2>
-              <p class="rw-sub">Tell us where you found it and add a photo if you have one.</p>
-            </div>
+          <!-- ===== PANEL 2 — Location & Photos ===== -->
+          <div class="rw-panel" id="rwPanel2" role="group" aria-labelledby="rwH2">
+            <div class="rw-card">
+              <div>
+                <span class="rw-eyebrow">Step 2 of 3</span>
+                <h2 class="rw-heading" id="rwH2">Where &amp; what?</h2>
+                <p class="rw-sub">Tell us where you found it and add a photo if you have one.</p>
+              </div>
 
-            <!-- Rouse HS satellite campus map (Leaflet + Esri imagery) -->
-            <div class="rw-map-wrap">
-              <div id="rwMap" class="rw-map" role="application"
-                aria-label="Rouse High School satellite map — tap to mark where you found the item"></div>
-              <button type="button" class="rw-map-locate" id="rwResetView" title="Recenter on Rouse High School">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="8"></circle>
-                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
-                  <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"></circle>
-                </svg>
-                Recenter
-              </button>
-              <div class="rw-map-loading" id="rwMapLoading" aria-hidden="true">Loading campus map…</div>
-            </div>
+              <!-- Rouse HS satellite campus map (Leaflet + Esri imagery) -->
+              <div class="rw-map-wrap">
+                <div id="rwMap" class="rw-map" role="application"
+                  aria-label="Rouse High School satellite map — tap to mark where you found the item"></div>
+                <button type="button" class="rw-map-locate" id="rwResetView" title="Recenter on Rouse High School">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <circle cx="12" cy="12" r="8"></circle>
+                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+                    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"></circle>
+                  </svg>
+                  Recenter
+                </button>
+                <div class="rw-map-loading" id="rwMapLoading" aria-hidden="true">Loading campus map…</div>
+              </div>
 
-            <div class="rw-field" data-required>
-              <label for="rw_itemLocation">Location found <em class="rw-req" aria-label="required">*</em></label>
-              <input type="text" id="rw_itemLocation" placeholder="e.g. Library, 2nd floor study room"
-                autocomplete="off" oninput="document.getElementById('itemLocation').value=this.value">
-              <span class="rw-err" role="alert"></span>
-            </div>
+              <div class="rw-field" data-required>
+                <label for="rw_itemLocation">Location found <em class="rw-req" aria-label="required">*</em></label>
+                <input type="text" id="rw_itemLocation" placeholder="e.g. Library, 2nd floor study room"
+                  autocomplete="off" oninput="document.getElementById('itemLocation').value=this.value">
+                <span class="rw-err" role="alert"></span>
+              </div>
 
-            <div class="rw-section-label">Photos (optional)</div>
+              <div class="rw-section-label">Photos (optional)</div>
 
-            <div class="rw-photo-upload-container">
-              <!-- Drop zone — the real file input lives here -->
-              <div class="rw-drop" id="rwDrop" role="button" tabindex="0"
-                aria-label="Upload item photo — click or drag and drop">
-                <input type="file" id="reportItemPhoto" accept="image/*" aria-label="Upload photo">
-                <div id="rwDropContent">
-                  <div class="rw-drop-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                      fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                      <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
+              <div class="rw-photo-upload-container">
+                <!-- Drop zone — the real file input lives here -->
+                <div class="rw-drop" id="rwDrop" role="button" tabindex="0"
+                  aria-label="Upload item photo — click or drag and drop">
+                  <input type="file" id="reportItemPhoto" accept="image/*" aria-label="Upload photo">
+                  <div id="rwDropContent">
+                    <div class="rw-drop-icon" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                      </svg>
+                    </div>
+                    <p class="rw-drop-title">Add a photo</p>
+                    <p class="rw-drop-hint">Drag here or tap to upload &middot; up to 10 MB</p>
                   </div>
-                  <p class="rw-drop-title">Add a photo</p>
-                  <p class="rw-drop-hint">Drag here or tap to upload &middot; up to 10 MB</p>
+                  <img id="rwPhotoPreview" class="rw-photo-preview" style="display:none" alt="Photo preview">
                 </div>
-                <img id="rwPhotoPreview" class="rw-photo-preview" style="display:none" alt="Photo preview">
+
+                <div class="rw-photo-divider" id="rwPhotoDivider">
+                  <span class="rw-photo-divider-text">OR</span>
+                </div>
+
+                <button type="button" id="rwCameraTriggerBtn" class="rw-btn-camera">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                  Take Photo
+                </button>
               </div>
 
-              <div class="rw-photo-divider" id="rwPhotoDivider">
-                <span class="rw-photo-divider-text">OR</span>
+              <div class="rw-nav">
+                <button type="button" class="rw-btn-ghost" data-action="rwBack()">&larr; Back</button>
+                <button type="button" class="rw-btn-next" data-action="rwNext()">Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL 3 — Review & Contact ===== -->
+          <div class="rw-panel" id="rwPanel3" role="group" aria-labelledby="rwH3">
+            <div class="rw-card">
+              <div>
+                <span class="rw-eyebrow">Step 3 of 3</span>
+                <h2 class="rw-heading" id="rwH3">Almost there.</h2>
+                <p class="rw-sub">Check your report and add contact info so we can reach you.</p>
               </div>
 
-              <button type="button" id="rwCameraTriggerBtn" class="rw-btn-camera">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
+              <!-- Summary card -->
+              <div class="rw-summary-card">
+                <div class="rw-summary-header">
+                  <span class="rw-summary-tag">FOUND ITEM</span>
+                  <button type="button" class="rw-edit-btn" data-action="rwGoTo(1)">Edit</button>
+                </div>
+                <p class="rw-summary-title" id="rwSumTitle">—</p>
+                <div class="rw-summary-meta">
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Category</span>
+                    <span class="rw-summary-value" id="rwSumCategory">—</span>
+                  </div>
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Date</span>
+                    <span class="rw-summary-value" id="rwSumDate">—</span>
+                  </div>
+                  <div class="rw-summary-field">
+                    <span class="rw-summary-label">Location</span>
+                    <span class="rw-summary-value" id="rwSumLocation">—</span>
+                  </div>
+                  <div class="rw-summary-field rw-summary-field--wide">
+                    <span class="rw-summary-label">Description</span>
+                    <span class="rw-summary-value" id="rwSumDesc">—</span>
+                  </div>
+                </div>
+                <div class="rw-summary-photos" id="rwSumPhotoWrap" style="display:none">
+                  <img id="rwSumPhoto" class="rw-summary-thumb" alt="Item photo">
+                </div>
+              </div>
+
+              <div class="rw-section-label">Your contact info</div>
+
+              <div class="rw-row">
+                <div class="rw-field" data-required>
+                  <label for="rw_contactName">Your name <em class="rw-req" aria-label="required">*</em></label>
+                  <input type="text" id="rw_contactName" autocomplete="name" placeholder="Full name"
+                    oninput="document.getElementById('contactName').value=this.value">
+                  <span class="rw-err" role="alert"></span>
+                </div>
+                <div class="rw-field" data-required>
+                  <label for="rw_contactEmail">School email <em class="rw-req" aria-label="required">*</em></label>
+                  <input type="email" id="rw_contactEmail" autocomplete="email" placeholder="you@school.edu"
+                    oninput="document.getElementById('contactEmail').value=this.value">
+                  <span class="rw-err" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="rw-field">
+                <label for="rw_contactPhone">Phone (optional)</label>
+                <input type="tel" id="rw_contactPhone" autocomplete="tel" placeholder="(555) 000-0000"
+                  oninput="document.getElementById('contactPhone').value=this.value">
+                <span class="rw-err" role="alert"></span>
+              </div>
+
+              <!-- Community feed toggle (real accessible switch) -->
+              <button type="button" class="rw-feed-toggle" id="rwFeedToggle" role="switch" aria-checked="true"
+                aria-label="Post to community feed">
+                <span class="rw-feed-toggle-text">
+                  <span class="rw-feed-toggle-title">Post to community feed</span>
+                  <span class="rw-feed-toggle-sub">Others can see this item and help reconnect it with its owner.</span>
+                </span>
+                <span class="rw-toggle-pill" aria-hidden="true"></span>
+              </button>
+
+              <button type="button" class="rw-btn-submit" id="rwSubmitBtn" data-action="rwSubmit()">
+                Submit Report
+              </button>
+              <p class="rw-submit-error" id="rwSubmitError" role="alert"></p>
+              <p class="rw-legal">By submitting you agree to our&nbsp;<a href="#" data-action="preventDefault">Privacy
+                  Policy</a>. Your contact info is only shared with administrators.</p>
+
+              <div class="rw-nav">
+                <button type="button" class="rw-btn-ghost" data-action="rwBack()">&larr; Back</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL 4 — Success ===== -->
+          <div class="rw-panel" id="rwPanel4" role="region" aria-labelledby="rwH4">
+            <div class="rw-card rw-success-card">
+              <div class="rw-success-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                Take Photo
-              </button>
-            </div>
+              </div>
+              <div>
+                <span class="rw-eyebrow">Report received</span>
+                <h2 class="rw-heading" id="rwH4">Successfully logged.</h2>
+                <p class="rw-sub">We've got your report. An admin will review it shortly and we'll email you with any
+                  matches.</p>
+              </div>
 
-            <div class="rw-nav">
-              <button type="button" class="rw-btn-ghost" data-action="rwBack()">&larr; Back</button>
-              <button type="button" class="rw-btn-next" data-action="rwNext()">Next &rarr;</button>
+              <div class="rw-success-meta">
+                <div class="rw-success-meta-item">
+                  <span class="rw-meta-label">Report ID</span>
+                  <span class="rw-meta-value" id="rwSuccessId">#—</span>
+                </div>
+                <div class="rw-success-meta-item">
+                  <span class="rw-meta-label">Item</span>
+                  <span class="rw-meta-value" id="rwSuccessName">—</span>
+                </div>
+                <div class="rw-success-meta-item">
+                  <span class="rw-meta-label">Status</span>
+                  <span class="rw-meta-value">Pending Review</span>
+                </div>
+              </div>
+
+              <div class="rw-success-actions">
+                <button type="button" class="rw-btn-next" data-action="navigateToSection('browse')">
+                  View Feed
+                </button>
+                <button type="button" class="rw-btn-ghost" data-action="navigateToSection('hero')">
+                  Dashboard
+                </button>
+              </div>
+
+              <p class="rw-start-over">
+                Found something else? <a href="#" data-action="preventDefault; rwReset()">File another report</a>
+              </p>
             </div>
           </div>
-        </div>
-
-        <!-- ===== PANEL 3 — Review & Contact ===== -->
-        <div class="rw-panel" id="rwPanel3" role="group" aria-labelledby="rwH3">
-          <div class="rw-card">
-            <div>
-              <span class="rw-eyebrow">Step 3 of 3</span>
-              <h2 class="rw-heading" id="rwH3">Almost there.</h2>
-              <p class="rw-sub">Check your report and add contact info so we can reach you.</p>
-            </div>
-
-            <!-- Summary card -->
-            <div class="rw-summary-card">
-              <div class="rw-summary-header">
-                <span class="rw-summary-tag">FOUND ITEM</span>
-                <button type="button" class="rw-edit-btn" data-action="rwGoTo(1)">Edit</button>
-              </div>
-              <p class="rw-summary-title" id="rwSumTitle">—</p>
-              <div class="rw-summary-meta">
-                <div class="rw-summary-field">
-                  <span class="rw-summary-label">Category</span>
-                  <span class="rw-summary-value" id="rwSumCategory">—</span>
-                </div>
-                <div class="rw-summary-field">
-                  <span class="rw-summary-label">Date</span>
-                  <span class="rw-summary-value" id="rwSumDate">—</span>
-                </div>
-                <div class="rw-summary-field">
-                  <span class="rw-summary-label">Location</span>
-                  <span class="rw-summary-value" id="rwSumLocation">—</span>
-                </div>
-                <div class="rw-summary-field rw-summary-field--wide">
-                  <span class="rw-summary-label">Description</span>
-                  <span class="rw-summary-value" id="rwSumDesc">—</span>
-                </div>
-              </div>
-              <div class="rw-summary-photos" id="rwSumPhotoWrap" style="display:none">
-                <img id="rwSumPhoto" class="rw-summary-thumb" alt="Item photo">
-              </div>
-            </div>
-
-            <div class="rw-section-label">Your contact info</div>
-
-            <div class="rw-row">
-              <div class="rw-field" data-required>
-                <label for="rw_contactName">Your name <em class="rw-req" aria-label="required">*</em></label>
-                <input type="text" id="rw_contactName" autocomplete="name" placeholder="Full name"
-                  oninput="document.getElementById('contactName').value=this.value">
-                <span class="rw-err" role="alert"></span>
-              </div>
-              <div class="rw-field" data-required>
-                <label for="rw_contactEmail">School email <em class="rw-req" aria-label="required">*</em></label>
-                <input type="email" id="rw_contactEmail" autocomplete="email" placeholder="you@school.edu"
-                  oninput="document.getElementById('contactEmail').value=this.value">
-                <span class="rw-err" role="alert"></span>
-              </div>
-            </div>
-
-            <div class="rw-field">
-              <label for="rw_contactPhone">Phone (optional)</label>
-              <input type="tel" id="rw_contactPhone" autocomplete="tel" placeholder="(555) 000-0000"
-                oninput="document.getElementById('contactPhone').value=this.value">
-              <span class="rw-err" role="alert"></span>
-            </div>
-
-            <!-- Community feed toggle (real accessible switch) -->
-            <button type="button" class="rw-feed-toggle" id="rwFeedToggle"
-              role="switch" aria-checked="true" aria-label="Post to community feed">
-              <span class="rw-feed-toggle-text">
-                <span class="rw-feed-toggle-title">Post to community feed</span>
-                <span class="rw-feed-toggle-sub">Others can see this item and help reconnect it with its owner.</span>
-              </span>
-              <span class="rw-toggle-pill" aria-hidden="true"></span>
-            </button>
-
-            <button type="button" class="rw-btn-submit" id="rwSubmitBtn" data-action="rwSubmit()">
-              Submit Report
-            </button>
-            <p class="rw-submit-error" id="rwSubmitError" role="alert"></p>
-            <p class="rw-legal">By submitting you agree to our&nbsp;<a href="#" data-action="preventDefault">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
-
-            <div class="rw-nav">
-              <button type="button" class="rw-btn-ghost" data-action="rwBack()">&larr; Back</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== PANEL 4 — Success ===== -->
-        <div class="rw-panel" id="rwPanel4" role="region" aria-labelledby="rwH4">
-          <div class="rw-card rw-success-card">
-            <div class="rw-success-icon" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-            <div>
-              <span class="rw-eyebrow">Report received</span>
-              <h2 class="rw-heading" id="rwH4">Successfully logged.</h2>
-              <p class="rw-sub">We've got your report. An admin will review it shortly and we'll email you with any matches.</p>
-            </div>
-
-            <div class="rw-success-meta">
-              <div class="rw-success-meta-item">
-                <span class="rw-meta-label">Report ID</span>
-                <span class="rw-meta-value" id="rwSuccessId">#—</span>
-              </div>
-              <div class="rw-success-meta-item">
-                <span class="rw-meta-label">Item</span>
-                <span class="rw-meta-value" id="rwSuccessName">—</span>
-              </div>
-              <div class="rw-success-meta-item">
-                <span class="rw-meta-label">Status</span>
-                <span class="rw-meta-value">Pending Review</span>
-              </div>
-            </div>
-
-            <div class="rw-success-actions">
-              <button type="button" class="rw-btn-next" data-action="navigateToSection('browse')">
-                View Feed
-              </button>
-              <button type="button" class="rw-btn-ghost" data-action="navigateToSection('hero')">
-                Dashboard
-              </button>
-            </div>
-
-            <p class="rw-start-over">
-              Found something else? <a href="#" data-action="preventDefault; rwReset()">File another report</a>
-            </p>
-          </div>
-        </div>
 
         </div><!-- /.rw-viewport -->
       </div><!-- /.rw-outer -->
@@ -899,7 +928,8 @@
       <!-- Mobile-app Header (visible only on mobile) -->
       <div id="cw-mobile-header" class="rw-mobile-header">
         <button type="button" class="rw-mobile-close-btn" data-action="navigateToSection('hero')">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -913,14 +943,16 @@
       <!-- Mobile-app Sticky Bottom Navigation (visible only on mobile) -->
       <div id="cw-mobile-footer" class="rw-mobile-footer">
         <button type="button" class="rw-m-btn-back" id="cwMobileBackBtn" data-action="cwBack()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
           Back
         </button>
         <button type="button" class="rw-m-btn-next" id="cwMobileNextBtn" data-action="cwNext()">
           Next
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </button>
@@ -929,12 +961,12 @@
       <!-- Hidden legacy form — existing JS (handleClaimSubmit, validateClaimForm) reads these IDs -->
       <form id="claimForm" class="hidden" aria-hidden="true" novalidate>
         <select id="claimItemId"></select>
-        <input type="text"  id="claimName"  autocomplete="name">
+        <input type="text" id="claimName" autocomplete="name">
         <input type="email" id="claimEmail" autocomplete="email">
-        <textarea          id="claimMessage"></textarea>
+        <textarea id="claimMessage"></textarea>
         <input type="file" id="claimItemPhoto" accept="image/*">
-        <img               id="claimPhotoPreview" class="hidden" alt="">
-        <div               id="claimStatus" role="status" aria-live="polite"></div>
+        <img id="claimPhotoPreview" class="hidden" alt="">
+        <div id="claimStatus" role="status" aria-live="polite"></div>
       </form>
 
       <!-- ===== CLAIM WIZARD ===== -->
@@ -945,9 +977,9 @@
           <div class="rw-step active" id="cwStepDot1">
             <div class="rw-step-circle">
               <span class="rw-step-num">01</span>
-              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -957,9 +989,9 @@
           <div class="rw-step" id="cwStepDot2">
             <div class="rw-step-circle">
               <span class="rw-step-num">02</span>
-              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -969,9 +1001,9 @@
           <div class="rw-step" id="cwStepDot3">
             <div class="rw-step-circle">
               <span class="rw-step-num">03</span>
-              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg class="rw-step-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -1044,8 +1076,8 @@
                 <input type="file" id="cw_photo" accept="image/*" aria-label="Upload proof photo">
                 <div id="cwDropContent">
                   <div class="rw-drop-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                      fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                       <circle cx="8.5" cy="8.5" r="1.5"></circle>
                       <polyline points="21 15 16 10 5 21"></polyline>
@@ -1059,7 +1091,7 @@
 
               <div class="rw-nav">
                 <button type="button" class="rw-btn-ghost" data-action="cwBack()">&larr; Back</button>
-                <button type="button" class="rw-btn-next"  data-action="cwNext()">Next &rarr;</button>
+                <button type="button" class="rw-btn-next" data-action="cwNext()">Next &rarr;</button>
               </div>
             </div>
           </div>
@@ -1121,7 +1153,8 @@
                 Submit Claim
               </button>
               <p class="rw-submit-error" id="cwSubmitErr" role="alert"></p>
-              <p class="rw-legal">By submitting you agree to our <a href="#" data-action="preventDefault">Privacy Policy</a>. Your contact info is only shared with administrators.</p>
+              <p class="rw-legal">By submitting you agree to our <a href="#" data-action="preventDefault">Privacy
+                  Policy</a>. Your contact info is only shared with administrators.</p>
 
               <div class="rw-nav">
                 <button type="button" class="rw-btn-ghost" data-action="cwBack()">&larr; Back</button>
@@ -1133,15 +1166,16 @@
           <div class="rw-panel" id="cwPanel4" role="region" aria-labelledby="cwH4">
             <div class="rw-card rw-success-card">
               <div class="rw-success-icon" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               </div>
               <div>
                 <span class="rw-eyebrow">Claim received</span>
                 <h2 class="rw-heading" id="cwH4">Submitted successfully.</h2>
-                <p class="rw-sub">An admin will review your claim and reach out to your school email within 1–2 school days.</p>
+                <p class="rw-sub">An admin will review your claim and reach out to your school email within 1–2 school
+                  days.</p>
               </div>
 
               <div class="rw-success-meta">
@@ -1160,8 +1194,9 @@
               </div>
 
               <div class="rw-success-actions">
-                <button type="button" class="rw-btn-next"  data-action="navigateToSection('found')">Browse Items</button>
-                <button type="button" class="rw-btn-ghost" data-action="navigateToSection('dashboard')">My Dashboard</button>
+                <button type="button" class="rw-btn-next" data-action="navigateToSection('found')">Browse Items</button>
+                <button type="button" class="rw-btn-ghost" data-action="navigateToSection('dashboard')">My
+                  Dashboard</button>
               </div>
 
               <p class="rw-start-over">
@@ -1217,8 +1252,8 @@
             </div>
 
             <!-- Quick Action / New -->
-            <button class="bento-card card-full-span action-card" data-action="navigateToSection('report')" type="button"
-              aria-label="Create New Report" title="Create New Report">
+            <button class="bento-card card-full-span action-card" data-action="navigateToSection('report')"
+              type="button" aria-label="Create New Report" title="Create New Report">
               <div class="action-content">
                 <h3>CREATE NEW REPORT</h3>
                 <div class="action-icon">+</div>
@@ -1249,7 +1284,8 @@
             <h2>SYSTEM OVERSIGHT</h2>
           </div>
           <div class="admin-actions" style="display: flex; gap: 0.5rem; align-items: center;">
-            <button class="btn btn-sm btn-outline" style="border-radius: 999px; font-weight: 700;" data-action="apiSync()">FORCE SYSTEM SYNC</button>
+            <button class="btn btn-sm btn-outline" style="border-radius: 999px; font-weight: 700;"
+              data-action="apiSync()">FORCE SYSTEM SYNC</button>
             <button class="btn btn-sm btn-outline" data-action="handleLogout()">LOGOUT</button>
           </div>
         </div>
@@ -1351,7 +1387,8 @@
   </main>
 
   <!-- ── Sources modal ─────────────────────────────────────────────────────── -->
-  <div id="sourcesModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="sourcesModalTitle">
+  <div id="sourcesModal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+    aria-labelledby="sourcesModalTitle">
     <div class="modal-box large sources-modal-box">
       <div class="modal-header">
         <h3 id="sourcesModalTitle">Sources &amp; Attribution</h3>
@@ -1359,52 +1396,150 @@
       </div>
       <div class="modal-body sources-body">
 
-        <p class="sources-note">All application code, UI, branding, and the on-device d-hash / Levenshtein matching logic are original work by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh). Third-party libraries and the Groq / Llama&nbsp;4 Scout AI service used by the Accurate match mode are credited below.</p>
+        <p class="sources-note">All application code, UI, branding, and the on-device d-hash / Levenshtein matching
+          logic are original work by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh). Third-party
+          libraries and the Groq / Llama&nbsp;4 Scout AI service used by the Accurate match mode are credited below.</p>
 
         <h4>Fonts</h4>
         <table class="sources-table">
-          <thead><tr><th>Asset</th><th>License</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>License</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td><a href="https://fonts.google.com/specimen/Inter" target="_blank" rel="noopener">Inter</a> (Google Fonts)</td><td>SIL Open Font License</td></tr>
-            <tr><td><a href="https://fonts.google.com/specimen/Roboto+Mono" target="_blank" rel="noopener">Roboto Mono</a> (Google Fonts)</td><td>Apache 2.0</td></tr>
-            <tr><td><a href="https://fonts.google.com/specimen/Bricolage+Grotesque" target="_blank" rel="noopener">Bricolage Grotesque</a> (Google Fonts)</td><td>SIL Open Font License</td></tr>
-            <tr><td><a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener">JetBrains Mono</a> (Google Fonts)</td><td>SIL Open Font License</td></tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/Inter" target="_blank" rel="noopener">Inter</a> (Google
+                Fonts)</td>
+              <td>SIL Open Font License</td>
+            </tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/Roboto+Mono" target="_blank" rel="noopener">Roboto Mono</a>
+                (Google Fonts)</td>
+              <td>Apache 2.0</td>
+            </tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/Bricolage+Grotesque" target="_blank"
+                  rel="noopener">Bricolage Grotesque</a> (Google Fonts)</td>
+              <td>SIL Open Font License</td>
+            </tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener">JetBrains
+                  Mono</a> (Google Fonts)</td>
+              <td>SIL Open Font License</td>
+            </tr>
           </tbody>
         </table>
 
         <h4>Backend Libraries</h4>
         <table class="sources-table">
-          <thead><tr><th>Library</th><th>Purpose</th><th>License</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Library</th>
+              <th>Purpose</th>
+              <th>License</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td>Node.js / Express</td><td>Server runtime &amp; REST API</td><td>MIT</td></tr>
-            <tr><td>Mongoose</td><td>MongoDB object modelling</td><td>MIT</td></tr>
-            <tr><td>mongodb-memory-server</td><td>In-memory DB fallback for evaluation</td><td>MIT</td></tr>
-            <tr><td>bcryptjs</td><td>Password hashing (salted, 12 rounds)</td><td>MIT</td></tr>
-            <tr><td>helmet</td><td>HTTP security headers</td><td>MIT</td></tr>
-            <tr><td>express-rate-limit</td><td>Brute-force &amp; DoS protection</td><td>MIT</td></tr>
-            <tr><td>Multer</td><td>Multipart file-upload handling</td><td>MIT</td></tr>
-            <tr><td>CORS / dotenv / nedb-promises</td><td>Cross-origin, env config, embedded DB</td><td>MIT / BSD-2</td></tr>
+            <tr>
+              <td>Node.js / Express</td>
+              <td>Server runtime &amp; REST API</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>Mongoose</td>
+              <td>MongoDB object modelling</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>mongodb-memory-server</td>
+              <td>In-memory DB fallback for evaluation</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>bcryptjs</td>
+              <td>Password hashing (salted, 12 rounds)</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>helmet</td>
+              <td>HTTP security headers</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>express-rate-limit</td>
+              <td>Brute-force &amp; DoS protection</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>Multer</td>
+              <td>Multipart file-upload handling</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>CORS / dotenv / nedb-promises</td>
+              <td>Cross-origin, env config, embedded DB</td>
+              <td>MIT / BSD-2</td>
+            </tr>
           </tbody>
         </table>
 
         <h4>Frontend Libraries</h4>
         <table class="sources-table">
-          <thead><tr><th>Library</th><th>Purpose</th><th>License</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Library</th>
+              <th>Purpose</th>
+              <th>License</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td><a href="https://threejs.org/" target="_blank" rel="noopener">Three.js</a></td><td>WebGL 3D hero animation</td><td>MIT</td></tr>
-            <tr><td><a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a></td><td>Interactive campus map</td><td>BSD-2-Clause</td></tr>
-            <tr><td><a href="https://gsap.com/" target="_blank" rel="noopener">GSAP</a></td><td>Scroll &amp; UI animations</td><td>GreenSock No-Charge</td></tr>
-            <tr><td><a href="https://www.emailjs.com/" target="_blank" rel="noopener">EmailJS SDK</a></td><td>OTP email delivery (client-side)</td><td>Terms of Service</td></tr>
-            <tr><td><a href="https://feathericons.com/" target="_blank" rel="noopener">Feather Icons</a></td><td>UI icon set</td><td>MIT</td></tr>
+            <tr>
+              <td><a href="https://threejs.org/" target="_blank" rel="noopener">Three.js</a></td>
+              <td>WebGL 3D hero animation</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td><a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a></td>
+              <td>Interactive campus map</td>
+              <td>BSD-2-Clause</td>
+            </tr>
+            <tr>
+              <td><a href="https://gsap.com/" target="_blank" rel="noopener">GSAP</a></td>
+              <td>Scroll &amp; UI animations</td>
+              <td>GreenSock No-Charge</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.emailjs.com/" target="_blank" rel="noopener">EmailJS SDK</a></td>
+              <td>OTP email delivery (client-side)</td>
+              <td>Terms of Service</td>
+            </tr>
+            <tr>
+              <td><a href="https://feathericons.com/" target="_blank" rel="noopener">Feather Icons</a></td>
+              <td>UI icon set</td>
+              <td>MIT</td>
+            </tr>
           </tbody>
         </table>
 
         <h4>AI / Machine Learning</h4>
         <table class="sources-table">
-          <thead><tr><th>Service</th><th>Role</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Role</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td><a href="https://groq.com/" target="_blank" rel="noopener">Groq API</a></td><td>Low-latency inference for Accurate match mode</td></tr>
-            <tr><td>Llama&nbsp;4 Scout (Meta AI)</td><td>Multimodal model comparing lost-item photos against inventory; Llama&nbsp;4 Community License</td></tr>
+            <tr>
+              <td><a href="https://groq.com/" target="_blank" rel="noopener">Groq API</a></td>
+              <td>Low-latency inference for Accurate match mode</td>
+            </tr>
+            <tr>
+              <td>Llama&nbsp;4 Scout (Meta AI)</td>
+              <td>Multimodal model comparing lost-item photos against inventory; Llama&nbsp;4 Community License</td>
+            </tr>
           </tbody>
         </table>
 
@@ -1417,7 +1552,12 @@
   <div id="itemModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-box large item-detail-modal">
       <button data-action="closeModal()" class="close-btn modal-close-pill" aria-label="Close details">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round"
+          style="margin-right: 4px; display: inline-block; vertical-align: middle;">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
         Close
       </button>
       <div class="item-modal-content">
@@ -1429,12 +1569,12 @@
           <span id="modalCategory" class="item-modal-category">CATEGORY</span>
           <h2 id="modalTitle">TITLE</h2>
           <hr class="item-modal-divider">
-          
+
           <div class="item-modal-section">
             <span class="section-label">LOCATION</span>
             <div id="modalLocation" class="item-modal-val">LOCATION</div>
           </div>
-          
+
           <div class="item-modal-section">
             <span class="section-label">DESCRIPTION</span>
             <p id="modalDescription" class="item-modal-val desc-text"></p>
@@ -1452,8 +1592,10 @@
           </div>
 
           <div class="item-modal-actions">
-            <button class="btn btn-primary" data-action="navigateToSection('claim'); closeModal()">CLAIM THIS ITEM</button>
-            <button class="btn btn-secondary" id="openMessageBtn" data-action="openSendMessageModal()">SEND MESSAGE</button>
+            <button class="btn btn-primary" data-action="navigateToSection('claim'); closeModal()">CLAIM THIS
+              ITEM</button>
+            <button class="btn btn-secondary" id="openMessageBtn" data-action="openSendMessageModal()">SEND
+              MESSAGE</button>
           </div>
         </div>
       </div>
@@ -1484,23 +1626,34 @@
       <div class="modal-body">
         <form id="sendMessageForm">
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="smRecipient" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">To (User)</label>
-            <select id="smRecipient" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
+            <label for="smRecipient"
+              style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">To
+              (User)</label>
+            <select id="smRecipient"
+              style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
               <!-- Options populated dynamically -->
               <option value="admin">System Admins</option>
             </select>
           </div>
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="smSenderName" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your Name</label>
-            <input type="text" id="smSenderName" required placeholder="Enter your name" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
+            <label for="smSenderName"
+              style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your
+              Name</label>
+            <input type="text" id="smSenderName" required placeholder="Enter your name"
+              style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
           </div>
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="smSenderEmail" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your Email</label>
-            <input type="email" id="smSenderEmail" required placeholder="Enter your email" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
+            <label for="smSenderEmail"
+              style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Your
+              Email</label>
+            <input type="email" id="smSenderEmail" required placeholder="Enter your email"
+              style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box;">
           </div>
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="smText" style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Message</label>
-            <textarea id="smText" required placeholder="Type your message here..." rows="4" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box; resize: vertical;"></textarea>
+            <label for="smText"
+              style="display: block; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">Message</label>
+            <textarea id="smText" required placeholder="Type your message here..." rows="4"
+              style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.9rem; background: var(--panel-bg); color: var(--text-color); box-sizing: border-box; resize: vertical;"></textarea>
           </div>
           <div class="modal-actions" style="margin-top: 1.5rem;">
             <button type="submit" class="btn btn-primary" style="width: 100%;">SEND MESSAGE</button>
@@ -1516,7 +1669,8 @@
     <div class="modal-box small">
       <div class="modal-header">
         <h3 id="settingsModalTitle">ACCESSIBILITY</h3>
-        <button data-action="toggleSettingsModal()" class="close-btn" aria-label="Close settings" title="Close settings">X</button>
+        <button data-action="toggleSettingsModal()" class="close-btn" aria-label="Close settings"
+          title="Close settings">X</button>
       </div>
       <div class="modal-body settings-body">
         <div class="setting-item">
@@ -1566,7 +1720,9 @@
       </div>
       <div class="modal-footer">
         <p class="settings-hint">Settings are saved automatically to this device.</p>
-        <button class="sfb-link" type="button" data-action="openSourcesModal()" style="margin:10px auto 0;display:block;background:none;border:none;padding:0;font-size:12px;font-family:var(--font-mono,monospace);color:var(--accent-color,#2563EB);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Sources &amp; Attribution</button>
+        <button class="sfb-link" type="button" data-action="openSourcesModal()"
+          style="margin:10px auto 0;display:block;background:none;border:none;padding:0;font-size:12px;font-family:var(--font-mono,monospace);color:var(--accent-color,#2563EB);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Sources
+          &amp; Attribution</button>
       </div>
     </div>
   </div>
@@ -1601,53 +1757,57 @@
   <div id="custom-camera-overlay" class="camera-overlay hidden">
     <!-- Camera stream video -->
     <video id="camera-video" autoplay playsinline muted class="camera-video"></video>
-    
+
     <!-- Snapshot preview (for review) -->
     <img id="camera-preview-img" class="camera-preview-img hidden" alt="Captured preview">
-    
+
     <!-- Visual shutter flash overlay -->
     <div id="camera-flash" class="camera-flash"></div>
-    
+
     <!-- Camera Top Toolbar -->
     <div class="camera-top-bar">
       <button type="button" id="camera-close-btn" class="camera-icon-btn" aria-label="Close Camera">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
       <h2 class="camera-title-indicator">Camera</h2>
       <button type="button" id="camera-switch-btn" class="camera-icon-btn" aria-label="Switch Camera">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.73-.73"></path>
         </svg>
       </button>
     </div>
-    
+
     <!-- Camera Bottom Shooting Toolbar -->
     <div id="camera-controls-shoot" class="camera-bottom-bar">
       <!-- Gallery upload trigger shortcut -->
       <button type="button" id="camera-gallery-btn" class="camera-icon-btn" aria-label="Choose Photo from Gallery">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
           <circle cx="8.5" cy="8.5" r="1.5"></circle>
           <polyline points="21 15 16 10 5 21"></polyline>
         </svg>
       </button>
-      
+
       <!-- Big circular Shutter button -->
       <button type="button" id="camera-shutter-btn" class="camera-shutter-btn" aria-label="Capture Photo">
         <span class="camera-shutter-inner"></span>
       </button>
-      
+
       <!-- Placeholder to balance flex layout -->
       <div style="width: 44px;"></div>
     </div>
-    
+
     <!-- Camera Bottom Preview Toolbar -->
     <div id="camera-controls-preview" class="camera-bottom-bar hidden">
       <button type="button" id="camera-retake-btn" class="camera-btn-text">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4.8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4.8px;">
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
           <polyline points="3 3 3 8 8 8"></polyline>
         </svg>
@@ -1655,18 +1815,20 @@
       </button>
       <button type="button" id="camera-use-btn" class="camera-btn-primary">
         Use Photo
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4.8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4.8px;">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
       </button>
     </div>
-    
+
     <!-- Camera Error / No Permission view -->
     <div id="camera-error-container" class="camera-error-container hidden">
       <div class="camera-error-content">
         <div class="camera-error-icon">⚠️</div>
         <h3>Camera Access Needed</h3>
-        <p>Reunite needs camera permission to capture photos of found items. Please allow camera access or choose a photo from your gallery instead.</p>
+        <p>Reunite needs camera permission to capture photos of found items. Please allow camera access or choose a
+          photo from your gallery instead.</p>
         <button type="button" id="camera-error-upload-btn" class="camera-btn-primary">Choose from Gallery</button>
         <button type="button" id="camera-error-close-btn" class="camera-btn-text">Cancel</button>
       </div>
