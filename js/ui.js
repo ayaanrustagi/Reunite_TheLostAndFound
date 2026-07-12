@@ -73,9 +73,11 @@ function setFocusForSection(sectionId) {
             break;
         case 'dashboard':
         case 'admin':
-
             focusTarget = document.querySelector(`#page-${sectionId} h2`);
-            if (focusTarget) focusTarget.setAttribute('tabindex', '-1');
+            if (focusTarget) {
+                focusTarget.setAttribute('tabindex', '-1');
+                focusTarget.style.outline = 'none';
+            }
             break;
         default:
 
