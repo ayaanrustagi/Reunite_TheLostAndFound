@@ -120,6 +120,8 @@ async function handleReportSubmit(e) {
         avgColor = await getDominantColor(preview);
     }
 
+    const type = document.getElementById('itemType')?.value || 'found';
+
     const newItem = {
         id: "item_" + Math.random().toString(36).substr(2, 9),
         title, category, location, date_found: date, description,
@@ -129,6 +131,7 @@ async function handleReportSubmit(e) {
         dhash: dhash,
         color: avgColor,
         status: 'pending',
+        type: type,
         created_at: new Date().toISOString(),
         created_by: email
     };
@@ -137,6 +140,17 @@ async function handleReportSubmit(e) {
     const success = await apiUpsert('items', newItem);
 
     if (success) {
+        // PROACTIVE MATCH ALERTS
+        if (type === 'found' && window.items) {
+            const lostItems = window.items.filter(i => i.type === 'lost' && i.status !== 'deleted');
+            const matches = lostItems.filter(i => i.category === category && i.contact_email);
+            for (const match of matches) {
+                const subject = "Match Alert: Your Lost Item May Have Been Found!";
+                const message = `Great news! Someone just reported finding a ${title} in the ${category} category near ${location || 'campus'}. Please check the REUNITE "Claim Item" page to see if this matches the item you reported lost.`;
+                sendEmailUpdate(match.contact_email, match.contact_name, subject, message, title).catch(e => console.error("Proactive Match Email Failed", e));
+            }
+        }
+
         showSuccess('REPORT LOGGED SUCCESSFULLY');
 
         window.items.unshift(newItem);
