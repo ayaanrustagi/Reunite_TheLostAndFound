@@ -89,7 +89,7 @@
                 
                 const backBtn = document.getElementById('rwMobileBackBtn');
                 if (backBtn) {
-                    backBtn.style.visibility = toStep === 1 ? 'hidden' : 'visible';
+                    backBtn.style.display = toStep === 1 ? 'none' : 'flex';
                 }
                 
                 const nextBtn = document.getElementById('rwMobileNextBtn');
