@@ -244,16 +244,11 @@
     }
 
     #page-claim .rw-progress {
-        display: flex !important; /* Show horizontal steps navigation on mobile */
-        padding-top: calc(4.75rem + env(safe-area-inset-top, 0px));
-        margin-bottom: 0;
-        padding-bottom: 1rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
+        display: none !important; /* Hide horizontal steps navigation on mobile for cleaner UI */
     }
 
-    #page-claim .rw-step-label {
-        display: none !important;
+    #page-claim .rw-eyebrow {
+        display: none !important; /* Redundant with mobile header */
     }
 
     #page-claim .rw-card {
@@ -263,7 +258,7 @@
         border: none !important;
         box-shadow: none !important;
         border-radius: 0 !important;
-        padding: 0 1.25rem calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
+        padding: calc(4.75rem + env(safe-area-inset-top, 0px)) 1.25rem calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important; /* Spaced for sticky bottom bar */
         margin: 0 !important;
         gap: 1.25rem;
         flex-grow: 1;

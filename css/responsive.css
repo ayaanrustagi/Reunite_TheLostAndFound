@@ -1432,7 +1432,10 @@
     }
 
     .mb-grid-card {
+        background: #ffffff !important;
+        border: 1px solid rgba(15, 20, 25, 0.05) !important;
         border-radius: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.01) !important;
         padding: 1.25rem;
         display: flex;
         flex-direction: column;
@@ -1440,26 +1443,44 @@
         justify-content: space-between;
         aspect-ratio: 1 / 1;
         height: auto;
-        border: none;
         cursor: pointer;
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
         text-align: left;
         box-sizing: border-box;
     }
 
     .mb-grid-card:active {
         transform: scale(0.96);
+        background-color: #f8fafc !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.005) !important;
     }
 
     .card-icon-wrap {
-        background: #fff;
         width: 42px;
         height: 42px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #000;
+        transition: transform 0.2s ease;
+    }
+
+    /* CURATED BRAND PALETTES FOR CARD ICONS */
+    .mb-card-scan .card-icon-wrap {
+        background: rgba(37, 99, 235, 0.08) !important;
+        color: var(--accent-color) !important;
+    }
+    .mb-card-report .card-icon-wrap {
+        background: rgba(216, 146, 74, 0.08) !important;
+        color: var(--c-orange) !important;
+    }
+    .mb-card-claim .card-icon-wrap {
+        background: rgba(130, 201, 130, 0.08) !important;
+        color: var(--c-green) !important;
+    }
+    .mb-card-dashboard .card-icon-wrap {
+        background: rgba(216, 120, 168, 0.08) !important;
+        color: var(--c-pink) !important;
     }
 
     .mb-grid-card span {
@@ -1567,4 +1588,14 @@
     .mobile-native-dashboard { display: none !important; }
     .mobile-floating-nav { display: none !important; }
     .mobile-header { display: none !important; }
+}
+
+/* Force fullscreen wizard app views on mobile (cancelling tablet scale overrides) */
+@media (max-width: 767px) {
+    #page-report.active,
+    #page-claim.active {
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        padding: 0 !important;
+    }
 }

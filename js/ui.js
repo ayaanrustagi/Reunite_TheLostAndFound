@@ -615,6 +615,8 @@ function updateAuthUI() {
 
     if (!loginBtn || !dashboardBtn || !adminBtn) return;
 
+    const mbGreeting = document.getElementById('mbGreetingHeading');
+
     if (window.currentUser) {
         loginBtn.classList.add('hidden');
         if (logoutBtn) logoutBtn.classList.add('hidden'); // We are removing it from top bar, but keep this just in case
@@ -632,6 +634,12 @@ function updateAuthUI() {
             if (lbl) lbl.textContent = 'Account';
             mobileLoginBtn.setAttribute('data-action', window.currentUser.role === 'admin' ? "navigateToSection('admin')" : "navigateToSection('dashboard')");
         }
+
+        if (mbGreeting) {
+            const name = window.currentUser.full_name || window.currentUser.name || 'User';
+            const firstName = name.trim().split(' ')[0];
+            mbGreeting.innerHTML = `Hi ${firstName},<br>How can I help<br>you today?`;
+        }
     } else {
         loginBtn.classList.remove('hidden');
         dashboardBtn.classList.add('hidden');
@@ -642,6 +650,10 @@ function updateAuthUI() {
             const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
             if (lbl) lbl.textContent = 'Login';
             mobileLoginBtn.setAttribute('data-action', "goLogin()");
+        }
+
+        if (mbGreeting) {
+            mbGreeting.innerHTML = `Hi guest,<br>How can I help<br>you today?`;
         }
     }
 }

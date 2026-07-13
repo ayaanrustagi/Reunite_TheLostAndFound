@@ -643,11 +643,13 @@
         resolveCategory();
 
         const btn = document.getElementById('rwSubmitBtn');
+        const mBtn = document.getElementById('rwMobileNextBtn');
         const errEl = document.getElementById('rwSubmitError');
         if (errEl) errEl.textContent = '';
 
         submitting = true;
         if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
+        if (mBtn) { mBtn.disabled = true; mBtn.textContent = 'Submitting…'; }
 
         /* Success hook fired by forms.js after a successful save */
         let consumed = false;
@@ -676,6 +678,10 @@
             window._onReportSuccess = null;
             if (typeof window.hideLoading === 'function') window.hideLoading();
             if (btn) { btn.disabled = false; btn.textContent = 'Submit Report'; }
+            if (mBtn) {
+                mBtn.disabled = false;
+                mBtn.innerHTML = 'Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            }
             if (errEl) {
                 errEl.textContent = 'Something went wrong saving your report. Please check your connection and try again.';
                 errEl.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'nearest' });

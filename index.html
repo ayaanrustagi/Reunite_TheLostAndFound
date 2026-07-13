@@ -246,13 +246,13 @@
       <div class="mobile-native-dashboard">
         <!-- Greeting -->
         <div class="mb-greeting">
-          <h1>Hi guest,<br>How can I help<br>you today?</h1>
+          <h1 id="mbGreetingHeading">Hi guest,<br>How can I help<br>you today?</h1>
           <img src="assets/reunite-logo.png" alt="Reunite Logo" class="mb-greeting-logo">
         </div>
 
         <!-- 2x2 Grid -->
         <div class="mb-grid">
-          <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('report')">
+          <button class="mb-grid-card mb-card-scan" data-action="navigateToSection('report')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 7V4h3 M20 7V4h-3 M4 17v3h3 M20 17v3h-3 M9 10h1 M14 10h1 M9 14h1 M14 14h1 M11 10h2 M11 14h2">
@@ -262,7 +262,7 @@
             <span>Scan</span>
           </button>
 
-          <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('report')">
+          <button class="mb-grid-card mb-card-report" data-action="navigateToSection('report')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
@@ -274,7 +274,7 @@
             <span>Report</span>
           </button>
 
-          <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('found')">
+          <button class="mb-grid-card mb-card-claim" data-action="navigateToSection('found')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
@@ -284,7 +284,7 @@
             <span>Claim</span>
           </button>
 
-          <button class="mb-grid-card" style="background-color: #d8f3fd;" data-action="navigateToSection('dashboard')">
+          <button class="mb-grid-card mb-card-dashboard" data-action="navigateToSection('dashboard')">
             <div class="card-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="7" height="7"></rect>
