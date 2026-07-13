@@ -1540,7 +1540,7 @@ body.wizard-active .mobile-header {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         border-top: none !important;
-        padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
+        padding: 0.75rem 1.25rem calc(1.75rem + env(safe-area-inset-bottom, 0px)) !important;
         z-index: 100;
         gap: 0.75rem;
     }

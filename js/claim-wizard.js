@@ -488,6 +488,7 @@
        ===================================================================== */
 
     function boot() {
+        showCwPanel(1);
         initDrop();
 
         // Live-clear field errors on input

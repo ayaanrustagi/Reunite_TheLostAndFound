@@ -1013,7 +1013,7 @@
 
     /* ---- init on DOM ready ---- */
     function init() {
-        updateProgress(1);
+        showPanel(1);
         initPhotoDropZone();
         initInlineValidation();
         initCustomCamera();
