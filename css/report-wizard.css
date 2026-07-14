@@ -156,31 +156,15 @@
 
 @media (prefers-reduced-motion: reduce) {
     .rw-panel.active.rw-fwd,
-    .rw-panel.active.rw-back { 
-        animation: none !important; 
-        opacity: 1 !important;
-        transform: none !important;
-    }
+    .rw-panel.active.rw-back,
     .rw-panel.exit.rw-fwd,
-    .rw-panel.exit.rw-back { 
-        animation: none !important; 
-        display: none !important;
-        opacity: 0 !important;
-    }
+    .rw-panel.exit.rw-back { animation: none; }
 }
 
 body.reduced-motion .rw-panel.active.rw-fwd,
-body.reduced-motion .rw-panel.active.rw-back { 
-    animation: none !important; 
-    opacity: 1 !important;
-    transform: none !important;
-}
+body.reduced-motion .rw-panel.active.rw-back,
 body.reduced-motion .rw-panel.exit.rw-fwd,
-body.reduced-motion .rw-panel.exit.rw-back { 
-    animation: none !important; 
-    display: none !important;
-    opacity: 0 !important;
-}
+body.reduced-motion .rw-panel.exit.rw-back { animation: none; }
 
 /* --- Card --- */
 .rw-card {
