@@ -1412,7 +1412,8 @@
         opacity: 0.9;
     }
 
-    .mb-greeting h1 {
+    .mb-greeting h1,
+    .mb-greeting h2 {
         font-family: var(--font-display);
         font-size: clamp(32px, 8.5vw, 42px);
         font-weight: 800;
@@ -1601,6 +1602,13 @@
     }
     
     .rw-btn-submit {
+        display: none !important;
+    }
+}
+
+/* Hide semantic site footer on mobile/tablet to maintain 100svh native app feel */
+@media (max-width: 1024px) {
+    .site-footer {
         display: none !important;
     }
 }
