@@ -1592,6 +1592,10 @@
 
 /* Force fullscreen wizard app views on mobile (cancelling tablet scale overrides) */
 @media (max-width: 767px) {
+    body.wizard-active {
+        background-color: #ffffff !important;
+    }
+    
     #page-report.active,
     #page-claim.active {
         min-height: 100vh !important;
