@@ -1598,4 +1598,8 @@
         min-height: 100dvh !important;
         padding: 0 !important;
     }
+    
+    .rw-btn-submit {
+        display: none !important;
+    }
 }

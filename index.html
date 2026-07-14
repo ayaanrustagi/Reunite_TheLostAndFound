@@ -589,7 +589,7 @@
         <input type="hidden" id="itemLat">
         <input type="hidden" id="itemLng">
         <input type="hidden" id="itemAddress">
-        <input type="hidden" id="itemPublic" value="true">
+        <input type="hidden" id="itemPublic" value="false">
         <input type="date" id="itemDate">
         <textarea id="itemDescription"></textarea>
         <!-- reportItemPhoto lives in the drop zone; reportPhotoPreview synced by wizard JS -->
@@ -848,15 +848,7 @@
                 <span class="rw-err" role="alert"></span>
               </div>
 
-              <!-- Community feed toggle (real accessible switch) -->
-              <button type="button" class="rw-feed-toggle" id="rwFeedToggle" role="switch" aria-checked="true"
-                aria-label="Post to community feed">
-                <span class="rw-feed-toggle-text">
-                  <span class="rw-feed-toggle-title">Post to community feed</span>
-                  <span class="rw-feed-toggle-sub">Others can see this item and help reconnect it with its owner.</span>
-                </span>
-                <span class="rw-toggle-pill" aria-hidden="true"></span>
-              </button>
+              <!-- Community feed toggle removed per user request -->
 
               <button type="button" class="rw-btn-submit" id="rwSubmitBtn" data-action="rwSubmit()">
                 Submit Report

@@ -755,11 +755,8 @@
         if (submitErr) submitErr.textContent = '';
         submitting = false;
 
-        /* Reset community feed switch to default (on) */
-        const feedToggle = document.getElementById('rwFeedToggle');
-        if (feedToggle) feedToggle.setAttribute('aria-checked', 'true');
         const publicEl = document.getElementById('itemPublic');
-        if (publicEl) publicEl.value = 'true';
+        if (publicEl) publicEl.value = 'false';
 
         /* Clear validation states */
         document.querySelectorAll('.rw-field.rw-invalid').forEach(f => markValid(f));
@@ -1041,16 +1038,7 @@
         const recenterBtn = document.getElementById('rwResetView');
         if (recenterBtn) recenterBtn.addEventListener('click', recenterMap);
 
-        /* Community feed switch */
-        const feedToggle = document.getElementById('rwFeedToggle');
-        if (feedToggle) {
-            feedToggle.addEventListener('click', () => {
-                const on = feedToggle.getAttribute('aria-checked') === 'true';
-                feedToggle.setAttribute('aria-checked', String(!on));
-                const hidden = document.getElementById('itemPublic');
-                if (hidden) hidden.value = String(!on);
-            });
-        }
+        /* Community feed switch removed */
 
         /* Drop zone keyboard access (Enter/Space opens the file picker) */
         const drop = document.getElementById('rwDrop');
