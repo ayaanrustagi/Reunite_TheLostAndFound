@@ -23,7 +23,7 @@ async function sendEmailUpdate(to_email, to_name, subject, message, item_title) 
         await client.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, templateParams, window.EMAILJS_PUBLIC_KEY);
     } catch (err) {
         console.error("EMAIL FAILED:", err);
-        alert(`EMAIL ERROR: ${err.text || "Recipient missing"}\n\nFIX: Go to EmailJS Dashboard -> Settings Tab -> Set "To Email" to {{to_email}}`);
+        if (window.showError) window.showError("Email notification failed");
     }
 }
 window.sendEmailUpdate = sendEmailUpdate;

@@ -49,6 +49,25 @@ function showSuccess(message = "SUCCESSFUL") {
 }
 window.showSuccess = showSuccess;
 
+function showError(message = "Something went wrong") {
+    const overlay = document.getElementById('loadingOverlay');
+    const messageEl = document.getElementById('loadingMessage');
+    if (!overlay || !messageEl) { console.error(message); return; }
+
+    overlay.classList.add('error-state');
+    messageEl.textContent = message.toUpperCase();
+    overlay.classList.remove('hidden');
+
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+        setTimeout(() => {
+            overlay.classList.remove('error-state');
+            window.loadingCounter = 0;
+        }, 500);
+    }, 3000);
+}
+window.showError = showError;
+
 function setStatusMessage(elementId, message, isError = false) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -65,12 +84,24 @@ function setFieldState(fieldId, isValid, message = "") {
     if (!field) return isValid;
     const group = field.closest('.input-group');
     if (!group) return isValid;
-    const errorEl = document.getElementById(`${fieldId}Error`);
+    let errorEl = document.getElementById(`${fieldId}Error`);
+    if (!errorEl && !isValid) {
+        errorEl = document.createElement('span');
+        errorEl.id = `${fieldId}Error`;
+        errorEl.className = 'error-text';
+        group.appendChild(errorEl);
+    }
     if (!isValid) {
         group.classList.add('invalid');
-        if (errorEl) errorEl.textContent = message;
+        field.setAttribute('aria-invalid', 'true');
+        if (errorEl) {
+            errorEl.textContent = message;
+            field.setAttribute('aria-describedby', errorEl.id);
+        }
     } else {
         group.classList.remove('invalid');
+        field.removeAttribute('aria-invalid');
+        field.removeAttribute('aria-describedby');
         if (errorEl) errorEl.textContent = "";
     }
     return isValid;

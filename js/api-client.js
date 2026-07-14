@@ -61,7 +61,7 @@ async function apiUpsert(resource, record) {
         return true;
     } catch (err) {
         console.error(`API ERROR (${resource}):`, err);
-        alert(`API ERROR: ${err.message}`);
+        if (window.showError) window.showError(err.message);
         return false;
     }
 }

@@ -722,7 +722,7 @@ async function requestItemPhoto(id) {
         showSuccess('PHOTO REQUEST SENT');
     } catch (err) {
         hideLoading();
-        alert('Failed to send email request.');
+        if (window.showError) window.showError('Failed to send email request');
     }
 }
 window.requestItemPhoto = requestItemPhoto;
@@ -753,7 +753,7 @@ async function requestClaimDetails(id) {
         showSuccess('DETAILS REQUEST SENT');
     } catch (err) {
         hideLoading();
-        alert('Failed to send email request.');
+        if (window.showError) window.showError('Failed to send email request');
     }
 }
 window.requestClaimDetails = requestClaimDetails;
@@ -770,7 +770,7 @@ async function withdrawClaim(id) {
         if (window.showSuccess) window.showSuccess('CLAIM SUCCESSFULLY WITHDRAWN');
     } catch (err) {
         if (window.hideLoading) window.hideLoading();
-        alert('Failed to withdraw claim.');
+        if (window.showError) window.showError('Failed to withdraw claim');
     }
 }
 window.withdrawClaim = withdrawClaim;

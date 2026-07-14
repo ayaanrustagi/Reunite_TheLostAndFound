@@ -408,7 +408,7 @@ async function renderDashboard() {
                         <button onclick="window.simulateClaimStatus('${c.id}', 'approved')">Approved & Ready</button>
                     </div>
 
-                    <div class="claim-card-header" onclick="window.toggleClaimDetails('${c.id}')">
+                    <div class="claim-card-header" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); this.click(); }" onclick="window.toggleClaimDetails('${c.id}')">
                         <div class="title-group">
                             <span class="ref-code">CLAIM ID: ${claimIdUpper}</span>
                             <h4>${itemTitle}</h4>
@@ -467,7 +467,7 @@ async function renderDashboard() {
                             <div class="details-block">
                                 <h5>Proof Attachment</h5>
                                 ${c.image || c.proof_image ? `
-                                    <div class="proof-img-container" onclick="window.openClaimLightbox('${c.image || c.proof_image}', '${itemTitle}')">
+                                    <div class="proof-img-container" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); this.click(); }" onclick="window.openClaimLightbox('${c.image || c.proof_image}', '${itemTitle}')">
                                         <img src="${c.image || c.proof_image}" alt="Proof of ownership for ${itemTitle}">
                                     </div>
                                 ` : '<p style="color: var(--muted-text); font-style: italic;">No proof image attached.</p>'}
@@ -571,7 +571,7 @@ async function renderAdmin() {
 
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
-        <div class="list-item clickable" onclick="openAdminDetailModal('report', '${i.id}')">
+        <div class="list-item clickable" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); this.click(); }" onclick="openAdminDetailModal('report', '${i.id}')">
             <div style="display: flex; align-items: center; gap: 1rem;">
               ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>'}
               <div class="item-info">
@@ -592,7 +592,7 @@ async function renderAdmin() {
     if (claimsEl) claimsEl.innerHTML = pendingClaims.length ? pendingClaims.map(c => {
         const item = window.items.find(it => it.id === c.item_id);
         return `
-            <div class="list-item clickable" onclick="openAdminDetailModal('claim', '${c.id}')">
+            <div class="list-item clickable" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); this.click(); }" onclick="openAdminDetailModal('claim', '${c.id}')">
                 <div style="display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0;">
                   ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>`}
                   <div class="item-info">

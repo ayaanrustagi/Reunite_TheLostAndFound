@@ -179,6 +179,8 @@ function openSendMessageModal() {
     const item = window.items.find(i => i.id === id);
     if (!item) return;
 
+    lastFocusedElement = document.activeElement;
+
     // Prefill user details if logged in
     const nameInput = document.getElementById('smSenderName');
     const emailInput = document.getElementById('smSenderEmail');
@@ -210,6 +212,8 @@ function openGeneralMessageModal() {
     // Clear item context
     sessionStorage.removeItem('reunite_selected_id');
     
+    lastFocusedElement = document.activeElement;
+    
     // Prefill user details if logged in
     const nameInput = document.getElementById('smSenderName');
     const emailInput = document.getElementById('smSenderEmail');
@@ -235,6 +239,10 @@ window.openGeneralMessageModal = openGeneralMessageModal;
 
 function closeSendMessageModal() {
     document.getElementById('sendMessageModal').classList.add('hidden');
+    if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+    }
 }
 window.closeSendMessageModal = closeSendMessageModal;
 
@@ -247,7 +255,7 @@ async function handleSendMessageSubmit(event) {
     const messageText = document.getElementById('smText').value.trim();
 
     if (!senderName || !senderEmail || !messageText) {
-        alert("Please fill in all fields.");
+        if (window.showError) window.showError("Please fill in all fields");
         return;
     }
 
@@ -272,7 +280,7 @@ async function handleSendMessageSubmit(event) {
         if (window.showSuccess) {
             window.showSuccess("Message Sent!");
         } else {
-            alert("Message sent successfully!");
+            window.showSuccess("Message Sent!");
         }
         
         closeSendMessageModal();
@@ -296,7 +304,7 @@ async function handleSendMessageSubmit(event) {
         }
     } else {
         if (window.hideLoading) window.hideLoading();
-        alert("Failed to send message. Please try again.");
+        if (window.showError) window.showError("Failed to send message");
     }
 }
 window.handleSendMessageSubmit = handleSendMessageSubmit;
@@ -403,17 +411,45 @@ function closeAdminDetailModal() {
 window.closeAdminDetailModal = closeAdminDetailModal;
 
 
-// Keyboard "Escape" to Close
+// Keyboard "Escape" to Close & Trap Focus
 document.addEventListener('keydown', (e) => {
+    const openModals = document.querySelectorAll('.modal-overlay:not(.hidden), .claim-lightbox:not(.hidden), #custom-camera-overlay:not(.hidden)');
+    if (openModals.length === 0) return;
+    
+    const activeModal = openModals[openModals.length - 1]; // last one opened
+    
     if (e.key === 'Escape') {
-        const smModal = document.getElementById('sendMessageModal');
-        if (smModal && !smModal.classList.contains('hidden')) {
-            closeSendMessageModal();
+        if (activeModal.id === 'sendMessageModal') closeSendMessageModal();
+        else if (activeModal.id === 'itemModal') closeModal();
+        else if (activeModal.id === 'adminDetailModal') { if (window.closeAdminDetailModal) window.closeAdminDetailModal(); }
+        else if (activeModal.id === 'sourcesModal') { if (window.closeSourcesModal) window.closeSourcesModal(); }
+        else if (activeModal.id === 'settingsModal') { if (window.closeSettingsModal) window.closeSettingsModal(); }
+        else if (activeModal.classList.contains('claim-lightbox')) { if (window.closeClaimLightbox) window.closeClaimLightbox(); }
+        else if (activeModal.id === 'custom-camera-overlay') { if (window.closeCameraOverlay) window.closeCameraOverlay(); }
+        return;
+    }
+
+    if (e.key === 'Tab') {
+        // Trap focus inside the modal
+        const focusableElements = activeModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusableElements.length === 0) {
+            e.preventDefault();
             return;
         }
-        const modal = document.getElementById('itemModal');
-        if (modal && !modal.classList.contains('hidden')) {
-            closeModal();
+        
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) { // Shift + Tab
+            if (document.activeElement === firstElement || !activeModal.contains(document.activeElement)) {
+                lastElement.focus();
+                e.preventDefault();
+            }
+        } else { // Tab
+            if (document.activeElement === lastElement || !activeModal.contains(document.activeElement)) {
+                firstElement.focus();
+                e.preventDefault();
+            }
         }
     }
 });
@@ -458,6 +494,10 @@ function initHeroRotation() {
     const subEl = document.getElementById('hero-subtitle');
 
     if (!titleEl || !subEl) return;
+
+    // Respect prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
     // Ensure we start clean by removing initial reveal class which has a delay
     titleEl.classList.remove('text-reveal');

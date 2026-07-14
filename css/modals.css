@@ -198,6 +198,22 @@
     animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.loading-overlay.error-state .spinner {
+    display: none;
+}
+
+.loading-overlay.error-state #loadingMessage {
+    color: #e53e3e;
+}
+
+.loading-overlay.error-state::before {
+    content: "\2717";
+    font-size: 3rem;
+    color: #e53e3e;
+    margin-bottom: 0.5rem;
+    animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @keyframes scaleIn {
     from {
         transform: scale(0);

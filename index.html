@@ -66,9 +66,9 @@
 
 
 
-  <div id="loadingOverlay" class="loading-overlay hidden" role="status" aria-live="assertive">
-    <div class="spinner" aria-hidden="true"></div>
-    <span id="loadingMessage">Processing request...</span>
+  <div id="loadingOverlay" class="loading-overlay hidden" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingMessage">Processing request...</div>
   </div>
 
   <!-- Desktop Header (hidden on mobile) -->
@@ -94,7 +94,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </div>
-        <input type="text" id="headerSearchInput" placeholder="Search lost items..."
+        <input type="text" id="headerSearchInput" placeholder="Search lost items..." aria-label="Search lost items"
           oninput="navigateToSection('found'); renderFound()" onfocus="navigateToSection('found')"
           onblur="setTimeout(renderFound, 200)">
       </div>
@@ -240,13 +240,13 @@
 
         </div><!-- /scrollhero-stage -->
       </div><!-- /scrollhero.mana -->
-      </div><!-- /scrollhero.mana -->
 
       <!-- Mobile Native Dashboard (Displays only on <1024px) -->
-      <div class="mobile-native-dashboard">
-        <!-- Greeting -->
-        <div class="mb-greeting">
-          <h1 id="mbGreetingHeading">Hi guest,<br>How can I help<br>you today?</h1>
+      <div class="admin-grid" id="adminViews" aria-live="polite" aria-atomic="false">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="mb-greeting">
+          <h2 id="mbGreetingHeading">Hi guest,<br>How can I help<br>you today?</h2>
           <img src="assets/reunite-logo.png" alt="Reunite Logo" class="mb-greeting-logo">
         </div>
 
@@ -299,7 +299,7 @@
 
         <!-- Search Pill -->
         <div class="mb-search-bar" data-action="navigateToSection('found')">
-          <input type="text" placeholder="Ask or search for anything" readonly>
+          <input type="text" placeholder="Ask or search for anything" aria-label="Ask or search for anything" readonly>
         </div>
       </div><!-- /.mobile-native-dashboard -->
 
@@ -319,15 +319,15 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input id="fpSearch" type="text" placeholder="Search lost items..."
+            <input id="fpSearch" type="text" placeholder="Search lost items..." aria-label="Search lost items"
               oninput="document.getElementById('searchFilter').value=this.value; renderFound()">
           </div>
         </div>
 
         <!-- Hidden legacy filters so existing JS handlers keep working -->
         <div class="filter-ui" role="search" aria-label="Inventory filters">
-          <input type="text" id="searchFilter" oninput="renderFound()">
-          <select id="categoryFilter" onchange="renderFound()">
+          <input type="text" id="searchFilter" aria-label="Hidden search filter" oninput="renderFound()">
+          <select id="categoryFilter" aria-label="Category filter" onchange="renderFound()">
             <option value="">ALL</option>
             <option value="Keys">Keys</option>
             <option value="Wallet">Wallet</option>
@@ -336,8 +336,8 @@
             <option value="Bottle">Bottle</option>
             <option value="Other">Other</option>
           </select>
-          <input type="text" id="locationFilter" oninput="renderFound()">
-          <select id="sortFilter" onchange="renderFound()">
+          <input type="text" id="locationFilter" aria-label="Hidden location filter" oninput="renderFound()">
+          <select id="sortFilter" aria-label="Sort filter" onchange="renderFound()">
             <option value="newest">NEWEST</option>
             <option value="oldest">OLDEST</option>
           </select>
@@ -457,7 +457,7 @@
               <div class="results-status" id="resultsStatus" aria-live="polite"></div>
             </div>
 
-            <div id="itemsGrid" class="grid-layout"><!-- JS injected --></div>
+            <div id="itemsGrid" class="grid-layout" aria-live="polite" aria-atomic="false"><!-- JS injected --></div>
 
             <div class="claimed-items-section">
               <button class="btn btn-sm btn-outline toggle-claimed-btn" data-action="toggleClaimedItems()" type="button"
@@ -550,7 +550,7 @@
         </button>
         <div class="rw-mobile-title-container">
           <span class="rw-mobile-eyebrow">Report Found Item</span>
-          <h1 class="rw-mobile-title" id="rwMobileStepTitle">Step 1: Details</h1>
+          <h2 class="rw-mobile-title" id="rwMobileStepTitle">Step 1: Details</h2>
         </div>
       </div>
 
@@ -590,13 +590,13 @@
         <input type="hidden" id="itemLng">
         <input type="hidden" id="itemAddress">
         <input type="hidden" id="itemPublic" value="false">
-        <input type="date" id="itemDate">
-        <textarea id="itemDescription"></textarea>
+        <input type="date" id="itemDate" aria-label="Date found">
+        <textarea id="itemDescription" aria-label="Item description"></textarea>
         <!-- reportItemPhoto lives in the drop zone; reportPhotoPreview synced by wizard JS -->
-        <img id="reportPhotoPreview" class="hidden" alt="">
-        <input type="text" id="contactName" autocomplete="name">
-        <input type="email" id="contactEmail" autocomplete="email">
-        <input type="tel" id="contactPhone" autocomplete="tel">
+        <img id="reportPhotoPreview" class="hidden" alt="Uploaded item photo preview">
+        <input type="text" id="contactName" aria-label="Contact name" autocomplete="name">
+        <input type="email" id="contactEmail" aria-label="Contact email" autocomplete="email">
+        <input type="tel" id="contactPhone" aria-label="Contact phone" autocomplete="tel">
         <!-- legacy wrappers forms.js touches -->
         <div id="otherCategoryWrap" class="hidden"></div>
       </form>
@@ -926,7 +926,7 @@
         </button>
         <div class="rw-mobile-title-container">
           <span class="rw-mobile-eyebrow">Claim Item</span>
-          <h1 class="rw-mobile-title" id="cwMobileStepTitle">Step 1: Select Item</h1>
+          <h2 class="rw-mobile-title" id="cwMobileStepTitle">Step 1: Select Item</h2>
         </div>
       </div>
 
@@ -950,14 +950,14 @@
 
       <!-- Hidden legacy form — existing JS (handleClaimSubmit, validateClaimForm) reads these IDs -->
       <form id="claimForm" class="hidden" aria-hidden="true" novalidate>
-        <select id="claimItemId"></select>
-        <input type="text" id="claimName" autocomplete="name">
-        <input type="email" id="claimEmail" autocomplete="email">
-        <textarea id="claimMessage"></textarea>
-        <input type="file" id="claimItemPhoto" accept="image/*">
-        <img id="claimPhotoPreview" class="hidden" alt="">
-        <div id="claimStatus" role="status" aria-live="polite"></div>
+        <select id="claimItemId" aria-label="Select item"></select>
+        <input type="text" id="claimName" aria-label="Claimant name" autocomplete="name">
+        <input type="email" id="claimEmail" aria-label="Claimant email" autocomplete="email">
+        <textarea id="claimMessage" aria-label="Claim proof"></textarea>
+        <input type="file" id="claimItemPhoto" aria-label="Claim proof photo" accept="image/*">
+        <img id="claimPhotoPreview" class="hidden" alt="Uploaded proof photo preview">
       </form>
+      <div id="claimStatus" role="status" aria-live="polite"></div>
 
       <!-- ===== CLAIM WIZARD ===== -->
       <div class="cw-outer">
@@ -1205,7 +1205,7 @@
           <button class="btn btn-sm btn-outline" data-action="handleLogout()">LOGOUT</button>
         </div>
 
-        <div class="dashboard-grid-container">
+        <div class="dashboard-grid-container" id="dashboardViews" aria-live="polite" aria-atomic="false">
           <!-- Top Stats Row -->
           <div class="stats-row">
             <div class="stat-card bg-pastel-blue">
@@ -1372,6 +1372,10 @@
     </section>
 
   </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <p>&copy; 2026 REUNITE &mdash; Lost &amp; Found Network. Built by Ayaan Rustagi, Sree Kondapalli &amp; Tushaar Singh.</p>
+  </footer>
 
   <!-- ── Sources modal ─────────────────────────────────────────────────────── -->
   <div id="sourcesModal" class="modal-overlay hidden" role="dialog" aria-modal="true"

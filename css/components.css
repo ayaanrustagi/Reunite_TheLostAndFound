@@ -465,6 +465,19 @@
 
 .sfb-link:hover { opacity: 0.75; }
 
+/* ── Semantic site footer ────────────────────────────────────────────────── */
+.site-footer {
+    text-align: center;
+    padding: 1.25rem clamp(1rem, 4vw, 3rem);
+    font-size: 11px;
+    font-family: var(--font-mono, monospace);
+    color: var(--muted-text, #6A7180);
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-color, #f8f9fb);
+}
+
+.site-footer p { margin: 0; }
+
 /* ── Sources modal body ──────────────────────────────────────────────────── */
 .sources-modal-box { max-width: 740px; }
 

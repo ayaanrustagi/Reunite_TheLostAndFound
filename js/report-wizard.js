@@ -19,13 +19,13 @@
 
     /* ---- progress bar update ---- */
     function updateProgress(step) {
-        document.querySelectorAll('.rw-step').forEach((el, i) => {
+        document.querySelectorAll('#page-report .rw-step').forEach((el, i) => {
             const n = i + 1;
             el.classList.remove('active', 'completed');
             if (n < step)  el.classList.add('completed');
             if (n === step) el.classList.add('active');
         });
-        document.querySelectorAll('.rw-connector').forEach((el, i) => {
+        document.querySelectorAll('#page-report .rw-connector').forEach((el, i) => {
             el.classList.toggle('done', i + 1 < step);
         });
     }
@@ -33,7 +33,7 @@
     /* ---- panel transitions (horizontal carousel) ---- */
     function showPanel(toStep, direction) {
         const dir = direction === 'back' ? 'rw-back' : 'rw-fwd';
-        const panels = document.querySelectorAll('.rw-panel');
+        const panels = document.querySelectorAll('#page-report .rw-panel');
         const target = document.getElementById('rwPanel' + toStep);
         if (!target) return;
 
@@ -124,7 +124,7 @@
         /* Only the success destination jumps the page to the wizard top —
            normal step changes stay put so the motion reads as horizontal. */
         if (toStep === 4) {
-            const outer = document.querySelector('.rw-outer');
+            const outer = document.querySelector('#page-report .rw-outer');
             if (outer) outer.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
         }
     }
@@ -414,13 +414,23 @@
     function markValid(fieldEl) {
         fieldEl.classList.remove('rw-invalid');
         const err = fieldEl.querySelector('.rw-err');
+        const input = fieldEl.querySelector('input, select, textarea');
         if (err) err.textContent = '';
+        if (input) input.removeAttribute('aria-invalid');
     }
 
     function markInvalid(fieldEl, msg) {
         fieldEl.classList.add('rw-invalid');
         const err = fieldEl.querySelector('.rw-err');
-        if (err) err.textContent = msg;
+        const input = fieldEl.querySelector('input, select, textarea');
+        if (err) {
+            err.textContent = msg;
+            if (!err.id) err.id = 'err-' + Math.random().toString(36).substr(2, 9);
+            if (input) {
+                input.setAttribute('aria-invalid', 'true');
+                input.setAttribute('aria-describedby', err.id);
+            }
+        }
     }
 
     function validateField(fieldEl) {
@@ -701,7 +711,7 @@
         if (nameEl) nameEl.textContent = (item && item.title) ? item.title : '—';
 
         /* Hide progress bar on success */
-        const prog = document.querySelector('.rw-progress');
+        const prog = document.querySelector('#page-report .rw-progress');
         if (prog) prog.style.display = 'none';
 
         showPanel(4, 'forward');
@@ -723,7 +733,7 @@
         currentStep = 1;
 
         /* Show progress bar again */
-        const prog = document.querySelector('.rw-progress');
+        const prog = document.querySelector('#page-report .rw-progress');
         if (prog) prog.style.display = '';
 
         /* Reset the hidden legacy form (incl. lat/lng/address hidden inputs) */
@@ -759,23 +769,23 @@
         if (publicEl) publicEl.value = 'false';
 
         /* Clear validation states */
-        document.querySelectorAll('.rw-field.rw-invalid').forEach(f => markValid(f));
+        document.querySelectorAll('#page-report .rw-field.rw-invalid').forEach(f => markValid(f));
 
         showPanel(1, 'back');
-    }
+     }
 
-    /* ---- inline validation on blur ---- */
-    function initInlineValidation() {
-        document.querySelectorAll('.rw-field[data-required] input, .rw-field[data-required] select, .rw-field[data-required] textarea')
-            .forEach(input => {
-                input.addEventListener('blur', () => validateField(input.closest('.rw-field')));
-                input.addEventListener('input', () => {
-                    if (input.closest('.rw-field').classList.contains('rw-invalid')) {
-                        validateField(input.closest('.rw-field'));
-                    }
-                });
-            });
-    }
+     /* ---- inline validation on blur ---- */
+     function initInlineValidation() {
+         document.querySelectorAll('#page-report .rw-field[data-required] input, #page-report .rw-field[data-required] select, #page-report .rw-field[data-required] textarea')
+             .forEach(input => {
+                 input.addEventListener('blur', () => validateField(input.closest('.rw-field')));
+                 input.addEventListener('input', () => {
+                     if (input.closest('.rw-field').classList.contains('rw-invalid')) {
+                         validateField(input.closest('.rw-field'));
+                     }
+                 });
+             });
+     }
 
     /* ---- expose to window ---- */
     window.rwNext   = rwNext;
@@ -814,23 +824,30 @@
 
         // Open Camera overlay
         window.openReportCamera = async () => {
+            window.lastFocusedElement = document.activeElement;
             overlay.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // prevent scrolling page background
             
             // Default to rear camera if possible
             currentFacingMode = 'environment';
             await startCamera();
+            setTimeout(() => { if(closeBtn) closeBtn.focus(); }, 100);
         };
 
         trigger.addEventListener('click', window.openReportCamera);
 
         // Close Camera
-        function closeCameraOverlay() {
+        window.closeCameraOverlay = function() {
             stopCamera();
             overlay.classList.add('hidden');
             document.body.style.overflow = '';
             resetCameraOverlayUI();
-        }
+            if (window.lastFocusedElement) {
+                window.lastFocusedElement.focus();
+                window.lastFocusedElement = null;
+            }
+        };
+        const closeCameraOverlay = window.closeCameraOverlay;
 
         closeBtn.addEventListener('click', closeCameraOverlay);
         errorCloseBtn.addEventListener('click', closeCameraOverlay);

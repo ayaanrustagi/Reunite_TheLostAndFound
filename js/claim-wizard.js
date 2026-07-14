@@ -137,7 +137,17 @@
         );
 
         if (!items.length) {
-            list.innerHTML = '<div class="cw-empty-state">No approved items in inventory yet.</div>';
+            list.innerHTML = `
+                <div class="cw-empty-state" style="padding: 40px 20px; text-align: center; background: rgba(0,0,0,0.02); border-radius: 16px; border: 1px dashed rgba(0,0,0,0.1); margin-top: 1rem;">
+                    <div style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: #111; margin-bottom: 0.5rem; text-transform: none; letter-spacing: normal;">
+                        No Items Available
+                    </div>
+                    <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--muted-text); line-height: 1.5; text-transform: none; letter-spacing: normal;">
+                        There are currently no <strong>approved</strong> items in the inventory ready to be claimed.<br><br>
+                        <em>Note: Newly reported items must be reviewed before they appear here.</em>
+                    </div>
+                </div>
+            `;
             return;
         }
 
@@ -195,8 +205,12 @@
             c.classList.remove('selected');
             c.setAttribute('aria-checked', 'false');
         });
-        card.classList.add('selected');
-        card.setAttribute('aria-checked', 'true');
+        
+        let targetCard = card || list.querySelector(`[data-id="${id}"]`);
+        if (targetCard) {
+            targetCard.classList.add('selected');
+            targetCard.setAttribute('aria-checked', 'true');
+        }
 
         cwSelectedItem = (window.items || []).find(i => String(i.id) === String(id)) || { id };
         document.getElementById('claimItemId').value = id;
@@ -228,15 +242,27 @@
             const val = el.value.trim();
 
             if (!val) {
-                if (err) err.textContent = f.msg;
+                if (err) {
+                    err.textContent = f.msg;
+                    if (!err.id) err.id = 'err-cw-' + Math.random().toString(36).substr(2, 9);
+                    el.setAttribute('aria-invalid', 'true');
+                    el.setAttribute('aria-describedby', err.id);
+                }
                 el.parentElement.classList.add('rw-invalid');
                 ok = false;
             } else if (f.id === 'cw_email' && !emailRe.test(val)) {
-                if (err) err.textContent = 'Enter a valid email address.';
+                if (err) {
+                    err.textContent = 'Enter a valid email address.';
+                    if (!err.id) err.id = 'err-cw-' + Math.random().toString(36).substr(2, 9);
+                    el.setAttribute('aria-invalid', 'true');
+                    el.setAttribute('aria-describedby', err.id);
+                }
                 el.parentElement.classList.add('rw-invalid');
                 ok = false;
             } else {
                 if (err) err.textContent = '';
+                el.removeAttribute('aria-invalid');
+                el.removeAttribute('aria-describedby');
                 el.parentElement.classList.remove('rw-invalid');
             }
         }
