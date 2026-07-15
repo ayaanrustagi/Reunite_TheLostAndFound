@@ -62,17 +62,17 @@ body.reduced-motion .scrollhero-canvas {
   --mana-ink: #0F1419;
   /* near-black headline */
   --mana-ink-2: #3A4250;
-  --mana-ink-3: #6A7180;
-  --mana-pink: #2563EB;
+  --mana-ink-3: #4b5563;
+  --mana-pink: #1d4ed8;
   /* accent → blue (reusing var name) */
-  --mana-magenta: #1D4ED8;
+  --mana-magenta: #1e40af;
   --mana-rule: rgba(15, 20, 25, 0.12);
   --mana-mono: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
   --mana-display: 'Bricolage Grotesque', 'Hanken Grotesk', sans-serif;
-  --c-green: #82c982;
-  --c-blue: #2563EB;
-  --c-orange: #d8924a;
-  --c-pink: #d878a8;
+  --c-green: #15803d;
+  --c-blue: #1d4ed8;
+  --c-orange: #c2410c;
+  --c-pink: #be185d;
   background: transparent;
 }
 

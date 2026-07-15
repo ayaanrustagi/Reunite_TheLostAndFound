@@ -97,25 +97,25 @@
 
 /* Color Modifiers for Outline */
 .btn-outline.orange {
-    border-color: #ff9500;
-    color: #ff9500;
+    border-color: #c2410c;
+    color: #c2410c;
 }
 
 .btn-outline.orange:hover {
-    background: #ff9500;
+    background: #c2410c;
     color: #fff;
-    border-color: #ff9500;
+    border-color: #c2410c;
 }
 
 .btn-outline.red {
-    border-color: #ff4d4d;
-    color: #ff4d4d;
+    border-color: #b91c1c;
+    color: #b91c1c;
 }
 
 .btn-outline.red:hover {
-    background: #ff4d4d;
+    background: #b91c1c;
     color: #fff;
-    border-color: #ff4d4d;
+    border-color: #b91c1c;
 }
 
 .btn-outline.blue {

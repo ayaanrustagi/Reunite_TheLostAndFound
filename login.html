@@ -39,14 +39,26 @@
             <img src="assets/reunite-logo.png" alt="" class="auth-brand-img">
             <span class="auth-brand-text">REUNITE</span>
         </a>
-        <a href="index.html" class="auth-back-pill">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to site
-        </a>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <button id="settingsBtn" class="btn-icon-alt header-settings-btn" data-action="toggleSettingsModal()"
+                aria-label="Accessibility Settings" title="Accessibility Settings" style="color: var(--ink-2); background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0.7; transition: all 0.3s ease;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                </svg>
+            </button>
+            <a href="index.html" class="auth-back-pill">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to site
+            </a>
+        </div>
     </header>
 
     <main class="auth-container centered">
@@ -169,6 +181,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <!-- App Scripts -->
+    <script src="js/handlers.js"></script>
     <script src="js/config.js"></script>
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
@@ -182,6 +195,235 @@
     <!-- Waves background + micro-interactions -->
     <script type="module" src="js/waves.js"></script>
     <script src="js/micro-interactions.js"></script>
+
+  <footer class="site-footer auth-footer" role="contentinfo">
+    <p>&copy; 2026 REUNITE &mdash; Lost &amp; Found Network. Built by Ayaan Rustagi, Sree Kondapalli &amp; Tushaar Singh. | <a href="#" onclick="event.preventDefault(); window.openSourcesModal();" style="color: inherit; text-decoration: underline; pointer-events: auto;">Sources &amp; Citations</a></p>
+  </footer>
+
+  <!-- ── Sources modal ─────────────────────────────────────────────────────── -->
+  <div id="sourcesModal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+    aria-labelledby="sourcesModalTitle">
+    <div class="modal-box large sources-modal-box">
+      <div class="modal-header">
+        <h3 id="sourcesModalTitle">Sources &amp; Attribution</h3>
+        <button data-action="closeSourcesModal()" class="close-btn" aria-label="Close sources">&#10005;</button>
+      </div>
+      <div class="modal-body sources-body">
+
+        <p class="sources-note">All application code, UI, branding, and the on-device d-hash / Levenshtein matching
+          logic are original work by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh). Third-party
+          libraries and the Groq / Llama&nbsp;4 Scout AI service used by the Accurate match mode are credited below.</p>
+
+        <h4>Fonts</h4>
+        <table class="sources-table">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>License</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/Inter" target="_blank" rel="noopener">Inter</a> (Google
+                Fonts)</td>
+              <td>SIL Open Font License</td>
+            </tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/Roboto+Mono" target="_blank" rel="noopener">Roboto Mono</a>
+                (Google Fonts)</td>
+              <td>Apache 2.0</td>
+            </tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/Bricolage+Grotesque" target="_blank"
+                  rel="noopener">Bricolage Grotesque</a> (Google Fonts)</td>
+              <td>SIL Open Font License</td>
+            </tr>
+            <tr>
+              <td><a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener">JetBrains
+                  Mono</a> (Google Fonts)</td>
+              <td>SIL Open Font License</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Backend Libraries</h4>
+        <table class="sources-table">
+          <thead>
+            <tr>
+              <th>Library</th>
+              <th>Purpose</th>
+              <th>License</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Node.js / Express</td>
+              <td>Server runtime &amp; REST API</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>Mongoose</td>
+              <td>MongoDB object modelling</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>mongodb-memory-server</td>
+              <td>In-memory DB fallback for evaluation</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>bcryptjs</td>
+              <td>Password hashing (salted, 12 rounds)</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>helmet</td>
+              <td>HTTP security headers</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>express-rate-limit</td>
+              <td>Brute-force &amp; DoS protection</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>Multer</td>
+              <td>Multipart file-upload handling</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>CORS / dotenv / nedb-promises</td>
+              <td>Cross-origin, env config, embedded DB</td>
+              <td>MIT / BSD-2</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Frontend Libraries</h4>
+        <table class="sources-table">
+          <thead>
+            <tr>
+              <th>Library</th>
+              <th>Purpose</th>
+              <th>License</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://threejs.org/" target="_blank" rel="noopener">Three.js</a></td>
+              <td>WebGL 3D hero animation</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td><a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a></td>
+              <td>Interactive campus map</td>
+              <td>BSD-2-Clause</td>
+            </tr>
+            <tr>
+              <td><a href="https://gsap.com/" target="_blank" rel="noopener">GSAP</a></td>
+              <td>Scroll &amp; UI animations</td>
+              <td>GreenSock No-Charge</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.emailjs.com/" target="_blank" rel="noopener">EmailJS SDK</a></td>
+              <td>OTP email delivery (client-side)</td>
+              <td>Terms of Service</td>
+            </tr>
+            <tr>
+              <td><a href="https://feathericons.com/" target="_blank" rel="noopener">Feather Icons</a></td>
+              <td>UI icon set</td>
+              <td>MIT</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>AI / Machine Learning</h4>
+        <table class="sources-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://groq.com/" target="_blank" rel="noopener">Groq API</a></td>
+              <td>Low-latency inference for Accurate match mode</td>
+            </tr>
+            <tr>
+              <td>Llama&nbsp;4 Scout (Meta AI)</td>
+              <td>Multimodal model comparing lost-item photos against inventory; Llama&nbsp;4 Community License</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCESSIBILITY SETTINGS MODAL -->
+  <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+    aria-labelledby="settingsModalTitle">
+    <div class="modal-box small">
+      <div class="modal-header">
+        <h3 id="settingsModalTitle">ACCESSIBILITY</h3>
+        <button data-action="toggleSettingsModal()" class="close-btn" aria-label="Close settings"
+          title="Close settings">X</button>
+      </div>
+      <div class="modal-body settings-body">
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">REDUCED MOTION</span>
+            <span class="setting-desc">Simplify animations & transitions</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="motionToggle" onchange="updateAccessibility('motion')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">HIGH CONTRAST</span>
+            <span class="setting-desc">Increase visibility of text and elements</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="contrastToggle" onchange="updateAccessibility('contrast')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">SCREEN READER (TTS)</span>
+            <span class="setting-desc">Read interface text aloud on hover</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="ttsToggle" onchange="updateAccessibility('tts')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">TEXT SCALING</span>
+            <span class="setting-desc">Increase interface font size</span>
+          </div>
+          <div class="scale-controls">
+            <button class="scale-btn" data-action="updateAccessibility('font', 'down')">-</button>
+            <span id="fontScaleDisplay">100%</span>
+            <button class="scale-btn" data-action="updateAccessibility('font', 'up')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <p class="settings-hint">Settings are saved automatically to this device.</p>
+        <button class="sfb-link" type="button" data-action="openSourcesModal()"
+          style="margin:10px auto 0;display:block;background:none;border:none;padding:0;font-size:12px;font-family:var(--font-mono,monospace);color:var(--accent-color,#2563EB);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Sources
+          &amp; Attribution</button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

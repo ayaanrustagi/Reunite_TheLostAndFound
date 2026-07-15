@@ -12,9 +12,10 @@ exports.getMyMessages = async (req, res) => {
         if (!email) return res.status(400).json({ error: "Email parameter is required" });
         if (!requester_id) return res.status(401).json({ error: "Authentication required" });
 
-        // Verify that the requester ID matches the email being queried
+        // Verify that the requester ID matches the email being queried, or is an admin querying system messages
         const user = await User.findOne({ _id: requester_id }).lean();
-        if (!user || user.email !== email) {
+        const isAuthorized = user && (user.email === email || (user.role === 'admin' && email === 'admin@reunite.com'));
+        if (!isAuthorized) {
             return res.status(403).json({ error: "Unauthorized access to messages" });
         }
 

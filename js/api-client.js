@@ -140,6 +140,23 @@ async function apiGetMessages(email) {
 }
 window.apiGetMessages = apiGetMessages;
 
+async function apiSendMessage(msgData) {
+    const session = JSON.parse(localStorage.getItem("reunite_session") || "null");
+    const payload = {
+        ...msgData,
+        id: msgData.id || "msg_" + Math.random().toString(36).substr(2, 9) + "_" + Date.now(),
+        _requester: session ? { id: session.id, email: session.email } : { id: 'guest', email: msgData.sender_email || 'guest' }
+    };
+    const res = await fetch(`${API_BASE}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw await res.json();
+    return await res.json();
+}
+window.apiSendMessage = apiSendMessage;
+
 // Initial sync is handled by app.js
 // but we expect window.items and window.claims to be available globally
 window.items = window.items || [];

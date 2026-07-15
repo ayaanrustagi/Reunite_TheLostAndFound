@@ -2,26 +2,26 @@
     --bg-color: #f4f5f7;
     --bg-color-rgb: 244, 245, 247;
     --text-color: #0f1419;
-    --accent-color: #2563eb;
-    --accent-deep: #1d4ed8;
-    --accent-rgb: 37, 99, 235;
+    --accent-color: #1d4ed8;
+    --accent-deep: #1e3a8a;
+    --accent-rgb: 29, 78, 216;
     --border-color: #e5e7eb;
     --panel-bg: #ffffff;
     --panel-bg-rgb: 255, 255, 255;
-    --muted-text: #555555;
+    --muted-text: #454545;
     --ink-2: #3a4250;
-    --ink-3: #6a7180;
+    --ink-3: #4b5563;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
     --font-display: 'Bricolage Grotesque', 'Inter', sans-serif;
     --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
     --glow-opacity: 0.15;
-    --accent-glow: rgba(37, 99, 235, 0.35);
+    --accent-glow: rgba(29, 78, 216, 0.35);
 
     /* Supporting palette (matches hero) */
-    --c-green: #82c982;
-    --c-orange: #d8924a;
-    --c-pink: #d878a8;
+    --c-green: #15803d;
+    --c-orange: #c2410c;
+    --c-pink: #be185d;
 
     /* New UI Tokens */
     --radius-lg: 24px;

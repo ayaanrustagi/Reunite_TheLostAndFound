@@ -1537,7 +1537,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #666;
+        color: #a3a3a3;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
