@@ -1426,40 +1426,40 @@
     /* Action Grid */
     .mb-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
         width: 100%;
         box-sizing: border-box;
     }
 
     .mb-grid-card {
-        background: #ffffff !important;
-        border: 1px solid rgba(15, 20, 25, 0.05) !important;
-        border-radius: 20px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.01) !important;
-        padding: 1rem 0.75rem;
+        background: #d8f3fd !important;
+        border: none !important;
+        border-radius: 24px;
+        box-shadow: none !important;
+        padding: 1.25rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        aspect-ratio: 1 / 1.1;
+        align-items: flex-start;
+        justify-content: space-between;
+        aspect-ratio: 1 / 1;
         height: auto;
         cursor: pointer;
         transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
-        text-align: center;
+        text-align: left;
         box-sizing: border-box;
-        gap: 0.5rem;
     }
 
     .mb-grid-card:active {
         transform: scale(0.96);
-        background-color: #f8fafc !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.005) !important;
+        background-color: #bae6fd !important;
     }
 
     .card-icon-wrap {
-        width: 38px;
-        height: 38px;
+        background: #ffffff !important;
+        color: #000000 !important;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -1467,25 +1467,11 @@
         transition: transform 0.2s ease;
     }
 
-    /* CURATED BRAND PALETTES FOR CARD ICONS */
-    .mb-card-report .card-icon-wrap {
-        background: rgba(216, 146, 74, 0.08) !important;
-        color: var(--c-orange) !important;
-    }
-    .mb-card-claim .card-icon-wrap {
-        background: rgba(130, 201, 130, 0.08) !important;
-        color: var(--c-green) !important;
-    }
-    .mb-card-find .card-icon-wrap {
-        background: rgba(37, 99, 235, 0.08) !important;
-        color: var(--accent-color) !important;
-    }
-
     .mb-grid-card span {
         font-family: var(--font-display);
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
         color: #0f172a;
     }
 
