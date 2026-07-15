@@ -149,6 +149,13 @@
         </svg>
         <span class="mb-nav-label">Claim</span>
       </button>
+      <button class="mb-nav-btn" data-action="toggleSettingsModal()" aria-label="Accessibility Settings" title="Accessibility Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span class="mb-nav-label">Settings</span>
+      </button>
       <button id="mbProfileBtn" class="mb-nav-btn" data-action="goLogin()" aria-label="Profile/Login">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -1217,10 +1224,17 @@
             </div>
           </div>
 
+          <!-- Segmented Dashboard Tabs (Visible on Mobile/Tablet only) -->
+          <div class="dashboard-tabs-nav" id="studentTabsNav">
+            <button type="button" class="tab-nav-item active" onclick="switchDashboardTab('student', 'reports')">Reports</button>
+            <button type="button" class="tab-nav-item" onclick="switchDashboardTab('student', 'claims')">Claims</button>
+            <button type="button" class="tab-nav-item" onclick="switchDashboardTab('student', 'inbox')">Inbox</button>
+          </div>
+
           <!-- Main Activity Bento -->
           <div class="dashboard-bento-grid">
             <!-- Reports Panel -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="student" data-tab-name="reports">
               <div class="card-header">
                 <h3>REPORTS</h3>
                 <span class="head-count" id="repCount">0</span>
@@ -1229,7 +1243,7 @@
             </div>
 
             <!-- Claims Panel -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="student" data-tab-name="claims">
               <div class="card-header">
                 <h3>CLAIMS</h3>
                 <span class="head-count" id="claimCount">0</span>
@@ -1239,7 +1253,7 @@
 
             <!-- Quick Action / New -->
             <button class="bento-card card-full-span action-card" data-action="navigateToSection('report')"
-              type="button" aria-label="Create New Report" title="Create New Report">
+              type="button" aria-label="Create New Report" title="Create New Report" data-tab-group="student" data-tab-name="reports">
               <div class="action-content">
                 <h3>CREATE NEW REPORT</h3>
                 <div class="action-icon">+</div>
@@ -1247,7 +1261,7 @@
             </button>
 
             <!-- Messages Panel -->
-            <div class="bento-card card-full-span messages-panel">
+            <div class="bento-card card-full-span messages-panel" data-tab-group="student" data-tab-name="inbox">
               <div class="card-header">
                 <h3>INBOX / MESSAGES</h3>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -1297,10 +1311,17 @@
             </div>
           </div>
 
+          <!-- Segmented Dashboard Tabs (Visible on Mobile/Tablet only) -->
+          <div class="dashboard-tabs-nav" id="adminTabsNav">
+            <button type="button" class="tab-nav-item active" onclick="switchDashboardTab('admin', 'queues')">Queues</button>
+            <button type="button" class="tab-nav-item" onclick="switchDashboardTab('admin', 'inventory')">Inventory</button>
+            <button type="button" class="tab-nav-item" onclick="switchDashboardTab('admin', 'system')">System</button>
+          </div>
+
           <!-- Admin Management Bento -->
           <div class="dashboard-bento-grid">
             <!-- Pending Reports Panel -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="admin" data-tab-name="queues">
               <div class="card-header">
                 <h3>REPORT QUEUE</h3>
                 <span class="head-count" id="adminPendingCount">0</span>
@@ -1309,7 +1330,7 @@
             </div>
 
             <!-- Claim Queue Panel -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="admin" data-tab-name="queues">
               <div class="card-header">
                 <h3>CLAIM QUEUE</h3>
                 <span class="head-count" id="adminClaimQueueCount">0</span>
@@ -1318,7 +1339,7 @@
             </div>
 
             <!-- Inventory Management -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="admin" data-tab-name="inventory">
               <div class="card-header">
                 <h3>LIVE INVENTORY</h3>
                 <span class="head-count" id="adminApprovedCount">0</span>
@@ -1327,7 +1348,7 @@
             </div>
 
             <!-- Verified Claims Archive -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="admin" data-tab-name="inventory">
               <div class="card-header">
                 <h3>VERIFIED CLAIMS</h3>
                 <span class="head-count" id="adminVerifiedCount">0</span>
@@ -1336,7 +1357,7 @@
             </div>
 
             <!-- Admin Messages Panel -->
-            <div class="bento-card card-full-span messages-panel">
+            <div class="bento-card card-full-span messages-panel" data-tab-group="admin" data-tab-name="system">
               <div class="card-header">
                 <h3>SYSTEM MESSAGES</h3>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -1348,7 +1369,7 @@
             </div>
 
             <!-- Audit Log Panel -->
-            <div class="bento-card card-large-span">
+            <div class="bento-card card-large-span" data-tab-group="admin" data-tab-name="system">
               <div class="card-header">
                 <h3>SYSTEM AUDIT LOG</h3>
                 <button class="btn btn-sm btn-outline" data-action="renderAdminAudit()">REFRESH</button>

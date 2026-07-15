@@ -46,8 +46,14 @@ function navigateToSection(sectionId) {
 
     if (sectionId === 'found' && window.renderFound) window.renderFound();
     if (sectionId === 'claim' && window.renderClaimSelect) window.renderClaimSelect();
-    if (sectionId === 'dashboard' && window.renderDashboard) window.renderDashboard();
-    if (sectionId === 'admin' && window.renderAdmin) window.renderAdmin();
+    if (sectionId === 'dashboard') {
+        if (window.renderDashboard) window.renderDashboard();
+        if (window.switchDashboardTab) window.switchDashboardTab('student', 'reports');
+    }
+    if (sectionId === 'admin') {
+        if (window.renderAdmin) window.renderAdmin();
+        if (window.switchDashboardTab) window.switchDashboardTab('admin', 'queues');
+    }
     if (sectionId === 'how' && window.handleSplitScroll) {
         setTimeout(window.handleSplitScroll, 50);
     }
@@ -1010,4 +1016,43 @@ function disableTextToSpeech() {
     document.removeEventListener('focusin', handleTTSFocus);
     document.removeEventListener('focusout', handleTTSLeave);
 }
+
+/**
+ * Switch the active dashboard view tab (Mobile/Tablet Segmented Nav).
+ * Controls the visibility of bento card groups inside student and admin dashboards.
+ * 
+ * @function switchDashboardTab
+ * @param {String} dashboardType - The dashboard view type ('student' or 'admin')
+ * @param {String} tabName - The target tab pane to display
+ * @returns {void}
+ */
+function switchDashboardTab(dashboardType, tabName) {
+    const navId = dashboardType === 'student' ? 'studentTabsNav' : 'adminTabsNav';
+    const navEl = document.getElementById(navId);
+    if (!navEl) return;
+
+    // Toggle active state on buttons
+    const buttons = navEl.querySelectorAll('.tab-nav-item');
+    buttons.forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick') || '';
+        if (onclickAttr.includes(`'${tabName}'`)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Show/hide bento cards
+    const cards = document.querySelectorAll(`[data-tab-group="${dashboardType}"]`);
+    cards.forEach(card => {
+        const name = card.getAttribute('data-tab-name');
+        if (name === tabName) {
+            card.classList.remove('tab-hidden');
+        } else {
+            card.classList.add('tab-hidden');
+        }
+    });
+}
+window.switchDashboardTab = switchDashboardTab;
+
 

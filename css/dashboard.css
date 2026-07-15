@@ -982,3 +982,57 @@ button.action-card {
     background: #fff1f2;
     color: #be123c;
 }
+
+/* ==========================================================================
+   SEGMENTED DASHBOARD TABS (Mobile & Tablet)
+   ========================================================================== */
+
+.dashboard-tabs-nav {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-tabs-nav {
+        display: flex;
+        gap: 4px;
+        background: rgba(15, 23, 42, 0.04);
+        border-radius: 999px;
+        padding: 4px;
+        margin: 0.5rem 0 1.5rem;
+        box-sizing: border-box;
+        width: 100%;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(15, 23, 42, 0.05);
+    }
+    
+    .tab-nav-item {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 0.6rem 0.8rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 999px;
+        color: var(--ink-3);
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        text-transform: uppercase;
+        text-align: center;
+        outline: none;
+        white-space: nowrap;
+    }
+    
+    .tab-nav-item.active {
+        background: #ffffff;
+        color: var(--accent-color);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Hide bento cards on tablet/mobile if they are not selected */
+    .bento-card.tab-hidden,
+    button.bento-card.tab-hidden {
+        display: none !important;
+    }
+}
