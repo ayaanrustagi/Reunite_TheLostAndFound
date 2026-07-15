@@ -1,7 +1,10 @@
-/* ==========================================================================
-   REPORT WIZARD — 3-step + success
-   Steps: 1 = Item Details  2 = Location & Photos  3 = Review & Submit
-   ========================================================================== */
+/**
+ * @file report-wizard.js
+ * @description Controls the 3-step interactive report wizard page.
+ * Users enter item details, drop a location pin on a satellite Leaflet map, capture/upload images, and verify summaries before submission.
+ * Includes custom camera overlay controls and integrated AI visual description generation.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
 
 (function () {
     'use strict';
@@ -11,13 +14,35 @@
 
 
     /* ---- helpers ---- */
+    /**
+     * Query selector shorthand.
+     * 
+     * @private
+     * @param {String} sel - CSS Selector
+     * @param {HTMLElement} [root] - Optional root element to search within
+     * @returns {HTMLElement|null} Found element
+     */
     function qs(sel, root) { return (root || document).querySelector(sel); }
+
+    /**
+     * Check if prefers-reduced-motion is active or overridden.
+     * 
+     * @private
+     * @returns {Boolean} True if motion animations should be disabled
+     */
     function reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
                document.body.classList.contains('reduced-motion');
     }
 
     /* ---- progress bar update ---- */
+    /**
+     * Update visual progress connectors and active step dots.
+     * 
+     * @private
+     * @param {Number} step - Target active step index
+     * @returns {void}
+     */
     function updateProgress(step) {
         document.querySelectorAll('#page-report .rw-step').forEach((el, i) => {
             const n = i + 1;
@@ -31,6 +56,15 @@
     }
 
     /* ---- panel transitions (horizontal carousel) ---- */
+    /**
+     * Slide panel carousel transitions.
+     * Manages step title changes, leaflet invalidations, and accessibility focusing.
+     * 
+     * @private
+     * @param {Number} toStep - Target step to transition to
+     * @param {String} [direction] - Animation direction ('forward'|'back')
+     * @returns {void}
+     */
     function showPanel(toStep, direction) {
         const dir = direction === 'back' ? 'rw-back' : 'rw-fwd';
         const panels = document.querySelectorAll('#page-report .rw-panel');
@@ -165,6 +199,14 @@
        their real buildings; the panel live-prints coordinates to hardcode. */
     const EDIT_MODE = /mapedit/i.test(location.hash) || /mapedit/i.test(location.search);
 
+    /**
+     * Create custom Leaflet div icons for school landmarks.
+     * 
+     * @private
+     * @param {String} name - Landmark label text
+     * @param {Boolean} isField - True if target represents a court or field
+     * @returns {L.DivIcon} Leaflet DivIcon instance
+     */
     function campusIcon(name, isField) {
         return L.divIcon({
             className: 'rw-campus-marker' + (EDIT_MODE ? ' rw-editing' : ''),
@@ -175,6 +217,14 @@
         });
     }
 
+    /**
+     * Position the pin marker at a designated preset landmark coordinate.
+     * Updates descriptive location values.
+     * 
+     * @private
+     * @param {Object} loc - Landmark location entry object
+     * @returns {void}
+     */
     function pinAtLocation(loc) {
         rwMap.flyTo([loc.lat, loc.lng], ROUSE_ZOOM, { animate: !reduced(), duration: 0.5 });
         placeMarker(loc.lat, loc.lng, false);
@@ -195,6 +245,12 @@
         }
     }
 
+    /**
+     * Add hardcoded school landmarks markers to the map.
+     * 
+     * @private
+     * @returns {void}
+     */
     function addCampusMarkers() {
         if (campusMarkersAdded || !rwMap) return;
         campusMarkersAdded = true;
@@ -234,6 +290,12 @@
     }
 
     /* ---- calibration panel (edit mode only) ---- */
+    /**
+     * Generate formatting for hardcoded coordinate outputs.
+     * 
+     * @private
+     * @returns {String} Formatted JS array string
+     */
     function editPanelText() {
         const rows = CAMPUS_LOCATIONS.map(l => {
             const pad = (l.name + "',").padEnd(18, ' ');
@@ -244,11 +306,23 @@
         return 'const CAMPUS_LOCATIONS = [\n' + rows.join('\n') + '\n    ];';
     }
 
+    /**
+     * Updates the calibration coordinates text block.
+     * 
+     * @private
+     * @returns {void}
+     */
     function refreshEditPanel() {
         const ta = document.getElementById('rwEditOut');
         if (ta) ta.value = editPanelText();
     }
 
+    /**
+     * Create the calibration coordinate display panel container.
+     * 
+     * @private
+     * @returns {void}
+     */
     function buildEditPanel() {
         if (document.getElementById('rwEditPanel')) return;
         const panel = document.createElement('div');
@@ -271,6 +345,12 @@
         });
     }
 
+    /**
+     * Create the custom SVG Map Pin icon.
+     * 
+     * @private
+     * @returns {L.DivIcon} Leaflet DivIcon instance
+     */
     function pinIcon() {
         return L.divIcon({
             className: '',
@@ -285,6 +365,12 @@
         });
     }
 
+    /**
+     * Initializes the Leaflet map instance. Sets tile layers, boundaries, overlays, and events.
+     * 
+     * @private
+     * @returns {void}
+     */
     function initMap() {
         if (rwMap) return;
         if (typeof L === 'undefined') {
@@ -334,6 +420,12 @@
         geocodeSchool();
     }
 
+    /**
+     * Query Nominatim to geocode the center coordinates of Rouse High School.
+     * 
+     * @private
+     * @returns {void}
+     */
     function geocodeSchool() {
         fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=' +
               encodeURIComponent(ROUSE_QUERY), { headers: { 'Accept': 'application/json' } })
@@ -347,6 +439,15 @@
             .catch(() => { /* keep fallback centre */ });
     }
 
+    /**
+     * Position or create the custom marker pin at designated coordinates.
+     * 
+     * @private
+     * @param {Number} lat - Latitude
+     * @param {Number} lng - Longitude
+     * @param {Boolean} announce - True if the readout text description should update
+     * @returns {void}
+     */
     function placeMarker(lat, lng, announce) {
         if (!rwMap) return;
         if (rwMarker) {
@@ -369,6 +470,14 @@
         if (announce) announcePin();
     }
 
+    /**
+     * Write selected coordinates to hidden fields for form synchronization.
+     * 
+     * @private
+     * @param {Number} lat - Latitude
+     * @param {Number} lng - Longitude
+     * @returns {void}
+     */
     function storeCoords(lat, lng) {
         const latEl = document.getElementById('itemLat');
         const lngEl = document.getElementById('itemLng');
@@ -378,6 +487,12 @@
         if (addrEl) addrEl.value = 'Map pin ' + lat.toFixed(5) + ', ' + lng.toFixed(5);
     }
 
+    /**
+     * Updates the map description block.
+     * 
+     * @private
+     * @returns {void}
+     */
     function announcePin() {
         const readout = document.getElementById('rwMapReadout');
         if (readout) {
@@ -386,6 +501,12 @@
         }
     }
 
+    /**
+     * Recenter the Leaflet map bounds around campus landmarks.
+     * 
+     * @private
+     * @returns {void}
+     */
     function recenterMap() {
         if (!rwMap) return;
         if (campusBounds) {
@@ -395,6 +516,12 @@
         }
     }
 
+    /**
+     * Clear the dropped pin marker and wipe associated coordinates.
+     * 
+     * @private
+     * @returns {void}
+     */
     function clearPin() {
         if (rwMarker && rwMap) { rwMap.removeLayer(rwMarker); rwMarker = null; }
         const latEl = document.getElementById('itemLat');
@@ -411,6 +538,13 @@
     }
 
     /* ---- validation helpers ---- */
+    /**
+     * Reset field errors and clear invalid indicators.
+     * 
+     * @private
+     * @param {HTMLElement} fieldEl - Field wrapper container
+     * @returns {void}
+     */
     function markValid(fieldEl) {
         fieldEl.classList.remove('rw-invalid');
         const err = fieldEl.querySelector('.rw-err');
@@ -419,6 +553,14 @@
         if (input) input.removeAttribute('aria-invalid');
     }
 
+    /**
+     * Set field errors and update invalid aria attributes.
+     * 
+     * @private
+     * @param {HTMLElement} fieldEl - Field wrapper container
+     * @param {String} msg - Error message text
+     * @returns {void}
+     */
     function markInvalid(fieldEl, msg) {
         fieldEl.classList.add('rw-invalid');
         const err = fieldEl.querySelector('.rw-err');
@@ -433,6 +575,13 @@
         }
     }
 
+    /**
+     * Validates input values, formatting constraints, and required fields.
+     * 
+     * @private
+     * @param {HTMLElement} fieldEl - Field wrapper container
+     * @returns {Boolean} True if valid, false otherwise
+     */
     function validateField(fieldEl) {
         const input = fieldEl.querySelector('input, select, textarea');
         if (!input) return true;
@@ -450,6 +599,12 @@
     }
 
     /* ---- step validation ---- */
+    /**
+     * Validates all required inputs on Step 1.
+     * 
+     * @private
+     * @returns {Boolean} True if valid
+     */
     function validateStep1() {
         const fields = document.querySelectorAll('#rwPanel1 .rw-field[data-required]');
         let ok = true;
@@ -457,6 +612,12 @@
         return ok;
     }
 
+    /**
+     * Validates all required inputs on Step 2.
+     * 
+     * @private
+     * @returns {Boolean} True if valid
+     */
     function validateStep2() {
         const fields = document.querySelectorAll('#rwPanel2 .rw-field[data-required]');
         let ok = true;
@@ -464,6 +625,12 @@
         return ok;
     }
 
+    /**
+     * Validates all required inputs on Step 3. Focuses the first invalid input.
+     * 
+     * @private
+     * @returns {Boolean} True if valid
+     */
     function validateStep3() {
         const fields = document.querySelectorAll('#rwPanel3 .rw-field[data-required]');
         let ok = true;
@@ -479,6 +646,12 @@
     }
 
     /* Resolve the category: if "Other" + a specified type, save the specific type */
+    /**
+     * Resolves and sets category values depending on custom category choices.
+     * 
+     * @private
+     * @returns {void}
+     */
     function resolveCategory() {
         const sel = document.getElementById('rw_itemCategory');
         const other = document.getElementById('rw_otherCategory');
@@ -492,6 +665,13 @@
     }
 
     /* ---- navigation ---- */
+    /**
+     * Advance to the next panel step.
+     * 
+     * @global
+     * @function rwNext
+     * @returns {void}
+     */
     function rwNext() {
         if (currentStep === 1) {
             if (!validateStep1()) return;
@@ -505,16 +685,37 @@
         }
     }
 
+    /**
+     * Retreat to the previous panel step.
+     * 
+     * @global
+     * @function rwBack
+     * @returns {void}
+     */
     function rwBack() {
         if (currentStep > 1) showPanel(currentStep - 1, 'back');
     }
 
+    /**
+     * Jump directly to an earlier step.
+     * 
+     * @global
+     * @function rwGoTo
+     * @param {Number} step - Target step number
+     * @returns {void}
+     */
     function rwGoTo(step) {
         /* only allow jumping back to an earlier (already-seen) step */
         if (step < currentStep) showPanel(step, 'back');
     }
 
     /* ---- build review summary ---- */
+    /**
+     * Builds and updates Step 3 Review summaries.
+     * 
+     * @private
+     * @returns {void}
+     */
     function rwBuildSummary() {
         resolveCategory();
         const title    = (qs('#itemTitle')?.value    || '').trim();
@@ -561,6 +762,12 @@
     /* ---- photo preview ---- */
     const MAX_PHOTO_BYTES = 10 * 1024 * 1024; /* 10 MB — matches the hint */
 
+    /**
+     * Initialize Step 2 photo dropzone target events and validation.
+     * 
+     * @private
+     * @returns {void}
+     */
     function initPhotoDropZone() {
         const drop = document.getElementById('rwDrop');
         const input = document.getElementById('reportItemPhoto');
@@ -644,6 +851,15 @@
 
     /* ---- submit ---- */
     let submitting = false;
+    /**
+     * Submits the report form. Delegates save calls to forms.js handlers.
+     * Surfaces validation and network failures.
+     * 
+     * @async
+     * @global
+     * @function rwSubmit
+     * @returns {Promise<void>}
+     */
     async function rwSubmit() {
         if (submitting) return;                 /* guard against double-submit */
 
@@ -700,6 +916,13 @@
     }
 
     /* ---- success screen ---- */
+    /**
+     * Navigates to Step 4 Success screen. Displays the generated report ID.
+     * 
+     * @private
+     * @param {Object} item - Saved Item document record
+     * @returns {void}
+     */
     function rwShowSuccess(item) {
         const successPanel = document.getElementById('rwPanel4');
         if (!successPanel) return;
@@ -729,6 +952,14 @@
     }
 
     /* ---- reset wizard ---- */
+    /**
+     * Resets the entire Report Wizard state.
+     * Clears all fields, resets the map coordinates, re-enables buttons, and transitions back to Step 1.
+     * 
+     * @global
+     * @function rwReset
+     * @returns {void}
+     */
     function rwReset() {
         currentStep = 1;
 
@@ -775,6 +1006,12 @@
      }
 
      /* ---- inline validation on blur ---- */
+     /**
+      * Attaches blur and input events for real-time validation error clearing.
+      * 
+      * @private
+      * @returns {void}
+      */
      function initInlineValidation() {
          document.querySelectorAll('#page-report .rw-field[data-required] input, #page-report .rw-field[data-required] select, #page-report .rw-field[data-required] textarea')
              .forEach(input => {
@@ -798,6 +1035,13 @@
     let currentFacingMode = 'environment';
     let capturedDataUrl = null;
 
+    /**
+     * Initializes custom camera overlay trigger actions.
+     * Hooks start, capture, close, use photo, and error upload fallbacks.
+     * 
+     * @private
+     * @returns {void}
+     */
     function initCustomCamera() {
         const trigger = document.getElementById('rwCameraTriggerBtn');
         const overlay = document.getElementById('custom-camera-overlay');
@@ -1026,6 +1270,13 @@
     }
 
     /* ---- init on DOM ready ---- */
+    /**
+     * Bootstraps the report wizard page settings.
+     * Binds other category changes, map resets, drop zone key triggers, and AI description generator actions.
+     * 
+     * @private
+     * @returns {void}
+     */
     function init() {
         showPanel(1);
         initPhotoDropZone();

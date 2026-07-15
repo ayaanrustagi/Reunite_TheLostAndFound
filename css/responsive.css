@@ -54,18 +54,6 @@
         padding: 0.3rem 0.5rem;
     }
 
-    body.wizard-active .mobile-header,
-    body:has(#page-report.active) .mobile-header,
-    body:has(#page-claim.active) .mobile-header {
-        display: none !important;
-    }
-
-    body.wizard-active #main-container,
-    body:has(#page-report.active) #main-container,
-    body:has(#page-claim.active) #main-container {
-        padding-top: 0 !important;
-    }
-
     .mobile-header .mobile-nav-icons {
         display: flex;
         align-items: center;
@@ -1589,6 +1577,18 @@
     
     .rw-btn-submit {
         display: none !important;
+    }
+
+    body.wizard-active .mobile-header,
+    body:has(#page-report.active) .mobile-header,
+    body:has(#page-claim.active) .mobile-header {
+        display: none !important;
+    }
+
+    body.wizard-active #main-container,
+    body:has(#page-report.active) #main-container,
+    body:has(#page-claim.active) #main-container {
+        padding-top: 0 !important;
     }
 }
 

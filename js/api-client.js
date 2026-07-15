@@ -1,5 +1,20 @@
+/**
+ * @file api-client.js
+ * @description Frontend API Client handling AJAX operations for authentication, item reports, claims, messages, and audit trails.
+ * Synchronizes client-side state with the backend database.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
+
 const API_BASE = '/api';
 
+/**
+ * Synchronizes local in-memory items and claims with the backend.
+ * Triggered on load and after major mutations to refresh lists across all active views.
+ * 
+ * @async
+ * @function apiSync
+ * @returns {Promise<void>}
+ */
 async function apiSync() {
     // pull data from the cloud
     try {
@@ -17,7 +32,6 @@ async function apiSync() {
         // Sort items by date desc
         window.items.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
-
         requestAnimationFrame(() => {
             if (window.renderFound) window.renderFound();
             if (window.renderClaimSelect) window.renderClaimSelect();
@@ -31,7 +45,16 @@ async function apiSync() {
 }
 window.apiSync = apiSync;
 
-
+/**
+ * Create or update a resource record on the server (upsert).
+ * Appends active session details as the requester metadata for security auditing.
+ * 
+ * @async
+ * @function apiUpsert
+ * @param {String} resource - The REST resource endpoint ('items', 'claims', etc.)
+ * @param {Object} record - The payload body representing the entity to save
+ * @returns {Promise<Boolean>} True if successful, false otherwise
+ */
 async function apiUpsert(resource, record) {
     // push new records
     try {
@@ -67,6 +90,15 @@ async function apiUpsert(resource, record) {
 }
 window.apiUpsert = apiUpsert;
 
+/**
+ * Delete a resource by ID. Appends requester credentials to satisfy backend audit logging.
+ * 
+ * @async
+ * @function apiDelete
+ * @param {String} resource - The REST endpoint resource ('items', 'claims')
+ * @param {String} id - The specific document identifier to remove
+ * @returns {Promise<void>}
+ */
 async function apiDelete(resource, id) {
     // nuke a record
     try {
@@ -84,7 +116,15 @@ async function apiDelete(resource, id) {
 }
 window.apiDelete = apiDelete;
 
-// Authorization related
+/**
+ * Authenticates user credentials with the backend.
+ * 
+ * @async
+ * @function apiLogin
+ * @param {String} email - User email address
+ * @param {String} password - User password
+ * @returns {Promise<Object>} The authenticated user object
+ */
 async function apiLogin(email, password) {
     const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
@@ -96,6 +136,14 @@ async function apiLogin(email, password) {
 }
 window.apiLogin = apiLogin;
 
+/**
+ * Register a new user in the system.
+ * 
+ * @async
+ * @function apiRegister
+ * @param {Object} userData - Full user record payload including password, role, name, etc.
+ * @returns {Promise<Object>} The newly created user object
+ */
 async function apiRegister(userData) {
     const res = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
@@ -107,6 +155,14 @@ async function apiRegister(userData) {
 }
 window.apiRegister = apiRegister;
 
+/**
+ * Securely retrieve a user profile by email.
+ * 
+ * @async
+ * @function apiGetProfile
+ * @param {String} email - Email query parameter
+ * @returns {Promise<Object|null>} Profile details or null if fetch fails
+ */
 async function apiGetProfile(email) {
     const res = await fetch(`${API_BASE}/auth/profile?email=${encodeURIComponent(email)}`);
     if (!res.ok) return null;
@@ -114,6 +170,13 @@ async function apiGetProfile(email) {
 }
 window.apiGetProfile = apiGetProfile;
 
+/**
+ * Fetch the latest security audit logs for system overview.
+ * 
+ * @async
+ * @function apiGetAuditLogs
+ * @returns {Promise<Array>} List of recent audit log entries
+ */
 async function apiGetAuditLogs() {
     const res = await fetch(`${API_BASE}/audit`);
     if (!res.ok) return [];
@@ -121,6 +184,15 @@ async function apiGetAuditLogs() {
 }
 window.apiGetAuditLogs = apiGetAuditLogs;
 
+/**
+ * Retrieve messages delivered to the designated email address.
+ * Passes X-User-Id header for session validation.
+ * 
+ * @async
+ * @function apiGetMessages
+ * @param {String} email - Recipient email address
+ * @returns {Promise<Array>} List of messages
+ */
 async function apiGetMessages(email) {
     try {
         const session = JSON.parse(localStorage.getItem("reunite_session") || "null");
@@ -140,6 +212,15 @@ async function apiGetMessages(email) {
 }
 window.apiGetMessages = apiGetMessages;
 
+/**
+ * Sends a message related to a specific claim or general inquiry.
+ * Generates a unique message ID and appends session headers.
+ * 
+ * @async
+ * @function apiSendMessage
+ * @param {Object} msgData - The message payload
+ * @returns {Promise<Object>} Server response body
+ */
 async function apiSendMessage(msgData) {
     const session = JSON.parse(localStorage.getItem("reunite_session") || "null");
     const payload = {
@@ -161,4 +242,5 @@ window.apiSendMessage = apiSendMessage;
 // but we expect window.items and window.claims to be available globally
 window.items = window.items || [];
 window.claims = window.claims || [];
+
    

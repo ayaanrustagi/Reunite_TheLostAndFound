@@ -1218,11 +1218,13 @@ body.reduced-motion .rw-pin-marker { animation: none; }
    MOBILE APP FORM LAYOUT & STICKY NAV (Step Form)
    ========================================================================== */
 
-/* Hide mobile nav bar when report or claim section is active */
-body:has(#page-report.active) .mobile-header,
-body:has(#page-claim.active) .mobile-header,
-body.wizard-active .mobile-header {
-    display: none !important;
+/* Hide mobile nav bar when report or claim section is active (mobile only) */
+@media (max-width: 767px) {
+    body:has(#page-report.active) .mobile-header,
+    body:has(#page-claim.active) .mobile-header,
+    body.wizard-active .mobile-header {
+        display: none !important;
+    }
 }
 
 /* Styling for Photo choices container */

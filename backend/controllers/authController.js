@@ -1,3 +1,10 @@
+/**
+ * @file authController.js
+ * @description Controller handling authentication operations including login, user registration, and profile retrieval.
+ * Employs salt rounds of 12 for bcrypt, and supports plain-text password migration.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
+
 const bcrypt = require('bcryptjs');
 const connectDB = require('../db');
 const User = require('../models/User');
@@ -5,6 +12,14 @@ const { logAudit } = require('../utils/auditLogger');
 
 const SALT_ROUNDS = 12;
 
+/**
+ * Log in a user. Uses constant-time bcrypt checks to mitigate user-enumeration attacks.
+ * Automatically hashes and upgrades plaintext passwords on successful authentication.
+ * 
+ * @param {Object} req - Express request object containing email and password
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 exports.login = async (req, res) => {
     try {
         await connectDB();
@@ -34,9 +49,13 @@ exports.login = async (req, res) => {
             await User.findByIdAndUpdate(user._id, { password: hashed });
         }
 
+        // Log the successful login event for security audits
         await logAudit({
-            userId: user._id, userEmail: user.email,
-            action: 'USER_LOGIN', resourceType: 'User', resourceId: user._id,
+            userId: user._id,
+            userEmail: user.email,
+            action: 'USER_LOGIN',
+            resourceType: 'User',
+            resourceId: user._id,
             details: { role: user.role },
         });
 
@@ -46,6 +65,14 @@ exports.login = async (req, res) => {
     }
 };
 
+/**
+ * Register a new user. Handles user roles and validates processes.
+ * Ensures role 'admin' can only be set if the client provides the correct secret key.
+ * 
+ * @param {Object} req - Express request object containing user payload and credentials
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 exports.register = async (req, res) => {
     try {
         await connectDB();
@@ -83,21 +110,34 @@ exports.register = async (req, res) => {
 
         const inserted = await newUser.save();
 
+        // Log registration to system audit
         await logAudit({
-            userId: inserted._id, userEmail: inserted.email,
-            action: 'USER_REGISTER', resourceType: 'User', resourceId: inserted._id,
+            userId: inserted._id,
+            userEmail: inserted.email,
+            action: 'USER_REGISTER',
+            resourceType: 'User',
+            resourceId: inserted._id,
             details: { role: inserted.role },
         });
 
         res.status(201).json({
-            id: inserted._id, email: inserted.email,
-            full_name: inserted.full_name, role: inserted.role,
+            id: inserted._id,
+            email: inserted.email,
+            full_name: inserted.full_name,
+            role: inserted.role,
         });
     } catch (err) {
         res.status(400).json({ error: 'Registration failed.' });
     }
 };
 
+/**
+ * Retrieve a user profile securely. Hides hashed credential data.
+ * 
+ * @param {Object} req - Express request containing query param 'email'
+ * @param {Object} res - Express response
+ * @returns {Promise<void>}
+ */
 exports.getProfile = async (req, res) => {
     try {
         await connectDB();

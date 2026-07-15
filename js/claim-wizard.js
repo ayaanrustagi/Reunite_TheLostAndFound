@@ -1,9 +1,10 @@
-/* ==========================================================================
-   CLAIM WIZARD — 3-step interactive claim form
-   Step 1: Pick item   Step 2: Prove it   Step 3: Review   Step 4: Success
-   Reads/writes the hidden legacy #claimForm fields so existing submit logic
-   (handleClaimSubmit) still works unchanged.
-   ========================================================================== */
+/**
+ * @file claim-wizard.js
+ * @description Controls the 3-step interactive claim wizard page.
+ * Users pick an item, enter personal details/proof, review input, and submit a claim.
+ * Coordinates with the standard hidden legacy form fields so form handlers continue to work.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
 
 (function () {
     'use strict';
@@ -12,19 +13,37 @@
     let cwSelectedItem = null;   // full item object from window.items
     let cwItemsReady = false;    // true once apiSync has populated window.items
 
-    /* ---- helpers ---- */
+    /**
+     * Check if prefers-reduced-motion is active or overridden.
+     * 
+     * @private
+     * @returns {Boolean} True if motion animations should be disabled
+     */
     function reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
                document.body.classList.contains('reduced-motion');
     }
 
+    /**
+     * Escape special HTML characters to prevent XSS.
+     * 
+     * @private
+     * @param {String} s - Target string to escape
+     * @returns {String} Escaped string
+     */
     function esc(s) {
         return String(s || '').replace(/[&<>"']/g, m => (
             { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]
         ));
     }
 
-    /* ---- progress indicator ---- */
+    /**
+     * Update the visual step dots and connections indicating progress through the wizard.
+     * 
+     * @private
+     * @param {Number} step - Target active step index
+     * @returns {void}
+     */
     function updateCwProgress(step) {
         for (let n = 1; n <= 3; n++) {
             const dot  = document.getElementById('cwStepDot' + n);
@@ -37,7 +56,15 @@
         }
     }
 
-    /* ---- panel slide transitions (same logic as report wizard) ---- */
+    /**
+     * Slides panels in or out on transition.
+     * Handles mobile header step title updates and focus adjustments.
+     * 
+     * @private
+     * @param {Number} toStep - Target step to reveal
+     * @param {String} [direction] - Animation slide direction ('fwd'|'back')
+     * @returns {void}
+     */
     function showCwPanel(toStep, direction) {
         const dirClass = direction === 'back' ? 'rw-back' : 'rw-fwd';
         const panels   = document.querySelectorAll('#page-claim .rw-panel');
@@ -121,10 +148,13 @@
         }
     }
 
-    /* =====================================================================
-       STEP 1 — Item Picker
-       ===================================================================== */
-
+    /**
+     * Render the grid list of approved items that can be claimed.
+     * Retains skeletons until items data synchronizes.
+     * 
+     * @private
+     * @returns {void}
+     */
     function renderItemGrid() {
         const list = document.getElementById('cwItemList');
         if (!list) return;
@@ -198,6 +228,15 @@
         }
     }
 
+    /**
+     * Pick/select a specific item to claim. Clears error messages and saves selection.
+     * 
+     * @global
+     * @function cwPickItem
+     * @param {HTMLElement} card - Card element clicked/selected
+     * @param {String} id - Selected item ID
+     * @returns {void}
+     */
     window.cwPickItem = function (card, id) {
         const list = document.getElementById('cwItemList');
         if (!list) return;
@@ -220,10 +259,12 @@
         if (err) err.textContent = '';
     };
 
-    /* =====================================================================
-       STEP 2 — Prove It
-       ===================================================================== */
-
+    /**
+     * Validate Step 2 fields: Name, Email format, and Proof Description.
+     * 
+     * @private
+     * @returns {Boolean} True if validation checks pass, false otherwise
+     */
     function validateStep2() {
         let ok = true;
 
@@ -274,10 +315,12 @@
         return ok;
     }
 
-    /* =====================================================================
-       STEP 3 — Review
-       ===================================================================== */
-
+    /**
+     * Populate Step 3 Review panel with information captured in earlier steps.
+     * 
+     * @private
+     * @returns {void}
+     */
     function populateReview() {
         if (cwSelectedItem) {
             document.getElementById('cwRevItem').textContent     = cwSelectedItem.title || '—';
@@ -303,10 +346,13 @@
         document.getElementById('cwRevMessage').textContent = msg.length > 140 ? msg.slice(0, 140) + '…' : (msg || '—');
     }
 
-    /* =====================================================================
-       Navigation (exposed globally for onclick handlers)
-       ===================================================================== */
-
+    /**
+     * Advance the wizard to the next step. Handles specific checks for Step 1 and Step 2.
+     * 
+     * @global
+     * @function cwNext
+     * @returns {void}
+     */
     window.cwNext = function () {
         if (cwStep === 1) {
             if (!cwSelectedItem) {
@@ -329,18 +375,38 @@
         }
     };
 
+    /**
+     * Retreat the wizard to the previous step.
+     * 
+     * @global
+     * @function cwBack
+     * @returns {void}
+     */
     window.cwBack = function () {
         if (cwStep > 1 && cwStep < 4) showCwPanel(cwStep - 1, 'back');
     };
 
+    /**
+     * Directly hop/transition to a specified step in the wizard.
+     * 
+     * @global
+     * @function cwGoTo
+     * @param {Number} step - Target step number (1-3)
+     * @returns {void}
+     */
     window.cwGoTo = function (step) {
         if (step >= 1 && step <= 3) showCwPanel(step, step < cwStep ? 'back' : 'fwd');
     };
 
-    /* =====================================================================
-       Submit (step 3 → step 4)
-       ===================================================================== */
-
+    /**
+     * Submit the claim record to the backend database.
+     * Dispatches verification/status updates via email client and navigates to the success panel.
+     * 
+     * @async
+     * @global
+     * @function cwSubmit
+     * @returns {Promise<void>}
+     */
     window.cwSubmit = async function () {
         const btn    = document.getElementById('cwSubmitBtn');
         const mBtn   = document.getElementById('cwMobileNextBtn');
@@ -435,10 +501,14 @@
         }
     };
 
-    /* =====================================================================
-       Reset (start over from success panel)
-       ===================================================================== */
-
+    /**
+     * Resets the entire Claim Wizard state.
+     * Clears all input elements, resets buttons, and navigates back to Step 1.
+     * 
+     * @global
+     * @function cwReset
+     * @returns {void}
+     */
     window.cwReset = function () {
         cwSelectedItem = null;
 
@@ -473,10 +543,12 @@
         showCwPanel(1, 'back');
     };
 
-    /* =====================================================================
-       Photo drop zone — step 2
-       ===================================================================== */
-
+    /**
+     * Initialize Step 2 file upload drag & drop target events.
+     * 
+     * @private
+     * @returns {void}
+     */
     function initDrop() {
         const drop    = document.getElementById('cwDrop');
         const input   = document.getElementById('cw_photo');
@@ -509,10 +581,13 @@
         });
     }
 
-    /* =====================================================================
-       Boot — init when page-claim gains active class
-       ===================================================================== */
-
+    /**
+     * Run boot initializations on load.
+     * Hooks validation error clearing events and renders initial grid.
+     * 
+     * @private
+     * @returns {void}
+     */
     function boot() {
         showCwPanel(1);
         initDrop();
@@ -554,3 +629,4 @@
     }
 
 })();
+

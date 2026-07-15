@@ -1,6 +1,15 @@
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+
+/**
+ * Shows the global loading overlay spinner with a custom message.
+ * Increments the global loading counter to handle nested async operations.
+ * 
+ * @function showLoading
+ * @param {string} [message="Processing request..."] - The message to display on the loading overlay.
+ * @returns {void}
+ */
 function showLoading(message = "Processing request...") {
     // show the spinner
     const overlay = document.getElementById('loadingOverlay');
@@ -14,6 +23,14 @@ function showLoading(message = "Processing request...") {
 }
 window.showLoading = showLoading;
 
+/**
+ * Decrements the global loading counter and hides the global loading overlay spinner
+ * once all pending async operations have completed (loading counter reaches 0).
+ * Skips hiding if the overlay is currently showing a success state.
+ * 
+ * @function hideLoading
+ * @returns {void}
+ */
 function hideLoading() {
     // kill the spinner
     const overlay = document.getElementById('loadingOverlay');
@@ -29,6 +46,14 @@ function hideLoading() {
 }
 window.hideLoading = hideLoading;
 
+/**
+ * Displays a success message state on the loading overlay, automatically
+ * hiding it after a 2-second timeout and resetting the loading counter.
+ * 
+ * @function showSuccess
+ * @param {string} [message="SUCCESSFUL"] - The success message to display.
+ * @returns {void}
+ */
 function showSuccess(message = "SUCCESSFUL") {
     const overlay = document.getElementById('loadingOverlay');
     const messageEl = document.getElementById('loadingMessage');
@@ -49,6 +74,14 @@ function showSuccess(message = "SUCCESSFUL") {
 }
 window.showSuccess = showSuccess;
 
+/**
+ * Displays an error message state on the loading overlay, automatically
+ * hiding it after a 3-second timeout and resetting the loading counter.
+ * 
+ * @function showError
+ * @param {string} [message="Something went wrong"] - The error message to display.
+ * @returns {void}
+ */
 function showError(message = "Something went wrong") {
     const overlay = document.getElementById('loadingOverlay');
     const messageEl = document.getElementById('loadingMessage');
@@ -68,6 +101,16 @@ function showError(message = "Something went wrong") {
 }
 window.showError = showError;
 
+/**
+ * Updates a status text element with a given message and adds success or error styles.
+ * If message is empty, clears the text and styles.
+ * 
+ * @function setStatusMessage
+ * @param {string} elementId - The ID of the HTML status element.
+ * @param {string} message - The message content.
+ * @param {boolean} [isError=false] - Whether to style the message as an error.
+ * @returns {void}
+ */
 function setStatusMessage(elementId, message, isError = false) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -79,6 +122,16 @@ function setStatusMessage(elementId, message, isError = false) {
 }
 window.setStatusMessage = setStatusMessage;
 
+/**
+ * Sets the validation visual and accessibility state for a form input field.
+ * Adds or removes 'invalid' classes, ARIA validation attributes, and inline error messages.
+ * 
+ * @function setFieldState
+ * @param {string} fieldId - The ID of the input field.
+ * @param {boolean} isValid - Whether the field input is currently valid.
+ * @param {string} [message=""] - The validation error message to display if invalid.
+ * @returns {boolean} The validity state passed in (`isValid`).
+ */
 function setFieldState(fieldId, isValid, message = "") {
     const field = document.getElementById(fieldId);
     if (!field) return isValid;
@@ -108,6 +161,13 @@ function setFieldState(fieldId, isValid, message = "") {
 }
 window.setFieldState = setFieldState;
 
+/**
+ * Attaches real-time validation event listeners to required input, select, and textarea fields.
+ * Clears field error states on user input.
+ * 
+ * @function attachRealtimeValidation
+ * @returns {void}
+ */
 function attachRealtimeValidation() {
     const requiredFields = document.querySelectorAll('.input-group.required input, .input-group.required select, .input-group.required textarea');
     requiredFields.forEach(field => {
@@ -120,6 +180,13 @@ function attachRealtimeValidation() {
 }
 window.attachRealtimeValidation = attachRealtimeValidation;
 
+/**
+ * Resets all validation styles and error texts inside the specified form element.
+ * 
+ * @function resetFormValidation
+ * @param {HTMLFormElement} formEl - The form element to reset.
+ * @returns {void}
+ */
 function resetFormValidation(formEl) {
     if (!formEl) return;
     formEl.querySelectorAll('.input-group').forEach(group => {
@@ -129,6 +196,8 @@ function resetFormValidation(formEl) {
     });
 }
 window.resetFormValidation = resetFormValidation;
+
+
 
 
 /**

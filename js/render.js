@@ -4,6 +4,12 @@
 
 
 
+/**
+ * @file render.js
+ * @description Renders dynamic HTML views, including the Browse grid feed, dashboard stats, claim wizard summaries, messaging lists, admin consoles, and audit trails.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
+
 const DASHBOARD_TUTORIALS = [
     {
         title: "HOW TO LOG A REPORT",
@@ -22,6 +28,12 @@ const DASHBOARD_TUTORIALS = [
     }
 ];
 
+/**
+ * Render tips and guides inside the student dashboard.
+ * 
+ * @function renderDashboardTips
+ * @returns {void}
+ */
 function renderDashboardTips() {
     const tipsEl = document.getElementById('dashboardTips');
     if (!tipsEl) return;
@@ -35,6 +47,16 @@ function renderDashboardTips() {
 }
 window.renderDashboardTips = renderDashboardTips;
 
+/**
+ * Updates the active filter indicator chips dynamically on the Browse page.
+ * 
+ * @function updateActiveFilters
+ * @param {Object} filterOptions
+ * @param {Array<String>} [filterOptions.searchTokens] - Active keyword search words
+ * @param {String} [filterOptions.category] - Chosen category name
+ * @param {String} [filterOptions.location] - Selected school location
+ * @returns {void}
+ */
 function updateActiveFilters({ searchTokens = [], category = "", location = "" }) {
     const filtersEl = document.getElementById('activeFilters');
     const clearBtn = document.getElementById('clearFiltersBtn');
@@ -62,6 +84,18 @@ function updateActiveFilters({ searchTokens = [], category = "", location = "" }
 }
 window.updateActiveFilters = updateActiveFilters;
 
+/**
+ * Updates the text message displaying the count of filtered items versus total approved items.
+ * 
+ * @function updateResultsStatus
+ * @param {Number} totalApproved - Total count of approved items in the inventory database
+ * @param {Number} shownCount - Count of items matching active filter criteria
+ * @param {Object} filterOptions
+ * @param {Array<String>} [filterOptions.searchTokens] - Search query words
+ * @param {String} [filterOptions.category] - Target category
+ * @param {String} [filterOptions.location] - Target location
+ * @returns {void}
+ */
 function updateResultsStatus(totalApproved, shownCount, { searchTokens = [], category = "", location = "" }) {
     const statusEl = document.getElementById('resultsStatus');
     if (!statusEl) return;
@@ -85,6 +119,12 @@ function updateResultsStatus(totalApproved, shownCount, { searchTokens = [], cat
 }
 window.updateResultsStatus = updateResultsStatus;
 
+/**
+ * Clear all search bar inputs, dropdown values, and trigger a browse grid re-render.
+ * 
+ * @function clearFilters
+ * @returns {void}
+ */
 function clearFilters() {
     const searchField = document.getElementById('searchFilter');
     const categoryField = document.getElementById('categoryFilter');
@@ -100,17 +140,22 @@ function clearFilters() {
 }
 window.clearFilters = clearFilters;
 
+/**
+ * Renders the browse grid containing approved lost and found items.
+ * Performs search token processing, fuzzy matching, categorization, and sorting filters.
+ * 
+ * @function renderFound
+ * @returns {void}
+ */
 function renderFound() {
     // draw the item grid
     if (!window.items) return;
     const grid = document.getElementById('itemsGrid');
     if (!grid) return;
 
-
     const headerInput = document.getElementById('headerSearchInput');
     const headerSearchVal = headerInput?.value || "";
     const pageSearchVal = document.getElementById('searchFilter')?.value || "";
-
 
     const foundSection = document.getElementById('page-found');
     if (foundSection) {
@@ -129,13 +174,11 @@ function renderFound() {
     const loc = document.getElementById('locationFilter')?.value.toLowerCase() || "";
     const sort = document.getElementById('sortFilter')?.value || "newest";
 
-
     let filtered = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'approved');
 
     // Separate claimed items
     const claimed = window.items.filter(it => (it.status || "").toLowerCase().trim() === 'claimed');
     renderClaimedItems(claimed);
-
 
     if (search) {
         const searchTokens = search.split(/\s+/);
@@ -160,7 +203,6 @@ function renderFound() {
     if (sort === 'newest') filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     else filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-
     const countEl = document.getElementById('itemsCount');
     if (countEl) countEl.textContent = filtered.length;
 
@@ -179,10 +221,26 @@ const FP_CAT_HUE = {
     'bottle': 200, 'paper': 130, 'optical': 160, 'audio': 0,
     'cable': 240, 'apparel': 320, 'other': 220
 };
+
+/**
+ * Return the color hue angle corresponding to the item category.
+ * 
+ * @function fpCategoryHue
+ * @param {String} cat - Category name
+ * @returns {Number} Hue degree angle
+ */
 function fpCategoryHue(cat) {
     const k = (cat || 'other').toString().toLowerCase().trim();
     return (FP_CAT_HUE[k] !== undefined) ? FP_CAT_HUE[k] : 220;
 }
+
+/**
+ * Humanize a date string relative to current local time.
+ * 
+ * @function fpRelativeTime
+ * @param {String} dateStr - Date string
+ * @returns {String} Relative time string (e.g. '3h ago', 'yesterday', 'just now')
+ */
 function fpRelativeTime(dateStr) {
     if (!dateStr) return '';
     const d = new Date(dateStr);
@@ -195,9 +253,27 @@ function fpRelativeTime(dateStr) {
     if (days < 7)   return d.toLocaleDateString(undefined, { weekday: 'short' });
     return d.toLocaleDateString();
 }
+
+/**
+ * Escape HTML symbols inside target string.
+ * 
+ * @function fpEscHtml
+ * @param {String} s - String to clean
+ * @returns {String} Escaped clean HTML string
+ */
 function fpEscHtml(s) {
     return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+
+/**
+ * Renders HTML for a specific browse item card.
+ * Draws custom striped canvas backgrounds when image attachments are missing.
+ * 
+ * @function renderFpCard
+ * @param {Object} item - Item record payload
+ * @param {Number} idx - List array index
+ * @returns {String} Compiled card HTML string
+ */
 function renderFpCard(item, idx) {
     // Use consistent clean color for all item cards
     const hue = 220; // fixed neutral blue
@@ -243,7 +319,13 @@ window.renderFpCard = renderFpCard;
 window.fpCategoryHue = fpCategoryHue;
 window.FP_CAT_HUE = FP_CAT_HUE;
 
-
+/**
+ * Compile and render historical claimed items inside archive rows.
+ * 
+ * @function renderClaimedItems
+ * @param {Array<Object>} claimedItems - List of historical claimed item documents
+ * @returns {void}
+ */
 function renderClaimedItems(claimedItems) {
     const grid = document.getElementById('claimedItemsGrid');
     if (!grid) return;
@@ -274,7 +356,7 @@ function renderClaimedItems(claimedItems) {
                 </div>
                 <span class="cl-badge">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                     Retrieved
@@ -285,6 +367,12 @@ function renderClaimedItems(claimedItems) {
 }
 window.renderClaimedItems = renderClaimedItems;
 
+/**
+ * Toggle the display and arrow indicators of the past claimed items history panel.
+ * 
+ * @function toggleClaimedItems
+ * @returns {void}
+ */
 function toggleClaimedItems() {
     const wrapper = document.getElementById('claimedItemsWrapper');
     const btn = document.getElementById('toggleClaimedBtn');
@@ -307,6 +395,12 @@ function toggleClaimedItems() {
 }
 window.toggleClaimedItems = toggleClaimedItems;
 
+/**
+ * Populates options inside the Claim Wizard's select dropdown.
+ * 
+ * @function renderClaimSelect
+ * @returns {void}
+ */
 function renderClaimSelect() {
     const select = document.getElementById('claimItemId');
     if (!select) return;
@@ -318,6 +412,13 @@ function renderClaimSelect() {
 }
 window.renderClaimSelect = renderClaimSelect;
 
+/**
+ * Compiles user reports, message inboxes, and interactive claim trackers inside the student dashboard view.
+ * 
+ * @async
+ * @function renderDashboard
+ * @returns {Promise<void>}
+ */
 async function renderDashboard() {
     // show user their history
     if (!window.currentUser) return;
@@ -536,10 +637,16 @@ async function renderDashboard() {
 }
 window.renderDashboard = renderDashboard;
 
+/**
+ * Render administrative statistics, audit logs, pending items, and claim queues.
+ * 
+ * @async
+ * @function renderAdmin
+ * @returns {Promise<void>}
+ */
 async function renderAdmin() {
     // the master view
     if (!window.currentUser || window.currentUser.role !== 'admin') return;
-
 
     const pending = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'pending');
     const pendingClaims = window.claims.filter(c => {
@@ -548,7 +655,6 @@ async function renderAdmin() {
     });
     const approved = window.items.filter(i => (i.status || "").toLowerCase().trim() === 'approved');
     const verified = window.claims.filter(c => (c.status || "").toLowerCase().trim() === 'approved');
-
 
     const stats = {
         'adminTotalReports': window.items.length,
@@ -567,7 +673,6 @@ async function renderAdmin() {
     });
 
     renderAdminAudit();
-
 
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
@@ -634,7 +739,9 @@ async function renderAdmin() {
                 <button onclick="deleteClaim('${c.id}')" class="btn btn-sm btn-outline red">PURGE</button>
             </div>
         `;
-    }).join('') : '<div class="status-msg">EMPTY</div>';    const adminMessagesEl = document.getElementById('adminMessages');
+    }).join('') : '<div class="status-msg">EMPTY</div>';
+
+    const adminMessagesEl = document.getElementById('adminMessages');
     const adminMessageCountEl = document.getElementById('adminMessageCount');
 
     if (adminMessagesEl) {
@@ -669,6 +776,14 @@ async function renderAdmin() {
     }
 }
 window.renderAdmin = renderAdmin;
+
+/**
+ * Fetch and render recent security audit log entries.
+ * 
+ * @async
+ * @function renderAdminAudit
+ * @returns {Promise<void>}
+ */
 async function renderAdminAudit() {
     const listEl = document.getElementById('adminAuditList');
     if (!listEl) return;
@@ -714,7 +829,14 @@ window.renderAdminAudit = renderAdminAudit;
 // Interactive Claims Stepper & Simulation Helper Handlers
 // =========================================================================
 
-// Toggle expanded claim card details
+/**
+ * Toggle expanded card details for a specific claim inside the student dashboard.
+ * 
+ * @global
+ * @function toggleClaimDetails
+ * @param {String} claimId - Target claim ID
+ * @returns {void}
+ */
 window.toggleClaimDetails = function(claimId) {
     const card = document.getElementById(`claim-card-${claimId}`);
     if (!card) return;
@@ -729,7 +851,15 @@ window.toggleClaimDetails = function(claimId) {
     }
 };
 
-// Toggle claim status simulator dropdown menu
+/**
+ * Toggle simulation dropdown overlays.
+ * 
+ * @global
+ * @function toggleSimulationMenu
+ * @param {Event} event - Dropdown toggle trigger event
+ * @param {String} claimId - Target claim ID
+ * @returns {void}
+ */
 window.toggleSimulationMenu = function(event, claimId) {
     event.stopPropagation();
     
@@ -753,7 +883,16 @@ document.addEventListener('click', () => {
     });
 });
 
-// Update claim status on the database and re-render dashboard
+/**
+ * Simulate status transitions for claims (toggles parent item statuses automatically).
+ * 
+ * @async
+ * @global
+ * @function simulateClaimStatus
+ * @param {String} claimId - Target claim ID
+ * @param {String} newStatus - Simulated status name ('pending'|'under_review'|'approved')
+ * @returns {Promise<void>}
+ */
 window.simulateClaimStatus = async function(claimId, newStatus) {
     const claim = window.claims.find(c => c.id === claimId);
     if (!claim) return;
@@ -789,7 +928,14 @@ window.simulateClaimStatus = async function(claimId, newStatus) {
     }
 };
 
-// Message admin/finder helper
+/**
+ * Toggles messenger modals targeted at a specific item.
+ * 
+ * @global
+ * @function messageAdminAboutItem
+ * @param {String} itemId - Target item ID
+ * @returns {void}
+ */
 window.messageAdminAboutItem = function(itemId) {
     sessionStorage.setItem('reunite_selected_id', itemId);
     if (window.openSendMessageModal) {
@@ -797,7 +943,15 @@ window.messageAdminAboutItem = function(itemId) {
     }
 };
 
-// Full-screen image lightbox modal
+/**
+ * Display full screen proof images inside a custom lightbox.
+ * 
+ * @global
+ * @function openClaimLightbox
+ * @param {String} imgSrc - Image source URL/Base64
+ * @param {String} itemTitle - Item name/title
+ * @returns {void}
+ */
 window.openClaimLightbox = function(imgSrc, itemTitle) {
     let lightbox = document.getElementById('claim-lightbox');
     if (!lightbox) {
@@ -840,4 +994,5 @@ window.openClaimLightbox = function(imgSrc, itemTitle) {
         lightbox.style.opacity = '1';
     });
 };
+
 

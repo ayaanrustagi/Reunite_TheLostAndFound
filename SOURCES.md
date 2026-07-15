@@ -1,52 +1,64 @@
-# SOURCES / ATTRIBUTION
+# Sources, Attributions, and Licenses
 
-## Fonts
+All core application design, the "Liquid Glass" CSS design system, user interfaces, branding, database integration, and custom matching logic (including Difference Hashing and Levenshtein fuzzy text calculations) are the original work of the development team: **Ayaan Rustagi, Sree Kondapalli, and Tushaar Singh**. 
 
-| Asset | License |
-|---|---|
-| [Inter](https://fonts.google.com/specimen/Inter) (Google Fonts) | [SIL Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL) |
-| [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono) (Google Fonts) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
-| [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque) (Google Fonts) | [SIL Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL) |
-| [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) (Google Fonts) | [SIL Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL) |
+This document serves as a complete repository of all third-party libraries, utility CDNs, fonts, APIs, and frameworks integrated into the REUNITE system, in accordance with the FBLA Website Coding & Development guidelines.
 
-## Backend Frameworks & Libraries
+---
 
-| Dependency | Description | License |
-|---|---|---|
-| [Node.js](https://nodejs.org/) | Open-source, cross-platform JavaScript runtime environment | [MIT](https://github.com/nodejs/node/blob/main/LICENSE) |
-| [Express.js](https://expressjs.com/) | Fast, unopinionated, minimalist web framework for Node.js | [MIT](https://github.com/expressjs/express/blob/master/LICENSE) |
-| [Mongoose](https://mongoosejs.com/) | MongoDB object modeling tool for asynchronous environments | [MIT](https://github.com/Automattic/mongoose/blob/master/LICENSE.base) |
-| [MongoDB Memory Server](https://github.com/nodkz/mongodb-memory-server) | In-memory MongoDB server for testing and evaluation failover | [MIT](https://github.com/nodkz/mongodb-memory-server/blob/master/LICENSE) |
-| [Dotenv](https://github.com/motdotla/dotenv) | Zero-dependency module that loads env vars from a `.env` file | [BSD-2-Clause](https://github.com/motdotla/dotenv/blob/master/LICENSE) |
-| [Multer](https://github.com/expressjs/multer) | Middleware for handling `multipart/form-data` (file uploads) | [MIT](https://github.com/expressjs/multer/blob/master/LICENSE) |
-| [CORS](https://github.com/expressjs/cors) | Express middleware for enabling Cross-Origin Resource Sharing | [MIT](https://github.com/expressjs/cors/blob/master/LICENSE) |
-| [nedb-promises](https://github.com/bajankristof/nedb-promises) | Promise-based embedded datastore used for local persistence | [MIT](https://github.com/bajankristof/nedb-promises/blob/master/LICENSE) |
+## 1. Typography & Fonts
 
-## Frontend Libraries & APIs
+| Asset / Font | Version | Purpose / Justification | Date Accessed | License & Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **Inter** | Variable | Used as the primary sans-serif body typeface for readability and modern rendering. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
+| **Roboto Mono** | Variable | Used for numeric stats displays, system notifications, and code badges. | June 10, 2026 | [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) / Google Fonts |
+| **Bricolage Grotesque** | Variable | Used for large hero headings and expressive brand elements. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
+| **JetBrains Mono** | Variable | Used for developer logs and details inside the System Audit Log panel. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
 
-| Dependency | Description | License |
-|---|---|---|
-| [EmailJS SDK](https://www.emailjs.com/) | Send transactional emails / OTP directly from client-side JavaScript | [Terms of Service](https://www.emailjs.com/legal/terms-of-service/) |
-| [Leaflet](https://leafletjs.com/) | Open-source JavaScript library for the interactive campus map | [BSD-2-Clause](https://github.com/Leaflet/Leaflet/blob/main/LICENSE) |
-| [Three.js](https://threejs.org/) | WebGL 3D library used for background visual effects | [MIT](https://github.com/mrdoob/three.js/blob/dev/LICENSE) |
-| [GSAP](https://gsap.com/) | JavaScript animation library used for scroll/UI motion | [GreenSock Standard "No Charge" License](https://gsap.com/community/standard-license/) |
-| [Feather Icons](https://feathericons.com/) | Open-source icons used for UI elements | [MIT](https://github.com/feathericons/feather/blob/main/LICENSE) |
+---
 
-## AI / Machine Learning Services
+## 2. Backend Frameworks & Libraries
 
-| Service | Description | Usage |
-|---|---|---|
-| [Groq API](https://groq.com/) | Low-latency inference endpoint used for the "Accurate" visual match mode | Third-party API ([terms](https://groq.com/terms-of-use/)) |
-| [Llama 4 Scout](https://ai.meta.com/blog/llama-4-multimodal-intelligence/) (`meta-llama/llama-4-scout-17b-16e-instruct`) | Multimodal model that compares a lost-item photo against inventory photos | [Llama 4 Community License](https://github.com/meta-llama/llama-models/blob/main/models/llama4/LICENSE) |
+| Library | Version | Purpose / Justification | Date Accessed | License & Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **Node.js** | v20.x (LTS) | Cross-platform JavaScript runtime environment for hosting the backend gateway. | June 12, 2026 | [Node.js License](https://github.com/nodejs/node/blob/main/LICENSE) |
+| **Express.js** | ^5.2.1 | Minimalist web framework handling REST API routing and static files serving. | June 12, 2026 | [MIT License](https://github.com/expressjs/express/blob/master/LICENSE) |
+| **Mongoose** | ^9.2.0 | Object Data Modeling (ODM) library for MongoDB schema definition and validation. | June 15, 2026 | [MIT License](https://github.com/Automattic/mongoose/blob/master/LICENSE.base) |
+| **MongoDB Memory Server** | ^11.0.1 | Runs a local in-memory MongoDB instance to serve as an automatic evaluation fallback. | June 15, 2026 | [MIT License](https://github.com/nodkz/mongodb-memory-server/blob/master/LICENSE) |
+| **bcryptjs** | ^3.0.3 | Secure password hashing algorithm (salted, 12 rounds) for registration and logins. | June 16, 2026 | [MIT License](https://github.com/dcodeIO/bcrypt.js/blob/master/LICENSE) |
+| **helmet** | ^8.2.0 | Sets HTTP headers (CSP, HSTS, etc.) to defend the web server from common security exploits. | June 16, 2026 | [MIT License](https://github.com/helmetjs/helmet/blob/main/LICENSE) |
+| **express-rate-limit** | ^8.5.2 | Rate-limiting middleware to protect the authentication endpoints from brute-force attempts. | June 16, 2026 | [MIT License](https://github.com/express-rate-limit/express-rate-limit/blob/main/LICENSE) |
+| **multer** | ^2.0.2 | Handles `multipart/form-data` uploads for parsing found/lost item photos. | June 15, 2026 | [MIT License](https://github.com/expressjs/multer/blob/master/LICENSE) |
+| **cors** | ^2.8.6 | Enables cross-origin resource sharing controls on API endpoints. | June 14, 2026 | [MIT License](https://github.com/expressjs/cors/blob/master/LICENSE) |
+| **dotenv** | ^17.2.4 | Parses and binds environment configuration variables from the secure `.env` file. | June 12, 2026 | [BSD-2-Clause](https://github.com/motdotla/dotenv/blob/master/LICENSE) |
+| **nedb-promises** | ^6.2.3 | Flat-file local database fallback option for offline or portable server deployment. | June 14, 2026 | [MIT License](https://github.com/bajankristof/nedb-promises/blob/master/LICENSE) |
 
-> **Note on originality:** All application code, UI, branding, and the on-device
-> d-hash / Levenshtein matching logic were written by the development team. The
-> "Accurate" match mode additionally calls the third-party Groq API (Llama 4
-> Scout) for multimodal image comparison; that model and service are credited above.
+---
 
-## Visual Assets & Textures
+## 3. Frontend Libraries & CDN Components
 
-| Asset | Attribution |
-|---|---|
-| REUNITE Identity | Brand logo, design language, and "Liquid Glass" system created by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh) |
-| Grainy Textures | Noise SVG textures generated via [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/) |
+| Asset / Script | Version | Purpose / Justification | Date Accessed | License & Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **Three.js** | r128 | WebGL 3D rendering library used to project the interactive key animation in the Hero. | June 18, 2026 | [MIT License](https://github.com/mrdoob/three.js/blob/dev/LICENSE) / CDNJS |
+| **GSAP (GreenSock)** | v3.12.5 | Powering fluid page transitions and micro-interaction animations. | June 18, 2026 | [GreenSock standard License](https://gsap.com/community/standard-license/) / CDNJS |
+| **Leaflet.js** | v1.9.4 | Interactive mapping library displaying campus coordinates for found/lost items. | June 19, 2026 | [BSD-2-Clause](https://github.com/Leaflet/Leaflet/blob/main/LICENSE) / Unpkg |
+| **EmailJS SDK** | v3 | Direct client-side SMTP bridge for dispatching verification OTP codes. | June 19, 2026 | [EmailJS Terms of Service](https://www.emailjs.com/legal/terms-of-service/) |
+| **Feather Icons** | v4.29.x | Lightweight vector icons used consistently throughout navigation bars and buttons. | June 15, 2026 | [MIT License](https://github.com/feathericons/feather/blob/main/LICENSE) / CDNJS |
+
+---
+
+## 4. Artificial Intelligence & Machine Learning APIs
+
+| API / Model | Version | Purpose / Justification | Date Accessed | License & Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **Groq Cloud API** | REST v1 | Endpoint for low-latency visual-description comparing in the Accurate matching mode. | June 20, 2026 | [Groq API Terms](https://groq.com/terms-of-use/) |
+| **Llama 4 Scout** | `meta-llama/llama-4-scout-17b-16e-instruct` | Multimodal Large Language Model used to compare item details and confirm match likelihoods. | June 20, 2026 | [Llama 4 License Agreement](https://github.com/meta-llama/llama-models/blob/main/models/llama4/LICENSE) |
+
+---
+
+## 5. Visual Asset Generators
+
+| Asset Generator | Description | Date Accessed | License / Link |
+| :--- | :--- | :--- | :--- |
+| **REUNITE Identity** | Logo branding, icons, and visual graphics generated by the team. | June 10, 2026 | Built by Development Team |
+| **Grainy Gradients** | Grain and noise SVGs utilized in the background styling overlay. | June 10, 2026 | [grainy-gradients.vercel.app](https://grainy-gradients.vercel.app/) |

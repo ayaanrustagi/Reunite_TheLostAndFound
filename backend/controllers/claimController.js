@@ -1,7 +1,22 @@
+/**
+ * @file claimController.js
+ * @description Controller handling item claims, including retrieval, creation, updates (upserting), and deletions.
+ * Integrates audit logging for tracking claims lifecycle.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
+
 const connectDB = require('../db');
 const Claim = require('../models/Claim');
 const { logAudit } = require('../utils/auditLogger');
 
+/**
+ * Retrieve all claims sorted by creation date in descending order.
+ * Maps MongoDB _id field to id for frontend API client compatibility.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 exports.getAllClaims = async (req, res) => {
     try {
         await connectDB();
@@ -9,17 +24,25 @@ exports.getAllClaims = async (req, res) => {
         const mappedClaims = claims.map(c => ({ ...c, id: c._id }));
         res.json(mappedClaims);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Failed to retrieve claims.' });
     }
 };
 
+/**
+ * Create or update a claim (upsert).
+ * Documents the claim state transition and logs the operation in the audit trail.
+ * 
+ * @param {Object} req - Express request object containing claim attributes
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 exports.upsertClaim = async (req, res) => {
     try {
         await connectDB();
         const claimData = req.body;
         const id = claimData.id || claimData._id;
 
-        if (!id) return res.status(400).json({ error: "ID is required" });
+        if (!id) return res.status(400).json({ error: 'ID is required.' });
 
         const updateData = { ...claimData, _id: id };
         delete updateData.id;
@@ -50,10 +73,17 @@ exports.upsertClaim = async (req, res) => {
 
         res.json({ ...updated, id: updated._id });
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        res.status(400).json({ error: 'Failed to save claim.' });
     }
 };
 
+/**
+ * Delete a claim by ID and record the removal action in the system audit logs.
+ * 
+ * @param {Object} req - Express request object with path param 'id'
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 exports.deleteClaim = async (req, res) => {
     try {
         await connectDB();
@@ -71,9 +101,10 @@ exports.deleteClaim = async (req, res) => {
             details: {}
         });
 
-        res.json({ message: "Claim deleted successfully" });
+        res.json({ message: 'Claim deleted successfully.' });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Failed to delete claim.' });
     }
 };
+
    

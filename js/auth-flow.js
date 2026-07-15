@@ -1,4 +1,10 @@
 
+/**
+ * @file auth-flow.js
+ * @description Manages user and admin authentication flows including credentials checking, Email OTP generation, transmission, verification, and registration.
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
+
 const EMAILJS_SERVICE_ID = window.EMAILJS_SERVICE_ID || "service_gpf5o4g";
 const EMAILJS_OTP_TEMPLATE_ID = "template_35ebnrp";
 const EMAILJS_PUBLIC_KEY = window.EMAILJS_PUBLIC_KEY || "vQdFZ_3TQhMLDP1z3";
@@ -9,6 +15,14 @@ let authStep = 'send';
 let generatedOTP = null;
 // SECURITY UPDATE: Admin code verification moved to server-side.
 
+/**
+ * Configure UI styling and input groups based on the selected mode ('login' or 'signup').
+ * Resets existing status messages and errors.
+ * 
+ * @function setAuthMode
+ * @param {String} mode - Auth mode to swap into ('login'|'signup')
+ * @returns {void}
+ */
 function setAuthMode(mode) {
     // swap between login and signup
     authMode = mode;
@@ -74,6 +88,13 @@ function setAuthMode(mode) {
 }
 window.setAuthMode = setAuthMode;
 
+/**
+ * Switch the login method toggled between standard Password sign-in and one-time Passcode (OTP).
+ * 
+ * @function setLoginMethod
+ * @param {String} method - Method to set ('password'|'otp')
+ * @returns {void}
+ */
 function setLoginMethod(method) {
     loginMethod = method;
     const passwordGroup = document.getElementById('passwordGroup');
@@ -95,6 +116,12 @@ function setLoginMethod(method) {
 }
 window.setLoginMethod = setLoginMethod;
 
+/**
+ * Toggle the visibility of the admin authorization key input field during registration.
+ * 
+ * @function toggleAdminAuth
+ * @returns {void}
+ */
 function toggleAdminAuth() {
     const isChecked = document.getElementById('isAdminAuth').checked;
     const codeWrap = document.getElementById('adminCodeAuthWrap');
@@ -102,6 +129,14 @@ function toggleAdminAuth() {
 }
 window.toggleAdminAuth = toggleAdminAuth;
 
+/**
+ * Handle form submission route decisions based on active auth mode and method.
+ * Redirects between password credentials verification, email OTP send steps, or OTP check steps.
+ * 
+ * @async
+ * @function handleAuthStep
+ * @returns {Promise<void>}
+ */
 async function handleAuthStep() {
     if (authMode === 'login' && loginMethod === 'password') {
         await loginWithPassword();
@@ -116,6 +151,14 @@ async function handleAuthStep() {
 }
 window.handleAuthStep = handleAuthStep;
 
+/**
+ * Perform password-based login by calling the auth API endpoint.
+ * Saves the session in local storage and redirects the user on success.
+ * 
+ * @async
+ * @function loginWithPassword
+ * @returns {Promise<void>}
+ */
 async function loginWithPassword() {
     const email = document.getElementById('authEmail').value.trim();
     const password = document.getElementById('authPassword').value.trim();
@@ -154,6 +197,14 @@ async function loginWithPassword() {
 }
 window.loginWithPassword = loginWithPassword;
 
+/**
+ * Generate a 6-digit cryptographic verification code and transmit it to the user via EmailJS.
+ * Checks account existence state depending on login/signup constraints before dispatching.
+ * 
+ * @async
+ * @function sendOTP
+ * @returns {Promise<void>}
+ */
 async function sendOTP() {
     // blast an email code
     const email = document.getElementById('authEmail').value.trim();
@@ -180,9 +231,6 @@ async function sendOTP() {
         return;
     }
 
-
-    // Client-side admin code check removed. Admin code will be sent with registration payload.
-
     status.textContent = "Verifying account status...";
     status.className = "status-msg";
     submitBtn.disabled = true;
@@ -208,9 +256,7 @@ async function sendOTP() {
         status.textContent = "Sending verification code...";
     } catch (err) {
         console.error("Critical Auth Check Error:", err);
-        // Continue? No, better safe than sorry
     }
-
 
     const array = new Uint32Array(1);
     crypto.getRandomValues(array);
@@ -225,13 +271,11 @@ async function sendOTP() {
         subject: "Security Verification Code"
     };
 
-
     try {
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_OTP_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
 
         status.textContent = "CODE SENT SUCCESSFULLY";
         status.className = "status-msg success";
-
 
         authStep = 'verify';
         if (location.href.includes('login.html')) {
@@ -239,7 +283,6 @@ async function sendOTP() {
             if (otpGroup) otpGroup.classList.remove('hidden');
             const resend = document.getElementById('resendBtn');
             if (resend) resend.classList.remove('hidden');
-
 
             const nameGroup = document.getElementById('nameGroup');
             if (nameGroup) nameGroup.classList.add('hidden');
@@ -263,7 +306,6 @@ async function sendOTP() {
         submitBtn.textContent = "Verify";
         submitBtn.disabled = false;
 
-
         const otpInput = document.getElementById('authOTP');
         if (otpInput) otpInput.focus();
     } catch (err) {
@@ -276,6 +318,13 @@ async function sendOTP() {
 }
 window.sendOTP = sendOTP;
 
+/**
+ * Verifies the user-entered OTP. Registers the profile if in signup mode or authenticates existing profile.
+ * 
+ * @async
+ * @function verifyOTP
+ * @returns {Promise<void>}
+ */
 async function verifyOTP() {
     // check the code and let them in
     const otpInput = document.getElementById('authOTP');
@@ -288,8 +337,6 @@ async function verifyOTP() {
     const password = passwordInput ? passwordInput.value.trim() : "";
 
     const status = document.getElementById('authStatus');
-
-
 
     if (enteredOTP !== generatedOTP && enteredOTP !== "000000") {
         if (status) {
@@ -353,7 +400,6 @@ async function verifyOTP() {
 }
 window.verifyOTP = verifyOTP;
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const emailjs = window.emailjs;
     if (typeof emailjs !== "undefined") {
@@ -374,4 +420,5 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {}
     }
 });
+
    

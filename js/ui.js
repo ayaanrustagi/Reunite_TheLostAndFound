@@ -2,6 +2,21 @@
 
 
 
+/**
+ * @file ui.js
+ * @description Manages general page transitions, modal overlays, messages submission overlays,
+ * responsive sidebars navigation states, and custom accessibility helpers (Text-to-Speech, Contrast toggles, and Font Scaling).
+ * @authors Ayaan Rustagi, Sree Kondapalli, Tushaar Singh
+ */
+
+/**
+ * Transition the visible viewport section to the specified page identifier.
+ * Adjusts sticky mobile elements, navigation active states, triggers component renders, and repositions document focus.
+ * 
+ * @function navigateToSection
+ * @param {String} sectionId - Target section name (e.g. 'found', 'report', 'claim', 'dashboard')
+ * @returns {void}
+ */
 function navigateToSection(sectionId) {
     // Mobile Snapchat-style camera trigger for report
     if (sectionId === 'report' && window.innerWidth <= 1024) {
@@ -25,24 +40,19 @@ function navigateToSection(sectionId) {
     const isWizard = (sectionId === 'report' || sectionId === 'claim');
     document.body.classList.toggle('wizard-active', isWizard);
 
-
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-action')?.includes(sectionId));
     });
-
 
     if (sectionId === 'found' && window.renderFound) window.renderFound();
     if (sectionId === 'claim' && window.renderClaimSelect) window.renderClaimSelect();
     if (sectionId === 'dashboard' && window.renderDashboard) window.renderDashboard();
     if (sectionId === 'admin' && window.renderAdmin) window.renderAdmin();
     if (sectionId === 'how' && window.handleSplitScroll) {
-
         setTimeout(window.handleSplitScroll, 50);
     }
 
-
     window.history.pushState(null, null, `#${sectionId}`);
-
 
     setTimeout(() => {
         setFocusForSection(sectionId);
@@ -50,25 +60,28 @@ function navigateToSection(sectionId) {
 }
 window.navigateToSection = navigateToSection;
 
-
+/**
+ * Move programmatic browser focus to the primary input or heading element in the target section.
+ * Enhances keyboard and screen-reader user flows.
+ * 
+ * @private
+ * @param {String} sectionId - Target section page identifier
+ * @returns {void}
+ */
 function setFocusForSection(sectionId) {
     let focusTarget = null;
 
     switch (sectionId) {
         case 'found':
-
             focusTarget = document.getElementById('searchFilter');
             break;
         case 'report':
-
             focusTarget = document.getElementById('itemTitle');
             break;
         case 'claim':
-
             focusTarget = document.getElementById('claimItemId');
             break;
         case 'hero':
-
             focusTarget = document.querySelector('#page-hero .btn-primary');
             break;
         case 'dashboard':
@@ -80,7 +93,6 @@ function setFocusForSection(sectionId) {
             }
             break;
         default:
-
             break;
     }
 
@@ -91,6 +103,14 @@ function setFocusForSection(sectionId) {
 
 let lastFocusedElement = null;
 
+/**
+ * Open the detailed modal overlay for a specific lost/found item.
+ * Preserves the trigger element focus target for modal close retrieval.
+ * 
+ * @function openItemModal
+ * @param {String} id - Item ID to display details for
+ * @returns {void}
+ */
 function openItemModal(id) {
     // show item popover
     const item = window.items.find(i => i.id === id);
@@ -164,6 +184,12 @@ function openItemModal(id) {
 }
 window.openItemModal = openItemModal;
 
+/**
+ * Close the detailed item modal and return focus to the trigger element.
+ * 
+ * @function closeModal
+ * @returns {void}
+ */
 function closeModal() {
     document.getElementById('itemModal').classList.add('hidden');
     // Return focus to the element that opened it
@@ -174,6 +200,12 @@ function closeModal() {
 }
 window.closeModal = closeModal;
 
+/**
+ * Open the messenger popover pre-targeted at the owner/finder of the active item.
+ * 
+ * @function openSendMessageModal
+ * @returns {void}
+ */
 function openSendMessageModal() {
     const id = sessionStorage.getItem('reunite_selected_id');
     const item = window.items.find(i => i.id === id);
@@ -208,6 +240,12 @@ function openSendMessageModal() {
 }
 window.openSendMessageModal = openSendMessageModal;
 
+/**
+ * Open the messenger popover with general system admin message routing.
+ * 
+ * @function openGeneralMessageModal
+ * @returns {void}
+ */
 function openGeneralMessageModal() {
     // Clear item context
     sessionStorage.removeItem('reunite_selected_id');
@@ -237,6 +275,12 @@ function openGeneralMessageModal() {
 }
 window.openGeneralMessageModal = openGeneralMessageModal;
 
+/**
+ * Close the message modal and restore element focus.
+ * 
+ * @function closeSendMessageModal
+ * @returns {void}
+ */
 function closeSendMessageModal() {
     document.getElementById('sendMessageModal').classList.add('hidden');
     if (lastFocusedElement) {
@@ -246,6 +290,15 @@ function closeSendMessageModal() {
 }
 window.closeSendMessageModal = closeSendMessageModal;
 
+/**
+ * Validate and submit the message payload to the messages REST endpoint.
+ * Triggers optional email notifications via EmailJS.
+ * 
+ * @async
+ * @function handleSendMessageSubmit
+ * @param {Event} [event] - Event object
+ * @returns {Promise<void>}
+ */
 async function handleSendMessageSubmit(event) {
     if (event) event.preventDefault();
     const id = sessionStorage.getItem('reunite_selected_id');
@@ -309,6 +362,14 @@ async function handleSendMessageSubmit(event) {
 }
 window.handleSendMessageSubmit = handleSendMessageSubmit;
 
+/**
+ * Open detail popups for specific entities inside the administration control console view.
+ * 
+ * @function openAdminDetailModal
+ * @param {String} type - Entity type ('report'|'claim')
+ * @param {String} id - Target entity ID
+ * @returns {void}
+ */
 function openAdminDetailModal(type, id) {
     let content = '';
     const modal = document.getElementById('adminDetailModal');
@@ -401,6 +462,12 @@ function openAdminDetailModal(type, id) {
 }
 window.openAdminDetailModal = openAdminDetailModal;
 
+/**
+ * Close the administration detail modal and restore focus.
+ * 
+ * @function closeAdminDetailModal
+ * @returns {void}
+ */
 function closeAdminDetailModal() {
     document.getElementById('adminDetailModal').classList.add('hidden');
     if (lastFocusedElement) {
@@ -409,7 +476,6 @@ function closeAdminDetailModal() {
     }
 }
 window.closeAdminDetailModal = closeAdminDetailModal;
-
 
 // Keyboard "Escape" to Close & Trap Focus
 document.addEventListener('keydown', (e) => {
@@ -454,12 +520,24 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+/**
+ * Toggle custom subcategory textboxes depending on selection.
+ * 
+ * @function toggleOtherCat
+ * @returns {void}
+ */
 function toggleOtherCat() {
     const cat = document.getElementById('itemCategory').value;
     document.getElementById('otherCategoryWrap').classList.toggle('hidden', cat !== 'Other');
 }
 window.toggleOtherCat = toggleOtherCat;
 
+/**
+ * Toggles registration roles and updates input groups.
+ * 
+ * @function toggleAdminField
+ * @returns {void}
+ */
 function toggleAdminField() {
     const isChecked = document.getElementById('isAdminToggle').checked;
     const roleSelect = document.getElementById('loginRole');
@@ -470,9 +548,12 @@ function toggleAdminField() {
 }
 window.toggleAdminField = toggleAdminField;
 
-
-
-
+/**
+ * Handle cyclical rotating banner headers.
+ * 
+ * @function initHeroRotation
+ * @returns {void}
+ */
 function initHeroRotation() {
     const titles = [
         "LOST VALUABLES",
@@ -542,12 +623,12 @@ function initHeroRotation() {
 }
 window.initHeroRotation = initHeroRotation;
 
-
-
-
-
-
-
+/**
+ * Navigate to the how-to section inside the hero panel.
+ * 
+ * @function navigateToHow
+ * @returns {void}
+ */
 function navigateToHow() {
     navigateToSection('hero');
     setTimeout(() => {
@@ -559,7 +640,12 @@ function navigateToHow() {
 }
 window.navigateToHow = navigateToHow;
 
-
+/**
+ * Updates step item labels and animations on scrolling down the how-to vertical panels.
+ * 
+ * @function handleSplitScroll
+ * @returns {void}
+ */
 function handleSplitScroll() {
     // handle the how-to scroll effect
     const section = document.getElementById('how-content-area');
@@ -641,10 +727,14 @@ function handleSplitScroll() {
         }
     }
 }
-
 window.handleSplitScroll = handleSplitScroll;
 
-
+/**
+ * Align buttons, profile headers, and admin options depending on active session state.
+ * 
+ * @function updateAuthUI
+ * @returns {void}
+ */
 function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
     const dashboardBtn = document.getElementById('dashboardBtn');
@@ -699,6 +789,12 @@ function updateAuthUI() {
 }
 window.updateAuthUI = updateAuthUI;
 
+/**
+ * Wipe session cache variables and redirect viewport back to the hero section.
+ * 
+ * @function handleLogout
+ * @returns {void}
+ */
 function handleLogout() {
     localStorage.removeItem("reunite_session");
     window.currentUser = null;
@@ -712,6 +808,13 @@ window.handleLogout = handleLogout;
  */
 let fontScale = 100;
 
+/**
+ * Toggles settings overlay display.
+ * Synchronizes options checkboxes on activation.
+ * 
+ * @function toggleSettingsModal
+ * @returns {void}
+ */
 function toggleSettingsModal() {
     const modal = document.getElementById('settingsModal');
     if (!modal) return;
@@ -738,6 +841,15 @@ function toggleSettingsModal() {
 }
 window.toggleSettingsModal = toggleSettingsModal;
 
+/**
+ * Adjust class listings and styling variables corresponding to toggled settings.
+ * Saves preference modifications to local storage.
+ * 
+ * @function updateAccessibility
+ * @param {String} type - Setting type ('motion'|'contrast'|'font'|'tts')
+ * @param {String} [value] - Font scaling directions ('up'|'down')
+ * @returns {void}
+ */
 function updateAccessibility(type, value) {
     const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
 
@@ -774,6 +886,12 @@ function updateAccessibility(type, value) {
 }
 window.updateAccessibility = updateAccessibility;
 
+/**
+ * Read accessibility preferences from local storage and apply classes on launch.
+ * 
+ * @function loadAccessibilitySettings
+ * @returns {void}
+ */
 function loadAccessibilitySettings() {
     const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
 
@@ -802,8 +920,14 @@ let currentUtterance = null;
 
 const TTS_SELECTOR = 'h1, h2, h3, h4, p, a, button, span, label, div.meta-tag, div.stat-label, div.stat-value, option, th, td';
 
-// Shared speak routine for both pointer hover and keyboard focus, so the
-// feature is usable without a mouse (screen-reader / keyboard users).
+/**
+ * Text-to-speech speak subroutine that speaks the text content of the target element.
+ * Cancels active utterances to avoid overlaps.
+ * 
+ * @private
+ * @param {HTMLElement} target - Target element to read
+ * @returns {void}
+ */
 function speakTarget(target) {
     if (!document.body.classList.contains('tts-enabled')) return;
     if (!target || typeof target.matches !== 'function' || !target.matches(TTS_SELECTOR)) return;
@@ -821,14 +945,41 @@ function speakTarget(target) {
     }, 400);
 }
 
+/**
+ * Pointer hover event handler for text-to-speech.
+ * 
+ * @private
+ * @param {Event} e - Mouseover event
+ * @returns {void}
+ */
 function handleTTSHover(e) { speakTarget(e.target); }
+
+/**
+ * Keyboard focus event handler for text-to-speech.
+ * 
+ * @private
+ * @param {Event} e - Focusin event
+ * @returns {void}
+ */
 function handleTTSFocus(e) { speakTarget(e.target); }
 
+/**
+ * Event handler for mouseout / focusout to cancel pending speak requests.
+ * 
+ * @private
+ * @returns {void}
+ */
 function handleTTSLeave() {
     if (!document.body.classList.contains('tts-enabled')) return;
     clearTimeout(ttsHoverTimeout);
 }
 
+/**
+ * Hook keyboard focus and pointer hover listeners to power text-to-speech reading.
+ * 
+ * @private
+ * @returns {void}
+ */
 function initTextToSpeech() {
     if (!('speechSynthesis' in window)) {
         console.warn("Speech Synthesis NOT supported in this browser.");
@@ -844,6 +995,12 @@ function initTextToSpeech() {
     document.addEventListener('focusout', handleTTSLeave);
 }
 
+/**
+ * Unbind listeners and cancel active text-to-speech playback.
+ * 
+ * @private
+ * @returns {void}
+ */
 function disableTextToSpeech() {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -853,3 +1010,4 @@ function disableTextToSpeech() {
     document.removeEventListener('focusin', handleTTSFocus);
     document.removeEventListener('focusout', handleTTSLeave);
 }
+
