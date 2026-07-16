@@ -67,7 +67,7 @@ body.reduced-motion .scrollhero-canvas {
   /* accent → blue (reusing var name) */
   --mana-magenta: #1e40af;
   --mana-rule: rgba(15, 20, 25, 0.12);
-  --mana-mono: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+  --mana-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
   --mana-display: 'Bricolage Grotesque', 'Hanken Grotesk', sans-serif;
   --c-green: #15803d;
   --c-blue: #1d4ed8;
@@ -493,7 +493,7 @@ body.reduced-motion .scrollhero-canvas {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(15, 20, 25, 0.08);
-    border-radius: 18px;
+    border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
     justify-content: center;
