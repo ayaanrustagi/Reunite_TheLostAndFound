@@ -12,7 +12,7 @@
     --ink-2: #3a4250;
     --ink-3: #4b5563;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
     --font-display: 'Bricolage Grotesque', 'Inter', sans-serif;
     --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
     --glow-opacity: 0.15;
@@ -331,13 +331,4 @@ body {
 /* Mobile/tablet renders without zoom to fix iOS sizing bugs. */
 @media (max-width: 1024px) {
     /* Zoom removed to allow native responsive design to work correctly. */
-}
-
-/* Mobile/tablet border-radius normalization to keep corner radius constant */
-@media (max-width: 768px) {
-    :root {
-        --radius-lg: 16px;
-        --radius-md: 8px;
-        --radius-sm: 4px;
-    }
 }

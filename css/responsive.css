@@ -113,7 +113,7 @@
         border: 1px solid rgba(255, 255, 255, 0.6);
         padding: 3rem 1.5rem;
         /* More compact */
-        border-radius: var(--radius-lg);
+        border-radius: 40px;
         margin: 0 1rem;
         width: calc(100% - 2rem);
         box-shadow:
@@ -729,7 +729,7 @@
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: var(--radius-lg);
+        border-radius: 36px;
         opacity: 1;
         transform: scale(0.92);
         box-shadow: 0 25px 60px rgba(0, 50, 150, 0.08);
@@ -1423,7 +1423,7 @@
     .mb-grid-card {
         background: #d8f3fd !important;
         border: none !important;
-        border-radius: var(--radius-lg);
+        border-radius: 24px;
         box-shadow: none !important;
         padding: 1.25rem;
         display: flex;

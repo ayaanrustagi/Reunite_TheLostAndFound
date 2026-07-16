@@ -15,7 +15,7 @@
     /* Very opaque white */
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border-radius: var(--radius-lg);
+    border-radius: 32px;
     padding: 3rem;
     box-shadow:
         0 40px 100px rgba(0, 0, 0, 0.1),
@@ -27,7 +27,7 @@
 @media (max-width: 768px) {
     .content-box {
         padding: 1.5rem;
-        border-radius: var(--radius-lg);
+        border-radius: 20px;
     }
 }
 
