@@ -113,7 +113,7 @@
 
 @media (max-width: 600px) {
     #page-admin .stats-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
