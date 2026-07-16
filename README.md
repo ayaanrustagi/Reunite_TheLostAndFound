@@ -81,6 +81,10 @@ REUNITE offers two distinct matching modes on the **Find Items** page:
 *   **System Audit Log**: Every administrative action (Approvals, Rejections, Deletions, Claims) is tracked securely.
 *   **Private Messages inbox**: Direct messaging between claim requesters and administrators to facilitate pick-ups.
 
+### 5. Arduino Smart Drop-Box Integration (Hardware Add-on)
+*   **Physical Security**: Planned integration with an ESP32/Arduino-powered locker system. Found items are secured in a smart locker bay.
+*   **Cloud-Synced Access**: Once an item is claimed and verified via the REUNITE web interface, the backend sends a secure IoT signal to the Arduino to unlock the corresponding physical bay for pickup.
+
 ---
 
 ## Universal Design & Accessibility (WCAG 2.1)

@@ -27,8 +27,8 @@
     }
 }
 
-/* TABLET BREAKPOINT (768px - 1024px) */
-@media (max-width: 1024px) {
+/* MOBILE BREAKPOINT (max-width: 768px) */
+@media (max-width: 768px) {
 
     /* Hide desktop header on mobile */
     .desktop-header {
