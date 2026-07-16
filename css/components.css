@@ -419,6 +419,7 @@
         top: 100%;
     }
 }
+
 /* ── Sources header button ───────────────────────────────────────────────── */
 .btn-ghost-xs {
     background: none;
@@ -431,11 +432,14 @@
     cursor: pointer;
     opacity: 0.7;
 }
-.btn-ghost-xs:hover { opacity: 1; }
+
+.btn-ghost-xs:hover {
+    opacity: 1;
+}
 
 /* ── Site footer bar ─────────────────────────────────────────────────────── */
 .site-footer-bar {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -449,7 +453,9 @@
     z-index: 2;
 }
 
-.sfb-copy { font-family: var(--font-mono, monospace); }
+.sfb-copy {
+    font-family: var(--font-mono, monospace);
+}
 
 .sfb-link {
     background: none;
@@ -463,10 +469,13 @@
     text-underline-offset: 3px;
 }
 
-.sfb-link:hover { opacity: 0.75; }
+.sfb-link:hover {
+    opacity: 0.75;
+}
 
 /* ── Semantic site footer ────────────────────────────────────────────────── */
 .site-footer {
+    display: none;
     text-align: center;
     padding: 1.25rem clamp(1rem, 4vw, 3rem);
     font-size: 11px;
@@ -476,10 +485,14 @@
     background: var(--bg-color, #f8f9fb);
 }
 
-.site-footer p { margin: 0; }
+.site-footer p {
+    margin: 0;
+}
 
 /* ── Sources modal body ──────────────────────────────────────────────────── */
-.sources-modal-box { max-width: 740px; }
+.sources-modal-box {
+    max-width: 740px;
+}
 
 .sources-body {
     padding: 0 0.25rem;
@@ -529,4 +542,6 @@
     vertical-align: top;
 }
 
-.sources-table a { color: var(--accent-color, #2563EB); }
+.sources-table a {
+    color: var(--accent-color, #2563EB);
+}

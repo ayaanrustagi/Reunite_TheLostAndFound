@@ -170,7 +170,9 @@ body.auth-page .site-header {
 }
 
 @keyframes orbSpin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .auth-logo-img {
@@ -335,13 +337,13 @@ body.auth-page .site-header {
     left: 1.2rem;
 }
 
-.field .input-pill:focus + .float-label,
-.field .input-pill:not(:placeholder-shown) + .float-label {
+.field .input-pill:focus+.float-label,
+.field .input-pill:not(:placeholder-shown)+.float-label {
     transform: translateY(-1.42rem) scale(0.72);
     color: var(--ink-2);
 }
 
-.field .input-pill:focus + .float-label {
+.field .input-pill:focus+.float-label {
     color: var(--accent-color);
 }
 
@@ -366,8 +368,8 @@ body.auth-page .site-header {
     padding-left: 0.6rem !important;
 }
 
-.otp-field .input-pill:focus + .float-label,
-.otp-field .input-pill:not(:placeholder-shown) + .float-label {
+.otp-field .input-pill:focus+.float-label,
+.otp-field .input-pill:not(:placeholder-shown)+.float-label {
     transform: translateY(-1.42rem) scale(0.72) translateX(0);
 }
 
@@ -400,9 +402,17 @@ body.auth-page .site-header {
     outline-offset: 1px;
 }
 
-.pw-toggle .eye-closed { display: none; }
-.pw-toggle.revealed .eye-open { display: none; }
-.pw-toggle.revealed .eye-closed { display: block; }
+.pw-toggle .eye-closed {
+    display: none;
+}
+
+.pw-toggle.revealed .eye-open {
+    display: none;
+}
+
+.pw-toggle.revealed .eye-closed {
+    display: block;
+}
 
 /* --- Admin signup group --- */
 .admin-toggle-label {
@@ -493,11 +503,27 @@ body.auth-page .site-header {
 }
 
 @keyframes statusShake {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(5px); }
-    60% { transform: translateX(-3px); }
-    80% { transform: translateX(2px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-6px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(2px);
+    }
 }
 
 /* --- Privacy note --- */
@@ -616,7 +642,7 @@ body.auth-page .site-header {
 
 /* --- Footer --- */
 body.auth-page .site-footer.auth-footer {
-    position: fixed;
+    display: none;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -631,6 +657,7 @@ body.auth-page .site-footer.auth-footer {
 
 /* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
+
     .orb-ring,
     .auth-submit::before {
         animation: none !important;
@@ -786,6 +813,7 @@ body.reduced-motion .orb-ring {
    MOBILE APP SIGN IN STYLE (FULL SCREEN VIEW)
    ========================================================================== */
 @media (max-width: 767px) {
+
     /* Full-screen auth container */
     body.auth-page {
         padding: 0 !important;
@@ -888,7 +916,8 @@ body.reduced-motion .orb-ring {
         max-width: 100% !important;
         min-height: 100vh;
         margin: 0 !important;
-        padding: calc(5.5rem + env(safe-area-inset-top, 0px)) 1.25rem 3rem !important; /* Spacing for topbar and mobile footers */
+        padding: calc(5.5rem + env(safe-area-inset-top, 0px)) 1.25rem 3rem !important;
+        /* Spacing for topbar and mobile footers */
         border-radius: 0 !important;
         border: none !important;
         box-shadow: none !important;
