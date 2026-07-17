@@ -97,43 +97,21 @@
     }
 }
 
-/* Card Zoom & Motion Blur Animation */
-.card-opening {
-    animation: cardZoomBlurOpen 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    pointer-events: none;
-    z-index: 100;
-    transition: none !important;
+/* Card Zoom & Motion Blur transition clone */
+.card-transition-clone {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+    transform-origin: center center !important;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: var(--shadow-medium) !important;
 }
 
-.card-dimmed {
-    animation: cardDimBlur 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    pointer-events: none;
-    transition: none !important;
-}
-
-@keyframes cardZoomBlurOpen {
-    0% {
-        transform: scale(1) translateY(0);
-        filter: blur(0px);
-        box-shadow: var(--shadow-soft);
-    }
-    100% {
-        transform: scale(1.1) translateY(-12px);
-        filter: blur(6px);
-        opacity: 0;
-        box-shadow: var(--shadow-medium);
-    }
-}
-
-@keyframes cardDimBlur {
-    0% {
-        filter: blur(0px);
-        opacity: 1;
-    }
-    100% {
-        filter: blur(4px);
-        opacity: 0.55;
-    }
+.card-transition-clone.expanded {
+    filter: blur(6px) !important;
+    opacity: 0 !important;
+    transform: scale(1.2) !important;
 }
 
 /* Reduced Motion Support */
@@ -152,9 +130,9 @@
     .text-slide-in,
     .text-slide-out,
     .fade-in,
-    .card-opening,
-    .card-dimmed {
+    .card-transition-clone {
         animation: none !important;
+        transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         filter: none !important;
@@ -178,9 +156,9 @@ body.reduced-motion .hero-text-fade,
 body.reduced-motion .text-slide-in,
 body.reduced-motion .text-slide-out,
 body.reduced-motion .fade-in,
-body.reduced-motion .card-opening,
-body.reduced-motion .card-dimmed {
+body.reduced-motion .card-transition-clone {
     animation: none !important;
+    transition: none !important;
     transform: none !important;
     opacity: 1 !important;
     filter: none !important;

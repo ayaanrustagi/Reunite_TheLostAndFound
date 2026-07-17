@@ -124,18 +124,6 @@ function openItemModal(id) {
 
     // Store element that opened modal
     lastFocusedElement = document.activeElement;
-    if (lastFocusedElement) {
-        const clickedCard = lastFocusedElement.closest('.item-card, .ai-match-item');
-        if (clickedCard) {
-            clickedCard.classList.add('card-opening');
-            // Dim and blur all other item cards & AI matches
-            document.querySelectorAll('.item-card, .ai-match-item').forEach(card => {
-                if (card !== clickedCard) {
-                    card.classList.add('card-dimmed');
-                }
-            });
-        }
-    }
 
     // Use consistent clean color for modal
     const bg = `oklch(0.96 0.02 220)`; // premium light background
@@ -192,13 +180,61 @@ function openItemModal(id) {
     }
 
     sessionStorage.setItem('reunite_selected_id', id);
-    modal.classList.remove('hidden');
 
-    // Move focus into the modal
-    const closeBtn = modal.querySelector('.close-btn');
-    if (closeBtn) {
-        setTimeout(() => closeBtn.focus(), 50);
+    let animationDelay = 0;
+
+    if (lastFocusedElement) {
+        const clickedCard = lastFocusedElement.closest('.item-card, .ai-match-item');
+        if (clickedCard) {
+            animationDelay = 350; // Delay showing the modal for animation
+
+            // 1. Get current position of the clicked card
+            const rect = clickedCard.getBoundingClientRect();
+
+            // 2. Clone the card node
+            const clone = clickedCard.cloneNode(true);
+            clone.className = 'card-transition-clone ' + clickedCard.className;
+            clone.style.top = `${rect.top}px`;
+            clone.style.left = `${rect.left}px`;
+            clone.style.width = `${rect.width}px`;
+            clone.style.height = `${rect.height}px`;
+
+            // Dim the original card in place
+            clickedCard.style.opacity = '0.05';
+            clickedCard.style.transition = 'opacity 0.3s ease';
+            window.activeOpeningCard = clickedCard;
+
+            document.body.appendChild(clone);
+
+            // 3. Trigger transition to zoom, blur, and move to center
+            requestAnimationFrame(() => {
+                const targetWidth = Math.min(480, window.innerWidth * 0.9);
+                const targetHeight = Math.min(580, window.innerHeight * 0.8);
+                const targetLeft = (window.innerWidth - targetWidth) / 2;
+                const targetTop = (window.innerHeight - targetHeight) / 2;
+
+                clone.classList.add('expanded');
+                clone.style.top = `${targetTop}px`;
+                clone.style.left = `${targetLeft}px`;
+                clone.style.width = `${targetWidth}px`;
+                clone.style.height = `${targetHeight}px`;
+            });
+
+            // 4. Remove clone after transition
+            setTimeout(() => {
+                clone.remove();
+            }, 550);
+        }
     }
+
+    // Delay modal overlay reveal to line up with the card transition
+    setTimeout(() => {
+        modal.classList.remove('hidden');
+        const closeBtn = modal.querySelector('.close-btn');
+        if (closeBtn) {
+            setTimeout(() => closeBtn.focus(), 50);
+        }
+    }, animationDelay);
 }
 window.openItemModal = openItemModal;
 
@@ -215,10 +251,11 @@ function closeModal() {
         lastFocusedElement.focus();
         lastFocusedElement = null;
     }
-    // Clean up animation classes on all cards
-    document.querySelectorAll('.item-card, .ai-match-item').forEach(card => {
-        card.classList.remove('card-opening', 'card-dimmed');
-    });
+    // Restore opacity on the original card
+    if (window.activeOpeningCard) {
+        window.activeOpeningCard.style.opacity = '1';
+        window.activeOpeningCard = null;
+    }
 }
 window.closeModal = closeModal;
 
