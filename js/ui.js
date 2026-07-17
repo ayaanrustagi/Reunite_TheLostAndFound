@@ -178,7 +178,6 @@ function openItemModal(id) {
             `;
         }
     }
-
     sessionStorage.setItem('reunite_selected_id', id);
 
     let animationDelay = 0;
@@ -186,7 +185,10 @@ function openItemModal(id) {
     if (lastFocusedElement) {
         const clickedCard = lastFocusedElement.closest('.item-card, .ai-match-item');
         if (clickedCard) {
-            animationDelay = 350; // Delay showing the modal for animation
+            animationDelay = 250; // Delay showing the modal for animation
+
+            // Add fade-only class to modal to prevent visual layout jumps
+            modal.classList.add('fade-only-mode');
 
             // 1. Get current position of the clicked card
             const rect = clickedCard.getBoundingClientRect();
@@ -206,8 +208,11 @@ function openItemModal(id) {
 
             document.body.appendChild(clone);
 
+            // Force a reflow
+            clone.offsetHeight;
+
             // 3. Trigger transition to zoom, blur, and move to center
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 const targetWidth = Math.min(480, window.innerWidth * 0.9);
                 const targetHeight = Math.min(580, window.innerHeight * 0.8);
                 const targetLeft = (window.innerWidth - targetWidth) / 2;
@@ -218,12 +223,12 @@ function openItemModal(id) {
                 clone.style.left = `${targetLeft}px`;
                 clone.style.width = `${targetWidth}px`;
                 clone.style.height = `${targetHeight}px`;
-            });
+            }, 20);
 
-            // 4. Remove clone after transition
+            // 4. Remove clone after transition (just as modal starts fading in)
             setTimeout(() => {
                 clone.remove();
-            }, 550);
+            }, 350);
         }
     }
 
@@ -245,7 +250,9 @@ window.openItemModal = openItemModal;
  * @returns {void}
  */
 function closeModal() {
-    document.getElementById('itemModal').classList.add('hidden');
+    const modal = document.getElementById('itemModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('fade-only-mode');
     // Return focus to the element that opened it
     if (lastFocusedElement) {
         lastFocusedElement.focus();

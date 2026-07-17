@@ -104,14 +104,23 @@
     z-index: 99999 !important;
     pointer-events: none !important;
     transform-origin: center center !important;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
     box-shadow: var(--shadow-medium) !important;
+    opacity: 1 !important;
 }
 
 .card-transition-clone.expanded {
-    filter: blur(6px) !important;
-    opacity: 0 !important;
-    transform: scale(1.2) !important;
+    filter: blur(3px) !important;
+    transform: scale(1.08) !important;
+}
+
+/* Modal Fade-Only Mode to support card transitions */
+.modal-overlay.fade-only-mode {
+    animation: modalFadeIn 0.3s ease-out !important;
+}
+
+.modal-overlay.fade-only-mode .modal-box {
+    animation: modalFadeIn 0.3s ease-out !important;
 }
 
 /* Reduced Motion Support */
