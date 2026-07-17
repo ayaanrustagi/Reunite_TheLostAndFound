@@ -190,66 +190,54 @@ function openItemModal(id) {
             // Get original card coordinates
             const rect = clickedCard.getBoundingClientRect();
 
-            // Set starting values on the modal box
-            modal.classList.add('expanding-card');
-            modalBox.style.transition = 'none';
-            modalBox.style.position = 'fixed';
-            modalBox.style.margin = '0';
-            modalBox.style.top = `${rect.top}px`;
-            modalBox.style.left = `${rect.left}px`;
-            modalBox.style.width = `${rect.width}px`;
-            modalBox.style.height = `${rect.height}px`;
-            modalBox.style.transform = 'none';
-            modalBox.style.filter = 'blur(6px)';
-            modalBox.style.opacity = '0.3';
-            modalBox.style.zIndex = '99999';
-
             // Dim original card
-            clickedCard.style.opacity = '0.05';
-            clickedCard.style.transition = 'opacity 0.3s ease';
+            clickedCard.style.opacity = '0';
             window.activeOpeningCard = clickedCard;
 
-            // Show modal overlay
+            // Show modal overlay to calculate its final layout
+            modal.classList.add('expanding-card');
             modal.classList.remove('hidden');
+
+            const finalRect = modalBox.getBoundingClientRect();
+
+            // Calculate inverse transforms for FLIP
+            const scaleX = rect.width / finalRect.width;
+            const scaleY = rect.height / finalRect.height;
+            const centerOriginalX = rect.left + rect.width / 2;
+            const centerOriginalY = rect.top + rect.height / 2;
+            const centerFinalX = finalRect.left + finalRect.width / 2;
+            const centerFinalY = finalRect.top + finalRect.height / 2;
+            
+            const translateX = centerOriginalX - centerFinalX;
+            const translateY = centerOriginalY - centerFinalY;
+
+            // Apply starting state
+            modalBox.style.transition = 'none';
+            modalBox.style.transformOrigin = 'center center';
+            modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
+            modalBox.style.filter = 'blur(12px)';
+            modalBox.style.opacity = '0.3';
 
             // Force reflow
             modalBox.offsetHeight;
 
-            // Transition modal box to target centered size
-            setTimeout(() => {
-                modalBox.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-                
-                const isDesktop = window.innerWidth >= 768;
-                const targetWidth = isDesktop 
-                    ? Math.min(1000, window.innerWidth * 0.9)
-                    : Math.min(480, window.innerWidth - 32);
-                const targetHeight = isDesktop
-                    ? 580
-                    : Math.min(600, window.innerHeight - 64);
-                const targetLeft = (window.innerWidth - targetWidth) / 2;
-                const targetTop = (window.innerHeight - targetHeight) / 2;
-
-                modalBox.style.top = `${targetTop}px`;
-                modalBox.style.left = `${targetLeft}px`;
-                modalBox.style.width = `${targetWidth}px`;
-                modalBox.style.height = `${targetHeight}px`;
-                modalBox.style.filter = 'blur(0px)';
-                modalBox.style.opacity = '1';
-            }, 20);
+            // Play transition
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    modalBox.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease-out, opacity 0.3s ease-out';
+                    modalBox.style.transform = 'translate(0px, 0px) scale(1, 1)';
+                    modalBox.style.filter = 'blur(0px)';
+                    modalBox.style.opacity = '1';
+                });
+            });
 
             // Clean up style tags when transition ends
             setTimeout(() => {
                 modalBox.style.transition = '';
-                modalBox.style.position = '';
-                modalBox.style.margin = '';
-                modalBox.style.top = '';
-                modalBox.style.left = '';
-                modalBox.style.width = '';
-                modalBox.style.height = '';
+                modalBox.style.transformOrigin = '';
                 modalBox.style.transform = '';
                 modalBox.style.filter = '';
                 modalBox.style.opacity = '';
-                modalBox.style.zIndex = '';
                 modal.classList.remove('expanding-card');
 
                 const closeBtn = modal.querySelector('.close-btn');
@@ -277,21 +265,61 @@ window.openItemModal = openItemModal;
 function closeModal() {
     const modal = document.getElementById('itemModal');
     const modalBox = modal.querySelector('.modal-box');
+    
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isReducedMode = prefersReducedMotion || document.body.classList.contains('reduced-motion');
+
+    if (window.activeOpeningCard && modalBox && !isReducedMode && !modal.classList.contains('hidden')) {
+        const rect = window.activeOpeningCard.getBoundingClientRect();
+        const finalRect = modalBox.getBoundingClientRect();
+        
+        const scaleX = rect.width / finalRect.width;
+        const scaleY = rect.height / finalRect.height;
+        const centerOriginalX = rect.left + rect.width / 2;
+        const centerOriginalY = rect.top + rect.height / 2;
+        const centerFinalX = finalRect.left + finalRect.width / 2;
+        const centerFinalY = finalRect.top + finalRect.height / 2;
+        
+        const translateX = centerOriginalX - centerFinalX;
+        const translateY = centerOriginalY - centerFinalY;
+
+        modal.classList.add('expanding-card');
+        modalBox.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease-in, opacity 0.25s ease-in';
+        modalBox.style.transformOrigin = 'center center';
+        modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
+        modalBox.style.filter = 'blur(8px)';
+        modalBox.style.opacity = '0';
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('expanding-card');
+            modalBox.style.transition = '';
+            modalBox.style.transformOrigin = '';
+            modalBox.style.transform = '';
+            modalBox.style.filter = '';
+            modalBox.style.opacity = '';
+            
+            if (window.activeOpeningCard) {
+                window.activeOpeningCard.style.opacity = '1';
+                window.activeOpeningCard = null;
+            }
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
+        }, 350);
+        return;
+    }
+
     modal.classList.add('hidden');
     modal.classList.remove('expanding-card');
 
     if (modalBox) {
         modalBox.style.transition = '';
-        modalBox.style.position = '';
-        modalBox.style.margin = '';
-        modalBox.style.top = '';
-        modalBox.style.left = '';
-        modalBox.style.width = '';
-        modalBox.style.height = '';
+        modalBox.style.transformOrigin = '';
         modalBox.style.transform = '';
         modalBox.style.filter = '';
         modalBox.style.opacity = '';
-        modalBox.style.zIndex = '';
     }
 
     // Return focus to the element that opened it
