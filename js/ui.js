@@ -196,6 +196,8 @@ function openItemModal(id) {
 
             // Show modal overlay to calculate its final layout
             modal.classList.add('expanding-card');
+            modal.style.animation = 'none'; // Prevent CSS modalFadeIn from interfering
+            modal.style.opacity = '0'; // Start overlay transparent
             modal.classList.remove('hidden');
 
             const finalRect = modalBox.getBoundingClientRect();
@@ -216,7 +218,7 @@ function openItemModal(id) {
             modalBox.style.transformOrigin = 'center center';
             modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
             modalBox.style.filter = 'blur(12px)';
-            modalBox.style.opacity = '0.3';
+            modalBox.style.opacity = '0';
 
             // Force reflow
             modalBox.offsetHeight;
@@ -224,10 +226,13 @@ function openItemModal(id) {
             // Play transition
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    modalBox.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease-out, opacity 0.3s ease-out';
+                    modalBox.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease-out, opacity 0.3s ease-out';
                     modalBox.style.transform = 'translate(0px, 0px) scale(1, 1)';
                     modalBox.style.filter = 'blur(0px)';
                     modalBox.style.opacity = '1';
+
+                    modal.style.transition = 'opacity 0.3s ease-out';
+                    modal.style.opacity = '1';
                 });
             });
 
@@ -238,11 +243,15 @@ function openItemModal(id) {
                 modalBox.style.transform = '';
                 modalBox.style.filter = '';
                 modalBox.style.opacity = '';
-                modal.classList.remove('expanding-card');
+                
+                modal.style.transition = '';
+                modal.style.opacity = '';
+                modal.style.animation = '';
+                // DO NOT remove expanding-card here, keeping it prevents the modalSlideUp from re-triggering and causing a blink
 
                 const closeBtn = modal.querySelector('.close-btn');
                 if (closeBtn) closeBtn.focus();
-            }, 450);
+            }, 420);
 
             return;
         }
@@ -283,21 +292,30 @@ function closeModal() {
         const translateX = centerOriginalX - centerFinalX;
         const translateY = centerOriginalY - centerFinalY;
 
-        modal.classList.add('expanding-card');
-        modalBox.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease-in, opacity 0.25s ease-in';
+        modal.style.animation = 'none'; // Ensure CSS animations don't override the JS transition
+        
+        modalBox.style.transition = 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s ease-in, opacity 0.2s ease-in';
         modalBox.style.transformOrigin = 'center center';
         modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
         modalBox.style.filter = 'blur(8px)';
         modalBox.style.opacity = '0';
+
+        modal.style.transition = 'opacity 0.25s ease-in';
+        modal.style.opacity = '0';
         
         setTimeout(() => {
             modal.classList.add('hidden');
             modal.classList.remove('expanding-card');
+            
             modalBox.style.transition = '';
             modalBox.style.transformOrigin = '';
             modalBox.style.transform = '';
             modalBox.style.filter = '';
             modalBox.style.opacity = '';
+            
+            modal.style.transition = '';
+            modal.style.opacity = '';
+            modal.style.animation = '';
             
             if (window.activeOpeningCard) {
                 window.activeOpeningCard.style.opacity = '1';
@@ -307,12 +325,13 @@ function closeModal() {
                 lastFocusedElement.focus();
                 lastFocusedElement = null;
             }
-        }, 350);
+        }, 260);
         return;
     }
 
     modal.classList.add('hidden');
     modal.classList.remove('expanding-card');
+    modal.style.animation = '';
 
     if (modalBox) {
         modalBox.style.transition = '';
