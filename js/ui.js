@@ -178,68 +178,93 @@ function openItemModal(id) {
             `;
         }
     }
+
     sessionStorage.setItem('reunite_selected_id', id);
 
-    let animationDelay = 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isReducedMode = prefersReducedMotion || document.body.classList.contains('reduced-motion');
 
-    if (lastFocusedElement) {
+    if (lastFocusedElement && !isReducedMode && modalBox) {
         const clickedCard = lastFocusedElement.closest('.item-card, .ai-match-item');
         if (clickedCard) {
-            animationDelay = 250; // Delay showing the modal for animation
-
-            // Add fade-only class to modal to prevent visual layout jumps
-            modal.classList.add('fade-only-mode');
-
-            // 1. Get current position of the clicked card
+            // Get original card coordinates
             const rect = clickedCard.getBoundingClientRect();
 
-            // 2. Clone the card node
-            const clone = clickedCard.cloneNode(true);
-            clone.className = 'card-transition-clone ' + clickedCard.className;
-            clone.style.top = `${rect.top}px`;
-            clone.style.left = `${rect.left}px`;
-            clone.style.width = `${rect.width}px`;
-            clone.style.height = `${rect.height}px`;
+            // Set starting values on the modal box
+            modal.classList.add('expanding-card');
+            modalBox.style.transition = 'none';
+            modalBox.style.position = 'fixed';
+            modalBox.style.margin = '0';
+            modalBox.style.top = `${rect.top}px`;
+            modalBox.style.left = `${rect.left}px`;
+            modalBox.style.width = `${rect.width}px`;
+            modalBox.style.height = `${rect.height}px`;
+            modalBox.style.transform = 'none';
+            modalBox.style.filter = 'blur(6px)';
+            modalBox.style.opacity = '0.3';
+            modalBox.style.zIndex = '99999';
 
-            // Dim the original card in place
+            // Dim original card
             clickedCard.style.opacity = '0.05';
             clickedCard.style.transition = 'opacity 0.3s ease';
             window.activeOpeningCard = clickedCard;
 
-            document.body.appendChild(clone);
+            // Show modal overlay
+            modal.classList.remove('hidden');
 
-            // Force a reflow
-            clone.offsetHeight;
+            // Force reflow
+            modalBox.offsetHeight;
 
-            // 3. Trigger transition to zoom, blur, and move to center
+            // Transition modal box to target centered size
             setTimeout(() => {
-                const targetWidth = Math.min(480, window.innerWidth * 0.9);
-                const targetHeight = Math.min(580, window.innerHeight * 0.8);
+                modalBox.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                
+                const isDesktop = window.innerWidth >= 768;
+                const targetWidth = isDesktop 
+                    ? Math.min(1000, window.innerWidth * 0.9)
+                    : Math.min(480, window.innerWidth - 32);
+                const targetHeight = isDesktop
+                    ? 580
+                    : Math.min(600, window.innerHeight - 64);
                 const targetLeft = (window.innerWidth - targetWidth) / 2;
                 const targetTop = (window.innerHeight - targetHeight) / 2;
 
-                clone.classList.add('expanded');
-                clone.style.top = `${targetTop}px`;
-                clone.style.left = `${targetLeft}px`;
-                clone.style.width = `${targetWidth}px`;
-                clone.style.height = `${targetHeight}px`;
+                modalBox.style.top = `${targetTop}px`;
+                modalBox.style.left = `${targetLeft}px`;
+                modalBox.style.width = `${targetWidth}px`;
+                modalBox.style.height = `${targetHeight}px`;
+                modalBox.style.filter = 'blur(0px)';
+                modalBox.style.opacity = '1';
             }, 20);
 
-            // 4. Remove clone after transition (just as modal starts fading in)
+            // Clean up style tags when transition ends
             setTimeout(() => {
-                clone.remove();
-            }, 350);
+                modalBox.style.transition = '';
+                modalBox.style.position = '';
+                modalBox.style.margin = '';
+                modalBox.style.top = '';
+                modalBox.style.left = '';
+                modalBox.style.width = '';
+                modalBox.style.height = '';
+                modalBox.style.transform = '';
+                modalBox.style.filter = '';
+                modalBox.style.opacity = '';
+                modalBox.style.zIndex = '';
+                modal.classList.remove('expanding-card');
+
+                const closeBtn = modal.querySelector('.close-btn');
+                if (closeBtn) closeBtn.focus();
+            }, 450);
+
+            return;
         }
     }
 
-    // Delay modal overlay reveal to line up with the card transition
-    setTimeout(() => {
-        modal.classList.remove('hidden');
-        const closeBtn = modal.querySelector('.close-btn');
-        if (closeBtn) {
-            setTimeout(() => closeBtn.focus(), 50);
-        }
-    }, animationDelay);
+    modal.classList.remove('hidden');
+    const closeBtn = modal.querySelector('.close-btn');
+    if (closeBtn) {
+        setTimeout(() => closeBtn.focus(), 50);
+    }
 }
 window.openItemModal = openItemModal;
 
@@ -251,8 +276,24 @@ window.openItemModal = openItemModal;
  */
 function closeModal() {
     const modal = document.getElementById('itemModal');
+    const modalBox = modal.querySelector('.modal-box');
     modal.classList.add('hidden');
-    modal.classList.remove('fade-only-mode');
+    modal.classList.remove('expanding-card');
+
+    if (modalBox) {
+        modalBox.style.transition = '';
+        modalBox.style.position = '';
+        modalBox.style.margin = '';
+        modalBox.style.top = '';
+        modalBox.style.left = '';
+        modalBox.style.width = '';
+        modalBox.style.height = '';
+        modalBox.style.transform = '';
+        modalBox.style.filter = '';
+        modalBox.style.opacity = '';
+        modalBox.style.zIndex = '';
+    }
+
     // Return focus to the element that opened it
     if (lastFocusedElement) {
         lastFocusedElement.focus();

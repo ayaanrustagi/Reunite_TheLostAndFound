@@ -97,30 +97,9 @@
     }
 }
 
-/* Card Zoom & Motion Blur transition clone */
-.card-transition-clone {
-    position: fixed !important;
-    margin: 0 !important;
-    z-index: 99999 !important;
-    pointer-events: none !important;
-    transform-origin: center center !important;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    box-shadow: var(--shadow-medium) !important;
-    opacity: 1 !important;
-}
-
-.card-transition-clone.expanded {
-    filter: blur(3px) !important;
-    transform: scale(1.08) !important;
-}
-
-/* Modal Fade-Only Mode to support card transitions */
-.modal-overlay.fade-only-mode {
-    animation: modalFadeIn 0.3s ease-out !important;
-}
-
-.modal-overlay.fade-only-mode .modal-box {
-    animation: modalFadeIn 0.3s ease-out !important;
+/* Modal Expanding Card mode to support shared-element transitions */
+.modal-overlay.expanding-card .modal-box {
+    animation: none !important;
 }
 
 /* Reduced Motion Support */
@@ -138,10 +117,8 @@
     .hero-text-fade,
     .text-slide-in,
     .text-slide-out,
-    .fade-in,
-    .card-transition-clone {
+    .fade-in {
         animation: none !important;
-        transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         filter: none !important;
@@ -164,10 +141,8 @@ body.reduced-motion ::after {
 body.reduced-motion .hero-text-fade,
 body.reduced-motion .text-slide-in,
 body.reduced-motion .text-slide-out,
-body.reduced-motion .fade-in,
-body.reduced-motion .card-transition-clone {
+body.reduced-motion .fade-in {
     animation: none !important;
-    transition: none !important;
     transform: none !important;
     opacity: 1 !important;
     filter: none !important;
