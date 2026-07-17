@@ -124,6 +124,18 @@ function openItemModal(id) {
 
     // Store element that opened modal
     lastFocusedElement = document.activeElement;
+    if (lastFocusedElement) {
+        const clickedCard = lastFocusedElement.closest('.item-card, .ai-match-item');
+        if (clickedCard) {
+            clickedCard.classList.add('card-opening');
+            // Dim and blur all other item cards & AI matches
+            document.querySelectorAll('.item-card, .ai-match-item').forEach(card => {
+                if (card !== clickedCard) {
+                    card.classList.add('card-dimmed');
+                }
+            });
+        }
+    }
 
     // Use consistent clean color for modal
     const bg = `oklch(0.96 0.02 220)`; // premium light background
@@ -203,6 +215,10 @@ function closeModal() {
         lastFocusedElement.focus();
         lastFocusedElement = null;
     }
+    // Clean up animation classes on all cards
+    document.querySelectorAll('.item-card, .ai-match-item').forEach(card => {
+        card.classList.remove('card-opening', 'card-dimmed');
+    });
 }
 window.closeModal = closeModal;
 
