@@ -301,7 +301,7 @@ function renderFpCard(item, idx) {
     return `
         <button class="item-card" onclick="openItemModal('${fpEscHtml(item.id)}')" type="button"
                 aria-label="View details for ${title}" title="View details for ${title}">
-            <div class="fp-photo" style="background:${bg}">
+            <div class="fp-photo" ${item.image ? '' : `style="background:${bg}"`}>
                 ${photoInner}
                 <span class="fp-tag">${cat}</span>
             </div>

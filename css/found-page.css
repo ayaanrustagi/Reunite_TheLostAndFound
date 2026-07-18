@@ -453,6 +453,8 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border-color);
 }
 #page-found .fp-photo svg {
   position: absolute; inset: 0;
