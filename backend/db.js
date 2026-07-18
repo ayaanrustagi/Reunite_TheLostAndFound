@@ -6,7 +6,15 @@ async function connectDB() {
     if (cached.conn) return cached.conn;
 
     if (!cached.promise) {
-        const opts = { bufferCommands: false, serverSelectionTimeoutMS: 5000 };
+        const opts = {
+            bufferCommands: false,
+            serverSelectionTimeoutMS: 5000,
+            maxPoolSize: 10,
+            minPoolSize: 2,
+            family: 4,
+            connectTimeoutMS: 5000,
+            socketTimeoutMS: 45000
+        };
         console.log('Connecting to MongoDB...');
 
         cached.promise = mongoose.connect(process.env.MONGO_URI, opts)

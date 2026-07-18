@@ -25,9 +25,9 @@ const messageSchema = new mongoose.Schema({
     item_title: String,
     sender_name: String,
     sender_email: String,
-    recipient_email: String,
+    recipient_email: { type: String, index: true },
     message: String,
-    created_at: { type: String, default: () => new Date().toISOString() }
+    created_at: { type: String, default: () => new Date().toISOString(), index: -1 }
 }, {
     _id: false,
     strict: false,

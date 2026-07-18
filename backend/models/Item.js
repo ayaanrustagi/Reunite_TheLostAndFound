@@ -46,8 +46,8 @@ const itemSchema = new mongoose.Schema({
         g: Number,
         b: Number
     },
-    status: { type: String, default: 'pending' },
-    created_at: { type: String, default: () => new Date().toISOString() },
+    status: { type: String, default: 'pending', index: true },
+    created_at: { type: String, default: () => new Date().toISOString(), index: -1 },
     created_by: String,
     type: String,
     finder_name: String,

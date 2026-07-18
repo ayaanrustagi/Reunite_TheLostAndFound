@@ -25,7 +25,7 @@ const auditLogSchema = new mongoose.Schema({
     resourceType: { type: String, required: true },
     resourceId: { type: String },
     details: { type: mongoose.Schema.Types.Mixed },
-    timestamp: { type: Date, default: Date.now }
+    timestamp: { type: Date, default: Date.now, index: -1 }
 }, {
     timestamps: false
 });
