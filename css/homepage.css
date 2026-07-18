@@ -167,6 +167,7 @@ body.reduced-motion .scrollhero-canvas {
   user-select: none;
   display: flex;
   align-items: baseline;
+  gap: 0.04em;   /* absorbs the outward bleed from -webkit-text-stroke: 12px on .sh-gn-a */
 }
 
 .sh-ghostnum .sh-gn-a {
