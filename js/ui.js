@@ -190,9 +190,12 @@ function openItemModal(id) {
             // Get original card coordinates
             const rect = clickedCard.getBoundingClientRect();
 
-            // Dim original card
-            clickedCard.style.opacity = '0';
+            // Store active opening card
             window.activeOpeningCard = clickedCard;
+
+            // Fade out original card smoothly
+            clickedCard.style.transition = 'opacity 0.15s ease-out';
+            clickedCard.style.opacity = '0';
 
             // Show modal overlay to calculate its final layout
             modal.classList.add('expanding-card');
@@ -217,8 +220,8 @@ function openItemModal(id) {
             modalBox.style.transition = 'none';
             modalBox.style.transformOrigin = 'center center';
             modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
-            modalBox.style.filter = 'blur(12px)';
-            modalBox.style.opacity = '0';
+            modalBox.style.filter = '';
+            modalBox.style.opacity = '0.3'; // Start semi-transparent to blend with card fade
 
             // Force reflow
             modalBox.offsetHeight;
@@ -226,12 +229,11 @@ function openItemModal(id) {
             // Play transition
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    modalBox.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease-out, opacity 0.3s ease-out';
+                    modalBox.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out';
                     modalBox.style.transform = 'translate(0px, 0px) scale(1, 1)';
-                    modalBox.style.filter = 'blur(0px)';
                     modalBox.style.opacity = '1';
 
-                    modal.style.transition = 'opacity 0.3s ease-out';
+                    modal.style.transition = 'opacity 0.35s ease-out';
                     modal.style.opacity = '1';
                 });
             });
@@ -247,7 +249,11 @@ function openItemModal(id) {
                 modal.style.transition = '';
                 modal.style.opacity = '';
                 modal.style.animation = '';
-                // DO NOT remove expanding-card here, keeping it prevents the modalSlideUp from re-triggering and causing a blink
+                
+                // Clear the transition property on the clicked card, but keep it transparent
+                if (window.activeOpeningCard) {
+                    window.activeOpeningCard.style.transition = '';
+                }
 
                 const closeBtn = modal.querySelector('.close-btn');
                 if (closeBtn) closeBtn.focus();
@@ -294,13 +300,19 @@ function closeModal() {
 
         modal.style.animation = 'none'; // Ensure CSS animations don't override the JS transition
         
-        modalBox.style.transition = 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s ease-in, opacity 0.2s ease-in';
+        // Fade the original card back in smoothly
+        window.activeOpeningCard.style.transition = 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        window.activeOpeningCard.style.opacity = '1';
+
+        // Shrink and fade out the modal box
+        modalBox.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
         modalBox.style.transformOrigin = 'center center';
         modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
-        modalBox.style.filter = 'blur(8px)';
+        modalBox.style.filter = '';
         modalBox.style.opacity = '0';
 
-        modal.style.transition = 'opacity 0.25s ease-in';
+        // Fade out the overlay background
+        modal.style.transition = 'opacity 0.3s ease-out';
         modal.style.opacity = '0';
         
         setTimeout(() => {
@@ -318,14 +330,14 @@ function closeModal() {
             modal.style.animation = '';
             
             if (window.activeOpeningCard) {
-                window.activeOpeningCard.style.opacity = '1';
+                window.activeOpeningCard.style.transition = '';
                 window.activeOpeningCard = null;
             }
             if (lastFocusedElement) {
                 lastFocusedElement.focus();
                 lastFocusedElement = null;
             }
-        }, 260);
+        }, 310);
         return;
     }
 
@@ -349,6 +361,7 @@ function closeModal() {
     // Restore opacity on the original card
     if (window.activeOpeningCard) {
         window.activeOpeningCard.style.opacity = '1';
+        window.activeOpeningCard.style.transition = '';
         window.activeOpeningCard = null;
     }
 }
