@@ -98,6 +98,7 @@
 }
 
 /* Modal Expanding Card mode to support shared-element transitions */
+.modal-overlay.expanding-card,
 .modal-overlay.expanding-card .modal-box {
     animation: none !important;
 }
