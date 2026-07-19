@@ -11,7 +11,6 @@ This document serves as a complete repository of all third-party libraries, util
 | Asset / Font | Version | Purpose / Justification | Date Accessed | License & Source |
 | :--- | :--- | :--- | :--- | :--- |
 | **Inter** | Variable | Used as the primary sans-serif body typeface for readability and modern rendering. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
-| **Roboto Mono** | Variable | Used for numeric stats displays, system notifications, and code badges. | June 10, 2026 | [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) / Google Fonts |
 | **Bricolage Grotesque** | Variable | Used for large hero headings and expressive brand elements. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
 | **JetBrains Mono** | Variable | Used for developer logs and details inside the System Audit Log panel. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
 

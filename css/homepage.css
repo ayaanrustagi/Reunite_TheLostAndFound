@@ -67,7 +67,7 @@ body.reduced-motion .scrollhero-canvas {
   /* accent → blue (reusing var name) */
   --mana-magenta: #1e40af;
   --mana-rule: rgba(15, 20, 25, 0.12);
-  --mana-mono: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+  --mana-mono: 'JetBrains Mono', ui-monospace, monospace;
   --mana-display: 'Bricolage Grotesque', 'Hanken Grotesk', sans-serif;
   --c-green: #15803d;
   --c-blue: #1d4ed8;
