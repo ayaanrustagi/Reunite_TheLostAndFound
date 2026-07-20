@@ -87,7 +87,7 @@
   letter-spacing: -0.025em;
   color: var(--text-color);
   margin: 0;
-  margin-left: calc(-1 * clamp(20px, 2.5vw, 32px));
+  margin-left: calc(0px - clamp(20px, 2.5vw, 32px));
   line-height: 1.1;
   text-transform: none;
 }
