@@ -80,7 +80,7 @@
   #page-found .section-head { flex-direction: column; align-items: stretch; gap: 14px; }
   #page-found .fp-topsearch { width: 100%; }
 }
-#page-found .section-head .fp-title {
+#page-found .section-head .fp-page-title {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 3.8vw, 2.2rem);
   font-weight: 800;
@@ -134,6 +134,9 @@
   color: var(--text-color);
   cursor: pointer;
   text-align: left;
+}
+@media (min-width: 1025px) {
+  .fp-mobile-toggle { display: none !important; }
 }
 
 .fp-mobile-toggle .fp-toggle-chevron {
