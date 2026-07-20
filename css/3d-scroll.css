@@ -39,7 +39,7 @@
 }
 
 .gsap-step .step-num {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: monospace;
   font-size: 1.5rem;
   color: var(--accent-color, #E5D5BC);
   margin-bottom: 0.5rem;
