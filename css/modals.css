@@ -239,7 +239,7 @@
 }
 
 .search-active .content-wrapper {
-    padding-top: 2rem;
+    padding-top: 2rem !important;
 }
 
 /* Fullscreen Item Detail Modal Specific Styles */
