@@ -234,7 +234,8 @@
 
 /* Search Active State (Clean View) */
 .search-active .filter-ui,
-.search-active .visual-search-group {
+.search-active .visual-search-group,
+.search-active .section-head {
     display: none !important;
 }
 
