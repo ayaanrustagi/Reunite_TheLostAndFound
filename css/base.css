@@ -11,9 +11,9 @@
     --muted-text: #454545;
     --ink-2: #3a4250;
     --ink-3: #4b5563;
-    --font-main: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-main: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --font-display: 'Bricolage Grotesque', 'DM Sans', sans-serif;
+    --font-display: 'Bricolage Grotesque', sans-serif;
     --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
     --glow-opacity: 0.15;
     --accent-glow: rgba(29, 78, 216, 0.35);
