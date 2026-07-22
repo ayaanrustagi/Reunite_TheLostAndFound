@@ -233,7 +233,8 @@
 }
 
 .search-active .filter-ui,
-.search-active .section-head {
+.search-active .fp-visual-bar,
+.search-active .grid-header {
     display: none !important;
 }
 
