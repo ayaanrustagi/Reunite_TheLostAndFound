@@ -234,7 +234,8 @@
 
 .search-active .filter-ui,
 .search-active .fp-visual-bar,
-.search-active .grid-header {
+.search-active .fp-topsearch,
+.search-active .results-meta {
     display: none !important;
 }
 
