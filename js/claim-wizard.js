@@ -194,11 +194,10 @@
                 <div class="cw-item-card" data-id="${esc(item.id)}"
                      onclick="cwPickItem(this, '${esc(item.id)}')"
                      role="radio" tabindex="0" aria-checked="false"
-                     aria-label="${esc(item.title)} — ${esc(item.location || '')}">
+                     aria-label="${esc(item.title)}">
                   ${thumb}
                   <div class="cw-item-info">
                     <div class="cw-item-name">${esc(item.title || 'Unnamed item')}</div>
-                    <div class="cw-item-meta">${esc(item.location || '—')} · ${date}</div>
                   </div>
                   <div class="cw-check" aria-hidden="true">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none"

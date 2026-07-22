@@ -303,14 +303,9 @@ function renderFpCard(item, idx) {
                 aria-label="View details for ${title}" title="View details for ${title}">
             <div class="fp-photo" ${item.image ? '' : `style="background:${bg}"`}>
                 ${photoInner}
-                <span class="fp-tag">${cat}</span>
             </div>
             <div class="fp-body">
                 <h3 class="fp-title">${title}</h3>
-                <div class="fp-meta">
-                    <span>${loc}</span>
-                    <span>${when}</span>
-                </div>
             </div>
         </button>
     `;
@@ -678,11 +673,11 @@ async function renderAdmin() {
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
         <div class="list-item clickable" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); this.click(); }" onclick="openAdminDetailModal('report', '${i.id}')">
             <div style="display: flex; align-items: center; gap: 1rem;">
-              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>'}
+              ${i.image ? `<img src="${i.image}" class="admin-thumb" alt="Item">` : '<div class="admin-thumb admin-thumb-missing" style="background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #1d4ed8; border: 1px dashed #1d4ed8;">?</div>'}
               <div class="item-info">
                 <div class="ref-code">REF: ${i.id.substring(5, 13).toUpperCase()}</div>
                 <strong>${i.title}</strong>
-                ${!i.image ? '<span style="font-size: 0.65rem; color: #ff9500; display: block;">NO IMAGE ATTACHED</span>' : ''}
+                ${!i.image ? '<span style="font-size: 0.65rem; color: #1d4ed8; display: block;">NO IMAGE ATTACHED</span>' : ''}
               </div>
             </div>
             <div class="admin-actions-inline" onclick="event.stopPropagation()">
@@ -699,16 +694,16 @@ async function renderAdmin() {
         return `
             <div class="list-item clickable" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); this.click(); }" onclick="openAdminDetailModal('claim', '${c.id}')">
                 <div style="display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0;">
-                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #fff3cd; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #ff9500; border: 1px dashed #ff9500;">?</div>`}
+                  ${c.image ? `<img src="${c.image}" class="admin-thumb" alt="Proof">` : `<div class="admin-thumb admin-thumb-missing" style="background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #1d4ed8; border: 1px dashed #1d4ed8;">?</div>`}
                   <div class="item-info">
                     <div class="ref-code">CLAIM BY: ${c.claimant_name.toUpperCase()}</div>
                     <strong>${item?.title || 'Unknown Item'}</strong>
-                    ${!c.image ? '<span style="font-size: 0.65rem; color: #ff9500; display: block;">NO PROOF IMAGE</span>' : ''}
+                    ${!c.image ? '<span style="font-size: 0.65rem; color: #1d4ed8; display: block;">NO PROOF IMAGE</span>' : ''}
                   </div>
                 </div>
                 <div class="admin-actions-inline" onclick="event.stopPropagation()">
                     ${(c.status || '').toLowerCase() === 'under_review' 
-                        ? `<span style="font-size: 0.7rem; font-weight: bold; color: #ff9500; margin-right: 10px; border: 1px solid #ff9500; padding: 4px 8px; border-radius: 4px;">AWAITING DETAILS</span>` 
+                        ? `<span style="font-size: 0.7rem; font-weight: bold; color: #1d4ed8; margin-right: 10px; border: 1px solid #1d4ed8; padding: 4px 8px; border-radius: 4px;">AWAITING DETAILS</span>` 
                         : `<button onclick="requestClaimDetails('${c.id}')" class="btn btn-sm btn-outline orange">REQUEST DETAILS</button>`}
                     <button onclick="approveClaim('${c.id}')" class="btn btn-sm btn-outline blue">VERIFY</button>
                 </div>

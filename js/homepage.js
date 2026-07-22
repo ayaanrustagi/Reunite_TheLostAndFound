@@ -3,14 +3,14 @@
   'use strict';
 
   var SH_STEPS = [
-    { k: '01 · REPORT',      t: 'Snap what you found',       c: 'var(--c-green)',
-      d: 'One photo is all it takes. Reunite turns it into a private visual fingerprint right on your device.' },
+    { k: '01 · REPORT',      t: 'Snap what you found',       c: 'var(--c-blue)',
+      d: 'Snap a photo of the item you found. Reunite creates a secure visual signature directly on your device.' },
     { k: '02 · FINGERPRINT', t: 'Hashed on your device',     c: 'var(--c-blue)',
-      d: 'That fingerprint is matched against every lost report — your actual photo never leaves your phone.' },
-    { k: '03 · MATCH',       t: 'The owner gets a nudge',     c: 'var(--c-orange)',
-      d: 'When something lines up, you both get a quiet tap on the shoulder. Contact details stay hidden until you agree.' },
-    { k: '04 · UNLOCK',      t: 'Unlock the reunion',         c: 'var(--c-pink)',
-      d: 'Confirm a detail, grab a one-time pickup code, and the thing finds its way home.' },
+      d: 'Your fingerprint is matched against every lost report and your actual photo never leaves your phone.' },
+    { k: '03 · MATCH',       t: 'The owner gets a nudge',     c: 'var(--c-blue)',
+      d: 'When a potential match is found, both parties are instantly notified. Your contact information remains completely private until you choose to share it.' },
+    { k: '04 · UNLOCK',      t: 'Unlock the reunion',         c: 'var(--c-blue)',
+      d: 'Confirm a few details to claim your item, then grab a pickup code to get it back.' },
   ];
 
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }

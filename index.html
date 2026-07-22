@@ -204,34 +204,33 @@
           <!-- Step panels (right side) -->
           <div class="sh-steps" id="sh-steps" aria-live="polite">
             <div class="sh-step">
-              <div class="sh-k" style="color:var(--c-green)">01 · REPORT</div>
+              <div class="sh-k" style="color:var(--c-blue)">01 · REPORT</div>
               <h3>Snap what you found</h3>
-              <p>One photo is all it takes. Reunite turns it into a private visual fingerprint right on your device.</p>
+              <p>Snap a photo of the item you found. Reunite creates a secure visual signature directly on your device.</p>
             </div>
             <div class="sh-step">
               <div class="sh-k" style="color:var(--c-blue)">02 · FINGERPRINT</div>
               <h3>Hashed on your device</h3>
-              <p>That fingerprint is matched against every lost report — your actual photo never leaves your phone.</p>
+              <p>Your fingerprint is matched against every lost report and your actual photo never leaves your phone.</p>
             </div>
             <div class="sh-step">
-              <div class="sh-k" style="color:var(--c-orange)">03 · MATCH</div>
+              <div class="sh-k" style="color:var(--c-blue)">03 · MATCH</div>
               <h3>The owner gets a nudge</h3>
-              <p>When something lines up, you both get a quiet tap on the shoulder. Contact details stay hidden until
-                you agree.</p>
+              <p>When a potential match is found, both parties are instantly notified. Your contact information remains completely private until you choose to share it.</p>
             </div>
             <div class="sh-step">
-              <div class="sh-k" style="color:var(--c-pink)">04 · UNLOCK</div>
+              <div class="sh-k" style="color:var(--c-blue)">04 · UNLOCK</div>
               <h3>Unlock the reunion</h3>
-              <p>Confirm a detail, grab a one-time pickup code, and the thing finds its way home.</p>
+              <p>Confirm a few details to claim your item, then grab a pickup code to get it back.</p>
             </div>
           </div>
 
           <!-- Progress rail (right edge) -->
           <div class="sh-rail" id="sh-rail" aria-hidden="true">
-            <span class="dot" style="--dot-on:#82c982"></span>
             <span class="dot" style="--dot-on:#72a8d8"></span>
-            <span class="dot" style="--dot-on:#d8924a"></span>
-            <span class="dot" style="--dot-on:#d878a8"></span>
+            <span class="dot" style="--dot-on:#72a8d8"></span>
+            <span class="dot" style="--dot-on:#72a8d8"></span>
+            <span class="dot" style="--dot-on:#72a8d8"></span>
           </div>
 
           <!-- Step counter -->
@@ -361,14 +360,13 @@
             Upload photo
             <input type="file" id="findItemPhoto" accept="image/*" onchange="previewFileFind()">
           </label>
-          <span class="fp-drag-hint">or drag &amp; drop a photo</span>
           <div class="fp-match-mode" role="radiogroup" aria-label="Matching mode">
-            <button type="button" class="fp-mode active" data-mode="fast" data-action="setMatchMode('fast')">
-              <span class="fp-mode-title">Fast</span>
+            <button type="button" class="fp-mode active" data-mode="fast" data-action="setMatchMode('fast')" title="This is fast and instant">
+              <span class="fp-mode-title">dHash</span>
               <span class="fp-mode-sub">d-hash · instant</span>
             </button>
-            <button type="button" class="fp-mode" data-mode="ai" data-action="setMatchMode('ai')">
-              <span class="fp-mode-title">Accurate</span>
+            <button type="button" class="fp-mode" data-mode="ai" data-action="setMatchMode('ai')" title="This is accurate but slower">
+              <span class="fp-mode-title">AI</span>
               <span class="fp-mode-sub">AI · slower</span>
             </button>
           </div>
@@ -663,7 +661,7 @@
               <div class="rw-row">
                 <div class="rw-field" data-required>
                   <label for="rw_itemTitle">Item name <em class="rw-req" aria-label="required">*</em></label>
-                  <input type="text" id="rw_itemTitle" placeholder="e.g. Blue AirPods case" autocomplete="off"
+                  <input type="text" id="rw_itemTitle" placeholder="e.g. AirPods" autocomplete="off"
                     oninput="document.getElementById('itemTitle').value=this.value">
                   <span class="rw-err" role="alert"></span>
                 </div>
@@ -684,17 +682,17 @@
 
               <div class="rw-field" id="rw_otherWrap" style="display:none">
                 <label for="rw_otherCategory">Specify type</label>
-                <input type="text" id="rw_otherCategory" placeholder="e.g. Umbrella"
+                <input type="text" id="rw_otherCategory" placeholder="e.g. Hat"
                   oninput="document.getElementById('otherCategory').value=this.value">
               </div>
 
               <div class="rw-field">
                 <label for="rw_itemDescription">Description</label>
-                <textarea id="rw_itemDescription" rows="3" placeholder="Color, brand, any identifying features…"
+                <textarea id="rw_itemDescription" rows="3" placeholder="Distinguishing features…"
                   oninput="document.getElementById('itemDescription').value=this.value"></textarea>
                 <div class="rw-ai-desc-container">
-                  <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc">
-                    <span class="ai-sparkle">✨</span> Generate description from photo
+                  <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc" title="Generate description from photo">
+                    <span class="ai-sparkle">✨</span> Auto-describe
                   </button>
                   <span id="rwAiDescStatus" class="rw-ai-desc-status hidden"></span>
                 </div>
@@ -744,7 +742,7 @@
 
               <div class="rw-field" data-required>
                 <label for="rw_itemLocation">Location found <em class="rw-req" aria-label="required">*</em></label>
-                <input type="text" id="rw_itemLocation" placeholder="e.g. Library, 2nd floor study room"
+                <input type="text" id="rw_itemLocation" placeholder="e.g. Library"
                   autocomplete="off" oninput="document.getElementById('itemLocation').value=this.value">
                 <span class="rw-err" role="alert"></span>
               </div>

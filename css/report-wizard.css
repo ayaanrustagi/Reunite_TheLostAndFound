@@ -4,7 +4,7 @@
 
 /* --- Outer shell --- */
 .rw-outer {
-    max-width: 960px;
+    max-width: 1600px;
     margin: 0 auto;
     padding-top: 1.5rem;
     scroll-margin-top: 6rem; /* clear the fixed header on programmatic scroll */
@@ -1144,19 +1144,18 @@ body.reduced-motion .rw-pin-marker { animation: none; }
 .rw-btn-ai-desc {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.9rem;
-    border: 1.5px solid var(--border-color);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.8);
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
     color: var(--ink-2);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
 }
 
 .rw-btn-ai-desc:hover:not(:disabled) {
