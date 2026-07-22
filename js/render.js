@@ -517,7 +517,7 @@ async function renderDashboard() {
                     <!-- Stepper component -->
                     <div class="claim-stepper-container">
                         <div class="claim-stepper-track"></div>
-                        <div class="claim-stepper-progress" style="width: ${progressWidth}"></div>
+                        <div class="claim-stepper-progress" style="width: calc(${progressWidth} * 0.84)"></div>
                         
                         <!-- Step 1 -->
                         <div class="claim-stepper-step ${step1Class}">

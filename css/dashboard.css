@@ -527,12 +527,12 @@ button.action-card {
    ========================================== */
 
 .claim-container-card {
-    background: linear-gradient(135deg, #fff5f6 0%, #ffffff 100%);
-    border: 1px solid #ffe4e6;
+    background: linear-gradient(135deg, rgba(29, 78, 216, 0.03) 0%, var(--panel-bg) 100%);
+    border: 1px solid var(--border-color);
     border-radius: 24px;
     padding: 1.5rem;
     margin-bottom: 1.25rem;
-    box-shadow: 0 4px 20px rgba(159, 18, 57, 0.02);
+    box-shadow: var(--shadow-soft);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: visible; /* Need overflow visible for tooltips and dropdowns */
@@ -540,8 +540,8 @@ button.action-card {
 
 .claim-container-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(159, 18, 57, 0.08);
-    border-color: #fecdd3;
+    box-shadow: var(--shadow-medium);
+    border-color: var(--accent-color);
 }
 
 .claim-card-header {
@@ -565,7 +565,7 @@ button.action-card {
     font-family: var(--font-display);
     font-size: 1.15rem;
     font-weight: 800;
-    color: #881337; /* deep rose */
+    color: var(--accent-deep);
     margin: 0;
     line-height: 1.25;
 }
@@ -574,12 +574,12 @@ button.action-card {
     font-family: var(--font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.05em;
-    color: #be123c;
+    color: var(--accent-color);
     opacity: 0.8;
 }
 
 .claim-card-header .toggle-arrow {
-    background: #fff1f2;
+    background: rgba(29, 78, 216, 0.06);
     border: none;
     width: 32px;
     height: 32px;
@@ -587,14 +587,14 @@ button.action-card {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #be123c;
+    color: var(--accent-color);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
     cursor: pointer;
 }
 
 .claim-card-header:hover .toggle-arrow {
-    background: #ffe4e6;
-    color: #9f1239;
+    background: rgba(29, 78, 216, 0.12);
+    color: var(--accent-deep);
 }
 
 .claim-container-card.expanded .toggle-arrow {
@@ -626,7 +626,7 @@ button.action-card {
     top: 16px;
     left: 8%;
     height: 2px;
-    background: #be123c; /* active rose line */
+    background: var(--accent-color);
     z-index: 1;
     transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -650,7 +650,7 @@ button.action-card {
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-    color: #be123c;
+    color: var(--accent-color);
     cursor: pointer;
 }
 
@@ -668,8 +668,8 @@ button.action-card {
 
 /* Completed Step */
 .claim-stepper-step.completed .step-dot {
-    background: #be123c;
-    border-color: #be123c;
+    background: var(--accent-color);
+    border-color: var(--accent-color);
     color: #ffffff;
 }
 
@@ -678,15 +678,15 @@ button.action-card {
 }
 
 .claim-stepper-step.completed .step-label {
-    color: #be123c;
+    color: var(--accent-color);
     font-weight: 700;
 }
 
 /* Active Current Step */
 .claim-stepper-step.active .step-dot {
-    border-color: #be123c;
+    border-color: var(--accent-color);
     background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(190, 18, 60, 0.15);
+    box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15);
 }
 
 .claim-stepper-step.active .step-dot::after {
@@ -694,11 +694,11 @@ button.action-card {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #be123c;
+    background: var(--accent-color);
 }
 
 .claim-stepper-step.active .step-label {
-    color: #be123c;
+    color: var(--accent-color);
     font-weight: 800;
 }
 
@@ -751,7 +751,7 @@ button.action-card {
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     opacity: 0;
-    border-top: 1px dashed #fecdd3;
+    border-top: 1px dashed rgba(29, 78, 216, 0.2);
     margin-top: 0.5rem;
     padding-top: 0;
 }
@@ -787,7 +787,7 @@ button.action-card {
     font-family: var(--font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.08em;
-    color: #9f1239;
+    color: var(--accent-deep);
     text-transform: uppercase;
     margin: 0;
     font-weight: 700;
@@ -795,7 +795,7 @@ button.action-card {
 
 .details-block p {
     font-size: 0.8rem;
-    color: #4c0519;
+    color: var(--text-color);
     margin: 0;
     line-height: 1.4;
 }
@@ -805,7 +805,7 @@ button.action-card {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #ffe4e6;
+    border: 1px solid var(--border-color);
     max-height: 180px;
     cursor: zoom-in;
     margin-top: 0.25rem;
@@ -827,10 +827,10 @@ button.action-card {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    background: #fffafb;
+    background: #f8fafc;
     border-radius: 16px;
     padding: 0.85rem;
-    border: 1px solid #fff1f2;
+    border: 1px solid var(--border-color);
 }
 
 .log-entry {
@@ -845,20 +845,20 @@ button.action-card {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #be123c;
+    background: var(--accent-color);
     margin-top: 0.35rem;
     flex-shrink: 0;
 }
 
 .log-entry .log-text {
     flex-grow: 1;
-    color: #4c0519;
+    color: var(--text-color);
 }
 
 .log-entry .log-time {
     font-family: var(--font-mono);
     font-size: 0.62rem;
-    color: #be123c;
+    color: var(--accent-color);
     opacity: 0.7;
     white-space: nowrap;
 }
@@ -869,7 +869,7 @@ button.action-card {
     gap: 0.75rem;
     margin-top: 1.25rem;
     justify-content: flex-end;
-    border-top: 1px solid #ffe4e6;
+    border-top: 1px solid var(--border-color);
     padding-top: 1rem;
 }
 
@@ -890,24 +890,24 @@ button.action-card {
 
 .btn-claim-action.withdraw {
     background: transparent;
-    border: 1px solid #fecdd3;
-    color: #e11d48;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
 }
 
 .btn-claim-action.withdraw:hover {
-    background: #fff1f2;
-    border-color: #e11d48;
+    background: #fef2f2;
+    border-color: #dc2626;
 }
 
 .btn-claim-action.message {
-    background: #be123c;
-    border: 1px solid #be123c;
+    background: var(--accent-color);
+    border: 1px solid var(--accent-color);
     color: #ffffff;
 }
 
 .btn-claim-action.message:hover {
-    background: #9f1239;
-    border-color: #9f1239;
+    background: var(--accent-deep);
+    border-color: var(--accent-deep);
 }
 
 /* Demo Status Simulator Badge */
@@ -917,8 +917,8 @@ button.action-card {
     right: 3.5rem;
     font-family: var(--font-mono);
     font-size: 0.55rem;
-    background: #ffe4e6;
-    color: #be123c;
+    background: rgba(29, 78, 216, 0.08);
+    color: var(--accent-color);
     padding: 0.2rem 0.5rem;
     border-radius: 999px;
     cursor: pointer;
@@ -933,7 +933,7 @@ button.action-card {
 
 .claim-simulation-badge:hover {
     opacity: 1;
-    background-color: #ffd3d6;
+    background-color: rgba(29, 78, 216, 0.15);
 }
 
 .claim-simulation-badge svg {
@@ -948,9 +948,9 @@ button.action-card {
     top: 3.25rem;
     right: 3.5rem;
     background: #ffffff;
-    border: 1px solid #ffe4e6;
+    border: 1px solid rgba(29, 78, 216, 0.12);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(159, 18, 57, 0.1);
+    box-shadow: 0 10px 25px rgba(29, 78, 216, 0.05);
     z-index: 1000;
     padding: 0.4rem;
     display: flex;
@@ -972,15 +972,15 @@ button.action-card {
     text-align: left;
     cursor: pointer;
     border-radius: 6px;
-    color: #4c0519;
+    color: var(--text-color);
     width: 100%;
     transition: all 0.15s ease;
     font-weight: 600;
 }
 
 .claim-simulation-menu button:hover {
-    background: #fff1f2;
-    color: #be123c;
+    background: rgba(29, 78, 216, 0.06);
+    color: var(--accent-color);
 }
 
 /* ==========================================================================
