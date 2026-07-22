@@ -233,14 +233,11 @@
 }
 
 .search-active .filter-ui,
-.search-active .fp-visual-bar,
 .search-active .section-head {
     display: none !important;
 }
 
-.search-active .content-wrapper {
-    padding-top: 3.5rem !important;
-}
+
 
 /* Fullscreen Item Detail Modal Specific Styles */
 .item-detail-modal {
