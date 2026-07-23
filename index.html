@@ -686,13 +686,15 @@
 
               <div class="rw-field">
                 <label for="rw_itemDescription">Description</label>
-                <textarea id="rw_itemDescription" rows="3" placeholder="Distinguishing features…"
-                  oninput="document.getElementById('itemDescription').value=this.value"></textarea>
-                <div class="rw-ai-desc-container">
-                  <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc" title="Generate description from photo">
-                    <span class="ai-sparkle">✨</span> Auto-describe
-                  </button>
-                  <span id="rwAiDescStatus" class="rw-ai-desc-status hidden"></span>
+                <div style="position: relative;">
+                  <textarea id="rw_itemDescription" rows="3" placeholder="Distinguishing features…" style="padding-bottom: 2.5rem;"
+                    oninput="document.getElementById('itemDescription').value=this.value"></textarea>
+                  <div class="rw-ai-desc-container">
+                    <button type="button" id="rwAiDescBtn" class="rw-btn-ai-desc" title="Generate description from photo">
+                      <span class="ai-sparkle">✨</span> Auto-describe
+                    </button>
+                    <span id="rwAiDescStatus" class="rw-ai-desc-status hidden"></span>
+                  </div>
                 </div>
                 <span class="rw-err" role="alert"></span>
               </div>

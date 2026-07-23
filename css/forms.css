@@ -596,7 +596,7 @@ select::-ms-expand {
 .tech-form .btn-primary {
     min-height: 54px;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-deep) 100%);
+    background: var(--accent-color);
     box-shadow: 0 10px 24px rgba(var(--accent-rgb), 0.28);
     margin-top: 0.5rem;
 }
@@ -615,7 +615,7 @@ select::-ms-expand {
 }
 
 .tech-form .btn-primary:hover {
-    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-deep) 100%);
+    background: var(--accent-color);
     transform: translateY(-2px);
     box-shadow: 0 16px 34px rgba(var(--accent-rgb), 0.38);
 }
