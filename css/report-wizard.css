@@ -1140,8 +1140,8 @@ body.reduced-motion .rw-pin-marker { animation: none; }
     gap: 0.75rem;
     flex-wrap: wrap;
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 16px;
+    right: 16px;
 }
 
 .rw-btn-ai-desc {
