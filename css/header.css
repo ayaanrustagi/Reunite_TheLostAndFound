@@ -373,7 +373,7 @@
         font-family: var(--font-mono) !important;
         font-weight: 800 !important;
         letter-spacing: 0.1em !important;
-        font-size: 0.9rem !important; /* Readable logo text */
+        font-size: 1.05rem !important; /* Readable logo text */
         text-transform: uppercase !important;
         color: var(--text-color) !important;
         line-height: 1 !important;
@@ -396,7 +396,7 @@
         border: none !important;
         font-family: var(--font-mono) !important;
         font-weight: 600 !important;
-        font-size: 0.78rem !important; /* Slightly larger, readable font size */
+        font-size: 0.88rem !important; /* Slightly larger, readable font size */
         text-transform: uppercase !important;
         letter-spacing: 0.05em !important;
         color: var(--muted-text) !important;
@@ -482,15 +482,15 @@
     }
 
     .desktop-header .header-search-wrap .search-icon svg {
-        width: 13px !important;
-        height: 13px !important;
+        width: 15px !important;
+        height: 15px !important;
     }
 
     .desktop-header #headerSearchInput {
         border: none !important;
         background: transparent !important;
         font-family: var(--font-mono) !important;
-        font-size: 0.78rem !important; /* Highly readable search input font */
+        font-size: 0.88rem !important; /* Highly readable search input font */
         width: 100% !important;
         outline: none !important;
         color: var(--text-color) !important;
@@ -501,7 +501,7 @@
 
     .desktop-header #headerSearchInput::placeholder {
         color: var(--muted-text) !important;
-        font-size: 0.78rem !important;
+        font-size: 0.88rem !important;
         opacity: 0.7 !important;
     }
 
@@ -535,18 +535,19 @@
     }
 
     .desktop-header .header-settings-btn svg {
-        width: 16px !important;
-        height: 16px !important;
+        width: 18px !important;
+        height: 18px !important;
+        color: var(--muted-text) !important;
     }
 
     /* SIGN IN (loginBtn) outline button styling */
     .desktop-header #loginBtn {
-        display: inline-flex !important;
+        display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 0 0.9rem !important;
+        padding: 0 0.8rem !important; /* Smaller, balanced padding */
         font-family: var(--font-mono) !important;
-        font-size: 0.78rem !important;
+        font-size: 0.85rem !important; /* Very small, neat text */
         font-weight: 600 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.05em !important;
@@ -555,7 +556,7 @@
         border: 1px solid var(--text-color) !important;
         border-radius: 6px !important;
         text-decoration: none !important;
-        height: 30px !important; /* Matches search bar height */
+        height: 32px !important; /* Matches search bar height */
         box-sizing: border-box !important;
         transition: all 0.2s ease !important;
         box-shadow: none !important;
