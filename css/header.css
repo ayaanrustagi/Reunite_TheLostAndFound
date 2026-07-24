@@ -335,19 +335,19 @@
         backdrop-filter: blur(40px) saturate(220%) !important;
         -webkit-backdrop-filter: blur(40px) saturate(220%) !important;
         border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 6px !important;
+        border-radius: 12px !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
     /* Force the height and spacing inside the pill */
     .desktop-header .header-inner {
-        height: 44px !important;
+        height: 52px !important;
         /* Elegant compact height (not too small, not fat) */
-        padding: 0 1.25rem !important;
+        padding: 0 1.8rem !important;
         display: flex !important;
         align-items: center !important;
-        gap: 0.75rem !important;
+        gap: 0.85rem !important;
         box-sizing: border-box !important;
     }
 
@@ -461,10 +461,10 @@
         border: 1px solid rgba(0, 0, 0, 0.08) !important;
         border-radius: 999px !important;
         /* Pill style search input */
-        padding: 0 0.75rem !important;
-        height: 30px !important;
+        padding: 0 0.85rem !important;
+        height: 36px !important;
         /* Slightly taller for balance */
-        width: 190px !important;
+        width: 200px !important;
         margin-right: 0.75rem !important;
         margin-left: 0 !important;
         transition: all 0.3s ease !important;
@@ -474,7 +474,7 @@
     .desktop-header .header-search-wrap:focus-within {
         background: #fff !important;
         border-color: var(--accent-color) !important;
-        width: 230px !important;
+        width: 240px !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     }
 
@@ -565,9 +565,9 @@
         color: var(--text-color) !important;
         background: transparent !important;
         border: 1px solid var(--text-color) !important;
-        border-radius: 6px !important;
+        border-radius: 12px !important;
         text-decoration: none !important;
-        height: 32px !important;
+        height: 36px !important;
         /* Matches search bar height */
         box-sizing: border-box !important;
         transition: all 0.2s ease !important;
