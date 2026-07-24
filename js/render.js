@@ -106,7 +106,7 @@ function updateResultsStatus(totalApproved, shownCount, { searchTokens = [], cat
     }
 
     if (!searchTokens.length && !category && !location) {
-        statusEl.textContent = "Most recent first.";
+        statusEl.textContent = "";
         return;
     }
 
