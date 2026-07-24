@@ -151,7 +151,7 @@
     align-items: center;
     background: rgba(var(--panel-bg-rgb), 0.6);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius-md);
+    border-radius: 20000px;
     padding: 0.3rem 0.75rem;
     /* Compact padding */
     width: 200px;
@@ -257,7 +257,8 @@
 }
 
 .header-action-btn svg {
-    display: none; /* Hide icon on desktop to match screenshot */
+    display: none;
+    /* Hide icon on desktop to match screenshot */
 }
 
 .nav-btn {
@@ -326,6 +327,7 @@
    Specifically targets screen widths > 1024px
    ========================================================================== */
 @media (min-width: 1025px) {
+
     /* Enforce thin pill style for desktop header container */
     .desktop-header {
         top: 0.75rem !important;
@@ -333,14 +335,15 @@
         backdrop-filter: blur(40px) saturate(220%) !important;
         -webkit-backdrop-filter: blur(40px) saturate(220%) !important;
         border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 999px !important;
+        border-radius: 6px !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
     /* Force the height and spacing inside the pill */
     .desktop-header .header-inner {
-        height: 44px !important; /* Elegant compact height (not too small, not fat) */
+        height: 44px !important;
+        /* Elegant compact height (not too small, not fat) */
         padding: 0 1.25rem !important;
         display: flex !important;
         align-items: center !important;
@@ -373,7 +376,8 @@
         font-family: var(--font-mono) !important;
         font-weight: 800 !important;
         letter-spacing: 0.1em !important;
-        font-size: 1.05rem !important; /* Readable logo text */
+        font-size: 1.05rem !important;
+        /* Readable logo text */
         text-transform: uppercase !important;
         color: var(--text-color) !important;
         line-height: 1 !important;
@@ -396,14 +400,16 @@
         border: none !important;
         font-family: var(--font-mono) !important;
         font-weight: 600 !important;
-        font-size: 0.88rem !important; /* Slightly larger, readable font size */
+        font-size: 0.88rem !important;
+        /* Slightly larger, readable font size */
         text-transform: uppercase !important;
         letter-spacing: 0.05em !important;
         color: var(--muted-text) !important;
         cursor: pointer !important;
         transition: all 0.25s ease !important;
         position: relative !important;
-        padding: 0.3rem 0.75rem !important; /* Balanced padding */
+        padding: 0.3rem 0.75rem !important;
+        /* Balanced padding */
         border-radius: 4px !important;
         display: flex !important;
         align-items: center !important;
@@ -453,9 +459,11 @@
         align-items: center !important;
         background: rgba(0, 0, 0, 0.03) !important;
         border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 999px !important; /* Pill style search input */
+        border-radius: 999px !important;
+        /* Pill style search input */
         padding: 0 0.75rem !important;
-        height: 30px !important; /* Slightly taller for balance */
+        height: 30px !important;
+        /* Slightly taller for balance */
         width: 190px !important;
         margin-right: 0.75rem !important;
         margin-left: 0 !important;
@@ -490,7 +498,8 @@
         border: none !important;
         background: transparent !important;
         font-family: var(--font-mono) !important;
-        font-size: 0.88rem !important; /* Highly readable search input font */
+        font-size: 0.88rem !important;
+        /* Highly readable search input font */
         width: 100% !important;
         outline: none !important;
         color: var(--text-color) !important;
@@ -545,9 +554,11 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 0 0.8rem !important; /* Smaller, balanced padding */
+        padding: 0 0.8rem !important;
+        /* Smaller, balanced padding */
         font-family: var(--font-mono) !important;
-        font-size: 0.85rem !important; /* Very small, neat text */
+        font-size: 0.85rem !important;
+        /* Very small, neat text */
         font-weight: 600 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.05em !important;
@@ -556,7 +567,8 @@
         border: 1px solid var(--text-color) !important;
         border-radius: 6px !important;
         text-decoration: none !important;
-        height: 32px !important; /* Matches search bar height */
+        height: 32px !important;
+        /* Matches search bar height */
         box-sizing: border-box !important;
         transition: all 0.2s ease !important;
         box-shadow: none !important;
