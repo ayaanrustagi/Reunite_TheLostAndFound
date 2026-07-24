@@ -310,4 +310,19 @@ html {
 body.high-contrast .btn-icon-alt {
     opacity: 1;
     border: 1px solid #000;
-}   
+}
+
+/* High Contrast Form Overrides */
+body.high-contrast .input-group input,
+body.high-contrast .input-group select,
+body.high-contrast .input-group textarea {
+    border: 2px solid #000 !important;
+    color: #000 !important;
+    background: #fff !important;
+}
+
+body.high-contrast .input-group input::placeholder,
+body.high-contrast .input-group textarea::placeholder {
+    color: #333 !important;
+    opacity: 1 !important;
+}
