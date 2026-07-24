@@ -326,3 +326,44 @@ body.high-contrast .input-group textarea::placeholder {
     color: #333 !important;
     opacity: 1 !important;
 }
+
+/* Global High Contrast Overrides for Pages & Cards */
+body.high-contrast,
+body.high-contrast body,
+body.high-contrast .auth-page,
+body.high-contrast .rw-page,
+body.high-contrast .dashboard-page {
+    background: #f8f9fa !important;
+}
+
+body.high-contrast::before,
+body.high-contrast .auth-page::before,
+body.high-contrast .rw-page::before {
+    display: none !important;
+    background: none !important;
+}
+
+body.high-contrast .auth-form-card,
+body.high-contrast .rw-split-card,
+body.high-contrast .admin-container,
+body.high-contrast .card,
+body.high-contrast .item-card,
+body.high-contrast .panel,
+body.high-contrast .auth-container {
+    background: #fff !important;
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.high-contrast .auth-header h1,
+body.high-contrast .auth-sub,
+body.high-contrast .rw-title,
+body.high-contrast .rw-subtitle,
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast p {
+    color: #000 !important;
+}
