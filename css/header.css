@@ -1,15 +1,15 @@
 /* Header - Floating Style */
 .site-header {
     position: fixed;
-    top: 0.75rem;
+    top: 1rem;
     left: 50%;
     transform: translateX(-50%);
-    width: auto;
-    max-width: calc(100% - 2rem);
+    width: calc(100% - 2rem);
+    max-width: 1400px;
     z-index: 1000;
 
     /* Visible glass effect */
-    background: rgba(255, 255, 255, 0.92);
+    background: #ffffff;
     backdrop-filter: blur(40px) saturate(220%);
     -webkit-backdrop-filter: blur(40px) saturate(220%);
     border: 1px solid rgba(0, 0, 0, 0.08);
@@ -42,8 +42,9 @@
 .header-inner {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.2rem 1.25rem;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 1.5rem;
     white-space: nowrap;
 }
 
@@ -261,80 +262,83 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 4px;
+    background: transparent;
+    padding: 0.5rem 0.75rem;
 }
 
-.nav-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    color: var(--ink-2);
-}
-
-.nav-btn:hover {
-    background: rgba(15, 20, 25, 0.08);
-    color: var(--text-color);
-}
-
-.nav-btn.active {
-    background: #ffffff;
-    border-color: rgba(15, 20, 25, 0.1);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    color: var(--text-color);
-}
-
-/* Custom Header CTA */
-.header-cta-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    margin-left: 1rem;
-}
-
-.header-cta-btn {
-    background: #D4F84A;
-    color: #000;
-    font-family: var(--font-main);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.6rem 1.25rem;
-    border-radius: 999px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.header-cta-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #000;
-    color: #fff;
+.nav-chevron {
+    opacity: 0.6;
     transition: transform 0.2s ease;
 }
 
-.header-cta-wrapper:hover .header-cta-btn {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(212, 248, 74, 0.3);
+.nav-btn:hover .nav-chevron {
+    transform: translateY(2px);
+    opacity: 1;
 }
 
-.header-cta-wrapper:hover .header-cta-arrow {
-    transform: translateX(2px) translateY(-2px);
+.nav-btn:hover,
+.nav-btn.active {
+    color: var(--text-color);
 }
 
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.25rem;
+}
+
+.header-lang {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.header-lang:hover {
+    color: var(--text-color);
+}
+
+.header-search-icon {
+    background: transparent;
+    border: none;
+    color: var(--ink-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: 0;
+}
+
+.header-search-icon:hover {
+    color: var(--text-color);
+    transform: scale(1.05);
+}
+
+/* Custom Header CTA */
+.header-cta-btn {
+    background: var(--accent-color);
+    color: #fff;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.65rem 1.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.header-cta-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+    background: var(--accent-deep);
 }
 
 /* Keep SIGN IN button tiny inside the header */
