@@ -42,12 +42,14 @@
 
 @keyframes modalSlideUp {
     from {
-        transform: translateY(40px) scale(0.95);
+        transform: translateY(40px) scale(0.92);
+        filter: blur(10px);
         opacity: 0;
     }
 
     to {
         transform: translateY(0) scale(1);
+        filter: blur(0);
         opacity: 1;
     }
 }

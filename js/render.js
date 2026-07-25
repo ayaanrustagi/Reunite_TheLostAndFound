@@ -970,23 +970,37 @@ window.openClaimLightbox = function(imgSrc, itemTitle) {
         lightbox.style.transition = 'opacity 0.3s ease';
         
         lightbox.innerHTML = `
-            <img id="claim-lightbox-img" src="" style="max-width: 90%; max-height: 85%; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); object-fit: contain;">
+            <img id="claim-lightbox-img" src="" style="max-width: 90%; max-height: 85%; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); object-fit: contain; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
             <p id="claim-lightbox-title" style="color: #ffffff; font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-top: 1.5rem;"></p>
         `;
         
         lightbox.addEventListener('click', () => {
             lightbox.style.opacity = '0';
+            const img = document.getElementById('claim-lightbox-img');
+            if (img) {
+                img.style.transform = 'scale(0.85)';
+                img.style.filter = 'blur(12px)';
+            }
             setTimeout(() => lightbox.style.display = 'none', 300);
         });
         
         document.body.appendChild(lightbox);
     }
     
-    document.getElementById('claim-lightbox-img').src = imgSrc;
+    const img = document.getElementById('claim-lightbox-img');
+    if (img) {
+        img.src = imgSrc;
+        img.style.transform = 'scale(0.85)';
+        img.style.filter = 'blur(12px)';
+    }
     document.getElementById('claim-lightbox-title').textContent = `Proof Image — ${itemTitle}`;
     lightbox.style.display = 'flex';
     requestAnimationFrame(() => {
         lightbox.style.opacity = '1';
+        if (img) {
+            img.style.transform = 'scale(1)';
+            img.style.filter = 'blur(0px)';
+        }
     });
 };
 

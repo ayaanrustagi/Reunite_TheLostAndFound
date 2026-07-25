@@ -38,7 +38,7 @@
 }
 
 .stat-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.025);
     box-shadow: var(--shadow-medium);
 }
 
@@ -81,7 +81,7 @@
 }
 
 .bento-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.02);
     box-shadow: var(--shadow-medium);
 }
 
@@ -199,7 +199,7 @@ button.action-card {
 }
 
 .action-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.015);
     background: #f8fafc;
     border-color: var(--text-color);
 }

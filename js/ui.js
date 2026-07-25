@@ -220,7 +220,7 @@ function openItemModal(id) {
             modalBox.style.transition = 'none';
             modalBox.style.transformOrigin = 'center center';
             modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
-            modalBox.style.filter = '';
+            modalBox.style.filter = 'blur(10px)';
             modalBox.style.opacity = '0.3'; // Start semi-transparent to blend with card fade
 
             // Force reflow
@@ -229,8 +229,9 @@ function openItemModal(id) {
             // Play transition
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    modalBox.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out';
+                    modalBox.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out, filter 0.35s ease-out';
                     modalBox.style.transform = 'translate(0px, 0px) scale(1, 1)';
+                    modalBox.style.filter = 'blur(0px)';
                     modalBox.style.opacity = '1';
 
                     modal.style.transition = 'opacity 0.35s ease-out';
@@ -305,10 +306,10 @@ function closeModal() {
         window.activeOpeningCard.style.opacity = '1';
 
         // Shrink and fade out the modal box
-        modalBox.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        modalBox.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
         modalBox.style.transformOrigin = 'center center';
         modalBox.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
-        modalBox.style.filter = '';
+        modalBox.style.filter = 'blur(10px)';
         modalBox.style.opacity = '0';
 
         // Fade out the overlay background

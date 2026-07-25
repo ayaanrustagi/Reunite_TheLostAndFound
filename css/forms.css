@@ -301,7 +301,7 @@ select::-ms-expand {
 
 .item-card:hover {
     border-color: var(--accent-color);
-    transform: translateY(-8px);
+    transform: translateY(-8px) scale(1.03);
     box-shadow: var(--shadow-medium);
 }
 

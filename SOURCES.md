@@ -10,6 +10,7 @@ This document serves as a complete repository of all third-party libraries, util
 
 | Asset / Font | Version | Purpose / Justification | Date Accessed | License & Source |
 | :--- | :--- | :--- | :--- | :--- |
+| **Epilogue** | Variable | Used as the primary structural sans-serif body typeface to pair with Bricolage Grotesque. | June 23, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
 | **Bricolage Grotesque** | Variable | Used for large hero headings and expressive brand elements. | June 10, 2026 | [SIL Open Font License](https://scripts.sil.org/OFL) / Google Fonts |
 
 ---
