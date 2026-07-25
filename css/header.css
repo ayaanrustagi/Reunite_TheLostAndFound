@@ -62,7 +62,7 @@
 }
 
 .logo-text {
-    font-family: var(--font-mono);
+    font-family: var(--font-display);
     font-weight: 800;
     letter-spacing: 0.15em;
     font-size: 1rem;
@@ -199,7 +199,7 @@
 #headerSearchInput {
     border: none;
     background: transparent;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 0.8rem;
     width: 100%;
     outline: none;
@@ -224,7 +224,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-weight: 600;
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -399,7 +399,7 @@
     }
 
     .desktop-header .logo-text {
-        font-family: var(--font-mono) !important;
+        font-family: var(--font-display) !important;
         font-weight: 800 !important;
         letter-spacing: 0.1em !important;
         font-size: 1.05rem !important;
@@ -424,7 +424,7 @@
     .desktop-header .nav-btn {
         background: none !important;
         border: none !important;
-        font-family: var(--font-mono) !important;
+        font-family: var(--font-main) !important;
         font-weight: 600 !important;
         font-size: 0.88rem !important;
         /* Slightly larger, readable font size */
@@ -523,7 +523,7 @@
     .desktop-header #headerSearchInput {
         border: none !important;
         background: transparent !important;
-        font-family: var(--font-mono) !important;
+        font-family: var(--font-main) !important;
         font-size: 0.88rem !important;
         /* Highly readable search input font */
         width: 100% !important;
@@ -582,7 +582,7 @@
         justify-content: center !important;
         padding: 0 0.8rem !important;
         /* Smaller, balanced padding */
-        font-family: var(--font-mono) !important;
+        font-family: var(--font-main) !important;
         font-size: 0.85rem !important;
         /* Very small, neat text */
         font-weight: 600 !important;
