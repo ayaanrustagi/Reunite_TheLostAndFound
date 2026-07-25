@@ -68,7 +68,7 @@ body.reduced-motion .scrollhero-canvas {
   --mana-magenta: #1e40af;
   --mana-rule: rgba(15, 20, 25, 0.12);
   --mana-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --mana-display: 'Bricolage Grotesque', 'Hanken Grotesk', sans-serif;
+  --mana-display: 'Bricolage Grotesque', sans-serif;
   --c-green: #15803d;
   --c-blue: #1d4ed8;
   --c-orange: #c2410c;
