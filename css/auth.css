@@ -566,7 +566,7 @@ body.auth-page .site-header {
     min-height: 54px;
     border: none;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-deep) 100%);
+    background: var(--accent-color);
     color: #fff;
     font-family: var(--font-mono);
     font-size: 0.8rem;
