@@ -12,7 +12,7 @@
     --ink-2: #3a4250;
     --ink-3: #4b5563;
     --font-main: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-mono: var(--font-main);
     --font-display: 'Bricolage Grotesque', sans-serif;
     --font-emoji: -apple-system, BlinkMacSystemFont, sans-serif;
     --glow-opacity: 0.15;
