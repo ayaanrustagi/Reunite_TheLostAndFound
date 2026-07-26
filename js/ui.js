@@ -18,6 +18,16 @@
  * @returns {void}
  */
 function navigateToSection(sectionId) {
+    // Check for login required sections
+    if ((sectionId === 'dashboard' || sectionId === 'admin') && !window.currentUser) {
+        if (typeof window.goLogin === 'function') {
+            window.goLogin();
+        } else {
+            window.location.href = 'login.html';
+        }
+        return;
+    }
+
     // Mobile Snapchat-style camera trigger for report
     if (sectionId === 'report' && window.innerWidth <= 1024) {
         const fileInput = document.getElementById('reportItemPhoto');
@@ -904,33 +914,23 @@ window.handleSplitScroll = handleSplitScroll;
  * @returns {void}
  */
 function updateAuthUI() {
-    const loginBtn = document.getElementById('loginBtn');
-    const dashboardBtn = document.getElementById('dashboardBtn');
-    const adminBtn = document.getElementById('adminBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-
     const mobileLoginBtn = document.getElementById('mbProfileBtn'); // The mobile bottom nav button
-
-    if (!loginBtn || !dashboardBtn || !adminBtn) return;
-
     const mbGreeting = document.getElementById('mbGreetingHeading');
+    const desktopLoginLink = document.querySelector('.desktop-header a[href="login.html"], .desktop-header a[data-auth-link="true"]');
 
     if (window.currentUser) {
-        loginBtn.classList.add('hidden');
-        if (logoutBtn) logoutBtn.classList.add('hidden'); // We are removing it from top bar, but keep this just in case
-
-        if (window.currentUser.role === 'admin') {
-            adminBtn.classList.remove('hidden');
-            dashboardBtn.classList.add('hidden');
-        } else {
-            dashboardBtn.classList.remove('hidden');
-            adminBtn.classList.add('hidden');
-        }
-
         if (mobileLoginBtn) {
             const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
-            if (lbl) lbl.textContent = 'Account';
+            if (lbl) lbl.textContent = window.currentUser.role === 'admin' ? 'ADMIN' : 'DASHBOARD';
             mobileLoginBtn.setAttribute('data-action', window.currentUser.role === 'admin' ? "navigateToSection('admin')" : "navigateToSection('dashboard')");
+        }
+        
+        if (desktopLoginLink) {
+            desktopLoginLink.setAttribute('data-auth-link', 'true');
+            const lbl = desktopLoginLink.querySelector('.dock-label');
+            if (lbl) lbl.textContent = window.currentUser.role === 'admin' ? 'ADMIN' : 'DASHBOARD';
+            desktopLoginLink.setAttribute('onclick', window.currentUser.role === 'admin' ? "navigateToSection('admin'); return false;" : "navigateToSection('dashboard'); return false;");
+            desktopLoginLink.removeAttribute('href');
         }
 
         if (mbGreeting) {
@@ -939,17 +939,20 @@ function updateAuthUI() {
             mbGreeting.innerHTML = `Hi ${firstName},<br>How can I help<br>you today?`;
         }
     } else {
-        loginBtn.classList.remove('hidden');
-        dashboardBtn.classList.add('hidden');
-        adminBtn.classList.add('hidden');
-        if (logoutBtn) logoutBtn.classList.add('hidden');
-        
         if (mobileLoginBtn) {
             const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
-            if (lbl) lbl.textContent = 'Login';
-            mobileLoginBtn.setAttribute('data-action', "goLogin()");
+            if (lbl) lbl.textContent = 'LOGIN';
+            mobileLoginBtn.setAttribute('data-action', "window.location.href='login.html'");
         }
-
+        
+        if (desktopLoginLink) {
+            desktopLoginLink.setAttribute('data-auth-link', 'true');
+            const lbl = desktopLoginLink.querySelector('.dock-label');
+            if (lbl) lbl.textContent = 'LOGIN';
+            desktopLoginLink.setAttribute('href', 'login.html');
+            desktopLoginLink.removeAttribute('onclick');
+        }
+        
         if (mbGreeting) {
             mbGreeting.innerHTML = `Hi guest,<br>How can I help<br>you today?`;
         }
