@@ -52,8 +52,10 @@
     align-items: center;
     justify-content: center;
     background: transparent;
-    border: none;
-    color: #111;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 0.5rem;
+    color: var(--accent-color);
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
     gap: 6px;
@@ -61,7 +63,7 @@
 }
 
 .dock-btn:hover {
-    opacity: 0.7;
+    background: rgba(29, 78, 216, 0.05);
     transform: translateY(-2px);
 }
 
@@ -71,7 +73,12 @@
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #111;
+    color: var(--accent-color);
+}
+
+.dock-btn.active {
+    border: 2px solid var(--accent-color);
+    background: rgba(29, 78, 216, 0.05);
 }
 
 .dock-divider {
@@ -88,6 +95,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--accent-color);
     transition: opacity 0.2s ease;
     padding: 0;
 }
