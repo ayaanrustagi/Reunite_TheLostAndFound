@@ -51,7 +51,12 @@ function navigateToSection(sectionId) {
     document.body.classList.toggle('wizard-active', isWizard);
 
     document.querySelectorAll('.nav-btn, .dock-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-action')?.includes(sectionId));
+        const action = btn.getAttribute('data-action');
+        if (action) {
+            btn.classList.toggle('active', action.includes(sectionId));
+        } else {
+            btn.classList.remove('active');
+        }
     });
 
     if (sectionId === 'found' && window.renderFound) window.renderFound();
@@ -929,8 +934,9 @@ function updateAuthUI() {
             desktopLoginLink.setAttribute('data-auth-link', 'true');
             const lbl = desktopLoginLink.querySelector('.dock-label');
             if (lbl) lbl.textContent = window.currentUser.role === 'admin' ? 'ADMIN' : 'DASHBOARD';
-            desktopLoginLink.setAttribute('onclick', window.currentUser.role === 'admin' ? "navigateToSection('admin'); return false;" : "navigateToSection('dashboard'); return false;");
+            desktopLoginLink.setAttribute('data-action', window.currentUser.role === 'admin' ? "navigateToSection('admin')" : "navigateToSection('dashboard')");
             desktopLoginLink.removeAttribute('href');
+            desktopLoginLink.removeAttribute('onclick');
         }
 
         if (mbGreeting) {
@@ -950,6 +956,7 @@ function updateAuthUI() {
             const lbl = desktopLoginLink.querySelector('.dock-label');
             if (lbl) lbl.textContent = 'LOGIN';
             desktopLoginLink.setAttribute('href', 'login.html');
+            desktopLoginLink.removeAttribute('data-action');
             desktopLoginLink.removeAttribute('onclick');
         }
         
