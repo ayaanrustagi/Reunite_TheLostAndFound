@@ -380,6 +380,13 @@
     font-style: italic;
 }
 
+.logo-img-compact {
+    width: 1.12rem;
+    height: 1.12rem;
+    object-fit: contain;
+    margin-right: 0.35rem;
+}
+
 
 /* Keep SIGN IN button tiny inside the header */
 .header-actions .btn {
