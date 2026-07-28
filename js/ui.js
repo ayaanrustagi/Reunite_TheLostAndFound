@@ -50,7 +50,7 @@ function navigateToSection(sectionId) {
     const isWizard = (sectionId === 'report' || sectionId === 'claim');
     document.body.classList.toggle('wizard-active', isWizard);
 
-    document.querySelectorAll('.nav-btn, .dock-btn').forEach(btn => {
+    document.querySelectorAll('.nav-btn, .dock-btn, .mb-nav-btn').forEach(btn => {
         const action = btn.getAttribute('data-action');
         if (action) {
             btn.classList.toggle('active', action.includes(sectionId));
