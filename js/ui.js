@@ -948,7 +948,7 @@ function updateAuthUI() {
         if (mobileLoginBtn) {
             const lbl = mobileLoginBtn.querySelector('.mb-nav-label');
             if (lbl) lbl.textContent = 'LOGIN';
-            mobileLoginBtn.setAttribute('data-action', "goLogin()");
+            mobileLoginBtn.setAttribute('data-action', "window.location.href='login.html'");
         }
         
         if (desktopLoginLink) {
@@ -1013,10 +1013,6 @@ function toggleSettingsModal() {
         // Sync toggles with current state
         document.getElementById('motionToggle').checked = document.body.classList.contains('reduced-motion');
         document.getElementById('contrastToggle').checked = document.body.classList.contains('high-contrast');
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        if (darkModeToggle) {
-            darkModeToggle.checked = document.documentElement.classList.contains('dark-mode');
-        }
         document.getElementById('ttsToggle').checked = document.body.classList.contains('tts-enabled');
         document.getElementById('fontScaleDisplay').textContent = fontScale + '%';
     }
@@ -1028,7 +1024,7 @@ window.toggleSettingsModal = toggleSettingsModal;
  * Saves preference modifications to local storage.
  * 
  * @function updateAccessibility
- * @param {String} type - Setting type ('motion'|'contrast'|'font'|'tts'|'dark')
+ * @param {String} type - Setting type ('motion'|'contrast'|'font'|'tts')
  * @param {String} [value] - Font scaling directions ('up'|'down')
  * @returns {void}
  */
@@ -1044,11 +1040,6 @@ function updateAccessibility(type, value) {
         const enabled = document.getElementById('contrastToggle').checked;
         document.body.classList.toggle('high-contrast', enabled);
         settings.highContrast = enabled;
-    }
-    else if (type === 'dark') {
-        const enabled = document.getElementById('darkModeToggle').checked;
-        document.documentElement.classList.toggle('dark-mode', enabled);
-        settings.darkMode = enabled;
     }
     else if (type === 'font') {
         if (value === 'up' && fontScale < 150) fontScale += 10;
@@ -1088,12 +1079,6 @@ function loadAccessibilitySettings() {
     if (settings.highContrast) {
         document.body.classList.add('high-contrast');
     }
-    if (settings.darkMode !== undefined) {
-        document.documentElement.classList.toggle('dark-mode', settings.darkMode);
-    } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.classList.toggle('dark-mode', prefersDark);
-    }
     if (settings.fontScale) {
         fontScale = settings.fontScale;
         document.documentElement.style.fontSize = (fontScale / 100 * 16) + 'px';
@@ -1104,18 +1089,6 @@ function loadAccessibilitySettings() {
     }
 }
 window.loadAccessibilitySettings = loadAccessibilitySettings;
-
-// Listen for system color scheme changes if user hasn't overridden
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
-    if (settings.darkMode === undefined) {
-        document.documentElement.classList.toggle('dark-mode', e.matches);
-        const toggle = document.getElementById('darkModeToggle');
-        if (toggle) {
-            toggle.checked = e.matches;
-        }
-    }
-});
 
 /**
  * Text to Speech Logic
