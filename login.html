@@ -28,6 +28,21 @@
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/auth.css" />
     <link rel="stylesheet" href="css/animations.css" />
+    <meta name="color-scheme" content="light dark">
+    <script>
+      (function() {
+        try {
+          const settings = JSON.parse(localStorage.getItem('reunite_accessibility') || '{}');
+          if (settings.darkMode !== undefined) {
+            if (settings.darkMode) {
+              document.documentElement.classList.add('dark-mode');
+            }
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark-mode');
+          }
+        } catch (e) {}
+      })();
+    </script>
 </head>
 
 <body class="auth-page">
@@ -381,6 +396,17 @@
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="contrastToggle" onchange="updateAccessibility('contrast')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label">DARK MODE</span>
+            <span class="setting-desc">Switch to a dark color palette</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle" onchange="updateAccessibility('dark')">
             <span class="slider"></span>
           </label>
         </div>

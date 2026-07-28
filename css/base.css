@@ -332,3 +332,223 @@ body {
 @media (max-width: 1024px) {
     /* Zoom removed to allow native responsive design to work correctly. */
 }
+
+/* ==========================================================================
+   DARK MODE THEME
+   ========================================================================== */
+.dark-mode {
+    --bg-color: #0b0f19;
+    --bg-color-rgb: 11, 15, 25;
+    --text-color: #f8fafc;
+    --accent-color: #3b82f6;
+    --accent-deep: #60a5fa;
+    --accent-rgb: 59, 130, 246;
+    --border-color: #1e293b;
+    --panel-bg: #111827;
+    --panel-bg-rgb: 17, 24, 39;
+    --muted-text: #94a3b8;
+    --ink-2: #e2e8f0;
+    --ink-3: #cbd5e1;
+    --accent-glow: rgba(59, 130, 246, 0.45);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+    --shadow-medium: 0 15px 45px rgba(0, 0, 0, 0.5);
+
+    color-scheme: dark;
+}
+
+/* Base body/html text overrides */
+.dark-mode body {
+    color: var(--text-color);
+}
+
+/* Force dark-scheme for dropdowns and native select elements */
+.dark-mode select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+}
+
+/* Panel and Card Backgrounds */
+.dark-mode .stat-card,
+.dark-mode .bento-card,
+.dark-mode button.action-card,
+.dark-mode .modal-box,
+.dark-mode .auth-form-card,
+.dark-mode .logo-orb,
+.dark-mode .desktop-header,
+.dark-mode .auth-back-pill,
+.dark-mode .dashboard-nav,
+.dark-mode .item-card,
+.dark-mode .ai-scan-box,
+.dark-mode .custom-select-trigger,
+.dark-mode .custom-select-options,
+.dark-mode .wizard-step,
+.dark-mode .form-card,
+.dark-mode .location-picker-box,
+.dark-mode .claim-wizard-box,
+.dark-mode .drop-zone,
+.dark-mode .activity-item,
+.dark-mode .task-row,
+.dark-mode .settings-body,
+.dark-mode .sources-modal-box,
+.dark-mode .sources-body,
+.dark-mode .search-bar-wrap,
+.dark-mode .search-dropdown,
+.dark-mode .activity-icon,
+.dark-mode .claim-item-details,
+.dark-mode .wizard-sidebar {
+    background-color: var(--panel-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Override task-row/activity-item borders */
+.dark-mode .activity-item,
+.dark-mode .task-row {
+    border-bottom-color: var(--border-color) !important;
+}
+.dark-mode .task-row {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+.dark-mode .task-row:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Primary Button Styling - Solid White in Dark Mode for High Contrast */
+.dark-mode .btn-primary {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+}
+.dark-mode .btn-primary:hover {
+    background: #ffffff !important;
+    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Secondary Button Styling - Translucent Glass Dark */
+.dark-mode .btn-secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-color) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.dark-mode .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: var(--text-color) !important;
+}
+
+/* Wave Background Overrides */
+.dark-mode #waves-container {
+    background-color: var(--bg-color) !important;
+}
+.dark-mode #waves-container div {
+    background: var(--bg-color) !important;
+    opacity: 0.15 !important;
+}
+.dark-mode #waves-container svg path {
+    stroke: var(--accent-color) !important;
+    stroke-opacity: 0.18 !important;
+}
+
+/* Input Fields overrides */
+.dark-mode input:not([type="checkbox"]):not([type="radio"]),
+.dark-mode select,
+.dark-mode textarea {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+.dark-mode .input-tech {
+    background-color: var(--panel-bg) !important;
+}
+
+.dark-mode .input-group input,
+.dark-mode .input-group select,
+.dark-mode .input-group textarea {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border-color: var(--border-color) !important;
+}
+
+.dark-mode .field .input-pill {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Input hover and focus states in dark mode */
+.dark-mode input:not([type="checkbox"]):not([type="radio"]):hover:not(:focus),
+.dark-mode select:hover:not(:focus),
+.dark-mode textarea:hover:not(:focus) {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark-mode input:not([type="checkbox"]):not([type="radio"]):focus,
+.dark-mode select:focus,
+.dark-mode textarea:focus {
+    background-color: var(--panel-bg) !important;
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.25) !important;
+}
+
+/* Floated labels & muted text overrides */
+.dark-mode .float-label,
+.dark-mode .field-hint,
+.dark-mode .settings-desc,
+.dark-mode .settings-hint,
+.dark-mode .auth-sub,
+.dark-mode .act-meta,
+.dark-mode .card-subtext,
+.dark-mode .form-hint,
+.dark-mode .wizard-desc,
+.dark-mode .nav-hint {
+    color: var(--muted-text) !important;
+}
+
+/* Leaflet Tile dark mode */
+.dark-mode .leaflet-tile-container {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
+}
+.dark-mode .leaflet-container {
+    background: #0b0f19 !important;
+}
+
+/* Accessibility / Modal text color normalization */
+.dark-mode .setting-label,
+.dark-mode .close-btn,
+.dark-mode .sfb-link {
+    color: var(--text-color) !important;
+}
+.dark-mode .sfb-link {
+    text-decoration-color: var(--accent-color) !important;
+}
+
+/* Border overrides */
+.dark-mode .border-b,
+.dark-mode .border-t,
+.dark-mode .border-l,
+.dark-mode .border-r,
+.dark-mode .divider,
+.dark-mode hr {
+    border-color: var(--border-color) !important;
+}
+
+/* Custom list items, custom checkboxes/controls */
+.dark-mode .custom-select-trigger::after {
+    border-color: var(--text-color) transparent transparent transparent !important;
+}
+
+/* Header Compact desktop container */
+.dark-mode .desktop-header {
+    background: rgba(17, 24, 39, 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .desktop-header .header-settings-btn {
+    color: var(--text-color) !important;
+}
+
+/* Custom attribution table */
+.dark-mode .sources-table th {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+.dark-mode .sources-table td {
+    border-color: var(--border-color) !important;
+}
