@@ -39,6 +39,6 @@
     "nedb-promises": "^6.2.3"
   },
   "devDependencies": {
-    "playwright": "^1.60.0"
+    "playwright": "^1.61.0"
   }
 }

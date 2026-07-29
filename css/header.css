@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2.2rem;
+    gap: 1.2rem;
     padding: 0.35rem 2rem;
     white-space: nowrap;
 }
@@ -70,8 +70,8 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -0.6rem; /* Stretch out past left border */
-    right: -0.6rem; /* Stretch out past right border */
+    left: -0.8rem; /* Stretch out past left border */
+    right: -0.8rem; /* Stretch out past right border */
     background-color: transparent;
     border-radius: 999px;
     z-index: -1;
@@ -108,7 +108,7 @@
     width: 1px;
     height: 20px;
     background: rgba(0, 0, 0, 0.1);
-    margin: 0 -1rem; /* Pull adjacent elements closer to reduce white space */
+    margin: 0; /* Let the gap handle spacing uniformly */
 }
 
 .dock-logo {
@@ -433,7 +433,7 @@
         padding: 0.35rem 2rem !important;
         display: flex !important;
         align-items: center !important;
-        gap: 2.2rem !important;
+        gap: 1.2rem !important;
         box-sizing: border-box !important;
     }
 
