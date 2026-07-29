@@ -50,7 +50,6 @@
 .cw-item-card:hover {
     border-color: var(--text-color);
     background: rgba(15, 20, 25, 0.04);
-    transform: scale(1.015);
 }
 
 .cw-item-card.selected {
