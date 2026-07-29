@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 2.2rem;
     padding: 0.35rem 2rem;
     white-space: nowrap;
 }
@@ -53,21 +53,38 @@
     justify-content: center;
     background: transparent;
     border: none;
-    padding: 0.3rem 1.75rem; /* Even wider horizontal padding to make the highlight pill longer on PC */
+    padding: 0.3rem 0.5rem; /* Keep button width compact so header remains short */
     color: var(--accent-color);
     cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
     gap: 4px;
     text-decoration: none;
     opacity: 0.65;
     position: relative;
+    z-index: 1;
+}
+
+/* Wider pseudo-element background for longer highlight pill without layout expansion */
+.dock-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -0.6rem; /* Stretch out past left border */
+    right: -0.6rem; /* Stretch out past right border */
+    background-color: transparent;
     border-radius: 999px;
+    z-index: -1;
+    transition: background-color 0.2s ease;
 }
 
 .dock-btn:hover {
     opacity: 1;
-    background-color: rgba(29, 78, 216, 0.04);
     transform: translateY(-1px);
+}
+
+.dock-btn:hover::before {
+    background-color: rgba(29, 78, 216, 0.04);
 }
 
 .dock-label {
@@ -81,7 +98,10 @@
 
 .dock-btn.active {
     opacity: 1;
-    background-color: rgba(29, 78, 216, 0.08);
+}
+
+.dock-btn.active::before {
+    background-color: rgba(29, 78, 216, 0.08); /* Active highlight */
 }
 
 .dock-divider {
@@ -413,7 +433,7 @@
         padding: 0.35rem 2rem !important;
         display: flex !important;
         align-items: center !important;
-        gap: 1.5rem !important;
+        gap: 2.2rem !important;
         box-sizing: border-box !important;
     }
 
