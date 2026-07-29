@@ -109,8 +109,22 @@
             });
         }
 
-        // Animations intentionally disabled on the auth page — functional
-        // handlers above (password toggle, OTP filtering) are all that runs.
+        // Staggered reveal for auth page elements
+        if (hasGSAP && !reduced() && card) {
+            var items = card.querySelectorAll('[data-reveal]');
+            if (items.length) {
+                gsap.fromTo(items,
+                    { y: 22, opacity: 0 },
+                    {
+                        y: 0, opacity: 1,
+                        duration: 0.6, ease: 'power3.out',
+                        stagger: 0.05,
+                        clearProps: 'transform,opacity',
+                        overwrite: true
+                    }
+                );
+            }
+        }
     }
 
     /* ---------- index: staggered reveal when a section becomes active ---------- */

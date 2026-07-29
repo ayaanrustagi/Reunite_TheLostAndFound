@@ -6,7 +6,7 @@
 
 body.auth-page {
     margin: 0;
-    padding: 5.5rem 1rem 7rem;
+    padding: 2rem 1rem;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -27,9 +27,16 @@ body.auth-page::before {
     z-index: 999;
 }
 
-/* Hide the legacy shared header if it ever renders here */
-body.auth-page .site-header {
-    display: none !important;
+/* Show the shared header only on PC for the auth page */
+@media (max-width: 1024px) {
+    body.auth-page .site-header {
+        display: none !important;
+    }
+}
+@media (min-width: 1025px) {
+    body.auth-page .auth-topbar {
+        display: none !important;
+    }
 }
 
 /* --- Top bar --- */
@@ -108,6 +115,9 @@ body.auth-page .site-header {
     align-items: center;
     justify-content: center;
     width: 100%;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding-top: 3rem;
 }
 
 .auth-form-card {
@@ -115,7 +125,7 @@ body.auth-page .site-header {
     position: relative;
     width: 100%;
     max-width: 480px;
-    padding: 2.75rem 3rem 2.25rem;
+    padding: 2.5rem 3rem;
     border-radius: 28px;
     background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(24px) saturate(1.4);
@@ -672,11 +682,11 @@ body.reduced-motion .orb-ring {
 /* --- Responsive --- */
 @media (max-width: 520px) {
     body.auth-page {
-        padding: 5.5rem 1rem;
+        padding: 2rem 1rem;
     }
 
     .auth-form-card {
-        padding: 2.25rem 1.4rem 1.75rem;
+        padding: 2rem 1.4rem;
         border-radius: 22px;
     }
 
