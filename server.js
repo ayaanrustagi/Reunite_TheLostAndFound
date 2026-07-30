@@ -11,6 +11,7 @@ const claimRoutes = require('./backend/routes/claims');
 const authRoutes  = require('./backend/routes/auth');
 const matchRoutes = require('./backend/routes/match');
 const messageRoutes = require('./backend/routes/messages');
+const sensorRoutes  = require('./backend/routes/sensors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -67,6 +68,7 @@ app.use('/api/items',    apiLimiter,  itemRoutes);
 app.use('/api/claims',   apiLimiter,  claimRoutes);
 app.use('/api/match',    apiLimiter,  matchRoutes);
 app.use('/api/messages', apiLimiter,  messageRoutes);
+app.use('/api/sensors',  apiLimiter,  sensorRoutes);
 
 // ── SPA fallback ──────────────────────────────────────────────────────────────
 app.get('*path', (req, res) => {

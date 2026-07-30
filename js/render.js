@@ -668,6 +668,7 @@ async function renderAdmin() {
     });
 
     renderAdminAudit();
+    renderBoxStatus();
 
     const pendingEl = document.getElementById('adminPendingItems');
     if (pendingEl) pendingEl.innerHTML = pending.length ? pending.map(i => `
@@ -819,6 +820,65 @@ async function renderAdminAudit() {
     }
 }
 window.renderAdminAudit = renderAdminAudit;
+
+/**
+ * Renders the live drop box fill-level card in the admin dashboard.
+ * Polls /api/sensors/box-status and updates the fill bar colour
+ * (green → yellow → red) based on fill percentage.
+ *
+ * @async
+ * @function renderBoxStatus
+ * @returns {void}
+ */
+async function renderBoxStatus() {
+    const listEl = document.getElementById('adminBoxStatus');
+    if (!listEl) return;
+
+    try {
+        const boxes = await window.apiGetBoxStatus();
+        if (!boxes || boxes.length === 0) {
+            listEl.innerHTML = '<div class="status-msg">NO SENSOR BOXES REPORTING YET</div>';
+            return;
+        }
+
+        listEl.innerHTML = boxes.map(box => {
+            const pct = Math.round(box.fillPercent);
+            let levelClass = 'box-ok';
+            if (pct >= 75) levelClass = 'box-full';
+            else if (pct >= 50) levelClass = 'box-mid';
+
+            const lastSeen = box.updatedAt
+                ? new Date(box.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : '—';
+
+            return `
+                <div class="box-status-card ${levelClass}">
+                    <div class="box-status-head">
+                        <strong>${box.deviceId}</strong>
+                        <span class="box-status-pct">${pct}%</span>
+                    </div>
+                    <div class="box-status-bar-track">
+                        <div class="box-status-bar-fill" style="width: ${pct}%;"></div>
+                    </div>
+                    <div class="box-status-meta">
+                        ${box.location ? `${box.location} &bull; ` : ''}Last reading: ${lastSeen}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } catch (err) {
+        console.error('Box status render failed:', err);
+        listEl.innerHTML = '<div class="status-msg" style="color: #ff4d4d;">FAILED TO LOAD SENSOR DATA</div>';
+    }
+}
+window.renderBoxStatus = renderBoxStatus;
+
+// Poll every 30 s, but only while an admin is actually viewing the dashboard.
+setInterval(() => {
+    if (window.currentUser && window.currentUser.role === 'admin' && document.getElementById('adminBoxStatus')) {
+        renderBoxStatus();
+    }
+}, 30000);
 
 // =========================================================================
 // Interactive Claims Stepper & Simulation Helper Handlers

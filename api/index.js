@@ -8,6 +8,8 @@ const claimRoutes = require('../backend/routes/claims');
 const authRoutes = require('../backend/routes/auth');
 const auditRoutes = require('../backend/routes/audit');
 const matchRoutes = require('../backend/routes/match');
+const messageRoutes = require('../backend/routes/messages');
+const sensorRoutes = require('../backend/routes/sensors');
 
 const app = express();
 
@@ -32,6 +34,8 @@ app.use('/api/claims', claimRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/match', matchRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/sensors', sensorRoutes);
 
 // Export for Vercel
 module.exports = app;

@@ -238,6 +238,20 @@ async function apiSendMessage(msgData) {
 }
 window.apiSendMessage = apiSendMessage;
 
+/**
+ * Fetch the current fill level for all registered drop box sensors.
+ *
+ * @async
+ * @function apiGetBoxStatus
+ * @returns {Promise<Array>} List of BoxStatus documents
+ */
+async function apiGetBoxStatus() {
+    const res = await fetch(`${API_BASE}/sensors/box-status`);
+    if (!res.ok) return [];
+    return await res.json();
+}
+window.apiGetBoxStatus = apiGetBoxStatus;
+
 // Initial sync is handled by app.js
 // but we expect window.items and window.claims to be available globally
 window.items = window.items || [];

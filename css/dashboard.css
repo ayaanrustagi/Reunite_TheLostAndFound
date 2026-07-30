@@ -1041,3 +1041,42 @@ button.action-card {
         display: none !important;
     }
 }
+/* ── Drop Box Sensor Status (ESP32 + VL53L0X) ────────────────────────── */
+.box-status-card {
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 0.6rem;
+    background: rgba(0, 0, 0, 0.02);
+}
+.box-status-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+}
+.box-status-pct {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.box-status-bar-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+.box-status-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--accent-color);
+    transition: width 0.4s ease;
+}
+.box-status-meta {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    opacity: 0.65;
+}
+.box-status-card.box-mid  .box-status-bar-fill { background: #f5a623; }
+.box-status-card.box-full .box-status-bar-fill { background: #e0433d; }
+.box-status-card.box-full .box-status-pct      { color: #e0433d; }
