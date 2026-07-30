@@ -15,6 +15,11 @@
 
     // Sources & Attribution modal
     window.openSourcesModal = function () {
+        // Close settings modal first so sources doesn't open behind it
+        var settings = document.getElementById('settingsModal');
+        if (settings && !settings.classList.contains('hidden')) {
+            settings.classList.add('hidden');
+        }
         const m = document.getElementById('sourcesModal');
         if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
     };
