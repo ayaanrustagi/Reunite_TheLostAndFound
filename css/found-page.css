@@ -23,7 +23,7 @@
   box-shadow: var(--shadow-soft) !important;
   /* No top padding — section-head carries it so sticky starts flush at top edge */
   padding: 0 clamp(20px, 2.5vw, 32px) clamp(16px, 2vw, 24px) !important;
-  max-width: 60%;
+  max-width: 70%;
   width: 100%;
   margin: 0 auto;
   max-height: calc(100vh - 9rem);

@@ -4,7 +4,7 @@
 
 /* --- Outer shell --- */
 .rw-outer {
-    max-width: 60%;
+    max-width: 70%;
     margin: 0 auto;
     padding-top: 1.5rem;
     scroll-margin-top: 6rem; /* clear the fixed header on programmatic scroll */

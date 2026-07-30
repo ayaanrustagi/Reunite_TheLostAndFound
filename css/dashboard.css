@@ -10,6 +10,11 @@
     margin-bottom: 1.5rem;
 }
 
+#page-dashboard .content-wrapper {
+    max-width: 70%;
+    margin: 0 auto;
+}
+
 #page-dashboard .section-head h2 {
     font-family: var(--font-display);
     font-size: clamp(32px, 5vw, 42px);
