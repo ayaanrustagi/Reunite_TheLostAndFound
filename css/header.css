@@ -54,12 +54,12 @@
     background: transparent;
     border: none;
     padding: 0.3rem 0.5rem; /* Keep button width compact so header remains short */
-    color: var(--ink-2); /* Dark slate gray for better inactive contrast */
+    color: var(--accent-color);
     cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
     gap: 4px;
     text-decoration: none;
-    opacity: 0.85; /* Increased opacity from 0.65 to 0.85 for stronger contrast */
+    opacity: 0.65;
     position: relative;
     z-index: 1;
 }
@@ -79,7 +79,6 @@
 }
 
 .dock-btn:hover {
-    color: var(--accent-color); /* Turn blue on hover */
     opacity: 1;
     transform: translateY(-1px);
 }
@@ -94,11 +93,10 @@
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: inherit; /* Inherit color from parent .dock-btn (ink-2 when inactive, accent blue when active/hovered) */
+    color: var(--accent-color);
 }
 
 .dock-btn.active {
-    color: var(--accent-color); /* Highlight color when active */
     opacity: 1;
 }
 
