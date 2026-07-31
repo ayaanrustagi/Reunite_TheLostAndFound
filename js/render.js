@@ -878,7 +878,7 @@ setInterval(() => {
     if (window.currentUser && window.currentUser.role === 'admin' && document.getElementById('adminBoxStatus')) {
         renderBoxStatus();
     }
-}, 30000);
+}, 60000);
 
 // =========================================================================
 // Interactive Claims Stepper & Simulation Helper Handlers
