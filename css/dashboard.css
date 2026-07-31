@@ -15,6 +15,19 @@
     margin: 0 auto;
 }
 
+@media (max-width: 1024px) {
+    #page-dashboard .content-wrapper {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    #page-dashboard .content-wrapper {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+}
+
 #page-dashboard .section-head h2 {
     font-family: var(--font-display);
     font-size: clamp(32px, 5vw, 42px);
@@ -661,14 +674,14 @@ button.action-card {
 
 .claim-stepper-step .step-label {
     margin-top: 0.5rem;
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 600;
     color: #64748b;
     transition: color 0.3s ease;
     text-align: center;
-    white-space: nowrap;
     position: absolute;
     top: 32px;
+    width: 60px;
 }
 
 /* Completed Step */
@@ -918,8 +931,8 @@ button.action-card {
 /* Demo Status Simulator Badge */
 .claim-simulation-badge {
     position: absolute;
-    top: 1.5rem;
-    right: 3.5rem;
+    top: 0.5rem;
+    right: 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.55rem;
     background: rgba(29, 78, 216, 0.08);
@@ -950,8 +963,8 @@ button.action-card {
 /* Simulator Dropdown Menu */
 .claim-simulation-menu {
     position: absolute;
-    top: 3.25rem;
-    right: 3.5rem;
+    top: 2rem;
+    right: 0.5rem;
     background: #ffffff;
     border: 1px solid rgba(29, 78, 216, 0.12);
     border-radius: 12px;
