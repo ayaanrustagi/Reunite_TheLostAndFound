@@ -560,14 +560,7 @@
       <form id="reportForm" class="hidden" aria-hidden="true" novalidate>
         <input type="hidden" id="itemType" value="found">
         <input type="text" id="itemTitle">
-        <select id="itemCategory" onchange="toggleOtherCat()">
-          <option value="">SELECT...</option>
-          <option value="Keys">KEYS</option>
-          <option value="Wallet">WALLET</option>
-          <option value="Phone">PHONE</option>
-          <option value="Bag">BAG</option>
-          <option value="Other">OTHER</option>
-        </select>
+        <input type="hidden" id="itemCategory">
         <input type="text" id="otherCategory">
         <input type="text" id="itemLocation">
         <input type="hidden" id="itemLat">
