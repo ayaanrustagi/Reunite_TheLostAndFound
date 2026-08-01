@@ -1,5 +1,5 @@
 
-import { createNoise2D } from './background.js';
+import { createNoise2D } from './noise-generator.js';
 
 class Waves {
     constructor(container, options = {}) {

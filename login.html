@@ -15,19 +15,19 @@
         href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/header.css" />
-    <link rel="stylesheet" href="css/hero.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/forms.css" />
-    <link rel="stylesheet" href="css/dashboard.css" />
-    <link rel="stylesheet" href="css/modals.css" />
-    <link rel="stylesheet" href="css/scroll-indicator.css" />
-    <link rel="stylesheet" href="css/ai-results.css" />
-    <link rel="stylesheet" href="css/settings.css" />
-    <link rel="stylesheet" href="css/responsive.css" />
-    <link rel="stylesheet" href="css/auth.css" />
-    <link rel="stylesheet" href="css/animations.css" />
+    <link rel="stylesheet" href="styles/base/base.css" />
+    <link rel="stylesheet" href="styles/layout/header.css" />
+    <link rel="stylesheet" href="styles/layout/hero.css" />
+    <link rel="stylesheet" href="styles/base/components.css" />
+    <link rel="stylesheet" href="styles/wizards/forms.css" />
+    <link rel="stylesheet" href="styles/pages/dashboard.css" />
+    <link rel="stylesheet" href="styles/modals/modals.css" />
+    <link rel="stylesheet" href="styles/layout/scroll-indicator.css" />
+    <link rel="stylesheet" href="styles/modals/ai-results.css" />
+    <link rel="stylesheet" href="styles/pages/settings.css" />
+    <link rel="stylesheet" href="styles/base/responsive.css" />
+    <link rel="stylesheet" href="styles/pages/auth.css" />
+    <link rel="stylesheet" href="styles/base/animations.css" />
 </head>
 
 <body class="auth-page">
@@ -214,20 +214,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <!-- App Scripts -->
-    <script src="js/handlers.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/state.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/email.js"></script>
+    <script src="src/core/event-handlers.js"></script>
+    <script src="src/core/config.js"></script>
+    <script src="src/core/state.js"></script>
+    <script src="src/core/utils.js"></script>
+    <script src="src/ui/ui.js"></script>
+    <script src="src/auth/email.js"></script>
 
     <!-- API Client -->
-    <script src="js/api-client.js"></script>
-    <script src="js/auth-flow.js"></script>
+    <script src="src/core/api-client.js"></script>
+    <script src="src/auth/auth-flow.js"></script>
 
     <!-- Waves background + micro-interactions -->
-    <script type="module" src="js/waves.js"></script>
-    <script src="js/micro-interactions.js"></script>
+    <script type="module" src="src/visuals/waves.js"></script>
+    <script src="src/ui/micro-interactions.js"></script>
 
   <footer class="site-footer auth-footer" role="contentinfo">
     <p>&copy; 2026 REUNITE &mdash; Lost &amp; Found Network. Built by Ayaan Rustagi, Sree Kondapalli &amp; Tushaar Singh. | <a href="#" onclick="event.preventDefault(); window.openSourcesModal();" style="color: inherit; text-decoration: underline; pointer-events: auto;">Sources &amp; Citations</a></p>
@@ -244,7 +244,7 @@
       <div class="modal-body sources-body">
 
         <p class="sources-note">All application code, UI, branding, and the on-device d-hash / Levenshtein matching
-          logic are original work by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh). Third-party
+          logic are original work by the development team (Ayaan Rustagi, Sree Kondapalli, Tushaar Singh). Third-party
           libraries and the Groq / Llama&nbsp;4 Scout AI service used by the Accurate match mode are credited below.</p>
 
         <h4>Fonts</h4>

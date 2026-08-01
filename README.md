@@ -63,7 +63,7 @@ graph TD
 
 ### 1. Two-Tier Visual Search
 REUNITE offers two distinct matching modes on the **Find Items** page:
-*   **Fast (On-Device d-Hash)**: A custom-built Difference Hashing algorithm (`js/utils.js`) converts images into structural hashes and compares them using Hamming distance combined with dominant-color average scoring. Runs 100% locally in the browser with zero network footprint.
+*   **Fast (On-Device d-Hash)**: A custom-built Difference Hashing algorithm (`src/core/utils.js`) converts images into structural hashes and compares them using Hamming distance combined with dominant-color average scoring. Runs 100% locally in the browser with zero network footprint.
 *   **Accurate (AI-Powered)**: Sends the photo and candidate inventory items to the **Groq API** running **Llama 4 Scout (multimodal)** for same-item visual comparisons. It automatically degrades gracefully to Fast mode if no API key is configured or the service is unreachable.
 
 ### 2. Fuzzy Text & Location Filtering
@@ -72,10 +72,11 @@ REUNITE offers two distinct matching modes on the **Find Items** page:
 
 ### 3. The Secure Backend Gateway
 *   **Security Protocols**:
-    *   Administrator role authorization guardrails on all queues.
-    *   One-time-password (OTP) email verification using EmailJS.
-    *   Payload limiting (50MB) to guard against oversized-upload abuse.
-    *   HTTP security headers integrated via **Helmet** and rate-limiting using **Express Rate Limit**.
+    *   **Server-verified admin role**: The `admin` role is granted only when a registration request supplies the correct secret code, which is checked against the `ADMIN_SECRET` environment variable on the server (`authController.register`) — never trusted from the client.
+    *   **Password hashing**: User passwords are salted and hashed with **bcrypt** (12 rounds); plaintext is never stored, and login uses a constant-time comparison to resist user-enumeration timing attacks.
+    *   **One-time-password (OTP) email verification** using EmailJS for sign-in identity confirmation.
+    *   **Payload limiting (10MB)** to guard against oversized-upload abuse (photos are compressed client-side before upload).
+    *   **HTTP security headers** integrated via **Helmet** (CSP, HSTS, X-Frame-Options) and **rate-limiting** on auth and API endpoints using **Express Rate Limit**.
 
 ### 4. Real-time Audit Trail & Inbox
 *   **System Audit Log**: Every administrative action (Approvals, Rejections, Deletions, Claims) is tracked securely.
@@ -105,35 +106,35 @@ The codebase is structured under clean Model-View-Controller (MVC) paradigms:
 
 ```
 Reunite/
-├── assets/                  # Graphics and brand assets
-├── backend/
-│   ├── controllers/         # REST API business logic handlers
-│   │   ├── auditController.js
-│   │   ├── authController.js
-│   │   ├── claimController.js
-│   │   ├── itemController.js
-│   │   └── messageController.js
-│   └── models/              # Mongoose database schemas
-│       ├── AuditLog.js
-│       ├── Claim.js
-│       ├── Item.js
-│       ├── Message.js
-│       └── User.js
-├── css/                     # Modulized styling sheets
-│   ├── base.css             # Globals, tokens, and CSS variables
-│   ├── components.css       # Buttons, cards, and UI components
-│   ├── responsive.css       # Breakpoints & mobile-first overrides
-│   └── ...
-├── js/                      # Frontend controllers & utilities
-│   ├── api-client.js        # Ajax requests & local state synchronizer
-│   ├── auth-flow.js         # Session and OTP logic
-│   ├── ui.js                # Core navigational and accessibility actions
-│   └── utils.js             # Matching calculations (d-hash, Levenshtein)
-├── test/
-│   └── mobile-smoke.js      # Headless Playwright layout validation tests
-├── index.html               # Main app single page wrapper
+├── index.html               # Main single-page app (home, find, report, claim, dashboard)
 ├── login.html               # Dedicated account authentication portal
 ├── server.js                # Express server entry point
+├── api/                     # Vercel serverless entry (mounts the same routes)
+├── assets/                  # Graphics and brand assets
+│
+├── src/                     # Frontend JavaScript, grouped by feature
+│   ├── core/                #   config, state, app bootstrap, API client, utils (d-hash + Levenshtein)
+│   ├── auth/                #   auth-flow.js (session/OTP), email.js
+│   ├── ui/                  #   ui.js (nav + accessibility), render.js, micro-interactions, homepage
+│   ├── wizards/             #   report-wizard, claim-wizard, forms
+│   └── visuals/             #   waves.js (3D hero), noise-generator.js
+│
+├── styles/                  # CSS, grouped by feature
+│   ├── base/                #   base, components, animations, responsive (tokens + breakpoints)
+│   ├── layout/              #   header, hero, homepage, scroll-indicator
+│   ├── pages/               #   dashboard, found-page, auth, settings
+│   ├── wizards/             #   report-wizard, claim-wizard, forms
+│   └── modals/              #   modals, ai-results
+│
+├── backend/                 # Node/Express backend (MVC)
+│   ├── controllers/         #   REST business logic (auth, items, claims, messages, audit, sensors)
+│   ├── models/              #   Mongoose schemas (User, Item, Claim, Message, AuditLog, BoxStatus)
+│   ├── routes/              #   Express routers, one per resource
+│   ├── utils/               #   auditLogger.js, mailer.js
+│   └── db.js                #   Mongo connection + in-memory fallback
+│
+├── esp32/                   # Arduino/ESP32 smart drop-box sensor sketch
+├── test/                    # Headless Playwright layout/smoke tests
 ├── SOURCES.md               # Attributions and license register
 └── package.json             # Node dependencies and execution scripts
 ```

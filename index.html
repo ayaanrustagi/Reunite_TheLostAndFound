@@ -7,7 +7,7 @@
   <title>REUNITE - Lost & Found Network</title>
   <meta name="description"
     content="REUNITE is a custom-coded lost & found network with two-tier visual search — on-device d-hash matching plus AI image matching (Llama 4 Scout) — on a Node.js/Express backend to reconnect communities." />
-  <meta name="author" content="Ayaan Rustagi, Sree Kondapali, Tushaar Singh" />
+  <meta name="author" content="Ayaan Rustagi, Sree Kondapalli, Tushaar Singh" />
   <link rel="icon" type="image/png" href="assets/reunite-logo.png" />
 
   <!-- Fonts -->
@@ -18,39 +18,39 @@
     rel="stylesheet">
 
   <!-- Base: variables, resets, accessibility -->
-  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="styles/base/base.css" />
   <!-- Header: floating header, nav, search -->
-  <link rel="stylesheet" href="css/header.css?v=1.0.3" />
+  <link rel="stylesheet" href="styles/layout/header.css?v=1.0.3" />
   <!-- Hero: hero section, CTA, text animations -->
-  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="styles/layout/hero.css" />
   <!-- Components: AI scan, split layout, scroll hint -->
-  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="styles/base/components.css" />
   <!-- Forms: inputs, filters, file upload, item cards -->
-  <link rel="stylesheet" href="css/forms.css?v=1.0.1" />
+  <link rel="stylesheet" href="styles/wizards/forms.css?v=1.0.1" />
   <!-- Dashboard: grid, admin panel, stats -->
-  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="styles/pages/dashboard.css" />
   <!-- Modals: modal overlays, loading states -->
-  <link rel="stylesheet" href="css/modals.css?v=1.0.1" />
+  <link rel="stylesheet" href="styles/modals/modals.css?v=1.0.1" />
   <!-- Scroll Indicator: scroll UI elements -->
-  <link rel="stylesheet" href="css/scroll-indicator.css" />
+  <link rel="stylesheet" href="styles/layout/scroll-indicator.css" />
   <!-- AI Results: AI match result styles -->
-  <link rel="stylesheet" href="css/ai-results.css" />
+  <link rel="stylesheet" href="styles/modals/ai-results.css" />
   <!-- Settings: accessibility, claimed items, high contrast -->
-  <link rel="stylesheet" href="css/settings.css" />
+  <link rel="stylesheet" href="styles/pages/settings.css" />
   <!-- Responsive: all media queries -->
-  <link rel="stylesheet" href="css/responsive.css?v=1.0.4" />
+  <link rel="stylesheet" href="styles/base/responsive.css?v=1.0.4" />
   <!-- Auth: login/signup pages -->
-  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="styles/pages/auth.css" />
   <!-- Animations: keyframes, transitions, reduced motion -->
-  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="styles/base/animations.css" />
   <!-- Homepage hero -->
-  <link rel="stylesheet" href="css/homepage.css" />
+  <link rel="stylesheet" href="styles/layout/homepage.css" />
   <!-- Find items page -->
-  <link rel="stylesheet" href="css/found-page.css?v=1.0.4" />
+  <link rel="stylesheet" href="styles/pages/found-page.css?v=1.0.4" />
   <!-- Report wizard -->
-  <link rel="stylesheet" href="css/report-wizard.css?v=1.0.1" />
+  <link rel="stylesheet" href="styles/wizards/report-wizard.css?v=1.0.1" />
   <!-- Claim wizard -->
-  <link rel="stylesheet" href="css/claim-wizard.css" />
+  <link rel="stylesheet" href="styles/wizards/claim-wizard.css" />
   <!-- Leaflet (satellite campus map) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -1393,7 +1393,7 @@
       <div class="modal-body sources-body">
 
         <p class="sources-note">All application code, UI, branding, and the on-device d-hash / Levenshtein matching
-          logic are original work by the development team (Ayaan Rustagi, Sree Kondapali, Tushaar Singh). Third-party
+          logic are original work by the development team (Ayaan Rustagi, Sree Kondapalli, Tushaar Singh). Third-party
           libraries and the Groq / Llama&nbsp;4 Scout AI service used by the Accurate match mode are credited below.</p>
 
         <h4>Fonts</h4>
@@ -1719,26 +1719,26 @@
   <!-- GSAP for micro-interactions -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-  <script src="js/handlers.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/state.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/email.js"></script>
-  <script src="js/api-client.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/forms.js"></script>
-  <script src="js/app.js"></script>
-  <script type="module" src="js/waves.js"></script>
+  <script src="src/core/event-handlers.js"></script>
+  <script src="src/core/config.js"></script>
+  <script src="src/core/state.js"></script>
+  <script src="src/core/utils.js"></script>
+  <script src="src/ui/ui.js"></script>
+  <script src="src/auth/email.js"></script>
+  <script src="src/core/api-client.js"></script>
+  <script src="src/ui/render.js"></script>
+  <script src="src/wizards/forms.js"></script>
+  <script src="src/core/app.js"></script>
+  <script type="module" src="src/visuals/waves.js"></script>
   <!-- Micro-interactions -->
-  <script src="js/micro-interactions.js"></script>
+  <script src="src/ui/micro-interactions.js"></script>
   <!-- Leaflet engine (load before the wizard so the map can initialize) -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/report-wizard.js"></script>
-  <script src="js/claim-wizard.js"></script>
+  <script src="src/wizards/report-wizard.js"></script>
+  <script src="src/wizards/claim-wizard.js"></script>
   <!-- Homepage hero -->
-  <script src="js/homepage.js"></script>
+  <script src="src/ui/homepage.js"></script>
 
   <!-- Fullscreen Snapchat/Instagram Style Camera Overlay -->
   <div id="custom-camera-overlay" class="camera-overlay hidden">

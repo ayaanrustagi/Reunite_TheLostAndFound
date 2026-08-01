@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+// Reuse one connection across invocations. On serverless (Vercel) the module
+// can be re-imported on every request, so we stash the connection on `global`
+// to avoid opening a new pool each time and exhausting MongoDB's connections.
 let cached = global.mongoose || (global.mongoose = { conn: null, promise: null });
 
 async function connectDB() {
@@ -19,6 +22,9 @@ async function connectDB() {
 
         cached.promise = mongoose.connect(process.env.MONGO_URI, opts)
             .catch(async (err) => {
+                // No reachable MongoDB (e.g. judging on a laptop with no URI):
+                // spin up an ephemeral in-memory database so the app still runs.
+                // Data lives only for this process — fine for a demo, not for prod.
                 console.warn('Primary MongoDB connection failed. Starting In-Memory fallback...');
                 try {
                     const { MongoMemoryServer } = require('mongodb-memory-server');

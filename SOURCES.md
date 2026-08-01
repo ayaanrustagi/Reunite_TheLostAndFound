@@ -41,7 +41,7 @@ This document serves as a complete repository of all third-party libraries, util
 | **GSAP (GreenSock)** | v3.12.5 | Powering fluid page transitions and micro-interaction animations. | June 18, 2026 | [GreenSock standard License](https://gsap.com/community/standard-license/) / CDNJS |
 | **Leaflet.js** | v1.9.4 | Interactive mapping library displaying campus coordinates for found/lost items. | June 19, 2026 | [BSD-2-Clause](https://github.com/Leaflet/Leaflet/blob/main/LICENSE) / Unpkg |
 | **EmailJS SDK** | v3 | Direct client-side SMTP bridge for dispatching verification OTP codes. | June 19, 2026 | [EmailJS Terms of Service](https://www.emailjs.com/legal/terms-of-service/) |
-| **Feather Icons** | v4.29.x | Lightweight vector icons used consistently throughout navigation bars and buttons. | June 15, 2026 | [MIT License](https://github.com/feathericons/feather/blob/main/LICENSE) / CDNJS |
+| **Feather Icons** | v4.29.x | Open-source icon set referenced as the visual basis for our navigation and button icons. We hand-inlined our own SVG markup (no runtime library/CDN dependency) and credit Feather for the original designs. | June 15, 2026 | [MIT License](https://github.com/feathericons/feather/blob/main/LICENSE) |
 
 ---
 

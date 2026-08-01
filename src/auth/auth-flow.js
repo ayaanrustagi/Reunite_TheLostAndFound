@@ -338,7 +338,10 @@ async function verifyOTP() {
 
     const status = document.getElementById('authStatus');
 
-    if (enteredOTP !== generatedOTP && enteredOTP !== "000000") {
+    // Reject unless a code was actually sent (generatedOTP set) AND the entered
+    // code matches it exactly. The `!generatedOTP` guard blocks verifying before
+    // any code was requested.
+    if (!generatedOTP || enteredOTP !== generatedOTP) {
         if (status) {
             status.textContent = "INVALID VERIFICATION CODE";
             status.className = "status-msg error";

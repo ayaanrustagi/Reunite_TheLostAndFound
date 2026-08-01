@@ -14,9 +14,12 @@ const sensorRoutes = require('../backend/routes/sensors');
 const app = express();
 
 // Middleware
+// Body cap matches server.js (10 MB). Photos are compressed client-side
+// before upload, so this is comfortably above what a real request needs
+// while still guarding against oversized-upload abuse.
 app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Connect to DB before handling routes
 app.use(async (req, res, next) => {
