@@ -1603,4 +1603,13 @@
     .site-footer {
         display: none !important;
     }
+
+    /* Restore full width for page containers on mobile/tablet */
+    #page-found .content-wrapper.content-box,
+    .dashboard-page-container,
+    .rw-outer,
+    .cw-outer {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
 }
