@@ -324,8 +324,8 @@
         if (cwSelectedItem) {
             document.getElementById('cwRevItem').textContent     = cwSelectedItem.title || '—';
             document.getElementById('cwRevLocation').textContent = cwSelectedItem.location || '—';
-            document.getElementById('cwRevDate').textContent     = cwSelectedItem.date
-                ? new Date(cwSelectedItem.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+            document.getElementById('cwRevDate').textContent     = cwSelectedItem.date_found
+                ? new Date(cwSelectedItem.date_found).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
                 : '—';
 
             // Show item thumbnail in review card
