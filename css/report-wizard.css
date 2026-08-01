@@ -776,7 +776,7 @@ body.reduced-motion .rw-pin-marker { animation: none; }
 .rw-summary-title {
     grid-area: title;
     font-family: var(--font-display);
-    font-size: 1.3rem;
+    font-size: 1.7rem;
     font-weight: 700;
     color: var(--text-color);
     margin: 0 0 1rem;
@@ -801,7 +801,7 @@ body.reduced-motion .rw-pin-marker { animation: none; }
 
 .rw-summary-label {
     font-family: var(--font-mono);
-    font-size: 0.56rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -809,7 +809,7 @@ body.reduced-motion .rw-pin-marker { animation: none; }
 }
 
 .rw-summary-value {
-    font-size: 0.9rem;
+    font-size: 1.15rem;
     color: var(--text-color);
     font-weight: 500;
     line-height: 1.5;
