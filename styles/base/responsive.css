@@ -4,26 +4,26 @@
 
 /* INTERMEDIATE BREAKPOINT - Compact header before mobile */
 @media (max-width: 1200px) {
-    .header-inner {
-        gap: 0.75rem;
-        padding: 0.25rem 0.75rem;
+    .main-nav {
+        gap: 0.5rem;
+        margin-left: 1.5rem;
     }
 
-    .dock-btn {
-        padding: 0.25rem 0.4rem;
+    .nav-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
     }
-    
-    .dock-label {
-        font-size: 0.55rem;
+
+    .header-search-wrap {
+        width: 140px;
+        min-width: 100px;
+        padding: 0.4rem 0.8rem;
     }
-    
-    .dock-divider {
-        margin: 0 -0.4rem;
-    }
+
+
 
     .site-header {
-        width: max-content;
-        max-width: calc(100% - 1rem);
+        width: calc(100% - 2rem);
     }
 }
 
@@ -72,6 +72,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        text-decoration: none;
         transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
         gap: 3px;
     }
@@ -80,7 +81,7 @@
         color: var(--accent-color);
         background-color: rgba(29, 78, 216, 0.08);
     }
-    
+
     .mb-nav-btn svg {
         width: 20px;
         height: 20px;
@@ -815,7 +816,8 @@
     }
 
     /* Mobile 2-column Inventory Grid */
-    #itemsGrid, #claimedItemsGrid {
+    #itemsGrid,
+    #claimedItemsGrid {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 12px !important;
@@ -1188,11 +1190,15 @@
         flex-direction: column;
         align-items: stretch;
         gap: 0.75rem;
-     }
-     #page-found .section-head .browse-inventory-title {
-         margin-left: 0 !important;
-     }
-     #page-found .fp-topsearch { width: 100% !important; }
+    }
+
+    #page-found .section-head .browse-inventory-title {
+        margin-left: 0 !important;
+    }
+
+    #page-found .fp-topsearch {
+        width: 100% !important;
+    }
 
     /* Visual search bar: stack vertically so nothing overflows. */
     #page-found .fp-visual-bar {
@@ -1200,16 +1206,31 @@
         align-items: stretch;
         gap: 12px;
     }
-    #page-found .fp-upload-btn { justify-content: center; }
-    #page-found .fp-drag-hint { text-align: center; }
+
+    #page-found .fp-upload-btn {
+        justify-content: center;
+    }
+
+    #page-found .fp-drag-hint {
+        text-align: center;
+    }
+
     #page-found .fp-visual-bar .fp-match-mode {
         width: 100% !important;
     }
 
     /* Scan results: photo on top, matches below; single-column cards. */
-    #page-found .fp-scan-grid { flex-direction: column; }
-    #page-found #aiMatchResults { grid-template-columns: 1fr; }
-    #page-found #aiMatchContainer { padding: 14px; }
+    #page-found .fp-scan-grid {
+        flex-direction: column;
+    }
+
+    #page-found #aiMatchResults {
+        grid-template-columns: 1fr;
+    }
+
+    #page-found #aiMatchContainer {
+        padding: 14px;
+    }
 
     /* Claimed archive: single column, taller scroll budget. */
     #page-found .claimed-grid {
@@ -1236,7 +1257,8 @@
    ============================================================= */
 @media (max-width: 1024px) {
     .main-nav {
-        background: #0e1726 !important;          /* deep ink overlay */
+        background: #0e1726 !important;
+        /* deep ink overlay */
         gap: 0.15rem !important;
         padding: 5.5rem 1.5rem 2.5rem !important;
         justify-content: center !important;
@@ -1244,7 +1266,7 @@
     }
 
     /* Primary nav links: large white text, no boxes */
-    .main-nav > .nav-btn {
+    .main-nav>.nav-btn {
         font-family: var(--font-display, 'Bricolage Grotesque', sans-serif);
         font-size: 1.65rem !important;
         font-weight: 700 !important;
@@ -1259,11 +1281,13 @@
         padding: 0.65rem 1rem !important;
     }
 
-    .main-nav > .nav-btn::after { display: none !important; }
+    .main-nav>.nav-btn::after {
+        display: none !important;
+    }
 
-    .main-nav > .nav-btn:hover,
-    .main-nav > .nav-btn:active,
-    .main-nav > .nav-btn.active {
+    .main-nav>.nav-btn:hover,
+    .main-nav>.nav-btn:active,
+    .main-nav>.nav-btn.active {
         color: #fff !important;
         background: transparent !important;
         opacity: 0.75;
@@ -1293,7 +1317,9 @@
         padding: 0.85rem 1.5rem !important;
     }
 
-    .mobile-nav-actions .nav-btn::after { display: none !important; }
+    .mobile-nav-actions .nav-btn::after {
+        display: none !important;
+    }
 
     .mobile-nav-actions .nav-btn:hover,
     .mobile-nav-actions .nav-btn:active {
@@ -1309,6 +1335,7 @@
         color: #fff !important;
         border-color: var(--accent-color) !important;
     }
+
     #mobileLoginBtn:hover,
     #mobileDashboardBtn:hover {
         background: var(--accent-deep) !important;
@@ -1331,8 +1358,10 @@
         display: flex !important;
         flex-direction: column;
         width: 100%;
-        margin-top: -6rem; /* Pull up over the waves */
-        padding: 7rem 1.25rem 6.5rem; /* Offset the negative margin and sit below header */
+        margin-top: -6rem;
+        /* Pull up over the waves */
+        padding: 7rem 1.25rem 6.5rem;
+        /* Offset the negative margin and sit below header */
         box-sizing: border-box;
         background: #fafafa;
         min-height: 100vh;
@@ -1399,7 +1428,7 @@
         justify-content: space-between;
         align-items: center;
     }
-    
+
     .mb-greeting-logo {
         height: 44px;
         width: auto;
@@ -1508,7 +1537,7 @@
         pointer-events: none;
     }
 
-    .mobile-floating-nav > * {
+    .mobile-floating-nav>* {
         pointer-events: auto;
     }
 
@@ -1563,9 +1592,17 @@
 
 /* Hide mobile elements on desktop */
 @media (min-width: 1025px) {
-    .mobile-native-dashboard { display: none !important; }
-    .mobile-floating-nav { display: none !important; }
-    .mobile-header { display: none !important; }
+    .mobile-native-dashboard {
+        display: none !important;
+    }
+
+    .mobile-floating-nav {
+        display: none !important;
+    }
+
+    .mobile-header {
+        display: none !important;
+    }
 }
 
 /* Force fullscreen wizard app views on mobile (cancelling tablet scale overrides) */
@@ -1573,14 +1610,14 @@
     body.wizard-active {
         background-color: #ffffff !important;
     }
-    
+
     #page-report.active,
     #page-claim.active {
         min-height: 100vh !important;
         min-height: 100dvh !important;
         padding: 0 !important;
     }
-    
+
     .rw-btn-submit {
         display: none !important;
     }
